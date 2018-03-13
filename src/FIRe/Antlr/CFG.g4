@@ -22,8 +22,8 @@ EType 		        : 'BattleEndedEvent' | 'BulletHitBulletEvent'
                     | 'ScannedRobotEvent' | 'SkippedTurnEvent' | 'StatusEvent'
                     | 'WinEvent'
                     ;
-SingleLineComment   : '//' [\u0000-\u007Eæøå]* -> skip;
-MultiLineComment    : '/*' ([\u0000-\u007Eæøå]* '*')* '/' -> skip;
+SingleLineComment   : '//' [\u0000-\u007E]* -> skip;
+MultiLineComment    : '/*' ([\u0000-\u007E]* '*')* '/' -> skip;
 WhiteSpace          : [ \r\n\t]+ -> skip;
 Val	                : [-]? [0-9]+ ('.' [0-9]+)?
                     | '"' [\u0020-\u0021\u0023-\u007E]* '"'
