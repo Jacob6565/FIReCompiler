@@ -1,5 +1,5 @@
 // Generated from C:/Users/TobiasW/IdeaProjects/FIReCompiler/src/FIRe/Antlr\CFG.g4 by ANTLR 4.7
-package FIRe.Antlr;
+package FIRe.Parser.FIRe.Antlr;
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.Token;
