@@ -206,3 +206,7 @@ class FunctionDeclarationNode extends AbstractNode{
 class StrategyDeclarationNode extends AbstractNode{
 
 }
+
+class ProgNode extends AbstractNode{
+    
+}
