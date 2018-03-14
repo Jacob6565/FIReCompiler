@@ -2,6 +2,8 @@ package FIRe;
 
 import FIRe.Parser.FIRe.Antlr.CFGBaseVisitor;
 import FIRe.Parser.FIRe.Antlr.CFGParser;
+import org.antlr.v4.runtime.tree.ParseTree;
+import org.antlr.v4.runtime.tree.RuleNode;
 
 
 public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
@@ -11,12 +13,34 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
 
     @Override
     public AbstractNode visitProg(CFGParser.ProgContext ctx) {
-        return super.visitProg(ctx);
+        //return super.visitProg(ctx);
+        ProgNode root = new ProgNode();
+
+        root.robotProperties =(RobotPropertiesNode)visitRobotDcl(ctx.robotDcl());
+
+        for(CFGParser.DclContext n : ctx.dcl()){
+            root.childList.add(visitDcl(n));
+        }
+
+        for(CFGParser.FuncDclContext n : ctx.funcDcl()){
+            root.childList.add(visitFuncDcl(n));
+        }
+
+        for(CFGParser.StrategydclContext n : ctx.strategydcl()){
+            root.childList.add(visitStrategydcl(n));
+        }
+
+        for(CFGParser.ConditionDclContext n : ctx.conditionDcl()){
+            root.childList.add(visitConditionDcl(n));
+        }
+
+        return root;
     }
 
     @Override
     public AbstractNode visitStrategydcl(CFGParser.StrategydclContext ctx) {
         return super.visitStrategydcl(ctx);
+
     }
 
     @Override
@@ -73,6 +97,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
     @Override
     public AbstractNode visitExpr(CFGParser.ExprContext ctx) {
         return super.visitExpr(ctx);
+
     }
 
     @Override
