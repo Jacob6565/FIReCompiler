@@ -212,5 +212,5 @@ class StrategyDeclarationNode extends AbstractNode{
 
 class ProgNode extends AbstractNode{
     public List<AbstractNode> childList = new ArrayList<>();
-    public RobotPropertiesNode robotProperties = new RobotPropertiesNode();
+    //public RobotPropertiesNode robotProperties = new RobotPropertiesNode();
 }
