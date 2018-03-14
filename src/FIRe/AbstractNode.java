@@ -1,4 +1,4 @@
-package Antlr;
+package FIRe;
 
 
 //begin enums

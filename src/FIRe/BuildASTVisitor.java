@@ -1,6 +1,9 @@
-package Antlr;
+package FIRe;
 
-public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode>{
+import FIRe.Parser.FIRe.Antlr.CFGBaseVisitor;
+
+
+public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
 
     //Skal override dem alle, lige som ham på stackoverflow.
 

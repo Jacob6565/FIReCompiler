@@ -1,4 +1,4 @@
-package Antlr;
+package FIRe;
 
 //Så skal man lave en klasse som nedarver denne klasse og som implementerer
 //en traverse metode for dem alle fx depth-first, som er standarden.
