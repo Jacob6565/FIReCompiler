@@ -1,6 +1,8 @@
 package FIRe;
 
 
+import java.util.ArrayList;
+
 //begin enums
 enum Color{
     red,
@@ -208,5 +210,7 @@ class StrategyDeclarationNode extends AbstractNode{
 }
 
 class ProgNode extends AbstractNode{
-    
+
+    public RobotPropertiesNode _robotProperties;
+    public ArrayList<AbstractNode> _abstractNodesList = new ArrayList<AbstractNode>();
 }

@@ -11,7 +11,12 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
 
     @Override
     public AbstractNode visitProg(CFGParser.ProgContext ctx) {
-        return super.visitProg(ctx);
+
+        ProgNode _head = new ProgNode();
+
+
+        return visitRobotDcl(ctx.robotDcl());
+
     }
 
     @Override
