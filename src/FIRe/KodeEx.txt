@@ -1,0 +1,172 @@
+RobotProperties
+{
+    	RobotName:TheDestroyer;
+    	RobotType:advancedRobot;
+    	BodyColor:yellow;
+    	GunColor:red;
+    	RadarColor:white;
+}
+
+number firepower = 1;
+text nameOfRival = "SittingDuck";
+
+bool turnLeftAndRotate(text currentRival)
+{
+    number degrees = 90;
+    nameOfRival = currentRival;
+    bool shotAtRival= false;
+
+    if (nameOfRival == "WallRider")
+    {
+   	 //Calling a standard Robocode function.
+   	 fire(firepower);
+   	 shotAtRival = true;
+    }
+    
+    for(0 upto 2)
+    {
+   	 turnLeft(degrees);
+    }
+
+    return shotAtRival;   	 
+}
+
+/*This is the
+ entry point.*/
+strategy Default()
+{
+    number[] firepowers;
+    number[1] = 1;
+    number[2] = 2;
+    number[3] = 3;
+
+    routine()
+    {
+  			 turnRadar(360);
+   	 routine(2)
+   	 {
+   		 ahead(20);
+   	 }
+    }
+
+    when IScannedARobot (ScannedRobotEvent e)
+    {
+   	 //e.getName() is a Robocode function.
+   	 text currentRival = e.getName();
+   	 turnLeftAndRotate(currentRival);
+   	 changeStrategy("Offensive");
+    }
+}
+
+strategy Offensive()
+{
+    routine()
+    {
+   	 fire(1);
+    }
+    when LowHealth()
+    {
+   	 changeStrategy("Default");
+    }    
+}
+
+condition LowHealth()
+{
+    turnLeftAndRotate("SittingDuck");
+    bool Test()
+    {
+    	return getEnergy() <= 50;
+    }
+}
+
+RobotProperties
+{
+	    RobotName:TheDestroyer;
+        RobotType:advancedRobot;
+        BodyColor:yellow;
+        GunColor:red;
+        RadarColor:white;
+}
+
+number firepower = 1;
+text nameOfRival = "SittingDuck";
+
+bool turnLeftAndRotate(text currentRival)
+{
+	number degrees = 90;
+	nameOfRival = currentRival;
+	bool shotAtRival= false;
+
+	if (nameOfRival == "WallRider")
+	{
+		//Calling a standard Robocode function.
+		fire(firepower);
+		shotAtRival = true;
+	}
+	
+	for(0 upto 2)
+	{
+		turnLeft(degrees);
+	}
+
+	return shotAtRival;		
+}
+
+/*This is the
+ entry point.*/
+strategy Default()
+{
+	number[] firepowers;
+	number[1] = 1;
+	number[2] = 2;
+	number[3] = 3;
+
+	routine()
+	{
+       		turnRadar(360);
+		fire(number[1]);
+
+	routine(2)
+		{
+			ahead(20);
+		}
+	}
+
+	when IScannedARobot (ScannedRobotEvent e)
+	{
+		//e.getName() is a Robocode function.
+		text currentRival = e.getName();
+		turnLeftAndRotate(currentRival);
+		changeStrategy("Offensive");
+	}
+}
+
+strategy Offensive()
+{
+	routine()
+	{
+		fire(1);
+	}
+	when LowHealth()
+	{
+		changeStrategy("Default");
+	}	
+}
+
+condition LowHealth()
+{
+	turnLeftAndRotate("SittingDuck");
+	bool Test()
+	{
+	    return getEnergy() <= 50;
+	}
+}
+
+
+
+
+
+
+
+
+

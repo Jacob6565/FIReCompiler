@@ -1,6 +1,9 @@
 package FIRe;
 
 
+import jdk.nashorn.api.tree.Tree;
+
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 
 //begin enums
@@ -13,6 +16,7 @@ enum Color{
     white
 }
 //end enums - begin abstract classes
+
 abstract class AbstractNode
 {
     //Should contain management functions.
@@ -28,31 +32,24 @@ abstract class AbstractNode
     {
 
     }
-    /*
-    public void printSubtree( int indent, node ) {
-        for( int i = 0; i < indent; ++i) {
-            System.out.print(" ");
-        }
 
-        if( inner node) {
-            System.out.println("(" + value);
-            printSubtree(indent + elem width, left child); //this is a recursive call, alternatively use the indent formula above if you don't use recursion
-            printSubtree(indent + elem width, right child);
+    public ArrayList<AbstractNode> Children = new ArrayList<>();
+@Override
+    public String toString() {
+        return Type.class.toString();
+    }
 
-            //we have a new line so print the indent again
-            for( int i = 0; i < indent; ++i) {
-                System.out.print(" ");
-            }
-            System.out.println(")");
-        } else if( not empty) {
-            System.out.println(value);
-        } else { //empty/non existing node
-            System.out.println("()");
+    public void Print(){
+        System.out.print(this);
+        for (AbstractNode AN : this.Children) {
+            AN.Print();
         }
     }
-    */
 
 }
+
+
+
 
 abstract class ExpressionNode extends AbstractNode
 {
@@ -235,5 +232,5 @@ class StrategyDeclarationNode extends AbstractNode{
 class ProgNode extends AbstractNode{
 
     public RobotPropertiesNode _robotProperties;
-    public ArrayList<AbstractNode> _abstractNodesList = new ArrayList<AbstractNode>();
+    public ArrayList<AbstractNode> _abstractNodesList = new ArrayList<>();
 }
