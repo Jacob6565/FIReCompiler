@@ -41,7 +41,8 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
     public AbstractNode visitStrategydcl(CFGParser.StrategydclContext ctx) {
         StrategyDeclarationNode node = new StrategyDeclarationNode();
 
-        //node.id=ctx.
+        node.id=new IdNode(){};
+        node.id.Value = ctx.Strategy().getSymbol().getText();
 
         //for(CFGParser.StrategydclContext
 
@@ -95,6 +96,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         //return super.visitRoutine(ctx);
         RoutineNode node = new RoutineNode();
 
+        return node;
     }
 
     @Override

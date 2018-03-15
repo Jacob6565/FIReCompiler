@@ -1,6 +1,7 @@
 package FIRe;
 
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -84,7 +85,7 @@ class ForNode extends  ControlStructureNode{
 }
 
 class RoutineNode extends ControlStructureNode{
-    int val = null;
+    int val = 0;
     String id = null;
 
 }
@@ -225,5 +226,8 @@ class FunctionDeclarationNode extends AbstractNode{
 class StrategyDeclarationNode extends AbstractNode{
     public IdNode id;
     public List<AbstractNode> childList = new ArrayList<>();
-    //public RobotPropertiesNode robotProperties = new RobotPropertiesNode();
+}
+
+class ProgNode extends AbstractNode{
+    public ArrayList<AbstractNode> _abstractNodesList = new ArrayList<>();
 }
