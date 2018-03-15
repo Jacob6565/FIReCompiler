@@ -1,10 +1,8 @@
 package FIRe;
 
 
-import jdk.nashorn.api.tree.Tree;
-
-import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.List;
 
 //begin enums
 enum Color{
@@ -89,6 +87,8 @@ class ForNode extends  ControlStructureNode{
 }
 
 class RoutineNode extends ControlStructureNode{
+    int val = null;
+    String id = null;
 
 }
 
@@ -230,7 +230,6 @@ class StrategyDeclarationNode extends AbstractNode{
 }
 
 class ProgNode extends AbstractNode{
-
-    public RobotPropertiesNode _robotProperties;
-    public ArrayList<AbstractNode> _abstractNodesList = new ArrayList<>();
+    public List<AbstractNode> childList = new ArrayList<>();
+    //public RobotPropertiesNode robotProperties = new RobotPropertiesNode();
 }

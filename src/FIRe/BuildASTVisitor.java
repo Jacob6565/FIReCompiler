@@ -86,7 +86,9 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
 
     @Override
     public AbstractNode visitRoutine(CFGParser.RoutineContext ctx) {
-        return super.visitRoutine(ctx);
+        //return super.visitRoutine(ctx);
+        RoutineNode node = new RoutineNode();
+
     }
 
     @Override
