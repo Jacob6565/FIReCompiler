@@ -1,6 +1,9 @@
 package FIRe;
 
 
+import jdk.nashorn.api.tree.Tree;
+
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +17,7 @@ enum Color{
     white
 }
 //end enums - begin abstract classes
+
 abstract class AbstractNode
 {
     //Should contain management functions.
@@ -28,6 +32,19 @@ abstract class AbstractNode
     public void traverseAST()
     {
 
+    }
+
+    public ArrayList<AbstractNode> childList = new ArrayList<>();
+@Override
+    public String toString() {
+        return Type.class.toString();
+    }
+
+    public void Print(){
+        System.out.print(this);
+        for (AbstractNode AN : this.childList) {
+            AN.Print();
+        }
     }
 
 }
@@ -212,6 +229,7 @@ class StrategyDeclarationNode extends AbstractNode{
 }
 
 class ProgNode extends AbstractNode{
-    public List<AbstractNode> childList = new ArrayList<>();
-    public RobotPropertiesNode robotProperties = new RobotPropertiesNode();
+
+    public RobotPropertiesNode _robotProperties;
+    public ArrayList<AbstractNode> _abstractNodesList = new ArrayList<>();
 }

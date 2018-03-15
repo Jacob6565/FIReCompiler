@@ -16,7 +16,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         //return super.visitProg(ctx);
         ProgNode root = new ProgNode();
 
-        root.robotProperties =(RobotPropertiesNode)visitRobotDcl(ctx.robotDcl());
+        root.childList.add(visitRobotDcl(ctx.robotDcl()));
 
         for(CFGParser.DclContext n : ctx.dcl()){
             root.childList.add(visitDcl(n));
