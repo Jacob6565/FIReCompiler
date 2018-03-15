@@ -46,9 +46,6 @@ abstract class AbstractNode
 
 }
 
-
-
-
 abstract class ExpressionNode extends AbstractNode
 {
 
@@ -226,10 +223,12 @@ class FunctionDeclarationNode extends AbstractNode{
 }
 
 class StrategyDeclarationNode extends AbstractNode{
-
+    public IdNode id;
+    public List<AbstractNode> childList = new ArrayList<>();
 }
 
 class ProgNode extends AbstractNode{
-    public List<AbstractNode> childList = new ArrayList<>();
-    //public RobotPropertiesNode robotProperties = new RobotPropertiesNode();
+
+    public RobotPropertiesNode _robotProperties;
+    public ArrayList<AbstractNode> _abstractNodesList = new ArrayList<>();
 }
