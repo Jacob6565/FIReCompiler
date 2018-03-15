@@ -33,7 +33,7 @@ abstract class AbstractNode
 
     }
 
-    public ArrayList<AbstractNode> Children = new ArrayList<>();
+    public ArrayList<AbstractNode> childList = new ArrayList<>();
 @Override
     public String toString() {
         return Type.class.toString();
@@ -41,7 +41,7 @@ abstract class AbstractNode
 
     public void Print(){
         System.out.print(this);
-        for (AbstractNode AN : this.Children) {
+        for (AbstractNode AN : this.childList) {
             AN.Print();
         }
     }
