@@ -3,6 +3,8 @@ package FIRe;
 
 import FIRe.Parser.*;
 
+import java.util.ArrayList;
+
 public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
 
     //Skal override dem alle, lige som ham på stackoverflow.
@@ -92,19 +94,103 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         return super.visitFParamList(ctx);
     }
 
+
     @Override
     public AbstractNode visitRobotDcl(CFGParser.RobotDclContext ctx) {
-        return super.visitRobotDcl(ctx);
+
+        RobotDclNode robotDclNode = new RobotDclNode();
+
+        robotDclNode.properties = (RobotPropertiesNode)visitRobotDclBody(ctx.robotDclBody());
+
+        return robotDclNode;
     }
 
     @Override
     public AbstractNode visitRobotDclBody(CFGParser.RobotDclBodyContext ctx) {
-        return super.visitRobotDclBody(ctx);
+
+        RobotPropertiesNode robotPropertiesNode = new RobotPropertiesNode();
+
+        for (CFGParser.IdContext idContext: ctx.id())
+        {
+         robotPropertiesNode.childList.add(visitId(idContext));
+        }
+
+        return robotPropertiesNode;
     }
 
     @Override
     public AbstractNode visitDcl(CFGParser.DclContext ctx) {
-        return super.visitDcl(ctx);
+
+
+        if(ctx.expr() != null){
+            visitExpr(ctx.expr());
+            if(ctx.Type().toString().equals("number")){ //måske det her ikke virker som vi lige tænkte
+
+                NumberDeclarationNode numberDeclarationNode = new NumberDeclarationNode();
+                numberDeclarationNode.childList.add(visitId(ctx.id(0))); //0 fordi vi tror der er tale om det første og eneste element i listen som vi vil tilføje
+
+                numberDeclarationNode.childList.add(visitExpr(ctx.expr()));
+               return numberDeclarationNode;
+            }
+
+            else if(ctx.Type().toString().equals("text")){
+
+                TextDeclarationNode textDeclarationNode = new TextDeclarationNode();
+                textDeclarationNode.childList.add(visitId(ctx.id(0))); //0 fordi vi tror der er tale om det første og eneste element i listen som vi vil tilføje
+
+                textDeclarationNode.childList.add(visitExpr(ctx.expr()));
+                return textDeclarationNode;
+
+            }
+
+            else if(ctx.Type().toString().equals("bool")){
+
+                BooleanDeclarationNode booleanDeclarationNode = new BooleanDeclarationNode();
+                booleanDeclarationNode.childList.add(visitId(ctx.id(0))); //0 fordi vi tror der er tale om det første og eneste element i listen som vi vil tilføje
+
+                booleanDeclarationNode.childList.add(visitExpr(ctx.expr()));
+                return booleanDeclarationNode;
+            }
+            else
+                return null;
+
+        }
+        else {
+
+            if(ctx.Type().toString().equals("number")){
+
+                NumberDeclarationNode numberDeclarationNode = new NumberDeclarationNode();
+
+                for (CFGParser.IdContext idContext:ctx.id()) {
+                    numberDeclarationNode.childList.add(visitId(idContext));
+                }
+                return numberDeclarationNode;
+
+            }
+
+            else if (ctx.Type().toString().equals("text")) {
+
+                TextDeclarationNode textDeclarationNode = new TextDeclarationNode();
+
+                for (CFGParser.IdContext idContext : ctx.id()) {
+                    textDeclarationNode.childList.add(visitId(idContext));
+                }
+                return textDeclarationNode;
+            }
+
+            else if (ctx.Type().toString().equals("bool")) {
+
+                BooleanDeclarationNode booleanDeclarationNode = new BooleanDeclarationNode();
+
+                for (CFGParser.IdContext idContext : ctx.id()) {
+                    booleanDeclarationNode.childList.add(visitId(idContext));
+                }
+                return booleanDeclarationNode;
+            }
+
+            return
+                    null;
+        }
     }
 
     @Override

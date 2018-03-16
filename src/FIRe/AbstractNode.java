@@ -92,12 +92,12 @@ class RoutineNode extends ControlStructureNode{
 
 //End control-structures - begin RobotProperties
 
+class RobotDclNode extends  AbstractNode{
+    public RobotPropertiesNode properties;
+}
+
 class RobotPropertiesNode extends AbstractNode{
-    public TextNode Name;
-    public TextNode RobotType;
-    public GunColorNode GunColor;
-    public BodyColorNode BodyColor;
-    public RadarColorNode RadarColor;
+
 }
 
 class GunColorNode extends AbstractNode{
@@ -220,6 +220,7 @@ class ConditionDeclarationNode extends AbstractNode{
 }
 
 class FunctionDeclarationNode extends AbstractNode{
+
 
 }
 
