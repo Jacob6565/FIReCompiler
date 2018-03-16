@@ -109,7 +109,7 @@ stmt		        : assignStmt SemiColon
                     ;
 routine	            : Routine Parenl (Val | id)? Parenr block
                     ;
-when		        : When Parenl (eParam) Parenr block
+when		        : When Parenl (id id) Parenr block
                     ;
 expr                : Parenl expr Parenr
                     | expr'['expr']'
@@ -137,13 +137,11 @@ ctrlStruct          : aif (aelseif)* (aelse)?
                     | While Parenl expr Parenr block
                     | routine
                     ;
-aif                  : If Parenl expr Parenr block
+aif                 : If Parenl expr Parenr block
                     ;
-aelseif              : Elseif Parenl expr Parenl  block
+aelseif             : Elseif Parenl expr Parenl  block
                     ;
-aelse                : Else  block
-                    ;
-eParam  	        : id id
+aelse               : Else  block
                     ;
 id                  : Name ( Dot id)?
                     | Name Squarel Val Squarer
