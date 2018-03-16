@@ -18,7 +18,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
             root.childList.add(visitProgBody(progBodyCtx));
         }
 
-        for(CFGParser.FuncDclContext n : ctx.funcDcl()){
+        /*for(CFGParser.FuncDclContext n : ctx.funcDcl()){
             root.childList.add(visitFuncDcl(n));
         }
 
@@ -28,16 +28,24 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
 
         for(CFGParser.ConditionDclContext n : ctx.conditionDcl()){
             root.childList.add(visitConditionDcl(n));
-        }
+        }*/
 
         return root;
     }
 
     @Override
     public AbstractNode visitProgBody(CFGParser.ProgBodyContext ctx) {
-
-
         //return super.visitProgBody(ctx);
+        if(!ctx.dcl().isEmpty())
+            return visitDcl(ctx.dcl());
+        else if(!ctx.funcDcl().isEmpty())
+            return visitFuncDcl(ctx.funcDcl());
+        else if(!ctx.strategyDcl().isEmpty())
+            return visitStrategyDcl(ctx.strategyDcl());
+        else if(!ctx.conditionDcl().isEmpty())
+            return visitConditionDcl(ctx.conditionDcl());
+        else
+            return null;
     }
 
     @Override
