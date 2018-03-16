@@ -5,6 +5,7 @@ import FIRe.Parser.*;
 
 import java.util.ArrayList;
 
+
 public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
 
     //Skal override dem alle, lige som ham på stackoverflow.
@@ -250,46 +251,94 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
 
     @Override
     public AbstractNode visitFuncCall(CFGParser.FuncCallContext ctx) {
-        return super.visitFuncCall(ctx);
+        FuncCallNode Func = new FuncCallNode();
+        Func.Id = visitId(ctx.id());
+        Func.AparamList = visitAParamList(ctx.aParamList());
+
+        return Func;
     }
 
     @Override
     public AbstractNode visitConditionDcl(CFGParser.ConditionDclContext ctx) {
-        return super.visitConditionDcl(ctx);
+        ConditionDeclarationNode CDN = new ConditionDeclarationNode();
+        CDN.Id = visitId(ctx.id());
+        if (!ctx.fParamList().isEmpty())
+            CDN.FParamList = visitFParamList(ctx.fParamList()); //Vi tilføjer den ikke, hvis den ikke findes.
+        CDN.Block = visitBlock(ctx.block());
+
+        return CDN;
     }
 
     @Override
     public AbstractNode visitAParamList(CFGParser.AParamListContext ctx) {
-        return super.visitAParamList(ctx);
+        ActualParameterNode APN = new ActualParameterNode();
+
+        while(ctx.expr() != null){
+            APN.Arguments.add(visitExpr(ctx.expr()));
+            ctx = ctx.aParamList();
+        }
+
+        return APN;
     }
 
     @Override
     public AbstractNode visitCtrlStruct(CFGParser.CtrlStructContext ctx) {
+        if (ctx.aif() != null) {
+            visitAif(ctx.aif());
+
+            if (!ctx.aelseif().isEmpty()) {
+                for (CFGParser.AelseifContext CTX : ctx.aelseif()) {
+                    visitAelseif(CTX);
+                }
+            }
+            if (ctx.aelse() != null) {
+                visitAelse(ctx.aelse());
+            }
+        }
+
+        else if (ctx.For() != null){
+            ForNode FN = new ForNode();
+            FN.Block = visitBlock(ctx.block());
+            if (ctx.dcl() != null){
+                FN.Declaration = visitDcl(ctx.dcl());
+            }
+
+            else if (!ctx.Val().isEmpty()){
+                //Vi ved ikke hvad man gør, hvis man har én Val og én Id :(
+            }
+        }
+
         return super.visitCtrlStruct(ctx);
     }
 
     @Override
     public AbstractNode visitAif(CFGParser.AifContext ctx) {
-        return super.visitAif(ctx);
+        IfControlStructureNode ICSN = new IfControlStructureNode();
+        ICSN.IfBlock = visitBlock(ctx.block());
+        ICSN.Expression = visitExpr(ctx.expr());
+
+        return ICSN;
     }
 
-    @Override
-    public AbstractNode visitAelseif(CFGParser.AelseifContext ctx) {
-        return super.visitAelseif(ctx);
+
+    public Tuple<AbstractNode,AbstractNode> visitElseif(CFGParser.AelseifContext ctx) {
+        return new Tuple<AbstractNode, AbstractNode>(visitExpr(ctx.expr()),visitBlock(ctx.block()));
     }
 
     @Override
     public AbstractNode visitAelse(CFGParser.AelseContext ctx) {
-        return super.visitAelse(ctx);
+        return visitBlock(ctx.block());
     }
 
-    @Override
-    public AbstractNode visitEParam(CFGParser.EParamContext ctx) {
-        return super.visitEParam(ctx);
-    }
 
     @Override
     public AbstractNode visitId(CFGParser.IdContext ctx) {
-        return super.visitId(ctx);
+        IdNode IN = new IdNode();
+        while(ctx.Val() != null){
+
+
+        }
+
+        return IN;
     }
 }

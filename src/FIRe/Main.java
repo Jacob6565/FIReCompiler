@@ -11,13 +11,12 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.InputStream;
 import java.util.Scanner;
-import FIRe.Parser.*;
 
 public class Main {
 
     public static void main(String[] args) throws FileNotFoundException {
 
-        Scanner in = new Scanner(new FileReader("C:\\Users\\Magnus\\Desktop\\FIReCompiler2\\src\\FIRe\\KodeEx.txt"));
+        Scanner in = new Scanner(new FileReader("src\\FIRe\\KodeEx.txt"));
 
         StringBuilder sb = new StringBuilder();
         while(in.hasNext()) {
@@ -37,7 +36,5 @@ public class Main {
         ProgNode ast = (ProgNode) new BuildASTVisitor().visitProg(cst);
 
         ast.Print();
-
-
     }
 }
