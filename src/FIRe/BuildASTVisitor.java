@@ -1,6 +1,8 @@
 package FIRe;
 
 
+import FIRe.Parser.*;
+
 public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
 
     //Skal override dem alle, lige som ham på stackoverflow.
@@ -39,7 +41,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
     }
 
     @Override
-    public AbstractNode visitStrategydcl(CFGParser.StrategydclContext ctx) {
+    public AbstractNode visitStrategyDcl(CFGParser.StrategyDclContext ctx) {
         StrategyDeclarationNode node = new StrategyDeclarationNode();
 
         node.id=new IdNode(){};
@@ -49,6 +51,11 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
 
         return node;
 
+    }
+
+    @Override
+    public AbstractNode visitStrategyBlock(CFGParser.StrategyBlockContext ctx) {
+        return super.visitStrategyBlock(ctx);
     }
 
     @Override
@@ -63,8 +70,13 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
 
 
     @Override
-    public AbstractNode visitFuncBody(CFGParser.FuncBodyContext ctx) {
-        return super.visitFuncBody(ctx);
+    public AbstractNode visitBlock(CFGParser.BlockContext ctx) {
+        return super.visitBlock(ctx);
+    }
+
+    @Override
+    public AbstractNode visitBlockBody(CFGParser.BlockBodyContext ctx) {
+        return super.visitBlockBody(ctx);
     }
 
     @Override
