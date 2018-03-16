@@ -122,24 +122,19 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
     @Override
     public AbstractNode visitRobotDcl(CFGParser.RobotDclContext ctx) {
 
-        RobotDclNode robotDclNode = new RobotDclNode();
-
-        robotDclNode.properties = (RobotPropertiesNode)visitRobotDclBody(ctx.robotDclBody());
-
-        return robotDclNode;
+        return visitRobotDclBody(ctx.robotDclBody());
     }
 
     @Override
     public AbstractNode visitRobotDclBody(CFGParser.RobotDclBodyContext ctx) {
 
-        RobotPropertiesNode robotPropertiesNode = new RobotPropertiesNode();
-
+        RobotDclBodyNode robotDclBodyNode = new RobotDclBodyNode();
         for (CFGParser.IdContext idContext: ctx.id())
         {
-         robotPropertiesNode.childList.add(visitId(idContext));
+            robotDclBodyNode.childList.add(visitId(idContext));
         }
 
-        return robotPropertiesNode;
+        return robotDclBodyNode;
     }
 
     @Override
