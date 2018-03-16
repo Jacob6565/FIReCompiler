@@ -85,9 +85,22 @@ class ForNode extends  ControlStructureNode{
 }
 
 class RoutineNode extends ControlStructureNode{
-    int val = 0;
-    String id = null;
+    String val;
 
+    public RoutineNode(String val, AbstractNode routineBlock){
+        this.val = val;
+        childList.add(routineBlock);
+    }
+
+    public RoutineNode(AbstractNode id, AbstractNode routineBlock){
+        childList.add(id);
+        childList.add(routineBlock);
+    }
+
+    public RoutineNode(AbstractNode routineBlock){
+        val = null;
+        childList.add(routineBlock);
+    }
 }
 
 //End control-structures - begin RobotProperties
@@ -212,20 +225,32 @@ class BooleanDeclarationNode extends DeclarationNode{
 //end declarations - begin Scope nodes
 
 class WhenNode extends AbstractNode{
-
+    public WhenNode(AbstractNode one, AbstractNode two){
+        childList.add(one);
+        childList.add(two);
+    }
 }
 
 class ConditionDeclarationNode extends AbstractNode{
 
 }
 
-class FunctionDeclarationNode extends AbstractNode{
+class BlockNode extends AbstractNode{
 
+
+}
+
+class FunctionDeclarationNode extends AbstractNode{
+    String Type;
+}
+
+class FormalParameterNode extends AbstractNode{
+    String type;
 }
 
 class StrategyDeclarationNode extends AbstractNode{
     public IdNode id;
-    public List<AbstractNode> childList = new ArrayList<>();
+    //public List<AbstractNode> childList = new ArrayList<>();
 }
 
 class ProgNode extends AbstractNode{

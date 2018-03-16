@@ -10,7 +10,6 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
 
     @Override
     public AbstractNode visitProg(CFGParser.ProgContext ctx) {
-        //return super.visitProg(ctx);
         ProgNode root = new ProgNode();
 
         root.childList.add(visitRobotDcl(ctx.robotDcl()));
@@ -18,24 +17,11 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
             root.childList.add(visitProgBody(progBodyCtx));
         }
 
-        /*for(CFGParser.FuncDclContext n : ctx.funcDcl()){
-            root.childList.add(visitFuncDcl(n));
-        }
-
-        for(CFGParser.StrategydclContext n : ctx.strategydcl()){
-            root.childList.add(visitStrategydcl(n));
-        }
-
-        for(CFGParser.ConditionDclContext n : ctx.conditionDcl()){
-            root.childList.add(visitConditionDcl(n));
-        }*/
-
         return root;
     }
 
     @Override
     public AbstractNode visitProgBody(CFGParser.ProgBodyContext ctx) {
-        //return super.visitProgBody(ctx);
         if(!ctx.dcl().isEmpty())
             return visitDcl(ctx.dcl());
         else if(!ctx.funcDcl().isEmpty())
@@ -52,10 +38,14 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
     public AbstractNode visitStrategyDcl(CFGParser.StrategyDclContext ctx) {
         StrategyDeclarationNode node = new StrategyDeclarationNode();
 
-        node.id=new IdNode(){};
-        node.id.Value = ctx.Strategy().getSymbol().getText();
+        node.id = (IdNode)visitId(ctx.id());
+        node.childList.add(visitFParamList(ctx.fParamList()));
 
-        //for(CFGParser.StrategydclContext
+        for(CFGParser.BlockBodyContext blockBodyCtx : ctx.blockBody())
+            node.childList.add(visitBlockBody(blockBodyCtx));
+
+        for(CFGParser.StrategyBlockContext strategyBlockCtx : ctx.strategyBlock())
+            node.childList.add(visitStrategyBlock(strategyBlockCtx));
 
         return node;
 
@@ -63,35 +53,76 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
 
     @Override
     public AbstractNode visitStrategyBlock(CFGParser.StrategyBlockContext ctx) {
-        return super.visitStrategyBlock(ctx);
+        if(!ctx.when().isEmpty())
+            return(new WhenNode(visitEParam(ctx.when().eParam()), visitBlock(ctx.when().block())));
+        else if(!ctx.routine().isEmpty()) {
+            if(!ctx.routine().id().isEmpty())
+                return (new RoutineNode(visitId(ctx.routine().id()), visitBlock(ctx.routine().block())));
+            else if(!(ctx.routine().Val().toString().isEmpty()))
+                return(new RoutineNode(ctx.routine().Val().toString(), visitBlock(ctx.routine().block())));
+            else
+                return(new RoutineNode(visitBlock(ctx.routine().block())));
+        }
+        else
+            return null;
     }
 
     @Override
     public AbstractNode visitFuncDcl(CFGParser.FuncDclContext ctx) {
-        return super.visitFuncDcl(ctx);
+        FunctionDeclarationNode node = new FunctionDeclarationNode();
+
+        if(!ctx.funcType().isEmpty())
+            node.Type = ctx.funcType().toString();
+        if(!ctx.id().isEmpty())
+            node.childList.add(visitId(ctx.id()));
+        if(!ctx.fParamList().isEmpty())
+            node.childList.add(visitFParamList(ctx.fParamList()));
+        if(!ctx.block().isEmpty())
+            node.childList.add(visitBlock(ctx.block()));
+
+        return node;
     }
 
-    @Override
+    /*@Override
     public AbstractNode visitFuncType(CFGParser.FuncTypeContext ctx) {
         return super.visitFuncType(ctx);
-    }
+    }*/
 
 
     @Override
     public AbstractNode visitBlock(CFGParser.BlockContext ctx) {
-        return super.visitBlock(ctx);
+        BlockNode blockNode = new BlockNode();
+        for(CFGParser.BlockBodyContext blockBodyCtx : ctx.blockBody())
+            blockNode.childList.add(visitBlockBody(blockBodyCtx));
+
+        return blockNode;
+
     }
 
     @Override
     public AbstractNode visitBlockBody(CFGParser.BlockBodyContext ctx) {
-        return super.visitBlockBody(ctx);
+        if(!ctx.dcl().isEmpty())
+            return visitDcl(ctx.dcl());
+        else if(!ctx.stmt().isEmpty())
+            return visitStmt(ctx.stmt());
+        else
+            return null;
     }
 
     @Override
     public AbstractNode visitFParamList(CFGParser.FParamListContext ctx) {
-        return super.visitFParamList(ctx);
+        FormalParameterNode node = new FormalParameterNode();
+
+        while(!ctx.fParamList().isEmpty()) {
+            node.type = ctx.Type().toString();
+            node.childList.add(visitId(ctx.id()));
+            ctx = ctx.fParamList();
+        }
+
+        return node;
     }
 
+//-------------------------------------------------------------------------------
     @Override
     public AbstractNode visitRobotDcl(CFGParser.RobotDclContext ctx) {
         return super.visitRobotDcl(ctx);
@@ -135,7 +166,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
     public AbstractNode visitAssignStmt(CFGParser.AssignStmtContext ctx) {
         return super.visitAssignStmt(ctx);
     }
-
+//----------------------------------------------------------------------------
     @Override
     public AbstractNode visitFuncCall(CFGParser.FuncCallContext ctx) {
         return super.visitFuncCall(ctx);
