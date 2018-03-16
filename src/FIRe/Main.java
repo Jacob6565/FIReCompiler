@@ -1,8 +1,5 @@
 package FIRe;
 
-import FIRe.Parser.FIRe.Antlr.CFGLexer;
-import FIRe.Parser.FIRe.Antlr.CFGParser;
-import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.UnbufferedCharStream;

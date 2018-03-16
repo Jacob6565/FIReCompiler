@@ -1,9 +1,9 @@
 grammar CFG;
 //Lexer rules
 //Robocode robot terminals
-RobotProperty       : 'GunColor' | 'BodyColor' | 'RadarColor' ;
-RobotTypeVal	    : 'advancedRobot' | 'juniorRobot' | 'robot' ;
-ColorVal	        : 'red' | 'blue' | 'yellow' | 'green' | 'black' | 'white' ;
+//RobotProperty       : 'GunColor' | 'BodyColor' | 'RadarColor' ;
+//RobotTypeVal	    : 'advancedRobot' | 'juniorRobot' | 'robot' ;
+//ColorVal	        : 'red' | 'blue' | 'yellow' | 'green' | 'black' | 'white' ;
 Type		        : 'number' | 'text' | 'bool' | 'number[]'
                     |'text[]' | 'bool[]'
                     ;
@@ -14,14 +14,6 @@ RobotName           : 'RobotName'
 RobotType           : 'RobotType';
 //Events types and whens
 When                : 'when';
-EType 		        : 'BattleEndedEvent' | 'BulletHitBulletEvent'
-                    | 'BulletHitEvent' | 'BulletMissedEvent' | 'CustomEvent'
-                    | 'DeathEvent' | 'HitByBulletEvent' | 'HitRobotEvent'
-                    | 'HitWallEvent' | 'KeyEvent' | 'MessageEvent' | 'MouseEvent'
-                    | 'PaintEvent' | 'RobotDeathEvent' | 'RoundEndedEvent'
-                    | 'ScannedRobotEvent' | 'SkippedTurnEvent' | 'StatusEvent'
-                    | 'WinEvent'
-                    ;
 SingleLineComment   : '//' [\u0000-\u007E]* -> skip;
 MultiLineComment    : '/*' ([\u0000-\u007E]* '*')* '/' -> skip;
 WhiteSpace          : [ \r\n\t]+ -> skip;
@@ -76,23 +68,36 @@ Condition           : 'condition';
 Name                : [A-z][A-z0-9]*;
 
 //Parser rules
-prog                : robotDcl (dcl | funcDcl | strategydcl | conditionDcl)*
+prog                : robotDcl (progBody)*
                     ;
-strategydcl     	: Strategy id Parenl fParamList? Parenr Scopel (dcl | stmt | routine | when)* Scoper
+progBody            : dcl
+                    | funcDcl
+                    | strategyDcl
+                    | conditionDcl
                     ;
-funcDcl	            : funcType id Parenl fParamList? Parenr funcBody
+strategyDcl     	: Strategy id Parenl fParamList? Parenr Scopel (blockBody)* (strategyBlock)* Scoper
+                    ;
+strategyBlock       : routine
+                    | when
+                    ;
+funcDcl	            : funcType id Parenl fParamList? Parenr block
                     ;
 funcType	        : Void
                     | Type
                     ;
-funcBody 	        :Scopel (dcl | stmt)* Scoper
+block 	            :Scopel (blockBody)* Scoper
+                    ;
+blockBody           : dcl
+                    | stmt
                     ;
 fParamList          : Type id
                     | Type id Comma fParamList
                     ;
 robotDcl 	        : RobotProperties Scopel robotDclBody Scoper
                     ;
-robotDclBody        : RobotName Colon id SemiColon RobotType Colon RobotTypeVal SemiColon (RobotProperty Colon ColorVal SemiColon)*
+
+robotDclBody        : (id Colon id SemiColon)*
+//robotDclBody        : RobotName Colon id SemiColon RobotType Colon RobotTypeVal SemiColon (RobotProperty Colon ColorVal SemiColon)*
                     ;
 dcl                 : Type id Assign expr SemiColon
                     | Type id (Comma id)* SemiColon
@@ -102,11 +107,12 @@ stmt		        : assignStmt SemiColon
                     | ctrlStruct
                     | Return expr SemiColon
                     ;
-routine	            : Routine Parenl (Val | id)? Parenr funcBody
+routine	            : Routine Parenl (Val | id)? Parenr block
                     ;
-when		        : When Parenl (eParam | id id) Parenr funcBody
+when		        : When Parenl (eParam) Parenr block
                     ;
 expr                : Parenl expr Parenr
+                    | expr'['expr']'
                     | Not expr
                     | <assoc=right> expr Hat expr
                     | expr MultiOp expr
@@ -122,22 +128,22 @@ assignStmt	        : id Assign expr
                     ;
 funcCall	        : id Parenl aParamList? Parenr
                     ;
-conditionDcl        : Condition id Parenl fParamList? Parenr funcBody
+conditionDcl        : Condition id Parenl fParamList? Parenr block
                     ;
 aParamList          : expr (Comma aParamList)?
                     ;
 ctrlStruct          : aif (aelseif)* (aelse)?
-                    | For Parenl (dcl | Val | id) (Upto | Downto) (Val | id) Parenr funcBody
-                    | While Parenl expr Parenr funcBody
+                    | For Parenl (dcl | Val | id) (Upto | Downto) (Val | id) Parenr block
+                    | While Parenl expr Parenr block
                     | routine
                     ;
-aif                  : If Parenl expr Parenr funcBody
+aif                  : If Parenl expr Parenr block
                     ;
-aelseif              : Elseif Parenl expr Parenl  funcBody
+aelseif              : Elseif Parenl expr Parenl  block
                     ;
-aelse                : Else  funcBody
+aelse                : Else  block
                     ;
-eParam  	        : EType id
+eParam  	        : id id
                     ;
 id                  : Name ( Dot id)?
                     | Name Squarel Val Squarer

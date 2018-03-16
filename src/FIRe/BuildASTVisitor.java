@@ -1,10 +1,5 @@
 package FIRe;
 
-import FIRe.Parser.FIRe.Antlr.CFGBaseVisitor;
-import FIRe.Parser.FIRe.Antlr.CFGParser;
-import org.antlr.v4.runtime.tree.ParseTree;
-import org.antlr.v4.runtime.tree.RuleNode;
-
 
 public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
 
@@ -17,9 +12,8 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         ProgNode root = new ProgNode();
 
         root.childList.add(visitRobotDcl(ctx.robotDcl()));
-
-        for(CFGParser.DclContext n : ctx.dcl()){
-            root.childList.add(visitDcl(n));
+        for(CFGParser.ProgBodyContext progBodyCtx: ctx.progBody()){
+            root.childList.add(visitProgBody(progBodyCtx));
         }
 
         for(CFGParser.FuncDclContext n : ctx.funcDcl()){
@@ -35,6 +29,13 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         }
 
         return root;
+    }
+
+    @Override
+    public AbstractNode visitProgBody(CFGParser.ProgBodyContext ctx) {
+
+
+        //return super.visitProgBody(ctx);
     }
 
     @Override
