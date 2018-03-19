@@ -142,7 +142,6 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
     public AbstractNode visitDcl(CFGParser.DclContext ctx) {
 
         if(ctx.expr() != null){
-            visitExpr(ctx.expr());
             if(ctx.Type().toString().equals("number")){ //måske det her ikke virker som vi lige tænkte
 
                 NumberDeclarationNode numberDeclarationNode = new NumberDeclarationNode();
