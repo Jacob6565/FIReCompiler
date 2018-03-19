@@ -1,4 +1,4 @@
-package FIRe.Parser;
+package FIRe;
 
 public class Tuple<X, Y> {
     public final X x;

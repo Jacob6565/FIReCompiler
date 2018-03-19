@@ -2,11 +2,12 @@ package FIRe;
 
 
 import FIRe.Parser.Tuple;
-import javafx.util.Pair;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 //begin enums
 enum Color{
@@ -255,11 +256,11 @@ class BlockNode extends AbstractNode{
 }
 
 class FunctionDeclarationNode extends AbstractNode{
-    String Type;
+    String type;
 }
 
 class FormalParameterNode extends AbstractNode{
-    String type;
+    Map<AbstractNode, String> parameterMap = new HashMap<AbstractNode, String>();
 }
 
 class StrategyDeclarationNode extends AbstractNode{

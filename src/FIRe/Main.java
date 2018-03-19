@@ -1,7 +1,5 @@
 package FIRe;
 
-import FIRe.Parser.CFGLexer;
-import FIRe.Parser.CFGParser;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.UnbufferedCharStream;
@@ -30,7 +28,6 @@ public class Main {
         CFGLexer lexer = new CFGLexer(charStream);
         CommonTokenStream tokenStream = new CommonTokenStream(lexer);
         CFGParser parser = new CFGParser(tokenStream);
-
 
         CFGParser.ProgContext cst = parser.prog();
         ProgNode ast = (ProgNode) new BuildASTVisitor().visitProg(cst);
