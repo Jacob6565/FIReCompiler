@@ -29,7 +29,6 @@ public class Main {
         CommonTokenStream tokenStream = new CommonTokenStream(lexer);
         CFGParser parser = new CFGParser(tokenStream);
 
-
         CFGParser.ProgContext cst = parser.prog();
         ProgNode ast = (ProgNode) new BuildASTVisitor().visitProg(cst);
 

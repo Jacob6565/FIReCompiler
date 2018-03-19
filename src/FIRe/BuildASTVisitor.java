@@ -3,6 +3,9 @@ package FIRe;
 
 import FIRe.Parser.*;
 
+import java.util.ArrayList;
+
+
 public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
 
     //Skal override dem alle, lige som ham på stackoverflow.
@@ -141,14 +144,13 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
     public AbstractNode visitDcl(CFGParser.DclContext ctx) {
 
         if(ctx.expr() != null){
-            visitExpr(ctx.expr());
             if(ctx.Type().toString().equals("number")){ //måske det her ikke virker som vi lige tænkte
 
                 NumberDeclarationNode numberDeclarationNode = new NumberDeclarationNode();
                 numberDeclarationNode.childList.add(visitId(ctx.id(0))); //0 fordi vi tror der er tale om det første og eneste element i listen som vi vil tilføje
 
                 numberDeclarationNode.childList.add(visitExpr(ctx.expr()));
-               return numberDeclarationNode;
+                return numberDeclarationNode;
             }
 
             else if(ctx.Type().toString().equals("text")){
@@ -205,8 +207,8 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
                 }
                 return booleanDeclarationNode;
             }
-
-            return null;
+            else
+                return null;
         }
     }
 
