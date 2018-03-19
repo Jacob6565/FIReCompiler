@@ -34,14 +34,12 @@ public abstract class ASTVisitor<T>
     public abstract T visit(PowerNode node);
     public abstract T visit(RadarColorNode node);
     public abstract T visit(ReturnNode node);
-    public abstract T visit(RobotPropertiesNode node);
     public abstract T visit(RoutineNode node);
     public abstract T visit(StatementNode node);
     public abstract T visit(StrategyDeclarationNode node);
     public abstract T visit(TextDeclarationNode node);
     public abstract T visit(TextNode node);
-    public abstract T visit(TypeFuncCallNode node);
-    public abstract T visit(VoidFuncCallNode node);
+    public abstract T visit(FuncCallNode node);
     public abstract T visit(WhenNode node);
     public abstract T visit(WhileNode node);
 
@@ -49,7 +47,4 @@ public abstract class ASTVisitor<T>
     //Da Java ikke har keyworded "dynamic" 
     public abstract T visit(AbstractNode node);
     public abstract T visit(ExpressionNode node);
-
-
-
 }

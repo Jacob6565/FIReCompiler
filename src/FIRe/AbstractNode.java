@@ -1,7 +1,7 @@
 package FIRe;
 
 
-import FIRe.Parser.Tuple;
+
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -65,7 +65,7 @@ abstract class DeclarationNode extends AbstractNode{
 }
 
 abstract class ControlStructureNode extends AbstractNode{
-
+    public boolean Incremental;
 }
 
 abstract class InfixExpressionNode extends ExpressionNode{
@@ -77,10 +77,6 @@ abstract class InfixExpressionNode extends ExpressionNode{
 //End abstract classes - begin control structures
 
 class IfControlStructureNode extends ControlStructureNode{
-    public AbstractNode Expression;
-    public AbstractNode IfBlock;
-    public List<Tuple<AbstractNode,AbstractNode>> ElseIfs;
-    public AbstractNode ElseBlock;
 }
 
 class WhileNode extends ControlStructureNode{
@@ -88,13 +84,6 @@ class WhileNode extends ControlStructureNode{
 }
 
 class ForNode extends  ControlStructureNode{
-    public AbstractNode Declaration;
-    public AbstractNode Block;
-    public AbstractNode Val1;
-    public AbstractNode Val2;
-    public AbstractNode Id1;
-    public AbstractNode Id2;
-    public boolean upto;
 }
 
 class RoutineNode extends ControlStructureNode{
@@ -245,17 +234,12 @@ class AssignNode extends StatementNode{
 }
 
 class FuncCallNode extends StatementNode{
-    public AbstractNode Id;
-    public AbstractNode AparamList;
-
 }
 
 class ActualParameterNode extends AbstractNode{
-    public List<AbstractNode> Arguments;
 }
 
 class ReturnNode extends StatementNode{
-
 }
 
 //end statements begin declarations
@@ -282,13 +266,9 @@ class WhenNode extends AbstractNode{
 }
 
 class ConditionDeclarationNode extends AbstractNode{
-    public AbstractNode Id;
-    public AbstractNode FParamList;
-    public AbstractNode Block;
 }
 
 class BlockNode extends AbstractNode{
-
 
 }
 
