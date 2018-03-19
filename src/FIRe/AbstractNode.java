@@ -65,7 +65,7 @@ abstract class DeclarationNode extends AbstractNode{
 }
 
 abstract class ControlStructureNode extends AbstractNode{
-
+    public boolean Incremental;
 }
 
 abstract class InfixExpressionNode extends ExpressionNode{

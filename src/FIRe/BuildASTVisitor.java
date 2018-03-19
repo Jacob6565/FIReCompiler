@@ -3,8 +3,6 @@ package FIRe;
 
 import FIRe.Parser.*;
 
-import java.util.ArrayList;
-
 
 public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
 
@@ -298,33 +296,66 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
 
     @Override
     public AbstractNode visitCtrlStruct(CFGParser.CtrlStructContext ctx) {
+
         if (ctx.aif() != null) {
             IfControlStructureNode IfNode = new IfControlStructureNode();
             IfNode.childList.add(visitAif(ctx.aif()));
 
             if (!ctx.aelseif().isEmpty()) {
                 for (CFGParser.AelseifContext CTX : ctx.aelseif()) {
-                    IfNode.childList.add(visitAelseif(CTX));
+                    IfNode.childList.add(visitExpr(CTX.expr()));
+                    IfNode.childList.add(visitBlock(CTX.block()));
                 }
             }
             if (ctx.aelse() != null) {
-                IfNode.childList.add(visitAelse(ctx.aelse()));
+                IfNode.childList.add(visitBlock(ctx.aelse().block()));
             }
+            return IfNode;
         }
 
         else if (ctx.For() != null){
             ForNode FN = new ForNode();
-            FN.Block = visitBlock(ctx.block());
-            if (ctx.dcl() != null){
-                FN.Declaration = visitDcl(ctx.dcl());
+            if (ctx.dcl() != null){//I denne if-kæde afgør vi det første led i for-løkken
+                FN.childList.add(visitDcl(ctx.dcl()));
+            }
+            else if (ctx.Val(0) != null){ //Vi ser om den først val er forskellig fra null, jeg håber det kan bruges sådan. Crossing fingers
+                FN.childList.add(visitTerminal(ctx.Val(0)));
+            }
+            else if (ctx.id(0) != null){
+                FN.childList.add(visitId(ctx.id(0)));
+            }
+            else
+                return null;
+
+            //Vi sætter en bool, der afgør om løkken kører op eller ned.
+            //Incremental == kører opad.
+            FN.Incremental = ctx.Downto() == null;
+
+            if (ctx.Val(1) != null){ //Her afgør vi det andet led i løkken.
+                FN.childList.add(visitTerminal(ctx.Val(1)));
+            }
+            else if (ctx.id(1) != null){
+                FN.childList.add(visitId(ctx.id(1)));
             }
 
-            else if (!ctx.Val().isEmpty()){
-                //Vi ved ikke hvad man gør, hvis man har én Val og én Id :(
-            }
+            FN.childList.add(visitBlock(ctx.block())); //Her er blokken af koden, der skal udføres.
+
+            return FN;
         }
 
-        return super.visitCtrlStruct(ctx);
+        else if (ctx.While() != null){ //While-noden får en expression og en block.
+            WhileNode node = new WhileNode();
+            node.childList.add(visitExpr(ctx.expr()));
+            node.childList.add(visitBlock(ctx.block()));
+            return node;
+        }
+
+        else if (ctx.routine() != null){
+            return (visitRoutine(ctx.routine())); //Smider ansvaret videre
+        }
+
+        else //Burde ikke ske. Vi returnere null, hvis det går helt galt.
+            return null;
     }
 
     @Override
@@ -336,16 +367,17 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         return ICSN;
     }
 
+    /*
     @Override
     public AbstractNode visitAelseif(CFGParser.AelseifContext ctx) {
-        return null;
+
     }
 
     @Override
     public AbstractNode visitAelse(CFGParser.AelseContext ctx) {
         return visitBlock(ctx.block());
     }
-
+    */
 
     @Override
     public AbstractNode visitId(CFGParser.IdContext ctx) {
