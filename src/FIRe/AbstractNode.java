@@ -1,7 +1,7 @@
 package FIRe;
 
 
-import FIRe.Parser.Tuple;
+
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
