@@ -148,7 +148,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
                 numberDeclarationNode.childList.add(visitId(ctx.id(0))); //0 fordi vi tror der er tale om det første og eneste element i listen som vi vil tilføje
 
                 numberDeclarationNode.childList.add(visitExpr(ctx.expr()));
-               return numberDeclarationNode;
+                return numberDeclarationNode;
             }
 
             else if(ctx.Type().toString().equals("text")){
@@ -205,9 +205,8 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
                 }
                 return booleanDeclarationNode;
             }
-
-            return
-                    null;
+            else
+                return null;
         }
     }
 
