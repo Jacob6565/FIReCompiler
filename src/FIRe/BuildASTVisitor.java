@@ -235,9 +235,238 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
 
     @Override
     public AbstractNode visitExpr(CFGParser.ExprContext ctx) {
-        return super.visitExpr(ctx);
+        AbstractNode node;
 
+        if(!ctx.BoolVal().toString().isEmpty())
+            node = CreateBoolNode(ctx);
+        else if(!ctx.Val().toString().isEmpty())
+            node = CreateValNode(ctx);
+        else if(!ctx.id().Name().toString().isEmpty())
+            node = visitId(ctx.id());
+        else if(!ctx.funcCall().id().Name().toString().isEmpty())
+            node = visitFuncCall(ctx.funcCall());
+        else if(!ctx.Not().toString().isEmpty())
+            node = CreateNotNode(ctx);
+        else if(!ctx.Squarel().toString().isEmpty())
+            node = CreateArrayAccessNode(ctx);
+        else node = null;
+
+        /*
+        else if(!ctx.Hat().toString().isEmpty())
+            node = CreateInFixExprNode(ctx);
+        else if(!ctx.MultiOp().toString().isEmpty()){
+            node = CreateInFixExprNode(ctx);
+        }
+        else if(!ctx.AdditiveOp().toString().isEmpty()){
+            node = CreateInFixExprNode(ctx);
+        }
+        else if(!ctx.BoolOp().toString().isEmpty()){
+            node = CreateInFixExprNode(ctx);
+        }
+        else if(!ctx.RelativeOp().toString().isEmpty()){
+            node = CreateInFixExprNode(ctx);
+        }
+        */
+        if(ctx.expr().size() > 1 && ctx.Squarel().toString().isEmpty())
+            CreateInFixExprNode(ctx);
+
+        return node;
     }
+
+    BoolNode CreateBoolNode(CFGParser.ExprContext ctx){
+        BoolNode node = new BoolNode();
+        if(ctx.BoolVal().toString().equals("true"))
+            node.value = true;
+        else
+            node.value = false;
+        return node;
+    }
+
+    ValNode CreateValNode(CFGParser.ExprContext ctx){
+        ValNode node;
+        if(tryParseDouble(ctx.Val().toString()))
+            node = new NumberNode(Double.parseDouble(ctx.Val().toString()));
+        else
+            node = new TextNode(ctx.Val().toString());
+        return node;
+    }
+
+    NotNode CreateNotNode(CFGParser.ExprContext ctx){
+        NotNode node = new NotNode();
+        node.Expression = (ExpressionNode)visitExpr(ctx.expr().get(0));
+        return node;
+    }
+
+
+
+    boolean tryParseDouble(String value) {
+        try {
+            Double.parseDouble(value);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+
+    InfixExpressionNode CreateInFixExprNode(CFGParser.ExprContext ctx){
+        InfixExpressionNode node = null;
+
+        if(!ctx.MultiOp().toString().isEmpty()){
+            if(ctx.MultiOp().toString().equals("*"))
+                node = CreateTimesNode(ctx);
+            else if(ctx.MultiOp().toString().equals("/"))
+                node = CreateDivisionNode(ctx);
+            else if(ctx.MultiOp().toString().equals("%"))
+                node = CreateModuloNode(ctx);
+        }
+        else if(!ctx.AdditiveOp().toString().isEmpty()){
+            if(ctx.AdditiveOp().toString().equals("+"))
+                node = CreatePlusNode(ctx);
+            else if(ctx.AdditiveOp().toString().equals("-"))
+                node = CreateMinusNode(ctx);
+        }
+        else if(!ctx.BoolOp().toString().isEmpty()){
+            if(ctx.BoolOp().toString().equals("and"))
+                node = CreateAndNode(ctx);
+            else if(ctx.BoolOp().toString().equals("or"))
+                node = CreateOrNode(ctx);
+        }
+
+        else if(!ctx.RelativeOp().toString().isEmpty()){
+            if(ctx.RelativeOp().toString().equals("<"))
+                node = CreateLessThanNode(ctx);
+            else if(ctx.RelativeOp().toString().equals(">"))
+                node = CreateGreaterThanNode(ctx);
+            else if(ctx.RelativeOp().toString().equals("=="))
+                node = CreateEqualsNode(ctx);
+            else if(ctx.RelativeOp().toString().equals("!="))
+                node = CreateNotEqualsNode(ctx);
+            else if(ctx.RelativeOp().toString().equals("<="))
+                node = CreateLEQNode(ctx);
+            else if(ctx.RelativeOp().toString().equals(">="))
+                node = CreateGEQNode(ctx);
+        }
+        else if(!ctx.Hat().toString().isEmpty())
+            node = CreateExponentNode(ctx);
+
+        return node;
+    }
+
+    MultiplicationNode CreateTimesNode(CFGParser.ExprContext ctx){
+        MultiplicationNode node = new MultiplicationNode();
+
+        node.LeftChild = (ExpressionNode) visitExpr(ctx.expr().get(0));
+        node.RightChild = (ExpressionNode) visitExpr(ctx.expr().get(1));
+
+        return node;
+    }
+
+    DivisionNode CreateDivisionNode(CFGParser.ExprContext ctx){
+        DivisionNode node = new DivisionNode();
+        node.LeftChild = (ExpressionNode) visitExpr(ctx.expr().get(0));
+        node.RightChild = (ExpressionNode) visitExpr(ctx.expr().get(1));
+
+        return node;
+    }
+
+    ModuloNode CreateModuloNode(CFGParser.ExprContext ctx){
+        ModuloNode node = new ModuloNode();
+        node.LeftChild = (ExpressionNode) visitExpr(ctx.expr().get(0));
+        node.RightChild = (ExpressionNode) visitExpr(ctx.expr().get(1));
+
+        return node;
+    }
+
+    AdditionNode CreatePlusNode(CFGParser.ExprContext ctx){
+        AdditionNode node = new AdditionNode();
+        node.LeftChild = (ExpressionNode) visitExpr(ctx.expr().get(0));
+        node.RightChild = (ExpressionNode) visitExpr(ctx.expr().get(1));
+
+        return node;
+    }
+
+    SubtractionNode CreateMinusNode(CFGParser.ExprContext ctx){
+        SubtractionNode node = new SubtractionNode();
+        node.LeftChild = (ExpressionNode) visitExpr(ctx.expr().get(0));
+        node.RightChild = (ExpressionNode) visitExpr(ctx.expr().get(1));
+
+        return node;
+    }
+
+    AndNode CreateAndNode(CFGParser.ExprContext ctx){
+        AndNode node = new AndNode();
+        node.LeftChild = (ExpressionNode) visitExpr(ctx.expr().get(0));
+        node.RightChild = (ExpressionNode) visitExpr(ctx.expr().get(1));
+
+        return node;
+    }
+
+    OrNode CreateOrNode(CFGParser.ExprContext ctx){
+        OrNode node = new OrNode();
+        node.LeftChild = (ExpressionNode) visitExpr(ctx.expr().get(0));
+        node.RightChild = (ExpressionNode) visitExpr(ctx.expr().get(1));
+
+        return node;
+    }
+
+    LessThanNode CreateLessThanNode(CFGParser.ExprContext ctx){
+        LessThanNode node = new LessThanNode();
+        node.LeftChild = (ExpressionNode) visitExpr(ctx.expr().get(0));
+        node.RightChild = (ExpressionNode) visitExpr(ctx.expr().get(1));
+
+        return node;
+    }
+
+    GreaterThanNode CreateGreaterThanNode(CFGParser.ExprContext ctx){
+        GreaterThanNode node = new GreaterThanNode();
+        node.LeftChild = (ExpressionNode) visitExpr(ctx.expr().get(0));
+        node.RightChild = (ExpressionNode) visitExpr(ctx.expr().get(1));
+
+        return node;
+    }
+
+    EqualsNode CreateEqualsNode(CFGParser.ExprContext ctx){
+        EqualsNode node = new EqualsNode();
+        node.LeftChild = (ExpressionNode) visitExpr(ctx.expr().get(0));
+        node.RightChild = (ExpressionNode) visitExpr(ctx.expr().get(1));
+
+        return node;
+    }
+
+    NotEqualsNode CreateNotEqualsNode(CFGParser.ExprContext ctx){
+        NotEqualsNode node = new NotEqualsNode();
+        node.LeftChild = (ExpressionNode) visitExpr(ctx.expr().get(0));
+        node.RightChild = (ExpressionNode) visitExpr(ctx.expr().get(1));
+
+        return node;
+    }
+
+    LEQNode CreateLEQNode(CFGParser.ExprContext ctx){
+        LEQNode node = new LEQNode();
+        node.LeftChild = (ExpressionNode) visitExpr(ctx.expr().get(0));
+        node.RightChild = (ExpressionNode) visitExpr(ctx.expr().get(1));
+
+        return node;
+    }
+
+    GEQNode CreateGEQNode(CFGParser.ExprContext ctx){
+        GEQNode node = new GEQNode();
+        node.LeftChild = (ExpressionNode) visitExpr(ctx.expr().get(0));
+        node.RightChild = (ExpressionNode) visitExpr(ctx.expr().get(1));
+
+        return node;
+    }
+
+    PowerNode CreateExponentNode(CFGParser.ExprContext ctx){
+        PowerNode node = new PowerNode();
+        node.LeftChild = (ExpressionNode) visitExpr(ctx.expr().get(0));
+        node.RightChild = (ExpressionNode) visitExpr(ctx.expr().get(1));
+
+        return node;
+    }
+
+
 
     @Override
     public AbstractNode visitAssignStmt(CFGParser.AssignStmtContext ctx) {
@@ -333,12 +562,18 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
 
     @Override
     public AbstractNode visitId(CFGParser.IdContext ctx) {
-        IdNode IN = new IdNode();
-        while(ctx.Val() != null){
+        IdNode node = new IdNode();
 
+        node.name = ctx.Name().toString();
 
+        while(ctx.id() != null){
+            node.name = node.name + "." + ctx.id().Name().toString();
+            ctx = ctx.id();
+        }
+        if(!ctx.Val().toString().isEmpty()){
+            node.name = node.name + "[" + ctx.Val().toString() + "]";
         }
 
-        return IN;
+        return node;
     }
 }

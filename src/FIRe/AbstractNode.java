@@ -135,20 +135,33 @@ class RadarColorNode extends AbstractNode{
 
 //end RobotProperties - begin Types
 
-class TextNode extends AbstractNode{
+class ValNode extends ExpressionNode{
+
+}
+
+class TextNode extends ValNode{
     public String Content;
+
+    public TextNode(){}
+    public TextNode(String content){
+        Content = content;
+    }
 }
 
 class ColorValNode extends AbstractNode{
     public Color Color;
 }
 
-class NumberNode extends ExpressionNode{
-    public double Value;
+class NumberNode extends ValNode{
+    public double value;
+    public NumberNode(){}
+    public NumberNode(double value){
+        this.value = value;
+    }
 }
 
 class BoolNode extends ExpressionNode{
-    public boolean Value;
+    public boolean value;
 }
 
 //end types - begin expressions
@@ -193,8 +206,32 @@ class ModuloNode extends InfixExpressionNode{
 
 }
 
+class GreaterThanNode extends InfixExpressionNode{
+
+}
+
+class LessThanNode extends InfixExpressionNode{
+
+}
+
+class GEQNode extends InfixExpressionNode{
+
+}
+
+class LEQNode extends InfixExpressionNode{
+
+}
+
+class EqualsNode extends InfixExpressionNode{
+
+}
+
+class NotEqualsNode extends  InfixExpressionNode{
+
+}
+
 class IdNode extends ExpressionNode{
-    public String Value;
+    public String name;
 
 
 

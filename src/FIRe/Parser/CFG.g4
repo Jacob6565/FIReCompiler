@@ -112,7 +112,7 @@ routine	            : Routine Parenl (Val | id)? Parenr block
 when		        : When Parenl (id id) Parenr block
                     ;
 expr                : Parenl expr Parenr
-                    | expr'['expr']'
+                    | expr Squarel expr Squarer
                     | Not expr
                     | <assoc=right> expr Hat expr
                     | expr MultiOp expr
