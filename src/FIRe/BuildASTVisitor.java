@@ -214,7 +214,22 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
 
     @Override
     public AbstractNode visitStmt(CFGParser.StmtContext ctx) {
-        return super.visitStmt(ctx);
+
+        if(ctx.assignStmt() != null){
+            return visitAssignStmt(ctx.assignStmt());
+        }
+        else if (ctx.funcCall() != null){
+            return visitFuncCall(ctx.funcCall());
+        }
+        else if (ctx.ctrlStruct() != null){
+            return visitCtrlStruct(ctx.ctrlStruct());
+        }
+        else if(ctx.expr() != null){
+            return visitExpr(ctx.expr());
+        }
+        else
+            return  null;
+
     }
 
     @Override
