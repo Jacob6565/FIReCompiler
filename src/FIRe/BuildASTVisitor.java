@@ -238,7 +238,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
 
     @Override
     public AbstractNode visitExpr(CFGParser.ExprContext ctx) {
-        AbstractNode node;
+        AbstractNode node = null;
 
         if(!ctx.BoolVal().toString().isEmpty())
             node = CreateBoolNode(ctx);
@@ -250,9 +250,6 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
             node = visitFuncCall(ctx.funcCall());
         else if(!ctx.Not().toString().isEmpty())
             node = CreateNotNode(ctx);
-        else if(!ctx.Squarel().toString().isEmpty())
-            node = CreateArrayAccessNode(ctx);
-        else node = null;
 
         /*
         else if(!ctx.Hat().toString().isEmpty())
@@ -271,7 +268,9 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         }
         */
         if(ctx.expr().size() > 1 && ctx.Squarel().toString().isEmpty())
-            CreateInFixExprNode(ctx);
+            node = CreateInFixExprNode(ctx);
+        else if(ctx.expr().size() > 1 && !ctx.Squarel().toString().isEmpty())
+            node = CreateArrayAccessNode(ctx);
 
         return node;
     }
@@ -465,6 +464,14 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         PowerNode node = new PowerNode();
         node.LeftChild = (ExpressionNode) visitExpr(ctx.expr().get(0));
         node.RightChild = (ExpressionNode) visitExpr(ctx.expr().get(1));
+
+        return node;
+    }
+
+    ArrayAccessNode CreateArrayAccessNode(CFGParser.ExprContext ctx){
+        ArrayAccessNode node = new ArrayAccessNode();
+        node.id = (ExpressionNode) visitExpr(ctx.expr().get(0));
+        node.index = (ExpressionNode) visitExpr(ctx.expr().get(1));
 
         return node;
     }

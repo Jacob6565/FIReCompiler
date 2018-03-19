@@ -128,6 +128,11 @@ class ValNode extends ExpressionNode{
 
 }
 
+class ArrayAccessNode extends ExpressionNode{
+    ExpressionNode id;
+    ExpressionNode index;
+}
+
 class TextNode extends ValNode{
     public String Content;
 
