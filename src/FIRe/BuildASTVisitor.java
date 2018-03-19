@@ -3,9 +3,6 @@ package FIRe;
 
 import FIRe.Parser.*;
 
-import java.util.ArrayList;
-
-
 public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
 
     //Skal override dem alle, lige som ham på stackoverflow.
@@ -25,13 +22,13 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
 
     @Override
     public AbstractNode visitProgBody(CFGParser.ProgBodyContext ctx) {
-        if(!ctx.dcl().isEmpty())
+        if(ctx.dcl() != null)
             return visitDcl(ctx.dcl());
-        else if(!ctx.funcDcl().isEmpty())
+        else if(ctx.funcDcl() != null)
             return visitFuncDcl(ctx.funcDcl());
-        else if(!ctx.strategyDcl().isEmpty())
+        else if(ctx.strategyDcl() != null)
             return visitStrategyDcl(ctx.strategyDcl());
-        else if(!ctx.conditionDcl().isEmpty())
+        else if(ctx.conditionDcl() != null)
             return visitConditionDcl(ctx.conditionDcl());
         else
             return null;
@@ -56,9 +53,9 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
 
     @Override
     public AbstractNode visitStrategyBlock(CFGParser.StrategyBlockContext ctx) {
-        if(!ctx.when().isEmpty())
+        if(ctx.when() != null)
             return(visitWhen(ctx.when()));
-        else if(!ctx.routine().isEmpty())
+        else if(ctx.routine() != null)
             return (visitRoutine(ctx.routine()));
         else
             return null;
@@ -68,13 +65,13 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
     public AbstractNode visitFuncDcl(CFGParser.FuncDclContext ctx) {
         FunctionDeclarationNode node = new FunctionDeclarationNode();
 
-        if(!ctx.funcType().isEmpty())
-            node.Type = ctx.funcType().toString();
-        if(!ctx.id().isEmpty())
+        if(ctx.funcType() != null)
+            node.type = ctx.funcType().toString();
+        if(ctx.id() != null)
             node.childList.add(visitId(ctx.id()));
-        if(!ctx.fParamList().isEmpty())
+        if(ctx.fParamList() != null)
             node.childList.add(visitFParamList(ctx.fParamList()));
-        if(!ctx.block().isEmpty())
+        if(ctx.block() != null)
             node.childList.add(visitBlock(ctx.block()));
 
         return node;
@@ -98,9 +95,9 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
 
     @Override
     public AbstractNode visitBlockBody(CFGParser.BlockBodyContext ctx) {
-        if(!ctx.dcl().isEmpty())
+        if(ctx.dcl() != null)
             return visitDcl(ctx.dcl());
-        else if(!ctx.stmt().isEmpty())
+        else if(ctx.stmt() != null)
             return visitStmt(ctx.stmt());
         else
             return null;
@@ -110,9 +107,11 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
     public AbstractNode visitFParamList(CFGParser.FParamListContext ctx) {
         FormalParameterNode node = new FormalParameterNode();
 
-        while(!ctx.fParamList().isEmpty()) {
-            node.type = ctx.Type().toString();
-            node.childList.add(visitId(ctx.id()));
+        while(ctx.fParamList() != null) {
+
+            node.parameterMap.put(visitId(ctx.id()), ctx.Type().toString());
+            //node.childList.add(ctx.Type().toString());
+            //node.childList.add(visitId(ctx.id()));
             ctx = ctx.fParamList();
         }
 
@@ -207,8 +206,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
                 return booleanDeclarationNode;
             }
 
-            return
-                    null;
+            return null;
         }
     }
 
@@ -219,9 +217,9 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
 
     @Override
     public AbstractNode visitRoutine(CFGParser.RoutineContext ctx) {
-        if(!ctx.id().isEmpty())
+        if(ctx.id() != null)
             return (new RoutineNode(visitId(ctx.id()), visitBlock(ctx.block())));
-        else if(!(ctx.Val().toString().isEmpty()))
+        else if(!ctx.Val().toString().isEmpty())
             return(new RoutineNode(ctx.Val().toString(), visitBlock(ctx.block())));
         else
             return(new RoutineNode(visitBlock(ctx.block())));
@@ -230,7 +228,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
     @Override
     public AbstractNode visitWhen(CFGParser.WhenContext ctx) {
 
-       return(new WhenNode(visitEParam(ctx.eParam()), visitBlock(ctx.block())));
+       return(new WhenNode(visitId(ctx.id().get(0)), visitId(ctx.id().get(1))));
     }
 
     @Override
