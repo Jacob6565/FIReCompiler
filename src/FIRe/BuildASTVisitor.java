@@ -251,20 +251,20 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
 
     @Override
     public AbstractNode visitFuncCall(CFGParser.FuncCallContext ctx) {
-        FuncCallNode Func = new FuncCallNode();
-        Func.Id = visitId(ctx.id());
-        Func.AparamList = visitAParamList(ctx.aParamList());
+        FuncCallNode func = new FuncCallNode();
+        func.childList.add(visitId(ctx.id()));
+        func.childList.add(visitAParamList(ctx.aParamList()));
 
-        return Func;
+        return func;
     }
 
     @Override
     public AbstractNode visitConditionDcl(CFGParser.ConditionDclContext ctx) {
         ConditionDeclarationNode CDN = new ConditionDeclarationNode();
-        CDN.Id = visitId(ctx.id());
+        CDN.childList.add(visitId(ctx.id()));
         if (!ctx.fParamList().isEmpty())
-            CDN.FParamList = visitFParamList(ctx.fParamList()); //Vi tilføjer den ikke, hvis den ikke findes.
-        CDN.Block = visitBlock(ctx.block());
+            CDN.childList.add(visitFParamList(ctx.fParamList())); //Vi tilføjer den ikke, hvis den ikke findes.
+        CDN.childList.add(visitBlock(ctx.block()));
 
         return CDN;
     }
@@ -273,8 +273,8 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
     public AbstractNode visitAParamList(CFGParser.AParamListContext ctx) {
         ActualParameterNode APN = new ActualParameterNode();
 
-        while(ctx.expr() != null){
-            APN.Arguments.add(visitExpr(ctx.expr()));
+        while(ctx != null){
+            APN.childList.add(visitExpr(ctx.expr()));
             ctx = ctx.aParamList();
         }
 
@@ -284,15 +284,16 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
     @Override
     public AbstractNode visitCtrlStruct(CFGParser.CtrlStructContext ctx) {
         if (ctx.aif() != null) {
-            visitAif(ctx.aif());
+            IfControlStructureNode IfNode = new IfControlStructureNode();
+            IfNode.childList.add(visitAif(ctx.aif()));
 
             if (!ctx.aelseif().isEmpty()) {
                 for (CFGParser.AelseifContext CTX : ctx.aelseif()) {
-                    visitAelseif(CTX);
+                    IfNode.childList.add(visitAelseif(CTX));
                 }
             }
             if (ctx.aelse() != null) {
-                visitAelse(ctx.aelse());
+                IfNode.childList.add(visitAelse(ctx.aelse()));
             }
         }
 
@@ -314,15 +315,15 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
     @Override
     public AbstractNode visitAif(CFGParser.AifContext ctx) {
         IfControlStructureNode ICSN = new IfControlStructureNode();
-        ICSN.IfBlock = visitBlock(ctx.block());
-        ICSN.Expression = visitExpr(ctx.expr());
+        ICSN.childList.add(visitBlock(ctx.block()));
+        ICSN.childList.add(visitExpr(ctx.expr()));
 
         return ICSN;
     }
 
-
-    public Tuple<AbstractNode,AbstractNode> visitElseif(CFGParser.AelseifContext ctx) {
-        return new Tuple<AbstractNode, AbstractNode>(visitExpr(ctx.expr()),visitBlock(ctx.block()));
+    @Override
+    public AbstractNode visitAelseif(CFGParser.AelseifContext ctx) {
+        return null;
     }
 
     @Override
