@@ -3,6 +3,7 @@ package FIRe;
 
 
 
+import java.beans.Expression;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -77,15 +78,13 @@ abstract class InfixExpressionNode extends ExpressionNode{
 
 //End abstract classes - begin control structures
 
-class IfControlStructureNode extends ControlStructureNode {
+class IfControlStructureNode extends ControlStructureNode{
     @Override
     public void accept(ASTVisitor v) {
         v.visit(this);
-        for (AbstractNode child : this.childList) {
-
+        for (AbstractNode child:childList) {
             if(child != null)
                 child.accept(v);
-
         }
     }
 }
@@ -95,7 +94,7 @@ class WhileNode extends ControlStructureNode{
     @Override
     public void accept(ASTVisitor v) {
         v.visit(this);
-        for(AbstractNode node : this.childList)
+        for(AbstractNode node : childList)
             node.accept(v);
     }
 }
@@ -427,12 +426,13 @@ class AssignNode extends StatementNode{
     public void accept(ASTVisitor v) {
         v.visit(this);
         for (AbstractNode child: childList) {
-            child.accept(v);
+            if(child != null)
+                child.accept(v);
         }
     }
 }
 
-class FuncCallNode extends StatementNode{
+class FuncCallNode extends ExpressionNode{
     @Override
     public void accept(ASTVisitor v) {
         v.visit(this);
@@ -447,15 +447,23 @@ class ActualParameterNode extends AbstractNode{
         v.visit(this);
         for(AbstractNode child : childList)
         {
-            child.accept(v);
+            if(child != null)
+                child.accept(v);
         }
     }
 }
 
 class ReturnNode extends StatementNode{
+    AbstractNode expr;
+
+    public ReturnNode(AbstractNode node){
+        expr = node;
+    }
     @Override
     public void accept(ASTVisitor v) {
-        //Bliver ikke brugt i BuildASTVisitor.
+        v.visit(this);
+        if(expr != null)
+            expr.accept(v);
     }
 }
 
@@ -466,7 +474,8 @@ class NumberDeclarationNode extends DeclarationNode{
     public void accept(ASTVisitor v) {
         v.visit(this);
         for (AbstractNode node : this.childList) {
-            node.accept(v);
+            if(node != null)
+                node.accept(v);
         }
     } //Jeg ved ikke om vi skal lave typechecking endnu
 
@@ -478,7 +487,8 @@ class TextDeclarationNode extends DeclarationNode{
     public void accept(ASTVisitor v) {
         v.visit(this);
         for (AbstractNode node : this.childList) {
-            node.accept(v);
+            if(node != null)
+                node.accept(v);
         }
     }
 }
@@ -489,7 +499,8 @@ class BooleanDeclarationNode extends DeclarationNode{
     public void accept(ASTVisitor v) {
         v.visit(this);
         for (AbstractNode node : this.childList) {
-            node.accept(v);
+            if(node != null)
+                node.accept(v);
         }
     }
 }
@@ -525,9 +536,9 @@ class BlockNode extends AbstractNode{
     @Override
     public void accept(ASTVisitor v) {
         v.visit(this);
-        for(AbstractNode node : childList)
+        for(AbstractNode node : this.childList)
             if(node != null)
-               node.accept(v);
+                node.accept(v);
     }
 }
 
@@ -539,7 +550,7 @@ class FunctionDeclarationNode extends AbstractNode{
         v.visit(this);
         for(AbstractNode node : childList)
             if(node != null)
-            node.accept(v);
+                node.accept(v);
     }
 }
 
@@ -567,9 +578,9 @@ class StrategyDeclarationNode extends AbstractNode{
     @Override
     public void accept(ASTVisitor v) {
         v.visit(this);
-        for(AbstractNode node : childList)
-          if(node != null)
-            node.accept(v);
+        for(AbstractNode node : this.childList)
+            if(node != null)
+                node.accept(v);
     }
     //public List<AbstractNode> childList = new ArrayList<>();
 }
@@ -581,6 +592,7 @@ class ProgNode extends AbstractNode{
     public void accept(ASTVisitor v) {
         v.visit(this);
         for(AbstractNode child : childList)
-            child.accept(v);
+            if(child != null)
+                child.accept(v);
     }
 }
