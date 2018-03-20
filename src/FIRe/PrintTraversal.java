@@ -109,7 +109,7 @@ public class PrintTraversal extends ASTVisitor{
         for(Map.Entry<AbstractNode, String> set : node.parameterMap.entrySet())
         {
             //Just printing the types.
-            System.out.print(set.getValue().toString());
+            System.out.print("            " + set.getValue().toString());
             //Calling the visit method for all the id nodes.
             visit((IdNode) set.getKey());
         }
@@ -289,9 +289,14 @@ public class PrintTraversal extends ASTVisitor{
 
         System.out.print(SB.toString());
         printNode(node);
+        if (!(node instanceof InfixExpressionNode))
         for (int i = 0; i < node.childList.size();++i){
             if (node.childList.get(i) != null)
                 Print(node.childList.get(i),level+1);
+        }
+        else {
+            Print(((InfixExpressionNode) node).LeftChild, level + 1);
+            Print(((InfixExpressionNode) node).RightChild, level + 1);
         }
     }
 
