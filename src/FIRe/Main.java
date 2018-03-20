@@ -20,14 +20,19 @@ public class Main {
         in.close();
         String outString = sb.toString();
 
-        InputStream inputStream = new ByteArrayInputStream(outString.getBytes());
-        CharStream charStream = new ANTLRInputStream(outString);
-        CFGLexer lexer = new CFGLexer(charStream);
+        //InputStream inputStream = new ByteArrayInputStream(outString.getBytes());
+        //CharStream charStream = new ANTLRInputStream(outString);
+
+        //https://stackoverflow.com/questions/18110180/processing-a-string-with-antlr4
+        CFGLexer lexer = new CFGLexer(CharStreams.fromString(outString));
         CommonTokenStream tokenStream = new CommonTokenStream(lexer);
         CFGParser parser = new CFGParser(tokenStream);
 
         CFGParser.ProgContext cst = parser.prog();
         ProgNode ast = (ProgNode) new BuildASTVisitor().visitProg(cst);
+        PrintTraversal print = new PrintTraversal();
+        ast.accept(print);
+
 
         ast.Print();
     }

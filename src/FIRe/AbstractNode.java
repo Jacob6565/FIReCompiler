@@ -88,7 +88,9 @@ class WhileNode extends ControlStructureNode{
 
     @Override
     public void accept(ASTVisitor v) {
-
+        v.visit(this);
+        for(AbstractNode node : childList)
+            node.accept(v);
     }
 }
 
@@ -476,6 +478,8 @@ class ProgNode extends AbstractNode{
 
     @Override
     public void accept(ASTVisitor v) {
-
+        v.visit(this);
+        for(AbstractNode node : childList)
+            node.accept(v);
     }
 }

@@ -170,101 +170,101 @@ public class PrintTraversal extends ASTVisitor{
 
     @Override
     public void visit(NegateNode node) {
-
+        System.out.println("NegateNode");
     }
 
     @Override
     public void visit(NotEqualsNode node) {
-
+        System.out.println("NotEqualsNode");
     }
 
     @Override
     public void visit(NotNode node) {
-
+        System.out.println("NotNode");
     }
 
     @Override
     public void visit(NumberDeclarationNode node) {
-
+        System.out.println("NumDclNode");
     }
 
     @Override
     public void visit(NumberNode node) {
-
+        System.out.println(node.value);
     }
 
     @Override
     public void visit(OrNode node) {
-
+        System.out.println("OrNode");
     }
 
     @Override
     public void visit(PowerNode node) {
-
+        System.out.println("PowerNode");
     }
 
     @Override
     public void visit(ProgNode node) {
-
+        System.out.println("ProgNode");
     }
 
     @Override
     public void visit(RadarColorNode node) {
-
+        System.out.println("RadarColorNode");
     }
 
     @Override
     public void visit(ReturnNode node) {
-
+        System.out.println("ReturnNode");
     }
 
     @Override
     public void visit(RobotDclBodyNode node) {
-
+        System.out.println("RobotDclBodyNode");
     }
 
     @Override
     public void visit(RoutineNode node) {
-
+        System.out.println("RoutineNode");
     }
 
     @Override
     public void visit(StatementNode node) {
-
+        System.out.println("StmtNode");
     }
 
     @Override
     public void visit(StrategyDeclarationNode node) {
-
+        System.out.println("StratDclNode");
     }
 
     @Override
     public void visit(SubtractionNode node) {
-
+        System.out.println("SubtractionNode");
     }
 
     @Override
     public void visit(TextDeclarationNode node) {
-
+        System.out.println("TextDeclNode");
     }
 
     @Override
     public void visit(TextNode node) {
-
+        System.out.println(node.Content);
     }
 
     @Override
     public void visit(ValNode node) {
-
+        //Doesnt exist
     }
 
     @Override
     public void visit(WhenNode node) {
-
+        System.out.println("when");
     }
 
     @Override
     public void visit(WhileNode node) {
-
+        System.out.println("while");
     }
 }
