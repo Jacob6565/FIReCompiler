@@ -454,7 +454,10 @@ class ReturnNode extends StatementNode{
 class NumberDeclarationNode extends DeclarationNode{
     @Override
     public void accept(ASTVisitor v) {
-
+        v.visit(this);
+        for (AbstractNode node : this.childList) {
+            node.accept(v);
+        }
     } //Jeg ved ikke om vi skal lave typechecking endnu
 
 }
@@ -463,7 +466,10 @@ class TextDeclarationNode extends DeclarationNode{
 
     @Override
     public void accept(ASTVisitor v) {
-
+        v.visit(this);
+        for (AbstractNode node : this.childList) {
+            node.accept(v);
+        }
     }
 }
 
@@ -471,7 +477,10 @@ class BooleanDeclarationNode extends DeclarationNode{
 
     @Override
     public void accept(ASTVisitor v) {
-
+        v.visit(this);
+        for (AbstractNode node : this.childList) {
+            node.accept(v);
+        }
     }
 }
 
