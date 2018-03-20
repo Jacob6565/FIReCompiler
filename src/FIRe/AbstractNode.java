@@ -130,8 +130,8 @@ class ValNode extends ExpressionNode{
 }
 
 class ArrayAccessNode extends ExpressionNode{
-    ExpressionNode id;
-    ExpressionNode index;
+    public ExpressionNode id;
+    public ExpressionNode index;
 }
 
 class TextNode extends ValNode{
