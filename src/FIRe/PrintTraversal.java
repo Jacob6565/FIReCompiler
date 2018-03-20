@@ -6,6 +6,8 @@ package FIRe;
 * To start it all, we just call the accept-method on the root
 * of the AST which then will call its children's accept-methods and so forth.*/
 
+import com.sun.java.accessibility.util.TopLevelWindowListener;
+
 import java.util.Map;
 
 public class PrintTraversal extends ASTVisitor{
@@ -17,6 +19,7 @@ public class PrintTraversal extends ASTVisitor{
 
     @Override
     public void visit(AdditionNode node) {
+
         System.out.println("plus");
     }
 
@@ -275,5 +278,116 @@ public class PrintTraversal extends ASTVisitor{
     @Override
     public void visit(WhileNode node) {
         System.out.println("while");
+    }
+
+    public void Print(AbstractNode node, int level){
+        String ToPrint = "";
+        StringBuilder SB = new StringBuilder(ToPrint);
+        for (int i = 0; i < level; ++i){
+            SB.append("    ");
+        }
+
+        System.out.print(SB.toString());
+        printNode(node);
+        for (int i = 0; i < node.childList.size();++i){
+            if (node.childList.get(i) != null)
+                Print(node.childList.get(i),level+1);
+        }
+    }
+
+    private void printNode(AbstractNode node){
+        if (node instanceof ProgNode)
+            visit((ProgNode) node);
+        else if (node instanceof ActualParameterNode)
+            visit ((ActualParameterNode) node);
+        else if (node instanceof AdditionNode)
+            visit ((AdditionNode) node);
+        else if (node instanceof AndNode)
+            visit ((AndNode) node);
+        else if (node instanceof ArrayAccessNode)
+            visit ((ArrayAccessNode) node);
+        else if (node instanceof AssignNode)
+            visit ((AssignNode) node);
+        else if (node instanceof BlockNode)
+            visit ((BlockNode) node);
+        else if (node instanceof BodyColorNode)
+            visit ((BodyColorNode) node);
+        else if (node instanceof BooleanDeclarationNode)
+            visit ((BooleanDeclarationNode) node);
+        else if (node instanceof BoolNode)
+            visit ((BoolNode) node);
+        else if (node instanceof ColorValNode)
+            visit((ColorValNode) node);
+        else if (node instanceof ConditionDeclarationNode)
+            visit((ConditionDeclarationNode) node);
+        else if (node instanceof DivisionNode)
+            visit ((DivisionNode) node);
+        else if (node instanceof EqualsNode)
+            visit ((EqualsNode) node);
+        else if (node instanceof FormalParameterNode)
+            visit((FormalParameterNode) node);
+        else if (node instanceof ForNode)
+            visit((ForNode) node);
+        else if (node instanceof FuncCallNode)
+            visit((FuncCallNode) node);
+        else if (node instanceof FunctionDeclarationNode)
+            visit((FunctionDeclarationNode) node);
+        else if (node instanceof GEQNode)
+            visit ((GEQNode) node);
+        else if (node instanceof GreaterThanNode)
+            visit ((GreaterThanNode)node);
+        else if (node instanceof GunColorNode)
+            visit((GunColorNode) node);
+        else if (node instanceof IdNode)
+            visit((IdNode) node);
+        else if (node instanceof IfControlStructureNode)
+            visit((IfControlStructureNode) node);
+        else if (node instanceof LEQNode)
+            visit((LEQNode) node);
+        else if (node instanceof LessThanNode)
+            visit((LessThanNode) node);
+        else if (node instanceof ModuloNode)
+            visit((ModuloNode) node);
+        else if (node instanceof MultiplicationNode)
+            visit((MultiplicationNode) node);
+        else if (node instanceof NegateNode)
+            visit ((NegateNode) node);
+        else if (node instanceof NotEqualsNode)
+            visit ((NotEqualsNode) node);
+        else if (node instanceof NotNode)
+            visit ((NotNode) node);
+        else if (node instanceof NumberDeclarationNode)
+            visit ((NumberDeclarationNode) node);
+        else if (node instanceof NumberNode)
+            visit((NumberNode) node);
+        else if (node instanceof OrNode)
+            visit ((OrNode) node);
+        else if (node instanceof PowerNode)
+            visit ((PowerNode) node);
+        else if (node instanceof  RadarColorNode)
+            visit ((RadarColorNode) node);
+        else if (node instanceof ReturnNode)
+            visit ((ReturnNode) node);
+        else if (node instanceof RobotDclBodyNode)
+            visit ((RobotDclBodyNode) node);
+        else if (node instanceof RoutineNode)
+            visit ((RoutineNode) node);
+        else if (node instanceof StrategyDeclarationNode)
+            visit ((StrategyDeclarationNode) node);
+        else if (node instanceof SubtractionNode)
+            visit ((SubtractionNode) node);
+        else if (node instanceof TextDeclarationNode)
+            visit ((TextDeclarationNode)node);
+        else if (node instanceof TextNode)
+            visit ((TextNode) node);
+        else if (node instanceof ValNode)
+            visit ((ValNode) node);
+        else if (node instanceof WhenNode)
+            visit ((WhenNode) node);
+        else if (node instanceof WhileNode)
+            visit ((WhileNode) node);
+        else
+            System.out.println("Error");
+
     }
 }

@@ -14,6 +14,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         ProgNode root = new ProgNode();
 
         root.childList.add(visitRobotDcl(ctx.robotDcl()));
+
         for(CFGParser.ProgBodyContext progBodyCtx: ctx.progBody()){
             root.childList.add(visitProgBody(progBodyCtx)); //Vi tilføjer alle  progbodies, idet vi visitter dem.
         }
@@ -525,8 +526,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
     public AbstractNode visitCtrlStruct(CFGParser.CtrlStructContext ctx) {
 
         if (ctx.aif() != null) {//hvis det er en if. "if if" med andre ord.
-            IfControlStructureNode IfNode = new IfControlStructureNode();
-            IfNode.childList.add(visitAif(ctx.aif()));
+            IfControlStructureNode IfNode = (IfControlStructureNode)visitAif(ctx.aif());
 
             if (!ctx.aelseif().isEmpty()) {
                 for (CFGParser.AelseifContext CTX : ctx.aelseif()) {
