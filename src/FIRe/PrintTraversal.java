@@ -6,266 +6,265 @@ package FIRe;
 * To start it all, we just call the accept-method on the root
 * of the AST which then will call its childrens accept-methods and so forth.*/
 
-
-public class PrintTraversal extends ASTVisitor<AbstractNode> {
+public class PrintTraversal extends ASTVisitor{
 
     @Override
-    public AbstractNode visit(AbstractNode node) {
-        return null;
+    public void visit(AbstractNode node) {
+
     }
 
     @Override
-    public AbstractNode visit(AdditionNode node) {
-        return null;
+    public void visit(AdditionNode node) {
+
     }
 
     @Override
-    public AbstractNode visit(ActualParameterNode node) {
-        return null;
+    public void visit(ActualParameterNode node) {
+
     }
 
     @Override
-    public AbstractNode visit(AndNode node) {
-        return null;
+    public void visit(AndNode node) {
+
     }
 
     @Override
-    public AbstractNode visit(ArrayAccessNode node) {
-        return null;
+    public void visit(ArrayAccessNode node) {
+
     }
 
     @Override
-    public AbstractNode visit(AssignNode node) {
-        return null;
+    public void visit(AssignNode node) {
+
     }
 
     @Override
-    public AbstractNode visit(BlockNode node) {
-        return null;
+    public void visit(BlockNode node) {
+
     }
 
     @Override
-    public AbstractNode visit(BodyColorNode node) {
-        return null;
+    public void visit(BodyColorNode node) {
+
     }
 
     @Override
-    public AbstractNode visit(BooleanDeclarationNode node) {
-        return null;
+    public void visit(BooleanDeclarationNode node) {
+
     }
 
     @Override
-    public AbstractNode visit(BoolNode node) {
-        return null;
+    public void visit(BoolNode node) {
+
     }
 
     @Override
-    public AbstractNode visit(Color node) {
-        return null;
+    public void visit(Color node) {
+
     }
 
     @Override
-    public AbstractNode visit(ColorValNode node) {
-        return null;
+    public void visit(ColorValNode node) {
+
     }
 
     @Override
-    public AbstractNode visit(ConditionDeclarationNode node) {
-        return null;
+    public void visit(ConditionDeclarationNode node) {
+
     }
 
     @Override
-    public AbstractNode visit(ControlStructureNode node) {
-        return null;
+    public void visit(ControlStructureNode node) {
+
     }
 
     @Override
-    public AbstractNode visit(DeclarationNode node) {
-        return null;
+    public void visit(DeclarationNode node) {
+
     }
 
     @Override
-    public AbstractNode visit(DivisionNode node) {
-        return null;
+    public void visit(DivisionNode node) {
+
     }
 
     @Override
-    public AbstractNode visit(EqualsNode node) {
-        return null;
+    public void visit(EqualsNode node) {
+
     }
 
     @Override
-    public AbstractNode visit(ExpressionNode node) {
-        return null;
+    public void visit(ExpressionNode node) {
+
     }
 
     @Override
-    public AbstractNode visit(FormalParameterNode node) {
-        return null;
+    public void visit(FormalParameterNode node) {
+
     }
 
     @Override
-    public AbstractNode visit(ForNode node) {
-        return null;
+    public void visit(ForNode node) {
+
     }
 
     @Override
-    public AbstractNode visit(FuncCallNode node) {
-        return null;
+    public void visit(FuncCallNode node) {
+
     }
 
     @Override
-    public AbstractNode visit(FunctionDeclarationNode node) {
-        return null;
+    public void visit(FunctionDeclarationNode node) {
+
     }
 
     @Override
-    public AbstractNode visit(GEQNode node) {
-        return null;
+    public void visit(GEQNode node) {
+
     }
 
     @Override
-    public AbstractNode visit(GreaterThanNode node) {
-        return null;
+    public void visit(GreaterThanNode node) {
+
     }
 
     @Override
-    public AbstractNode visit(GunColorNode node) {
-        return null;
+    public void visit(GunColorNode node) {
+
     }
 
     @Override
-    public AbstractNode visit(IdNode node) {
-        return null;
+    public void visit(IdNode node) {
+
     }
 
     @Override
-    public AbstractNode visit(IfControlStructureNode node) {
-        return null;
+    public void visit(IfControlStructureNode node) {
+
     }
 
     @Override
-    public AbstractNode visit(InfixExpressionNode node) {
-        return null;
+    public void visit(InfixExpressionNode node) {
+
     }
 
     @Override
-    public AbstractNode visit(LEQNode node) {
-        return null;
+    public void visit(LEQNode node) {
+
     }
 
     @Override
-    public AbstractNode visit(LessThanNode node) {
-        return null;
+    public void visit(LessThanNode node) {
+
     }
 
     @Override
-    public AbstractNode visit(ModuloNode node) {
-        return null;
+    public void visit(ModuloNode node) {
+
     }
 
     @Override
-    public AbstractNode visit(MultiplicationNode node) {
-        return null;
+    public void visit(MultiplicationNode node) {
+
     }
 
     @Override
-    public AbstractNode visit(NegateNode node) {
-        return null;
+    public void visit(NegateNode node) {
+
     }
 
     @Override
-    public AbstractNode visit(NotEqualsNode node) {
-        return null;
+    public void visit(NotEqualsNode node) {
+
     }
 
     @Override
-    public AbstractNode visit(NotNode node) {
-        return null;
+    public void visit(NotNode node) {
+
     }
 
     @Override
-    public AbstractNode visit(NumberDeclarationNode node) {
-        return null;
+    public void visit(NumberDeclarationNode node) {
+
     }
 
     @Override
-    public AbstractNode visit(NumberNode node) {
-        return null;
+    public void visit(NumberNode node) {
+
     }
 
     @Override
-    public AbstractNode visit(OrNode node) {
-        return null;
+    public void visit(OrNode node) {
+
     }
 
     @Override
-    public AbstractNode visit(PowerNode node) {
-        return null;
+    public void visit(PowerNode node) {
+
     }
 
     @Override
-    public AbstractNode visit(ProgNode node) {
-        return null;
+    public void visit(ProgNode node) {
+
     }
 
     @Override
-    public AbstractNode visit(RadarColorNode node) {
-        return null;
+    public void visit(RadarColorNode node) {
+
     }
 
     @Override
-    public AbstractNode visit(ReturnNode node) {
-        return null;
+    public void visit(ReturnNode node) {
+
     }
 
     @Override
-    public AbstractNode visit(RobotDclBodyNode node) {
-        return null;
+    public void visit(RobotDclBodyNode node) {
+
     }
 
     @Override
-    public AbstractNode visit(RoutineNode node) {
-        return null;
+    public void visit(RoutineNode node) {
+
     }
 
     @Override
-    public AbstractNode visit(StatementNode node) {
-        return null;
+    public void visit(StatementNode node) {
+
     }
 
     @Override
-    public AbstractNode visit(StrategyDeclarationNode node) {
-        return null;
+    public void visit(StrategyDeclarationNode node) {
+
     }
 
     @Override
-    public AbstractNode visit(SubtractionNode node) {
-        return null;
+    public void visit(SubtractionNode node) {
+
     }
 
     @Override
-    public AbstractNode visit(TextDeclarationNode node) {
-        return null;
+    public void visit(TextDeclarationNode node) {
+
     }
 
     @Override
-    public AbstractNode visit(TextNode node) {
-        return null;
+    public void visit(TextNode node) {
+
     }
 
     @Override
-    public AbstractNode visit(ValNode node) {
-        return null;
+    public void visit(ValNode node) {
+
     }
 
     @Override
-    public AbstractNode visit(WhenNode node) {
-        return null;
+    public void visit(WhenNode node) {
+
     }
 
     @Override
-    public AbstractNode visit(WhileNode node) {
-        return null;
+    public void visit(WhileNode node) {
+
     }
 }
