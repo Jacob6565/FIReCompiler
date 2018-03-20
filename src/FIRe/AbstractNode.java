@@ -132,7 +132,11 @@ class RoutineNode extends ControlStructureNode{
 class RobotDclBodyNode extends  AbstractNode{
     @Override
     public void accept(ASTVisitor v) {
-
+        v.visit(this);
+        for (AbstractNode child: childList)
+        {
+            child.accept(v);
+        }
     }
 }
 
