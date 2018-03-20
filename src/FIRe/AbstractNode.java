@@ -189,7 +189,9 @@ class ArrayAccessNode extends ExpressionNode{
 
     @Override
     public void accept(ASTVisitor v) {
-
+        v.visit(this);
+        id.accept(v);
+        index.accept(v);
     }
 }
 
@@ -400,6 +402,7 @@ class NotEqualsNode extends  InfixExpressionNode{
 
 class IdNode extends ExpressionNode{
     public String name;
+    public String type;
 
 
     @Override
@@ -426,7 +429,9 @@ class AssignNode extends StatementNode{
 class FuncCallNode extends StatementNode{
     @Override
     public void accept(ASTVisitor v) {
-
+        v.visit(this);
+        for(AbstractNode node : childList)
+            node.accept(v);
     }
 }
 
@@ -521,6 +526,8 @@ class FormalParameterNode extends AbstractNode{
 
     @Override
     public void accept(ASTVisitor v) {
+        //Hvor man inde i denne visit metode så printer elementerne i mappen.
+        v.visit(this);
 
     }
 }
