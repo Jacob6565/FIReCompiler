@@ -95,9 +95,14 @@ class WhileNode extends ControlStructureNode{
 }
 
 class ForNode extends  ControlStructureNode{
+
     @Override
     public void accept(ASTVisitor v) {
-
+        v.visit(this);
+        for(AbstractNode child : childList)
+        {
+            child.accept(v);
+        }
     }
 }
 
@@ -425,14 +430,18 @@ class FuncCallNode extends StatementNode{
 class ActualParameterNode extends AbstractNode{
     @Override
     public void accept(ASTVisitor v) {
-
+        v.visit(this);
+        for(AbstractNode child : childList)
+        {
+            child.accept(v);
+        }
     }
 }
 
 class ReturnNode extends StatementNode{
     @Override
     public void accept(ASTVisitor v) {
-
+        //Bliver ikke brugt i BuildASTVisitor.
     }
 }
 
