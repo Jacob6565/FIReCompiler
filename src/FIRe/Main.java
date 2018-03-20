@@ -3,7 +3,6 @@ package FIRe;
 import FIRe.Parser.CFGLexer;
 import FIRe.Parser.CFGParser;
 import org.antlr.v4.runtime.*;
-import org.antlr.v4.runtime.misc.Interval;
 
 import java.io.*;
 import java.util.Scanner;
@@ -21,9 +20,11 @@ public class Main {
         in.close();
         String outString = sb.toString();
 
-        InputStream inputStream = new ByteArrayInputStream(outString.getBytes());
-        CharStream charStream = new ANTLRInputStream(outString);
-        CFGLexer lexer = new CFGLexer(charStream);
+        //InputStream inputStream = new ByteArrayInputStream(outString.getBytes());
+        //CharStream charStream = new ANTLRInputStream(outString);
+
+        //https://stackoverflow.com/questions/18110180/processing-a-string-with-antlr4
+        CFGLexer lexer = new CFGLexer(CharStreams.fromString(outString));
         CommonTokenStream tokenStream = new CommonTokenStream(lexer);
         CFGParser parser = new CFGParser(tokenStream);
 

@@ -1,10 +1,10 @@
 RobotProperties
 {
-    	RobotName:TheDestroyer;
-    	RobotType:advancedRobot;
-    	BodyColor:yellow;
-    	GunColor:red;
-    	RadarColor:white;
+      RobotName:TheDestroyer;
+      RobotType:advancedRobot;
+      BodyColor:yellow;
+      GunColor:red;
+      RadarColor:white;
 }
 
 number firepower = 1;
@@ -12,63 +12,64 @@ text nameOfRival = "SittingDuck";
 
 bool turnLeftAndRotate(text currentRival)
 {
-    number degrees = 90;
-    nameOfRival = currentRival;
-    bool shotAtRival= false;
+   number degrees = 90;
+   nameOfRival = currentRival;
+   bool shotAtRival= false;
 
-    if (nameOfRival == "WallRider")
-    {
-   	    fire(firepower);
-   	    shotAtRival = true;
-    }
+   if (nameOfRival == "WallRider")
+   {
+          fire(firepower);
+          shotAtRival = true;
+   }
 
-    for(0 upto 2)
-    {
-   	 turnLeft(degrees);
-    }
+   for(0 upto 2)
+   {
+       turnLeft(degrees);
+   }
 
-    return shotAtRival;
+   return shotAtRival;
 }
 
 strategy Default()
 {
-    number[] firepowers;
-    number[1] = 1;
-    number[2] = 2;
-    number[3] = 3;
+   number[] firepowers;
+   number[1] = 1;
+   number[2] = 2;
+   number[3] = 3;
 
-    routine()
-    {
-  			 turnRadar(360);
-   	 routine(2)
-   	 {
-   		 ahead(20);
-   	 }
-    }
+   routine()
+   {
+         turnRadar(360);
+       routine(2)
+       {
+          ahead(20);
+       }
+   }
 
-    when (ScannedRobotEvent e)
-    {
-   	 text currentRival = e.getName();
-   	 turnLeftAndRotate(currentRival);
-   	 changeStrategy("Offensive");
-    }
+   when (ScannedRobotEvent e)
+   {
+       text currentRival = e.getName();
+       turnLeftAndRotate(currentRival);
+       changeStrategy("Offensive");
+   }
 }
 
 strategy Offensive()
 {
-    routine()
-    {
-   	 fire(1);
-    }
-    when(LowHealth a)
-    {
-   	 changeStrategy("Default");
-    }
+   routine()
+   {
+       fire(1);
+   }
+   when(LowHealth a)
+   {
+       changeStrategy("Default");
+   }
 }
 
 condition LowHealth()
 {
-    turnLeftAndRotate("SittingDuck");
+   turnLeftAndRotate("SittingDuck");
 
-	return getEnergy() <= 50;
+  return getEnergy() <= 50;
 }
+

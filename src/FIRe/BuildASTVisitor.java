@@ -98,7 +98,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         FormalParameterNode node = new FormalParameterNode();
 
         while(ctx.fParamList() != null) {
-            /* Vi mapper et id til en type i en parametermap (som er en dictionary i C#), så vi nemt
+            /* Vi mapper et id til en type i en map (som er en dictionary i C#), så vi nemt
             * kan finde et ids type.*/
             node.parameterMap.put(visitId(ctx.id()), ctx.Type().toString());
             ctx = ctx.fParamList();
