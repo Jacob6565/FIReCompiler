@@ -99,7 +99,7 @@ class WhileNode extends ControlStructureNode{
     }
 }
 
-class ForNode extends  ControlStructureNode{
+class ForNode extends ControlStructureNode{
 
     @Override
     public void accept(ASTVisitor v) {

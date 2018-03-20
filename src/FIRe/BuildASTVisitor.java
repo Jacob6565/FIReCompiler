@@ -14,6 +14,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         ProgNode root = new ProgNode();
 
         root.childList.add(visitRobotDcl(ctx.robotDcl()));
+
         for(CFGParser.ProgBodyContext progBodyCtx: ctx.progBody()){
             root.childList.add(visitProgBody(progBodyCtx)); //Vi tilføjer alle  progbodies, idet vi visitter dem.
         }
