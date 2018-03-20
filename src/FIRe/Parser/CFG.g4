@@ -9,9 +9,6 @@ Type		        : 'number' | 'text' | 'bool' | 'number[]'
                     ;
 RobotProperties     : 'RobotProperties'
                     ;
-RobotName           : 'RobotName'
-                    ;
-RobotType           : 'RobotType';
 //Events types and whens
 When                : 'when';
 SingleLineComment   : '//' [\u0000-\u007E]* -> skip;

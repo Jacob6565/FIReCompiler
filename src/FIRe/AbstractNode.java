@@ -37,6 +37,7 @@ abstract class AbstractNode
     }
 
     public ArrayList<AbstractNode> childList = new ArrayList<>();
+
 @Override
     public String toString() {
         return Type.class.toString();

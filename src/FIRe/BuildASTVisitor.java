@@ -299,8 +299,6 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         return node;
     }
 
-
-
     boolean tryParseDouble(String value) {
         try {
             Double.parseDouble(value);
