@@ -216,7 +216,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
             return visitCtrlStruct(ctx.ctrlStruct());
         }
         else if(ctx.expr() != null){
-            return visitExpr(ctx.expr());
+            return new ReturnNode(visitExpr(ctx.expr()));
         }
         else
             return  null;
@@ -244,17 +244,18 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
     public AbstractNode visitExpr(CFGParser.ExprContext ctx) {
         AbstractNode node = null;
 
-        if(ctx.BoolVal() != null)
-            node = CreateBoolNode(ctx);
-        else if(ctx.Val() != null )
-            node = CreateValNode(ctx);
-        else if(ctx.id() != null)
-            node = visitId(ctx.id());
-        else if(ctx.funcCall()!= null)
-            node = visitFuncCall(ctx.funcCall());
-        else if(ctx.Not() != null)
-            node = CreateNotNode(ctx);
-
+        if(ctx.expr().size() <= 1) {
+            if (ctx.BoolVal() != null)
+                node = CreateBoolNode(ctx);
+            else if (ctx.Val() != null)
+                node = CreateValNode(ctx);
+            else if (ctx.id() != null)
+                node = visitId(ctx.id());
+            else if (ctx.funcCall() != null)
+                node = visitFuncCall(ctx.funcCall());
+            else if (ctx.Not() != null)
+                node = CreateNotNode(ctx);
+        }
         /*
         else if(!ctx.Hat().toString().isEmpty())
             node = CreateInFixExprNode(ctx);
@@ -271,9 +272,9 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
             node = CreateInFixExprNode(ctx);
         }
         */
-        if(ctx.expr().size() > 1 && ctx.Squarel() != null)
+        if(ctx.expr().size() > 1 && ctx.Squarel() == null)
             node = CreateInFixExprNode(ctx);
-        else if(ctx.expr().size() > 1 && ctx.Squarel()!=null)
+        else if(ctx.expr().size() > 1 && ctx.Squarel()!= null)
             node = CreateArrayAccessNode(ctx);
 
         return node;
@@ -316,7 +317,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
     private InfixExpressionNode CreateInFixExprNode(CFGParser.ExprContext ctx){
         InfixExpressionNode node = null;
 
-        if(!ctx.MultiOp().toString().isEmpty()){
+        if(ctx.MultiOp() != null){
             if(ctx.MultiOp().toString().equals("*"))
                 node = CreateTimesNode(ctx);
             else if(ctx.MultiOp().toString().equals("/"))
@@ -324,20 +325,20 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
             else if(ctx.MultiOp().toString().equals("%"))
                 node = CreateModuloNode(ctx);
         }
-        else if(!ctx.AdditiveOp().toString().isEmpty()){
+        else if(ctx.AdditiveOp() != null){
             if(ctx.AdditiveOp().toString().equals("+"))
                 node = CreatePlusNode(ctx);
             else if(ctx.AdditiveOp().toString().equals("-"))
                 node = CreateMinusNode(ctx);
         }
-        else if(!ctx.BoolOp().toString().isEmpty()){
+        else if(ctx.BoolOp() != null){
             if(ctx.BoolOp().toString().equals("and"))
                 node = CreateAndNode(ctx);
             else if(ctx.BoolOp().toString().equals("or"))
                 node = CreateOrNode(ctx);
         }
 
-        else if(!ctx.RelativeOp().toString().isEmpty()){
+        else if(ctx.RelativeOp() != null){
             if(ctx.RelativeOp().toString().equals("<"))
                 node = CreateLessThanNode(ctx);
             else if(ctx.RelativeOp().toString().equals(">"))
@@ -351,7 +352,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
             else if(ctx.RelativeOp().toString().equals(">="))
                 node = CreateGEQNode(ctx);
         }
-        else if(!ctx.Hat().toString().isEmpty())
+        else if(ctx.Hat() != null)
             node = CreateExponentNode(ctx);
 
         return node;
