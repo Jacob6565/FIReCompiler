@@ -18,7 +18,6 @@ public class Main {
             sb.append(in.next());
             sb.append(" ");
         }
-        sb.append("$");
         in.close();
         String outString = sb.toString();
 
