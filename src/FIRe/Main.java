@@ -3,7 +3,6 @@ package FIRe;
 import FIRe.Parser.CFGLexer;
 import FIRe.Parser.CFGParser;
 import org.antlr.v4.runtime.*;
-import org.antlr.v4.runtime.misc.Interval;
 
 import java.io.*;
 import java.util.Scanner;
