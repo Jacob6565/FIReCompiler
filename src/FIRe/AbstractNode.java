@@ -388,6 +388,7 @@ class NotEqualsNode extends  InfixExpressionNode{
 
 class IdNode extends ExpressionNode{
     public String name;
+    public String type;
 
 
     @Override
@@ -498,6 +499,8 @@ class FormalParameterNode extends AbstractNode{
 
     @Override
     public void accept(ASTVisitor v) {
+        //Hvor man inde i denne visit metode så printer elementerne i mappen.
+        v.visit(this);
 
     }
 }
