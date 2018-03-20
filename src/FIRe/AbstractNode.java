@@ -38,13 +38,9 @@ abstract class AbstractNode
 
     public ArrayList<AbstractNode> childList = new ArrayList<>();
 
-@Override
-    public String toString() {
-        return Type.class.toString();
-    }
 
     public void Print(){
-        System.out.print(this);
+        System.out.println(this);
         for (AbstractNode AN : this.childList) {
             AN.Print();
         }
@@ -78,6 +74,7 @@ abstract class InfixExpressionNode extends ExpressionNode{
 //End abstract classes - begin control structures
 
 class IfControlStructureNode extends ControlStructureNode{
+
 }
 
 class WhileNode extends ControlStructureNode{

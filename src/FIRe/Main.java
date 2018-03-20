@@ -2,15 +2,10 @@ package FIRe;
 
 import FIRe.Parser.CFGLexer;
 import FIRe.Parser.CFGParser;
-import org.antlr.v4.runtime.ANTLRFileStream;
-import org.antlr.v4.runtime.CharStream;
-import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.UnbufferedCharStream;
+import org.antlr.v4.runtime.*;
+import org.antlr.v4.runtime.misc.Interval;
 
-import java.io.ByteArrayInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.InputStream;
+import java.io.*;
 import java.util.Scanner;
 
 public class Main {
@@ -27,7 +22,7 @@ public class Main {
         String outString = sb.toString();
 
         InputStream inputStream = new ByteArrayInputStream(outString.getBytes());
-        CharStream charStream = new UnbufferedCharStream(inputStream);
+        CharStream charStream = new ANTLRInputStream(outString);
         CFGLexer lexer = new CFGLexer(charStream);
         CommonTokenStream tokenStream = new CommonTokenStream(lexer);
         CFGParser parser = new CFGParser(tokenStream);

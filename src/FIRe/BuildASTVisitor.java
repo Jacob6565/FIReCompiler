@@ -604,7 +604,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
             node.name = node.name + "." + ctx.id().Name().toString();
             ctx = ctx.id();
         }
-        if(!ctx.Val().toString().isEmpty()){
+        if(ctx.Val() != null){
             node.name = node.name + "[" + ctx.Val().toString() + "]";
         }
 
