@@ -3,12 +3,9 @@ package FIRe;
 
 
 
-import FIRe.Parser.CFGParser;
-
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 //begin enums
@@ -79,13 +76,15 @@ abstract class InfixExpressionNode extends ExpressionNode{
 
 //End abstract classes - begin control structures
 
-class IfControlStructureNode extends ControlStructureNode{
+class IfControlStructureNode extends ControlStructureNode {
     @Override
     public void accept(ASTVisitor v) {
         v.visit(this);
-        for (AbstractNode child:childList
-             ) {
-            child.accept(v);
+        for (AbstractNode child : this.childList) {
+
+            if(child != null)
+                child.accept(v);
+
         }
     }
 }
@@ -95,7 +94,7 @@ class WhileNode extends ControlStructureNode{
     @Override
     public void accept(ASTVisitor v) {
         v.visit(this);
-        for(AbstractNode node : childList)
+        for(AbstractNode node : this.childList)
             node.accept(v);
     }
 }
@@ -107,7 +106,8 @@ class ForNode extends  ControlStructureNode{
         v.visit(this);
         for(AbstractNode child : childList)
         {
-            child.accept(v);
+            if(child != null)
+                child.accept(v);
         }
     }
 }
@@ -524,7 +524,8 @@ class BlockNode extends AbstractNode{
     public void accept(ASTVisitor v) {
         v.visit(this);
         for(AbstractNode node : childList)
-            node.accept(v);
+            if(node != null)
+               node.accept(v);
     }
 }
 
@@ -535,6 +536,7 @@ class FunctionDeclarationNode extends AbstractNode{
     public void accept(ASTVisitor v) {
         v.visit(this);
         for(AbstractNode node : childList)
+            if(node != null)
             node.accept(v);
     }
 }
@@ -557,6 +559,7 @@ class StrategyDeclarationNode extends AbstractNode{
     public void accept(ASTVisitor v) {
         v.visit(this);
         for(AbstractNode node : childList)
+          if(node != null)
             node.accept(v);
     }
     //public List<AbstractNode> childList = new ArrayList<>();

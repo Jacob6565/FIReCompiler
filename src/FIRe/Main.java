@@ -16,6 +16,7 @@ public class Main {
         StringBuilder sb = new StringBuilder();
         while(in.hasNext()) {
             sb.append(in.next());
+            sb.append(" ");
         }
         in.close();
         String outString = sb.toString();

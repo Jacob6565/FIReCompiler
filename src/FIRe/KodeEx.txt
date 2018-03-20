@@ -70,6 +70,6 @@ condition LowHealth()
 {
    turnLeftAndRotate("SittingDuck");
 
-  return getEnergy() <= 50;
+   return getEnergy() <= 50;
 }
-
+$

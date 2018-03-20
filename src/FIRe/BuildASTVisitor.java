@@ -97,7 +97,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
     public AbstractNode visitFParamList(CFGParser.FParamListContext ctx) {
         FormalParameterNode node = new FormalParameterNode();
 
-        while(ctx.fParamList() != null) {
+        while(ctx != null) {
             /* Vi mapper et id til en type i en map (som er en dictionary i C#), så vi nemt
             * kan finde et ids type.*/
             node.parameterMap.put(visitId(ctx.id()), ctx.Type().toString());
@@ -227,7 +227,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         //Her fremgår de forskellige slags routine-kald. med id, med Val og tom.
         if(ctx.id() != null)
             return (new RoutineNode(visitId(ctx.id()), visitBlock(ctx.block())));
-        else if(!ctx.Val().toString().isEmpty())
+        else if(ctx.Val() != null)
             return(new RoutineNode(ctx.Val().toString(), visitBlock(ctx.block())));
         else
             return(new RoutineNode(visitBlock(ctx.block())));
@@ -243,15 +243,15 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
     public AbstractNode visitExpr(CFGParser.ExprContext ctx) {
         AbstractNode node = null;
 
-        if(!ctx.BoolVal().toString().isEmpty())
+        if(ctx.BoolVal() != null)
             node = CreateBoolNode(ctx);
-        else if(!ctx.Val().toString().isEmpty())
+        else if(ctx.Val() != null )
             node = CreateValNode(ctx);
-        else if(!ctx.id().Name().toString().isEmpty())
+        else if(ctx.id() != null)
             node = visitId(ctx.id());
-        else if(!ctx.funcCall().id().Name().toString().isEmpty())
+        else if(ctx.funcCall()!= null)
             node = visitFuncCall(ctx.funcCall());
-        else if(!ctx.Not().toString().isEmpty())
+        else if(ctx.Not() != null)
             node = CreateNotNode(ctx);
 
         /*
@@ -270,9 +270,9 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
             node = CreateInFixExprNode(ctx);
         }
         */
-        if(ctx.expr().size() > 1 && ctx.Squarel().toString().isEmpty())
+        if(ctx.expr().size() > 1 && ctx.Squarel() != null)
             node = CreateInFixExprNode(ctx);
-        else if(ctx.expr().size() > 1 && !ctx.Squarel().toString().isEmpty())
+        else if(ctx.expr().size() > 1 && ctx.Squarel()!=null)
             node = CreateArrayAccessNode(ctx);
 
         return node;
@@ -502,7 +502,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
     public AbstractNode visitConditionDcl(CFGParser.ConditionDclContext ctx) {
         ConditionDeclarationNode CDN = new ConditionDeclarationNode();
         CDN.childList.add(visitId(ctx.id()));
-        if (!ctx.fParamList().isEmpty())
+        if (ctx.fParamList() != null)
             CDN.childList.add(visitFParamList(ctx.fParamList())); //Vi tilføjer den ikke, hvis den ikke findes.
         CDN.childList.add(visitBlock(ctx.block()));
 

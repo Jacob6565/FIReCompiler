@@ -144,7 +144,7 @@ public class PrintTraversal extends ASTVisitor{
 
     @Override
     public void visit(IdNode node) {
-        System.out.println("Id");
+        System.out.println(node.name);
     }
 
     @Override
