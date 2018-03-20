@@ -22,6 +22,7 @@ enum Color{
 
 abstract class AbstractNode
 {
+
     //Should contain management functions.
     public void connectSibling()
     {

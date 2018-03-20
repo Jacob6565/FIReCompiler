@@ -526,8 +526,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
     public AbstractNode visitCtrlStruct(CFGParser.CtrlStructContext ctx) {
 
         if (ctx.aif() != null) {//hvis det er en if. "if if" med andre ord.
-            IfControlStructureNode IfNode = new IfControlStructureNode();
-            IfNode.childList.add(visitAif(ctx.aif()));
+            IfControlStructureNode IfNode = (IfControlStructureNode)visitAif(ctx.aif());
 
             if (!ctx.aelseif().isEmpty()) {
                 for (CFGParser.AelseifContext CTX : ctx.aelseif()) {
