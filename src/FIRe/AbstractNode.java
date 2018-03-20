@@ -80,7 +80,9 @@ abstract class InfixExpressionNode extends ExpressionNode{
 class IfControlStructureNode extends ControlStructureNode{
     @Override
     public void accept(ASTVisitor v) {
-
+        v.visit(this);
+        for(AbstractNode node : childList)
+            node.accept(v);
     }
 }
 
@@ -183,7 +185,9 @@ class ArrayAccessNode extends ExpressionNode{
 
     @Override
     public void accept(ASTVisitor v) {
-
+        v.visit(this);
+        id.accept(v);
+        index.accept(v);
     }
 }
 
@@ -418,7 +422,9 @@ class AssignNode extends StatementNode{
 class FuncCallNode extends StatementNode{
     @Override
     public void accept(ASTVisitor v) {
-
+        v.visit(this);
+        for(AbstractNode node : childList)
+            node.accept(v);
     }
 }
 
