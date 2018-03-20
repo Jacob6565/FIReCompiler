@@ -63,9 +63,10 @@ Not                 : '!';
 Condition           : 'condition';
 
 Name                : [A-z][A-z0-9]*;
+EndOfFile           : '$';
 
 //Parser rules
-prog                : robotDcl (progBody)*
+prog                : robotDcl (progBody)* EndOfFile
                     ;
 progBody            : dcl
                     | funcDcl
