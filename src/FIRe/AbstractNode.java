@@ -121,7 +121,9 @@ class RoutineNode extends ControlStructureNode{
 
     @Override
     public void accept(ASTVisitor v) {
-
+        v.visit(this);
+        for(AbstractNode node : childList)
+            node.accept(v);
     }
 }
 
@@ -130,7 +132,11 @@ class RoutineNode extends ControlStructureNode{
 class RobotDclBodyNode extends  AbstractNode{
     @Override
     public void accept(ASTVisitor v) {
-
+        v.visit(this);
+        for (AbstractNode child: childList)
+        {
+            child.accept(v);
+        }
     }
 }
 
@@ -167,7 +173,7 @@ class ValNode extends ExpressionNode{
 
     @Override
     public void accept(ASTVisitor v) {
-
+        //Denne burde ikke blive benyttet
     }
 }
 
@@ -466,14 +472,18 @@ class WhenNode extends AbstractNode{
 
     @Override
     public void accept(ASTVisitor v) {
-
+        v.visit(this);
+        for(AbstractNode node : childList)
+            node.accept(v);
     }
 }
 
 class ConditionDeclarationNode extends AbstractNode{
     @Override
     public void accept(ASTVisitor v) {
-
+        v.visit(this);
+        for(AbstractNode node : childList)
+            node.accept(v);
     }
 }
 
@@ -481,7 +491,9 @@ class BlockNode extends AbstractNode{
 
     @Override
     public void accept(ASTVisitor v) {
-
+        v.visit(this);
+        for(AbstractNode node : childList)
+            node.accept(v);
     }
 }
 
@@ -490,7 +502,9 @@ class FunctionDeclarationNode extends AbstractNode{
 
     @Override
     public void accept(ASTVisitor v) {
-
+        v.visit(this);
+        for(AbstractNode node : childList)
+            node.accept(v);
     }
 }
 
@@ -523,7 +537,7 @@ class ProgNode extends AbstractNode{
     @Override
     public void accept(ASTVisitor v) {
         v.visit(this);
-        for(AbstractNode node : childList)
-            node.accept(v);
+        for(AbstractNode child : childList)
+            child.accept(v);
     }
 }
