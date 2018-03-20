@@ -3,6 +3,8 @@ package FIRe;
 
 
 
+import FIRe.Parser.CFGParser;
+
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -80,7 +82,11 @@ abstract class InfixExpressionNode extends ExpressionNode{
 class IfControlStructureNode extends ControlStructureNode{
     @Override
     public void accept(ASTVisitor v) {
-
+        v.visit(this);
+        for (AbstractNode child:childList
+             ) {
+            child.accept(v);
+        }
     }
 }
 
@@ -145,7 +151,7 @@ class GunColorNode extends AbstractNode{
 
     @Override
     public void accept(ASTVisitor v) {
-
+        //bruges ikke
     }
 }
 
@@ -154,7 +160,7 @@ class BodyColorNode extends AbstractNode{
 
     @Override
     public void accept(ASTVisitor v) {
-
+        //bruges ikke
     }
 }
 
@@ -163,7 +169,7 @@ class RadarColorNode extends AbstractNode{
 
     @Override
     public void accept(ASTVisitor v) {
-
+        //bruges ikke
     }
 }
 
@@ -206,7 +212,7 @@ class ColorValNode extends AbstractNode{
 
     @Override
     public void accept(ASTVisitor v) {
-
+        //bruges ikke
     }
 }
 
@@ -410,7 +416,10 @@ class AssignNode extends StatementNode{
 
     @Override
     public void accept(ASTVisitor v) {
-
+        v.visit(this);
+        for (AbstractNode child: childList) {
+            child.accept(v);
+        }
     }
 }
 
