@@ -188,6 +188,11 @@ class TextNode extends ValNode{
     public TextNode(String content){
         Content = content;
     }
+
+    @Override
+    public void accept(ASTVisitor v) {
+        v.visit(this);
+    }
 }
 
 class ColorValNode extends AbstractNode{
@@ -205,6 +210,11 @@ class NumberNode extends ValNode{
     public NumberNode(double value){
         this.value = value;
     }
+
+    @Override
+    public void accept(ASTVisitor v) {
+        v.visit(this);
+    }
 }
 
 class BoolNode extends ExpressionNode{
@@ -212,7 +222,7 @@ class BoolNode extends ExpressionNode{
 
     @Override
     public void accept(ASTVisitor v) {
-
+        v.visit(this);
     }
 }
 
@@ -222,7 +232,9 @@ class AdditionNode extends InfixExpressionNode{
 
     @Override
     public void accept(ASTVisitor v) {
-
+        v.visit(this);
+        this.LeftChild.accept(v);
+        this.RightChild.accept(v);
     }
 }
 
@@ -230,7 +242,9 @@ class SubtractionNode extends InfixExpressionNode{
 
     @Override
     public void accept(ASTVisitor v) {
-
+        v.visit(this);
+        this.LeftChild.accept(v);
+        this.RightChild.accept(v);
     }
 }
 
@@ -238,7 +252,9 @@ class MultiplicationNode extends InfixExpressionNode{
 
     @Override
     public void accept(ASTVisitor v) {
-
+        v.visit(this);
+        this.LeftChild.accept(v);
+        this.RightChild.accept(v);
     }
 }
 
@@ -246,14 +262,18 @@ class DivisionNode extends InfixExpressionNode{
 
     @Override
     public void accept(ASTVisitor v) {
-
+        v.visit(this);
+        this.LeftChild.accept(v);
+        this.RightChild.accept(v);
     }
 }
 
 class PowerNode extends InfixExpressionNode{
     @Override
     public void accept(ASTVisitor v) {
-
+        v.visit(this);
+        this.LeftChild.accept(v);
+        this.RightChild.accept(v);
     }
     /* ex 3^4 */
 }
@@ -261,7 +281,7 @@ class PowerNode extends InfixExpressionNode{
 class NegateNode extends ExpressionNode{
     @Override
     public void accept(ASTVisitor v) {
-
+        //Tror ikke denne bliver benyttet
     }
     // ex -34;
 }
@@ -271,7 +291,8 @@ class NotNode extends ExpressionNode{
 
     @Override
     public void accept(ASTVisitor v) {
-
+        v.visit(this);
+        this.Expression.accept(v);
     }
 }
 
@@ -279,7 +300,9 @@ class AndNode extends InfixExpressionNode{
 
     @Override
     public void accept(ASTVisitor v) {
-
+        v.visit(this);
+        this.LeftChild.accept(v);
+        this.RightChild.accept(v);
     }
 }
 
@@ -287,7 +310,9 @@ class OrNode extends InfixExpressionNode{
 
     @Override
     public void accept(ASTVisitor v) {
-
+        v.visit(this);
+        this.LeftChild.accept(v);
+        this.RightChild.accept(v);
     }
 }
 
@@ -295,7 +320,9 @@ class ModuloNode extends InfixExpressionNode{
 
     @Override
     public void accept(ASTVisitor v) {
-
+        v.visit(this);
+        this.LeftChild.accept(v);
+        this.RightChild.accept(v);
     }
 }
 
@@ -303,7 +330,9 @@ class GreaterThanNode extends InfixExpressionNode{
 
     @Override
     public void accept(ASTVisitor v) {
-
+        v.visit(this);
+        this.LeftChild.accept(v);
+        this.RightChild.accept(v);
     }
 }
 
@@ -311,7 +340,9 @@ class LessThanNode extends InfixExpressionNode{
 
     @Override
     public void accept(ASTVisitor v) {
-
+        v.visit(this);
+        this.LeftChild.accept(v);
+        this.RightChild.accept(v);
     }
 }
 
@@ -319,7 +350,9 @@ class GEQNode extends InfixExpressionNode{
 
     @Override
     public void accept(ASTVisitor v) {
-
+        v.visit(this);
+        this.LeftChild.accept(v);
+        this.RightChild.accept(v);
     }
 }
 
@@ -327,7 +360,9 @@ class LEQNode extends InfixExpressionNode{
 
     @Override
     public void accept(ASTVisitor v) {
-
+        v.visit(this);
+        this.LeftChild.accept(v);
+        this.RightChild.accept(v);
     }
 }
 
@@ -335,7 +370,9 @@ class EqualsNode extends InfixExpressionNode{
 
     @Override
     public void accept(ASTVisitor v) {
-
+        v.visit(this);
+        this.LeftChild.accept(v);
+        this.RightChild.accept(v);
     }
 }
 
@@ -343,7 +380,9 @@ class NotEqualsNode extends  InfixExpressionNode{
 
     @Override
     public void accept(ASTVisitor v) {
-
+        v.visit(this);
+        this.LeftChild.accept(v);
+        this.RightChild.accept(v);
     }
 }
 
@@ -353,7 +392,7 @@ class IdNode extends ExpressionNode{
 
     @Override
     public void accept(ASTVisitor v) {
-
+        v.visit(this);
     }
 }
 
@@ -468,7 +507,9 @@ class StrategyDeclarationNode extends AbstractNode{
 
     @Override
     public void accept(ASTVisitor v) {
-
+        v.visit(this);
+        for(AbstractNode node : childList)
+            node.accept(v);
     }
     //public List<AbstractNode> childList = new ArrayList<>();
 }
