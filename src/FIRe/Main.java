@@ -32,8 +32,5 @@ public class Main {
         ProgNode ast = (ProgNode) new BuildASTVisitor().visitProg(cst);
         PrintTraversal print = new PrintTraversal();
         ast.accept(print);
-
-
-        ast.Print();
     }
 }
