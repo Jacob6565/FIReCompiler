@@ -37,6 +37,7 @@ abstract class AbstractNode
     }
 
     public ArrayList<AbstractNode> childList = new ArrayList<>();
+
 @Override
     public String toString() {
         return Type.class.toString();
@@ -129,8 +130,8 @@ class ValNode extends ExpressionNode{
 }
 
 class ArrayAccessNode extends ExpressionNode{
-    ExpressionNode id;
-    ExpressionNode index;
+    public ExpressionNode id;
+    public ExpressionNode index;
 }
 
 class TextNode extends ValNode{

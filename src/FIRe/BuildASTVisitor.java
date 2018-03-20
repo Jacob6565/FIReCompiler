@@ -275,7 +275,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         return node;
     }
 
-    BoolNode CreateBoolNode(CFGParser.ExprContext ctx){
+    private BoolNode CreateBoolNode(CFGParser.ExprContext ctx){
         BoolNode node = new BoolNode();
         if(ctx.BoolVal().toString().equals("true"))
             node.value = true;
@@ -284,7 +284,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         return node;
     }
 
-    ValNode CreateValNode(CFGParser.ExprContext ctx){
+    private ValNode CreateValNode(CFGParser.ExprContext ctx){
         ValNode node;
         if(tryParseDouble(ctx.Val().toString()))
             node = new NumberNode(Double.parseDouble(ctx.Val().toString()));
@@ -293,15 +293,13 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         return node;
     }
 
-    NotNode CreateNotNode(CFGParser.ExprContext ctx){
+    private NotNode CreateNotNode(CFGParser.ExprContext ctx){
         NotNode node = new NotNode();
         node.Expression = (ExpressionNode)visitExpr(ctx.expr().get(0));
         return node;
     }
 
-
-
-    boolean tryParseDouble(String value) {
+    private boolean tryParseDouble(String value) {
         try {
             Double.parseDouble(value);
             return true;
@@ -311,7 +309,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
     }
 
 
-    InfixExpressionNode CreateInFixExprNode(CFGParser.ExprContext ctx){
+    private InfixExpressionNode CreateInFixExprNode(CFGParser.ExprContext ctx){
         InfixExpressionNode node = null;
 
         if(!ctx.MultiOp().toString().isEmpty()){
@@ -355,7 +353,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         return node;
     }
 
-    MultiplicationNode CreateTimesNode(CFGParser.ExprContext ctx){
+    private MultiplicationNode CreateTimesNode(CFGParser.ExprContext ctx){
         MultiplicationNode node = new MultiplicationNode();
 
         node.LeftChild = (ExpressionNode) visitExpr(ctx.expr().get(0));
@@ -364,7 +362,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         return node;
     }
 
-    DivisionNode CreateDivisionNode(CFGParser.ExprContext ctx){
+    private DivisionNode CreateDivisionNode(CFGParser.ExprContext ctx){
         DivisionNode node = new DivisionNode();
         node.LeftChild = (ExpressionNode) visitExpr(ctx.expr().get(0));
         node.RightChild = (ExpressionNode) visitExpr(ctx.expr().get(1));
@@ -372,7 +370,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         return node;
     }
 
-    ModuloNode CreateModuloNode(CFGParser.ExprContext ctx){
+    private ModuloNode CreateModuloNode(CFGParser.ExprContext ctx){
         ModuloNode node = new ModuloNode();
         node.LeftChild = (ExpressionNode) visitExpr(ctx.expr().get(0));
         node.RightChild = (ExpressionNode) visitExpr(ctx.expr().get(1));
@@ -380,7 +378,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         return node;
     }
 
-    AdditionNode CreatePlusNode(CFGParser.ExprContext ctx){
+    private AdditionNode CreatePlusNode(CFGParser.ExprContext ctx){
         AdditionNode node = new AdditionNode();
         node.LeftChild = (ExpressionNode) visitExpr(ctx.expr().get(0));
         node.RightChild = (ExpressionNode) visitExpr(ctx.expr().get(1));
@@ -388,7 +386,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         return node;
     }
 
-    SubtractionNode CreateMinusNode(CFGParser.ExprContext ctx){
+    private SubtractionNode CreateMinusNode(CFGParser.ExprContext ctx){
         SubtractionNode node = new SubtractionNode();
         node.LeftChild = (ExpressionNode) visitExpr(ctx.expr().get(0));
         node.RightChild = (ExpressionNode) visitExpr(ctx.expr().get(1));
@@ -396,7 +394,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         return node;
     }
 
-    AndNode CreateAndNode(CFGParser.ExprContext ctx){
+    private AndNode CreateAndNode(CFGParser.ExprContext ctx){
         AndNode node = new AndNode();
         node.LeftChild = (ExpressionNode) visitExpr(ctx.expr().get(0));
         node.RightChild = (ExpressionNode) visitExpr(ctx.expr().get(1));
@@ -404,7 +402,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         return node;
     }
 
-    OrNode CreateOrNode(CFGParser.ExprContext ctx){
+    private OrNode CreateOrNode(CFGParser.ExprContext ctx){
         OrNode node = new OrNode();
         node.LeftChild = (ExpressionNode) visitExpr(ctx.expr().get(0));
         node.RightChild = (ExpressionNode) visitExpr(ctx.expr().get(1));
@@ -412,7 +410,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         return node;
     }
 
-    LessThanNode CreateLessThanNode(CFGParser.ExprContext ctx){
+    private LessThanNode CreateLessThanNode(CFGParser.ExprContext ctx){
         LessThanNode node = new LessThanNode();
         node.LeftChild = (ExpressionNode) visitExpr(ctx.expr().get(0));
         node.RightChild = (ExpressionNode) visitExpr(ctx.expr().get(1));
@@ -420,7 +418,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         return node;
     }
 
-    GreaterThanNode CreateGreaterThanNode(CFGParser.ExprContext ctx){
+    private GreaterThanNode CreateGreaterThanNode(CFGParser.ExprContext ctx){
         GreaterThanNode node = new GreaterThanNode();
         node.LeftChild = (ExpressionNode) visitExpr(ctx.expr().get(0));
         node.RightChild = (ExpressionNode) visitExpr(ctx.expr().get(1));
@@ -428,7 +426,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         return node;
     }
 
-    EqualsNode CreateEqualsNode(CFGParser.ExprContext ctx){
+    private EqualsNode CreateEqualsNode(CFGParser.ExprContext ctx){
         EqualsNode node = new EqualsNode();
         node.LeftChild = (ExpressionNode) visitExpr(ctx.expr().get(0));
         node.RightChild = (ExpressionNode) visitExpr(ctx.expr().get(1));
@@ -436,7 +434,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         return node;
     }
 
-    NotEqualsNode CreateNotEqualsNode(CFGParser.ExprContext ctx){
+    private NotEqualsNode CreateNotEqualsNode(CFGParser.ExprContext ctx){
         NotEqualsNode node = new NotEqualsNode();
         node.LeftChild = (ExpressionNode) visitExpr(ctx.expr().get(0));
         node.RightChild = (ExpressionNode) visitExpr(ctx.expr().get(1));
@@ -444,7 +442,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         return node;
     }
 
-    LEQNode CreateLEQNode(CFGParser.ExprContext ctx){
+    private LEQNode CreateLEQNode(CFGParser.ExprContext ctx){
         LEQNode node = new LEQNode();
         node.LeftChild = (ExpressionNode) visitExpr(ctx.expr().get(0));
         node.RightChild = (ExpressionNode) visitExpr(ctx.expr().get(1));
@@ -452,7 +450,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         return node;
     }
 
-    GEQNode CreateGEQNode(CFGParser.ExprContext ctx){
+    private GEQNode CreateGEQNode(CFGParser.ExprContext ctx){
         GEQNode node = new GEQNode();
         node.LeftChild = (ExpressionNode) visitExpr(ctx.expr().get(0));
         node.RightChild = (ExpressionNode) visitExpr(ctx.expr().get(1));
@@ -460,7 +458,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         return node;
     }
 
-    PowerNode CreateExponentNode(CFGParser.ExprContext ctx){
+    private PowerNode CreateExponentNode(CFGParser.ExprContext ctx){
         PowerNode node = new PowerNode();
         node.LeftChild = (ExpressionNode) visitExpr(ctx.expr().get(0));
         node.RightChild = (ExpressionNode) visitExpr(ctx.expr().get(1));
@@ -468,7 +466,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         return node;
     }
 
-    ArrayAccessNode CreateArrayAccessNode(CFGParser.ExprContext ctx){
+    private ArrayAccessNode CreateArrayAccessNode(CFGParser.ExprContext ctx){
         ArrayAccessNode node = new ArrayAccessNode();
         node.id = (ExpressionNode) visitExpr(ctx.expr().get(0));
         node.index = (ExpressionNode) visitExpr(ctx.expr().get(1));
