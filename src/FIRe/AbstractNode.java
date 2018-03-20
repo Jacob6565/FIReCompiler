@@ -550,6 +550,13 @@ class FormalParameterNode extends AbstractNode{
     public void accept(ASTVisitor v) {
         //Hvor man inde i denne visit metode så printer elementerne i mappen.
         v.visit(this);
+        for(Map.Entry<AbstractNode, String> set : parameterMap.entrySet())
+        {
+            //Just printing the types.
+            System.out.print(set.getValue().toString());
+            //Calling the visit method for all the id nodes.
+            set.getKey().accept(v);
+        }
 
     }
 }
