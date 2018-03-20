@@ -32,16 +32,14 @@ abstract class AbstractNode
 
     }
 
-
     /*Each class needs this in order to accept a
     * visit from a visitor. Then each nodes has to call
     * its childrens accept-methods.*/
     public abstract void accept(ASTVisitor v);
 
-
     public ArrayList<AbstractNode> childList = new ArrayList<>();
 
-@Override
+    @Override
     public String toString() {
         return Type.class.toString();
     }
@@ -74,7 +72,6 @@ abstract class ControlStructureNode extends AbstractNode{
 
 abstract class InfixExpressionNode extends ExpressionNode{
     public ExpressionNode LeftChild;
-
     public ExpressionNode RightChild;
 }
 
