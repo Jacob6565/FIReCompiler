@@ -30,8 +30,8 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
             return visitFuncDcl(ctx.funcDcl());
         else if(ctx.strategyDcl() != null)
             return visitStrategyDcl(ctx.strategyDcl());
-        else if(ctx.conditionDcl() != null)
-            return visitConditionDcl(ctx.conditionDcl());
+        else if(ctx.eventDcl() != null)
+            return visitEventDcl(ctx.eventDcl());
         else
             return null; //..og burde ikke returne null
     }
@@ -43,8 +43,8 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         node.id = (IdNode)visitId(ctx.id());
         node.childList.add(visitFParamList(ctx.fParamList())); //Vi tilføjer dens Fparamliste
 
-        for(CFGParser.BlockBodyContext blockBodyCtx : ctx.blockBody())
-            node.childList.add(visitBlockBody(blockBodyCtx)); //og alle dens Blockbodies
+        for(CFGParser.BlockContext blockCtx : ctx.block())
+            node.childList.add(visitBlock(blockCtx)); //og alle dens Blockbodies
 
         for(CFGParser.StrategyBlockContext strategyBlockCtx : ctx.strategyBlock())
             node.childList.add(visitStrategyBlock(strategyBlockCtx)); //Og dens strategy-blocks (routines og whens)
@@ -501,8 +501,8 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
     }
 
     @Override
-    public AbstractNode visitConditionDcl(CFGParser.ConditionDclContext ctx) {
-        ConditionDeclarationNode CDN = new ConditionDeclarationNode();
+    public AbstractNode visitEventDcl(CFGParser.EventDclContext ctx) {
+        EventDeclarationNode CDN = new EventDeclarationNode();
         CDN.childList.add(visitId(ctx.id()));
         if (ctx.fParamList() != null)
             CDN.childList.add(visitFParamList(ctx.fParamList())); //Vi tilføjer den ikke, hvis den ikke findes.

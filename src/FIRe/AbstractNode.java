@@ -521,7 +521,7 @@ class WhenNode extends AbstractNode{
     }
 }
 
-class ConditionDeclarationNode extends AbstractNode{
+class EventDeclarationNode extends AbstractNode{
     @Override
     public void accept(ASTVisitor v) {
         v.visit(this);

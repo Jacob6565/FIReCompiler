@@ -74,8 +74,8 @@ public class PrintTraversal extends ASTVisitor{
     }
 
     @Override
-    public void visit(ConditionDeclarationNode node) {
-        System.out.println("Condition Declaration");
+    public void visit(EventDeclarationNode node) {
+        System.out.println("Event Declaration");
     }
 
     @Override
