@@ -106,7 +106,7 @@ stmt		        : assignStmt SemiColon
                     | ctrlStruct
                     | Return expr SemiColon
                     ;
-routine	            : Routine Parenl (Val | id)? Parenr block
+routine	            : Routine Parenl (expr)? Parenr block
                     ;
 when		        : When Parenl (id id) Parenr block
                     ;
@@ -132,7 +132,7 @@ eventDcl            : Event id Parenl fParamList? Parenr block
 aParamList          : expr (Comma aParamList)?
                     ;
 ctrlStruct          : aif (aelseif)* (aelse)?
-                    | For Parenl (dcl | Val | id) (Upto | Downto) (Val | id) Parenr block
+                    | For Parenl (dcl | expr) (Upto | Downto) (expr) Parenr block
                     | While Parenl expr Parenr block
                     | routine
                     ;
