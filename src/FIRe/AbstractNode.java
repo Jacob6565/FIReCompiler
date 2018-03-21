@@ -99,7 +99,7 @@ class WhileNode extends ControlStructureNode{
     }
 }
 
-class ForNode extends  ControlStructureNode{
+class ForNode extends ControlStructureNode{
 
     @Override
     public void accept(ASTVisitor v) {
@@ -521,7 +521,7 @@ class WhenNode extends AbstractNode{
     }
 }
 
-class ConditionDeclarationNode extends AbstractNode{
+class EventDeclarationNode extends AbstractNode{
     @Override
     public void accept(ASTVisitor v) {
         v.visit(this);
@@ -561,7 +561,6 @@ class FormalParameterNode extends AbstractNode{
     public void accept(ASTVisitor v) {
         //Hvor man inde i denne visit metode så printer elementerne i mappen.
         v.visit(this);
-
     }
 }
 

@@ -60,7 +60,8 @@ Void                : 'void';
 Assign              : '=';
 Return              : 'return';
 Not                 : '!';
-Condition           : 'condition';
+Event               : 'event';
+Setup               : 'setup';
 
 Name                : [A-z][A-z0-9]*;
 EndOfFile           : '$';
@@ -71,9 +72,9 @@ prog                : robotDcl (progBody)* EndOfFile
 progBody            : dcl
                     | funcDcl
                     | strategyDcl
-                    | conditionDcl
+                    | eventDcl
                     ;
-strategyDcl     	: Strategy id Parenl fParamList? Parenr Scopel (blockBody)* (strategyBlock)* Scoper
+strategyDcl     	: Strategy id Parenl fParamList? Parenr Scopel (Setup block)? (strategyBlock)* Scoper
                     ;
 strategyBlock       : routine
                     | when
@@ -126,7 +127,7 @@ assignStmt	        : id Assign expr
                     ;
 funcCall	        : id Parenl aParamList? Parenr
                     ;
-conditionDcl        : Condition id Parenl fParamList? Parenr block
+eventDcl            : Event id Parenl fParamList? Parenr block
                     ;
 aParamList          : expr (Comma aParamList)?
                     ;

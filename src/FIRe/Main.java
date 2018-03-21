@@ -34,6 +34,6 @@ public class Main {
         //cst.children.add(parser.dcl());
         ProgNode ast = (ProgNode) new BuildASTVisitor().visitProg(cst);
         PrintTraversal print = new PrintTraversal();
-        ast.accept(print);
+        print.Print(ast,0);
     }
 }

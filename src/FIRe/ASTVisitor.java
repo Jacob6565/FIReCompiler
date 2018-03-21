@@ -20,10 +20,10 @@ public abstract class ASTVisitor
     public abstract void visit(BoolNode node);
     public abstract void visit(Color node);
     public abstract void visit(ColorValNode node);
-    public abstract void visit(ConditionDeclarationNode node);
     public abstract void visit(ControlStructureNode node);
     public abstract void visit(DeclarationNode node);
     public abstract void visit(DivisionNode node);
+    public abstract void visit(EventDeclarationNode node);
     public abstract void visit(EqualsNode node);
     public abstract void visit(ExpressionNode node);
     public abstract void visit(FormalParameterNode node);

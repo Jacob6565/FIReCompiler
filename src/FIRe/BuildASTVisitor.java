@@ -14,6 +14,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         ProgNode root = new ProgNode();
 
         root.childList.add(visitRobotDcl(ctx.robotDcl()));
+
         for(CFGParser.ProgBodyContext progBodyCtx: ctx.progBody()){
             root.childList.add(visitProgBody(progBodyCtx)); //Vi tilføjer alle  progbodies, idet vi visitter dem.
         }
@@ -29,8 +30,8 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
             return visitFuncDcl(ctx.funcDcl());
         else if(ctx.strategyDcl() != null)
             return visitStrategyDcl(ctx.strategyDcl());
-        else if(ctx.conditionDcl() != null)
-            return visitConditionDcl(ctx.conditionDcl());
+        else if(ctx.eventDcl() != null)
+            return visitEventDcl(ctx.eventDcl());
         else
             return null; //..og burde ikke returne null
     }
@@ -42,8 +43,8 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         node.id = (IdNode)visitId(ctx.id());
         node.childList.add(visitFParamList(ctx.fParamList())); //Vi tilføjer dens Fparamliste
 
-        for(CFGParser.BlockBodyContext blockBodyCtx : ctx.blockBody())
-            node.childList.add(visitBlockBody(blockBodyCtx)); //og alle dens Blockbodies
+        if(ctx.block()!=null)
+            node.childList.add(visitBlock(ctx.block())); //og dens Block
 
         for(CFGParser.StrategyBlockContext strategyBlockCtx : ctx.strategyBlock())
             node.childList.add(visitStrategyBlock(strategyBlockCtx)); //Og dens strategy-blocks (routines og whens)
@@ -358,12 +359,12 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
     }
 
     private MultiplicationNode CreateTimesNode(CFGParser.ExprContext ctx){
-        MultiplicationNode node = new MultiplicationNode();
+        InfixExpressionNode node = new MultiplicationNode();
 
         node.LeftChild = (ExpressionNode) visitExpr(ctx.expr().get(0));
         node.RightChild = (ExpressionNode) visitExpr(ctx.expr().get(1));
 
-        return node;
+        return (MultiplicationNode) node;
     }
 
     private DivisionNode CreateDivisionNode(CFGParser.ExprContext ctx){
@@ -500,8 +501,8 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
     }
 
     @Override
-    public AbstractNode visitConditionDcl(CFGParser.ConditionDclContext ctx) {
-        ConditionDeclarationNode CDN = new ConditionDeclarationNode();
+    public AbstractNode visitEventDcl(CFGParser.EventDclContext ctx) {
+        EventDeclarationNode CDN = new EventDeclarationNode();
         CDN.childList.add(visitId(ctx.id()));
         if (ctx.fParamList() != null)
             CDN.childList.add(visitFParamList(ctx.fParamList())); //Vi tilføjer den ikke, hvis den ikke findes.
