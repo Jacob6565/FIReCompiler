@@ -323,10 +323,10 @@ public class PrintTraversal extends ASTVisitor{
             visit ((BoolNode) node);
         else if (node instanceof ColorValNode)
             visit((ColorValNode) node);
-        else if (node instanceof ConditionDeclarationNode)
-            visit((ConditionDeclarationNode) node);
         else if (node instanceof DivisionNode)
             visit ((DivisionNode) node);
+        else if (node instanceof EventDeclarationNode)
+            visit((EventDeclarationNode) node);
         else if (node instanceof EqualsNode)
             visit ((EqualsNode) node);
         else if (node instanceof FormalParameterNode)
