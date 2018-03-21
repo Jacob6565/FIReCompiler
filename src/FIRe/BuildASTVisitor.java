@@ -359,12 +359,12 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
     }
 
     private MultiplicationNode CreateTimesNode(CFGParser.ExprContext ctx){
-        MultiplicationNode node = new MultiplicationNode();
+        InfixExpressionNode node = new MultiplicationNode();
 
         node.LeftChild = (ExpressionNode) visitExpr(ctx.expr().get(0));
         node.RightChild = (ExpressionNode) visitExpr(ctx.expr().get(1));
 
-        return node;
+        return (MultiplicationNode) node;
     }
 
     private DivisionNode CreateDivisionNode(CFGParser.ExprContext ctx){
