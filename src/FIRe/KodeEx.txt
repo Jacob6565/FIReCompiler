@@ -69,7 +69,7 @@ strategy Offensive()
    }
 }
 
-condition LowHealth()
+event LowHealth()
 {
    turnLeftAndRotate("SittingDuck");
 
