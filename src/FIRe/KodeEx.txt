@@ -10,11 +10,12 @@ RobotProperties
 number firepower = 1;
 text nameOfRival = "SittingDuck";
 
-bool turnLeftAndRotate(text currentRival)
+bool turnLeftAndRotate(text currentRival, number hallo)
 {
    number degrees = 90;
    nameOfRival = currentRival;
    bool shotAtRival= false;
+   bool a[];
 
    if (nameOfRival == "WallRider")
    {

@@ -113,20 +113,15 @@ class ForNode extends ControlStructureNode{
 }
 
 class RoutineNode extends ControlStructureNode{
-    String val;
+    ExpressionNode repeatCondition;
 
-    public RoutineNode(String val, AbstractNode routineBlock){
-        this.val = val;
+    public RoutineNode(AbstractNode routineBlock) {
+        repeatCondition = null;
         childList.add(routineBlock);
     }
 
-    public RoutineNode(AbstractNode id, AbstractNode routineBlock){
-        childList.add(id);
-        childList.add(routineBlock);
-    }
-
-    public RoutineNode(AbstractNode routineBlock){
-        val = null;
+    public RoutineNode(AbstractNode expr, AbstractNode routineBlock){
+        repeatCondition = (ExpressionNode) expr;
         childList.add(routineBlock);
     }
 

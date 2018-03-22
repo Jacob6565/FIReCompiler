@@ -226,10 +226,8 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
     @Override
     public AbstractNode visitRoutine(CFGParser.RoutineContext ctx) {
         //Her fremgår de forskellige slags routine-kald. med id, med Val og tom.
-        if(ctx.id() != null)
-            return (new RoutineNode(visitId(ctx.id()), visitBlock(ctx.block())));
-        else if(ctx.Val() != null)
-            return(new RoutineNode(ctx.Val().toString(), visitBlock(ctx.block())));
+        if(ctx.expr() != null)
+            return (new RoutineNode(visitExpr(ctx.expr()), visitBlock(ctx.block())));
         else
             return(new RoutineNode(visitBlock(ctx.block())));
     }
@@ -504,8 +502,6 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
     public AbstractNode visitEventDcl(CFGParser.EventDclContext ctx) {
         EventDeclarationNode CDN = new EventDeclarationNode();
         CDN.childList.add(visitId(ctx.id()));
-        if (ctx.fParamList() != null)
-            CDN.childList.add(visitFParamList(ctx.fParamList())); //Vi tilføjer den ikke, hvis den ikke findes.
         CDN.childList.add(visitBlock(ctx.block()));
 
         return CDN;
@@ -545,14 +541,13 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
 
         else if (ctx.For() != null){//Hvis det er en for
             ForNode FN = new ForNode();
-            if (ctx.dcl() != null){//I denne if-kæde afgør vi det første led i for-løkken
+            if (ctx.dcl() != null){//I denne if-kæde afgør vi om det første led i for-løkken er en dcl
                 FN.childList.add(visitDcl(ctx.dcl()));
             }
-            else if (ctx.Val(0) != null){ //Vi ser om den først val er forskellig fra null, jeg håber det kan bruges sådan. Crossing fingers
-                FN.childList.add(visitTerminal(ctx.Val(0)));
-            }
-            else if (ctx.id(0) != null){
-                FN.childList.add(visitId(ctx.id(0)));
+            else if (ctx.expr() != null){ //Nu vil vi gerne tilføje alle expressions (som også kan være id) til childlisten. Der kan max være 2.
+                for (CFGParser.ExprContext exprContext: ctx.expr()) {
+                    FN.childList.add(visitExpr(exprContext));
+                }
             }
             else
                 return null;
@@ -561,13 +556,6 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
             //Incremental == kører opad.
             FN.Incremental = ctx.Downto() == null;
 
-            if (ctx.Val(1) != null){ //Her afgør vi det andet led i løkken.
-                FN.childList.add(visitTerminal(ctx.Val(1)));
-            }
-            else if (ctx.id(1) != null){
-                FN.childList.add(visitId(ctx.id(1)));
-            }
-
             FN.childList.add(visitBlock(ctx.block())); //Her er blokken af koden, der skal udføres.
 
             return FN;
@@ -575,7 +563,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
 
         else if (ctx.While() != null){ //While-noden får en expression og en block.
             WhileNode node = new WhileNode();
-            node.childList.add(visitExpr(ctx.expr()));
+            node.childList.add(visitExpr(ctx.expr(0))); //En while controlstruct kan kun have en expression
             node.childList.add(visitBlock(ctx.block()));
             return node;
         }
@@ -608,8 +596,8 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
             node.name = node.name + "." + ctx.id().Name().toString();
             ctx = ctx.id();
         }
-        if(ctx.Val() != null){
-            node.name = node.name + "[" + ctx.Val().toString() + "]";
+        if(ctx.Squarel() != null){
+            node.name = node.name + "[" + "]";
         }
 
         return node;

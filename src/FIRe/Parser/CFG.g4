@@ -127,7 +127,7 @@ assignStmt	        : id Assign expr
                     ;
 funcCall	        : id Parenl aParamList? Parenr
                     ;
-eventDcl            : Event id Parenl fParamList? Parenr block
+eventDcl            : Event id Parenl Parenr block
                     ;
 aParamList          : expr (Comma aParamList)?
                     ;
@@ -143,5 +143,4 @@ aelseif             : Elseif Parenl expr Parenl  block
 aelse               : Else  block
                     ;
 id                  : Name ( Dot id)?
-                    | Name Squarel Val Squarer
-                    ;
+                    | Name Squarel Squarer;
