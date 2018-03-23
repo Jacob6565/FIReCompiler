@@ -393,6 +393,5 @@ public class PrintTraversal extends ASTVisitor{
             visit ((WhileNode) node);
         else
             System.out.println("Error");
-
     }
 }

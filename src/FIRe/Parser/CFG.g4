@@ -69,7 +69,7 @@ EndOfFile           : '$';
 //Parser rules
 prog                : robotDcl (progBody)* EndOfFile
                     ;
-progBody            : dcl
+progBody            : dcl SemiColon
                     | funcDcl
                     | strategyDcl
                     | eventDcl
@@ -86,7 +86,7 @@ funcType	        : Void
                     ;
 block 	            :Scopel (blockBody)* Scoper
                     ;
-blockBody           : dcl
+blockBody           : dcl SemiColon
                     | stmt
                     ;
 fParamList          : Type id
@@ -98,8 +98,8 @@ robotDcl 	        : RobotProperties Scopel robotDclBody Scoper
 robotDclBody        : (id Colon id SemiColon)*
 //robotDclBody        : RobotName Colon id SemiColon RobotType Colon RobotTypeVal SemiColon (RobotProperty Colon ColorVal SemiColon)*
                     ;
-dcl                 : Type id Assign expr SemiColon
-                    | Type id (Comma id)* SemiColon
+dcl                 : Type id Assign expr
+                    | Type id (Comma id)*
                     ;
 stmt		        : assignStmt SemiColon
                     | funcCall SemiColon

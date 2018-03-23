@@ -45,7 +45,7 @@ abstract class AbstractNode
         return Type.class.toString();
     }
 
-    public void Print(){
+    private void Print(){
         System.out.print(this);
         for (AbstractNode AN : this.childList) {
             AN.Print();
@@ -449,16 +449,15 @@ class ActualParameterNode extends AbstractNode{
 }
 
 class ReturnNode extends StatementNode{
-    AbstractNode expr;
 
     public ReturnNode(AbstractNode node){
-        expr = node;
+        childList.add(node);
     }
     @Override
     public void accept(ASTVisitor v) {
         v.visit(this);
-        if(expr != null)
-            expr.accept(v);
+        if(childList.get(0) != null)
+            childList.get(0).accept(v);
     }
 }
 

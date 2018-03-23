@@ -16,7 +16,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         root.childList.add(visitRobotDcl(ctx.robotDcl()));
 
         for(CFGParser.ProgBodyContext progBodyCtx: ctx.progBody()){
-            root.childList.add(visitProgBody(progBodyCtx)); //Vi tilføjer alle  progbodies, idet vi visitter dem.
+            root.childList.add(visitProgBody(progBodyCtx)); //Vi tilføjer alle  progbodies, idet vi visiter dem.
         }
 
         return root;
@@ -253,6 +253,8 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
                 node = visitFuncCall(ctx.funcCall());
             else if (ctx.Not() != null)
                 node = CreateNotNode(ctx);
+            else if (ctx.Parenl() != null)
+                node = visitExpr(ctx.expr().get(0));
         }
         /*
         else if(!ctx.Hat().toString().isEmpty())
