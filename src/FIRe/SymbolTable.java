@@ -6,40 +6,41 @@ import java.util.Stack;
 
 public class SymbolTable  {
 
-    private Stack<Hashtable<String, String>> stack = new Stack<Hashtable<String, String>>();
+    private FIRe.Stack<Hashtable<String, String>> stack = new FIRe.Stack<Hashtable<String, String>>();
 
     public SymbolTable(){
         OpenScope();
     }
 
     public void Insert(String input) throws Exception{
-        if(!stack.firstElement().contains(input)) {
-            stack.firstElement().put((String.valueOf(input.hashCode())), input);
+        if(!stack.Peek().contains(input)) {
+            stack.Peek().put((String.valueOf(input.hashCode())), input);
             return;
         }
         throw new Exception("Variable allerede brugt");
     }
 
     public void OpenScope(){
-        stack.push(new Hashtable<String, String>());
+        stack.Push(new Hashtable<String, String>());
     }
 
     public void CloseScope(){
-        stack.pop();
+        stack.Peek().clear();
+        stack.Pop();
     }
 
     public String Search(String key) throws Exception{
-        for (int i = stack.size()-1; i >= 0; i-- ){
-            if(stack.get(i).contains(key)){
-                return stack.elementAt(i).get(String.valueOf(key.hashCode()));
+        for (int i = 0; i < stack.Size(); i++ ){
+            if(stack.Get(i).contains(key)){
+                return stack.Get(i).get(String.valueOf(key.hashCode()));
             }
         }
         throw new Exception("Variabel kunne ikke findes");
     }
 
     public boolean Contains(String key){
-        for (int i = stack.size()-1; i >= 0; i-- ){
-            if(stack.get(i).contains(key)){
+        for (int i = 0; i < stack.Size(); i++ ){
+            if(stack.Get(i).contains(key)){
                 return true;
             }
         }

@@ -39,13 +39,7 @@ public class Main {
         SymbolTable st = new SymbolTable();
         try {
             st.Insert("Fredag");
-            st.Insert("Lørdag");
-            st.Insert("Søndag");
-            st.Insert("Mandag");
-            st.OpenScope();
-            st.Insert("KAffe og KAge");
-            st.CloseScope();
-            st.Search("KAffe og KAge");
+            st.Insert("Fredag");
 
             System.out.println(st.Search("Fredag"));
         }
