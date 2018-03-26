@@ -43,8 +43,10 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         node.id = (IdNode)visitId(ctx.id());
         node.childList.add(visitFParamList(ctx.fParamList())); //Vi tilføjer dens Fparamliste
 
-        if(ctx.block()!=null)
-            node.childList.add(visitBlock(ctx.block())); //og dens Block
+        if(ctx.blockBody() != null)
+            for(CFGParser.BlockBodyContext blockBodyCtx: ctx.blockBody()) {
+                node.childList.add(visitBlockBody(blockBodyCtx)); //og dens Block
+            }
 
         for(CFGParser.StrategyBlockContext strategyBlockCtx : ctx.strategyBlock())
             node.childList.add(visitStrategyBlock(strategyBlockCtx)); //Og dens strategy-blocks (routines og whens)
