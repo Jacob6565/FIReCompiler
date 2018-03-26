@@ -36,7 +36,7 @@ abstract class AbstractNode
     /*Each class needs this in order to accept a
     * visit from a visitor. Then each nodes has to call
     * its childrens accept-methods.*/
-    public abstract void accept(ASTVisitor v);
+    public abstract void accept(ASTVisitor v) throws Exception;
 
     public ArrayList<AbstractNode> childList = new ArrayList<>();
 
@@ -80,7 +80,7 @@ abstract class InfixExpressionNode extends ExpressionNode{
 
 class IfControlStructureNode extends ControlStructureNode{
     @Override
-    public void accept(ASTVisitor v) {
+    public void accept(ASTVisitor v) throws Exception {
         v.visit(this);
         for (AbstractNode child:childList) {
             if(child != null)
@@ -92,7 +92,7 @@ class IfControlStructureNode extends ControlStructureNode{
 class WhileNode extends ControlStructureNode{
 
     @Override
-    public void accept(ASTVisitor v) {
+    public void accept(ASTVisitor v) throws Exception {
         v.visit(this);
         for(AbstractNode node : childList)
             node.accept(v);
@@ -102,7 +102,7 @@ class WhileNode extends ControlStructureNode{
 class ForNode extends ControlStructureNode{
 
     @Override
-    public void accept(ASTVisitor v) {
+    public void accept(ASTVisitor v) throws Exception {
         v.visit(this);
         for(AbstractNode child : childList)
         {
@@ -126,7 +126,7 @@ class RoutineNode extends ControlStructureNode{
     }
 
     @Override
-    public void accept(ASTVisitor v) {
+    public void accept(ASTVisitor v) throws Exception {
         v.visit(this);
         for(AbstractNode node : childList)
             node.accept(v);
@@ -137,7 +137,7 @@ class RoutineNode extends ControlStructureNode{
 
 class RobotDclBodyNode extends  AbstractNode{
     @Override
-    public void accept(ASTVisitor v) {
+    public void accept(ASTVisitor v) throws Exception {
         v.visit(this);
         for (AbstractNode child: childList)
         {
@@ -188,7 +188,7 @@ class ArrayAccessNode extends ExpressionNode{
     public ExpressionNode index;
 
     @Override
-    public void accept(ASTVisitor v) {
+    public void accept(ASTVisitor v) throws Exception {
         v.visit(this);
         id.accept(v);
         index.accept(v);
@@ -245,7 +245,7 @@ class BoolNode extends ExpressionNode{
 class AdditionNode extends InfixExpressionNode{
 
     @Override
-    public void accept(ASTVisitor v) {
+    public void accept(ASTVisitor v) throws Exception {
         v.visit(this);
         this.LeftChild.accept(v);
         this.RightChild.accept(v);
@@ -255,7 +255,7 @@ class AdditionNode extends InfixExpressionNode{
 class SubtractionNode extends InfixExpressionNode{
 
     @Override
-    public void accept(ASTVisitor v) {
+    public void accept(ASTVisitor v) throws Exception {
         v.visit(this);
         this.LeftChild.accept(v);
         this.RightChild.accept(v);
@@ -265,7 +265,7 @@ class SubtractionNode extends InfixExpressionNode{
 class MultiplicationNode extends InfixExpressionNode{
 
     @Override
-    public void accept(ASTVisitor v) {
+    public void accept(ASTVisitor v) throws Exception {
         v.visit(this);
         this.LeftChild.accept(v);
         this.RightChild.accept(v);
@@ -275,7 +275,7 @@ class MultiplicationNode extends InfixExpressionNode{
 class DivisionNode extends InfixExpressionNode{
 
     @Override
-    public void accept(ASTVisitor v) {
+    public void accept(ASTVisitor v) throws Exception {
         v.visit(this);
         this.LeftChild.accept(v);
         this.RightChild.accept(v);
@@ -284,7 +284,7 @@ class DivisionNode extends InfixExpressionNode{
 
 class PowerNode extends InfixExpressionNode{
     @Override
-    public void accept(ASTVisitor v) {
+    public void accept(ASTVisitor v) throws Exception {
         v.visit(this);
         this.LeftChild.accept(v);
         this.RightChild.accept(v);
@@ -304,7 +304,7 @@ class NotNode extends ExpressionNode{
     public ExpressionNode Expression;
 
     @Override
-    public void accept(ASTVisitor v) {
+    public void accept(ASTVisitor v) throws Exception {
         v.visit(this);
         this.Expression.accept(v);
     }
@@ -313,7 +313,7 @@ class NotNode extends ExpressionNode{
 class AndNode extends InfixExpressionNode{
 
     @Override
-    public void accept(ASTVisitor v) {
+    public void accept(ASTVisitor v) throws Exception {
         v.visit(this);
         this.LeftChild.accept(v);
         this.RightChild.accept(v);
@@ -323,7 +323,7 @@ class AndNode extends InfixExpressionNode{
 class OrNode extends InfixExpressionNode{
 
     @Override
-    public void accept(ASTVisitor v) {
+    public void accept(ASTVisitor v) throws Exception {
         v.visit(this);
         this.LeftChild.accept(v);
         this.RightChild.accept(v);
@@ -333,7 +333,7 @@ class OrNode extends InfixExpressionNode{
 class ModuloNode extends InfixExpressionNode{
 
     @Override
-    public void accept(ASTVisitor v) {
+    public void accept(ASTVisitor v) throws Exception {
         v.visit(this);
         this.LeftChild.accept(v);
         this.RightChild.accept(v);
@@ -343,7 +343,7 @@ class ModuloNode extends InfixExpressionNode{
 class GreaterThanNode extends InfixExpressionNode{
 
     @Override
-    public void accept(ASTVisitor v) {
+    public void accept(ASTVisitor v) throws Exception {
         v.visit(this);
         this.LeftChild.accept(v);
         this.RightChild.accept(v);
@@ -353,7 +353,7 @@ class GreaterThanNode extends InfixExpressionNode{
 class LessThanNode extends InfixExpressionNode{
 
     @Override
-    public void accept(ASTVisitor v) {
+    public void accept(ASTVisitor v) throws Exception {
         v.visit(this);
         this.LeftChild.accept(v);
         this.RightChild.accept(v);
@@ -363,7 +363,7 @@ class LessThanNode extends InfixExpressionNode{
 class GEQNode extends InfixExpressionNode{
 
     @Override
-    public void accept(ASTVisitor v) {
+    public void accept(ASTVisitor v) throws Exception {
         v.visit(this);
         this.LeftChild.accept(v);
         this.RightChild.accept(v);
@@ -373,7 +373,7 @@ class GEQNode extends InfixExpressionNode{
 class LEQNode extends InfixExpressionNode{
 
     @Override
-    public void accept(ASTVisitor v) {
+    public void accept(ASTVisitor v) throws Exception {
         v.visit(this);
         this.LeftChild.accept(v);
         this.RightChild.accept(v);
@@ -383,7 +383,7 @@ class LEQNode extends InfixExpressionNode{
 class EqualsNode extends InfixExpressionNode{
 
     @Override
-    public void accept(ASTVisitor v) {
+    public void accept(ASTVisitor v) throws Exception {
         v.visit(this);
         this.LeftChild.accept(v);
         this.RightChild.accept(v);
@@ -393,20 +393,20 @@ class EqualsNode extends InfixExpressionNode{
 class NotEqualsNode extends  InfixExpressionNode{
 
     @Override
-    public void accept(ASTVisitor v) {
+    public void accept(ASTVisitor v) throws Exception {
         v.visit(this);
         this.LeftChild.accept(v);
         this.RightChild.accept(v);
     }
 }
 
-class IdNode extends ExpressionNode{
+class IdNode extends ExpressionNode {
     public String name;
     public String type;
 
 
     @Override
-    public void accept(ASTVisitor v) {
+    public void accept(ASTVisitor v) throws Exception {
         v.visit(this);
     }
 }
@@ -418,7 +418,7 @@ class AssignNode extends StatementNode{
     public ExpressionNode Expression;
 
     @Override
-    public void accept(ASTVisitor v) {
+    public void accept(ASTVisitor v) throws Exception {
         v.visit(this);
         for (AbstractNode child: childList) {
             if(child != null)
@@ -429,7 +429,7 @@ class AssignNode extends StatementNode{
 
 class FuncCallNode extends ExpressionNode{
     @Override
-    public void accept(ASTVisitor v) {
+    public void accept(ASTVisitor v) throws Exception {
         v.visit(this);
         for(AbstractNode node : childList)
             node.accept(v);
@@ -438,7 +438,7 @@ class FuncCallNode extends ExpressionNode{
 
 class ActualParameterNode extends AbstractNode{
     @Override
-    public void accept(ASTVisitor v) {
+    public void accept(ASTVisitor v) throws Exception {
         v.visit(this);
         for(AbstractNode child : childList)
         {
@@ -454,7 +454,7 @@ class ReturnNode extends StatementNode{
         childList.add(node);
     }
     @Override
-    public void accept(ASTVisitor v) {
+    public void accept(ASTVisitor v) throws Exception {
         v.visit(this);
         if(childList.get(0) != null)
             childList.get(0).accept(v);
@@ -465,7 +465,7 @@ class ReturnNode extends StatementNode{
 
 class NumberDeclarationNode extends DeclarationNode{
     @Override
-    public void accept(ASTVisitor v) {
+    public void accept(ASTVisitor v) throws Exception {
         v.visit(this);
         for (AbstractNode node : this.childList) {
             if(node != null)
@@ -478,7 +478,7 @@ class NumberDeclarationNode extends DeclarationNode{
 class TextDeclarationNode extends DeclarationNode{
 
     @Override
-    public void accept(ASTVisitor v) {
+    public void accept(ASTVisitor v) throws Exception {
         v.visit(this);
         for (AbstractNode node : this.childList) {
             if(node != null)
@@ -490,7 +490,7 @@ class TextDeclarationNode extends DeclarationNode{
 class BooleanDeclarationNode extends DeclarationNode{
 
     @Override
-    public void accept(ASTVisitor v) {
+    public void accept(ASTVisitor v) throws Exception {
         v.visit(this);
         for (AbstractNode node : this.childList) {
             if(node != null)
@@ -508,7 +508,7 @@ class WhenNode extends AbstractNode{
     }
 
     @Override
-    public void accept(ASTVisitor v) {
+    public void accept(ASTVisitor v) throws Exception {
         v.visit(this);
         for(AbstractNode node : childList)
             node.accept(v);
@@ -517,7 +517,7 @@ class WhenNode extends AbstractNode{
 
 class EventDeclarationNode extends AbstractNode{
     @Override
-    public void accept(ASTVisitor v) {
+    public void accept(ASTVisitor v) throws Exception {
         v.visit(this);
 
         for(AbstractNode node : childList)
@@ -528,7 +528,7 @@ class EventDeclarationNode extends AbstractNode{
 class BlockNode extends AbstractNode{
 
     @Override
-    public void accept(ASTVisitor v) {
+    public void accept(ASTVisitor v) throws Exception {
         v.visit(this);
         for(AbstractNode node : this.childList)
             if(node != null)
@@ -540,7 +540,7 @@ class FunctionDeclarationNode extends AbstractNode{
     String type;
 
     @Override
-    public void accept(ASTVisitor v) {
+    public void accept(ASTVisitor v) throws Exception {
         v.visit(this);
         for(AbstractNode node : childList)
             if(node != null)
@@ -562,7 +562,7 @@ class StrategyDeclarationNode extends AbstractNode{
     public IdNode id;
 
     @Override
-    public void accept(ASTVisitor v) {
+    public void accept(ASTVisitor v) throws Exception {
         v.visit(this);
         for(AbstractNode node : this.childList)
             if(node != null)
@@ -575,7 +575,7 @@ class ProgNode extends AbstractNode{
     public ArrayList<AbstractNode> _abstractNodesList = new ArrayList<>();
 
     @Override
-    public void accept(ASTVisitor v) {
+    public void accept(ASTVisitor v) throws Exception {
         v.visit(this);
         for(AbstractNode child : childList)
             if(child != null)

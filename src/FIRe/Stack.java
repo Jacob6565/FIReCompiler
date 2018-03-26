@@ -1,7 +1,9 @@
 package FIRe;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 
 public class Stack<T> {
 
@@ -32,4 +34,6 @@ public class Stack<T> {
     public T Get(int index){
         return list.get(index);
     }
+
+
 }

@@ -35,16 +35,7 @@ public class Main {
         ProgNode ast = (ProgNode) new BuildASTVisitor().visitProg(cst);
         PrintTraversal print = new PrintTraversal();
       //  print.Print(ast,0);
-
-        SymbolTable st = new SymbolTable();
-        try {
-            st.Insert("Fredag");
-            st.Insert("Fredag");
-
-            System.out.println(st.Search("Fredag"));
-        }
-        catch(Exception e){
-            System.out.println(e.getMessage());
-        }
+        SymbolTableVisitor STV = new SymbolTableVisitor();
+        STV.visit(ast);
     }
 }
