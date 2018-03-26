@@ -236,8 +236,9 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
 
     @Override
     public AbstractNode visitWhen(CFGParser.WhenContext ctx) {
-
-       return(new WhenNode(visitId(ctx.id().get(0)), visitId(ctx.id().get(1)))); //Vi smider bare ansvaret længere ned.
+        WhenNode when = new WhenNode(visitId(ctx.id().get(0)), visitId(ctx.id().get(1)));
+        when.childList.add(visitBlock(ctx.block()));
+        return when;
     }
 
     @Override
@@ -570,10 +571,6 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
             node.childList.add(visitExpr(ctx.expr(0))); //En while controlstruct kan kun have en expression
             node.childList.add(visitBlock(ctx.block()));
             return node;
-        }
-
-        else if (ctx.routine() != null){
-            return (visitRoutine(ctx.routine())); //Smider ansvaret videre
         }
 
         else //Burde ikke ske. Vi returnere null, hvis det går helt galt.
