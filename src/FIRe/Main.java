@@ -34,17 +34,8 @@ public class Main {
         //cst.children.add(parser.dcl());
         ProgNode ast = (ProgNode) new BuildASTVisitor().visitProg(cst);
         PrintTraversal print = new PrintTraversal();
-        print.Print(ast,0);
-
-        SymbolTable st = new SymbolTable();
-        try {
-            st.Insert("Fredag");
-            st.Insert("Fredag");
-
-            System.out.println(st.Search("Fredag"));
-        }
-        catch(Exception e){
-            System.out.println(e.getMessage());
-        }
+      //  print.Print(ast,0);
+        SymbolTableVisitor STV = new SymbolTableVisitor();
+        STV.visit(ast);
     }
 }
