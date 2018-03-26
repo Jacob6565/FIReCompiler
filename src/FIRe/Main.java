@@ -34,7 +34,7 @@ public class Main {
         //cst.children.add(parser.dcl());
         ProgNode ast = (ProgNode) new BuildASTVisitor().visitProg(cst);
         PrintTraversal print = new PrintTraversal();
-      //  print.Print(ast,0);
+        print.Print(ast,0);
 
         SymbolTable st = new SymbolTable();
         try {
