@@ -73,7 +73,7 @@ progBody            : dcl SemiColon
                     | strategyDcl
                     | eventDcl
                     ;
-strategyDcl     	: Strategy id Parenl fParamList? Parenr Scopel (blockBody*)? (strategyBlock)* Scoper
+strategyDcl     	: Strategy id Parenl fParamList? Parenr Scopel blockBody* (strategyBlock)* Scoper
                     ;
 strategyBlock       : routine
                     | when
@@ -133,7 +133,6 @@ aParamList          : expr (Comma aParamList)?
 ctrlStruct          : aif (aelseif)* (aelse)?
                     | For Parenl (dcl | expr) (Upto | Downto) (expr) Parenr block
                     | While Parenl expr Parenr block
-                    | routine
                     ;
 aif                 : If Parenl expr Parenr block
                     ;
