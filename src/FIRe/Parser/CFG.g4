@@ -61,7 +61,6 @@ Assign              : '=';
 Return              : 'return';
 Not                 : '!';
 Event               : 'event';
-Setup               : 'setup';
 
 Name                : [A-z][A-z0-9]*;
 EndOfFile           : '$';
