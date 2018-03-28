@@ -8,7 +8,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
 
     //Skal override dem alle, lige som ham på stackoverflow.
 
-
+    //Visitis the very first node of the CST
     @Override
     public AbstractNode visitProg(CFGParser.ProgContext ctx) {
         ProgNode root = new ProgNode();
@@ -16,15 +16,16 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         root.childList.add(visitRobotDcl(ctx.robotDcl()));
 
         for(CFGParser.ProgBodyContext progBodyCtx: ctx.progBody()){
-            root.childList.add(visitProgBody(progBodyCtx)); //Vi tilføjer alle  progbodies, idet vi visiter dem.
+            root.childList.add(visitProgBody(progBodyCtx)); //We add all progBodies, since we visit each of them.
         }
 
         return root;
     }
 
+    //Methods has an if-else for each possible node in the xontext ctx.
     @Override
     public AbstractNode visitProgBody(CFGParser.ProgBodyContext ctx) {
-        if(ctx.dcl() != null) //Vi finder den rigtige visitmetode og kalder den...
+        if(ctx.dcl() != null) //finds the right visitmethod and calls it
             return visitDcl(ctx.dcl());
         else if(ctx.funcDcl() != null)
             return visitFuncDcl(ctx.funcDcl());
@@ -33,30 +34,32 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         else if(ctx.eventDcl() != null)
             return visitEventDcl(ctx.eventDcl());
         else
-            return null; //..og burde ikke returne null
+            return null; //Maybe this shouldn't return null?
     }
 
+    //Method creates a new StrategyDeclerationNode adds the Fparamlist, and also visitis it's block and routines and when
     @Override
     public AbstractNode visitStrategyDcl(CFGParser.StrategyDclContext ctx) {
-        StrategyDeclarationNode node = new StrategyDeclarationNode();//Vi laver en ny node
+        StrategyDeclarationNode node = new StrategyDeclarationNode();//Makes a new node
 
         node.id = (IdNode)visitId(ctx.id());
-        node.childList.add(visitFParamList(ctx.fParamList())); //Vi tilføjer dens Fparamliste
+        node.childList.add(visitFParamList(ctx.fParamList())); //Add the fParamList
 
         if(ctx.blockBody() != null)
             for(CFGParser.BlockBodyContext blockBodyCtx: ctx.blockBody()) {
-                node.childList.add(visitBlockBody(blockBodyCtx)); //og dens Block
+                node.childList.add(visitBlockBody(blockBodyCtx)); //And the block
             }
 
         for(CFGParser.StrategyBlockContext strategyBlockCtx : ctx.strategyBlock())
-            node.childList.add(visitStrategyBlock(strategyBlockCtx)); //Og dens strategy-blocks (routines og whens)
+            node.childList.add(visitStrategyBlock(strategyBlockCtx)); //And it's strategy block (routines og whens)
 
         return node;
     }
 
+    //Determines wheter visitWhen should be called or visitRoutine
     @Override
     public AbstractNode visitStrategyBlock(CFGParser.StrategyBlockContext ctx) {
-        if(ctx.when() != null) //Vi finder den rigtige visitmetode og sender ansvaret videre
+        if(ctx.when() != null) //Finds the right visit method.
             return(visitWhen(ctx.when()));
         else if(ctx.routine() != null)
             return (visitRoutine(ctx.routine()));
@@ -64,6 +67,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
             return null;
     }
 
+    //creates a new FunctionDeclNode, sets the type of it, add the fParamlist and the block
     @Override
     public AbstractNode visitFuncDcl(CFGParser.FuncDclContext ctx) {
         FunctionDeclarationNode node = new FunctionDeclarationNode();
@@ -77,18 +81,20 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         return node;
     }
 
+    //adds all the blockbodies as children, a blockbody can evaluate to a dcl or a Stmt
     @Override
     public AbstractNode visitBlock(CFGParser.BlockContext ctx) {
         BlockNode blockNode = new BlockNode();
         for(CFGParser.BlockBodyContext blockBodyCtx : ctx.blockBody())
-            blockNode.childList.add(visitBlockBody(blockBodyCtx)); //Vi tilføjer alle dens blockbodies som children
+            blockNode.childList.add(visitBlockBody(blockBodyCtx)); //Add all the blockbodies as children
 
         return blockNode;
     }
 
+    //deteermines wheter a blockbody is a dcl or stmt
     @Override
     public AbstractNode visitBlockBody(CFGParser.BlockBodyContext ctx) {
-        if(ctx.dcl() != null) //Vi afgør om det er en dcl eller en stmt
+        if(ctx.dcl() != null)
             return visitDcl(ctx.dcl());
         else if(ctx.stmt() != null)
             return visitStmt(ctx.stmt());
@@ -96,19 +102,20 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
             return null;
     }
 
+
     @Override
     public AbstractNode visitFParamList(CFGParser.FParamListContext ctx) {
         FormalParameterNode node = new FormalParameterNode();
 
         while(ctx != null) {
-            /* Vi mapper et id til en type i en map (som er en dictionary i C#), så vi nemt
-            * kan finde et ids type.*/
+            /* We maå an id to a type in a map (known as a dictionary in C#,
+            to easily find the type of an id*/
             node.parameterMap.put(visitId(ctx.id()), ctx.Type().toString());
             //IdNode idnode = (IdNode) visitId(ctx.id());
             //idnode.type = ctx.Type().toString();
             //node.childList.add(idnode);
             ctx = ctx.fParamList();
-            //Vi sætter ctx til den indre contekst. Løkken kører indtil vi ikke har flere indre kontekster.
+            //ctx is set to the inner context. the loop iterates until there aren't any more inner contexts.
         }
 
         return node;
@@ -121,11 +128,12 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         return visitRobotDclBody(ctx.robotDclBody());
     }
 
+    //for each idContext we add et as a child to the  robotDclBodyNde
     @Override
     public AbstractNode visitRobotDclBody(CFGParser.RobotDclBodyContext ctx) {
 
         RobotDclBodyNode robotDclBodyNode = new RobotDclBodyNode();
-        for (CFGParser.IdContext idContext: ctx.id())//For hver idcontext tilføjer vi den som et child.
+        for (CFGParser.IdContext idContext: ctx.id())
         {
             robotDclBodyNode.childList.add(visitId(idContext));
         }
@@ -133,14 +141,16 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         return robotDclBodyNode;
     }
 
+    //THis method handles the dcl rule from the cfg, multiple cases exists since we have different types and
+    //multiple declerations can be made at once
     @Override
     public AbstractNode visitDcl(CFGParser.DclContext ctx) {
 
-        if(ctx.expr() != null){ //Hvis der er en expr går vi ud fra, at det er den første regel.
-            if(ctx.Type().toString().equals("number")){ //måske det her ikke virker som vi lige tænkte
+        if(ctx.expr() != null){ // If there is an expr we assume the first rule.
+            if(ctx.Type().toString().equals("number")){
 
                 NumberDeclarationNode numberDeclarationNode = new NumberDeclarationNode();
-                numberDeclarationNode.childList.add(visitId(ctx.id(0))); //0 fordi vi tror der er tale om det første og eneste element i listen som vi vil tilføje
+                numberDeclarationNode.childList.add(visitId(ctx.id(0))); //0 beacuse we want to add the first and only element from the list
 
                 numberDeclarationNode.childList.add(visitExpr(ctx.expr()));
                 return numberDeclarationNode;
@@ -149,7 +159,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
             else if(ctx.Type().toString().equals("text")){
 
                 TextDeclarationNode textDeclarationNode = new TextDeclarationNode();
-                textDeclarationNode.childList.add(visitId(ctx.id(0))); //0 fordi vi tror der er tale om det første og eneste element i listen som vi vil tilføje
+                textDeclarationNode.childList.add(visitId(ctx.id(0))); //0 beacuse we want to add the first and only element from the list
 
                 textDeclarationNode.childList.add(visitExpr(ctx.expr()));
                 return textDeclarationNode;
@@ -159,7 +169,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
             else if(ctx.Type().toString().equals("bool")){
 
                 BooleanDeclarationNode booleanDeclarationNode = new BooleanDeclarationNode();
-                booleanDeclarationNode.childList.add(visitId(ctx.id(0))); //0 fordi vi tror der er tale om det første og eneste element i listen som vi vil tilføje
+                booleanDeclarationNode.childList.add(visitId(ctx.id(0))); //0 beacuse we want to add the first and only element from the list
 
                 booleanDeclarationNode.childList.add(visitExpr(ctx.expr()));
                 return booleanDeclarationNode;
@@ -168,14 +178,14 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
                 return null;
 
         }
-        else {//Hvis der er flere declarations i én.
+        else {//This else handles the case where multiple declerations are made.
 
             if(ctx.Type().toString().equals("number")){
 
                 NumberDeclarationNode numberDeclarationNode = new NumberDeclarationNode();
 
                 for (CFGParser.IdContext idContext:ctx.id()) {
-                    numberDeclarationNode.childList.add(visitId(idContext)); //Vi smider alle dcls ind som children
+                    numberDeclarationNode.childList.add(visitId(idContext)); //we add the dcls as children
                 }
                 return numberDeclarationNode;
 
@@ -186,7 +196,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
                 TextDeclarationNode textDeclarationNode = new TextDeclarationNode();
 
                 for (CFGParser.IdContext idContext : ctx.id()) {
-                    textDeclarationNode.childList.add(visitId(idContext));//Vi smider alle dcls ind som children
+                    textDeclarationNode.childList.add(visitId(idContext));//We add the dcls as children
                 }
                 return textDeclarationNode;
             }
@@ -196,7 +206,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
                 BooleanDeclarationNode booleanDeclarationNode = new BooleanDeclarationNode();
 
                 for (CFGParser.IdContext idContext : ctx.id()) {
-                    booleanDeclarationNode.childList.add(visitId(idContext));//Vi smider alle dcls ind som children
+                    booleanDeclarationNode.childList.add(visitId(idContext));//We add the dcls as children
                 }
                 return booleanDeclarationNode;
             }
