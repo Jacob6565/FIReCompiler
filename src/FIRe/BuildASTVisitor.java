@@ -412,6 +412,8 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         return node;
     }
 
+
+    //Creating the AndNode and adding its left and right child.
     private AndNode CreateAndNode(CFGParser.ExprContext ctx){
         AndNode node = new AndNode();
         node.LeftChild = (ExpressionNode) visitExpr(ctx.expr().get(0));
@@ -420,6 +422,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         return node;
     }
 
+    //Creating the CreateOrNode and adding its left and right child.
     private OrNode CreateOrNode(CFGParser.ExprContext ctx){
         OrNode node = new OrNode();
         node.LeftChild = (ExpressionNode) visitExpr(ctx.expr().get(0));
@@ -428,6 +431,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         return node;
     }
 
+    //Creating the LessThanNode and adding its left and right child.
     private LessThanNode CreateLessThanNode(CFGParser.ExprContext ctx){
         LessThanNode node = new LessThanNode();
         node.LeftChild = (ExpressionNode) visitExpr(ctx.expr().get(0));
@@ -436,6 +440,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         return node;
     }
 
+    ////Creating the GreaterThanNode and adding its left and right child.
     private GreaterThanNode CreateGreaterThanNode(CFGParser.ExprContext ctx){
         GreaterThanNode node = new GreaterThanNode();
         node.LeftChild = (ExpressionNode) visitExpr(ctx.expr().get(0));
@@ -444,6 +449,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         return node;
     }
 
+    //Creating the EqualNode and adding its left and right child.
     private EqualsNode CreateEqualsNode(CFGParser.ExprContext ctx){
         EqualsNode node = new EqualsNode();
         node.LeftChild = (ExpressionNode) visitExpr(ctx.expr().get(0));
@@ -452,6 +458,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         return node;
     }
 
+    //Creating the NotEqualNode and adding its left and right child.
     private NotEqualsNode CreateNotEqualsNode(CFGParser.ExprContext ctx){
         NotEqualsNode node = new NotEqualsNode();
         node.LeftChild = (ExpressionNode) visitExpr(ctx.expr().get(0));
@@ -460,6 +467,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         return node;
     }
 
+    //Creating the LEQNode and adding its left and right child.
     private LEQNode CreateLEQNode(CFGParser.ExprContext ctx){
         LEQNode node = new LEQNode();
         node.LeftChild = (ExpressionNode) visitExpr(ctx.expr().get(0));
@@ -468,6 +476,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         return node;
     }
 
+    //Creating the GEQNode and adding its left and right child.
     private GEQNode CreateGEQNode(CFGParser.ExprContext ctx){
         GEQNode node = new GEQNode();
         node.LeftChild = (ExpressionNode) visitExpr(ctx.expr().get(0));
@@ -476,6 +485,8 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         return node;
     }
 
+
+    //Creating the PowerNode and adding its left and right child.
     private PowerNode CreateExponentNode(CFGParser.ExprContext ctx){
         PowerNode node = new PowerNode();
         node.LeftChild = (ExpressionNode) visitExpr(ctx.expr().get(0));
@@ -484,6 +495,9 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         return node;
     }
 
+
+    //Creating ArrayAccessNode which consists of a id followed by index.
+    //Both id and index can be an expression, to allow fx f(x)[2+2];
     private ArrayAccessNode CreateArrayAccessNode(CFGParser.ExprContext ctx){
         ArrayAccessNode node = new ArrayAccessNode();
         node.id = (ExpressionNode) visitExpr(ctx.expr().get(0));
@@ -494,6 +508,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
 
 
 
+    //Creating AssignNode, whihc consists of a id and the expression to be assigned to the id.
     @Override
     public AbstractNode visitAssignStmt(CFGParser.AssignStmtContext ctx) {
         AssignNode node = new AssignNode();
@@ -504,6 +519,8 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         return node;
     }
 
+
+    //Creating FuncCall, which consists of and id(funcname) and the actual parameters.
     @Override
     public AbstractNode visitFuncCall(CFGParser.FuncCallContext ctx) {
         FuncCallNode func = new FuncCallNode();
@@ -513,6 +530,8 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         return func;
     }
 
+
+    //Creating Event declaration which consists of and id(eventname) and a body.
     @Override
     public AbstractNode visitEventDcl(CFGParser.EventDclContext ctx) {
         EventDeclarationNode CDN = new EventDeclarationNode();
@@ -522,12 +541,13 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         return CDN;
     }
 
+    //Creating ActualParameterNode, which consists of an arbitrary number of expression.
     @Override
     public AbstractNode visitAParamList(CFGParser.AParamListContext ctx) {
         ActualParameterNode APN = new ActualParameterNode();
 
         while(ctx != null){
-            APN.childList.add(visitExpr(ctx.expr()));//vi smider alle expr's med som children
+            APN.childList.add(visitExpr(ctx.expr()));//Adding the expressions.
             ctx = ctx.aParamList();
         }
 
@@ -537,29 +557,32 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
     @Override
     public AbstractNode visitCtrlStruct(CFGParser.CtrlStructContext ctx) {
 
-        if (ctx.aif() != null) {//hvis det er en if. "if if" med andre ord.
+        //If the constrolstructure is an "if".
+        //Then adding all the else-if's.
+        if (ctx.aif() != null) {
             IfControlStructureNode IfNode = (IfControlStructureNode)visitAif(ctx.aif());
 
             if (!ctx.aelseif().isEmpty()) {
                 for (CFGParser.AelseifContext CTX : ctx.aelseif()) {
-                    IfNode.childList.add(visitExpr(CTX.expr())); //vi tilføjer alle else-if'erne
+                    IfNode.childList.add(visitExpr(CTX.expr())); //Adding the else-ifs.
                     IfNode.childList.add(visitBlock(CTX.block()));
                 }
             }
 
-            if (ctx.aelse() != null) { //Og en else, hvis der er en.
+            if (ctx.aelse() != null) { //Adding the else-block if it exists.
                 IfNode.childList.add(visitBlock(ctx.aelse().block()));
             }
 
             return IfNode;
         }
 
-        else if (ctx.For() != null){//Hvis det er en for
+        //If the constrolstructure is a for-loop.
+        else if (ctx.For() != null){
             ForNode FN = new ForNode();
-            if (ctx.dcl() != null){//I denne if-kæde afgør vi om det første led i for-løkken er en dcl
+            if (ctx.dcl() != null){//Detemine whether the first part of the for-loops is a declaration.
                 FN.childList.add(visitDcl(ctx.dcl()));
             }
-            else if (ctx.expr() != null){ //Nu vil vi gerne tilføje alle expressions (som også kan være id) til childlisten. Der kan max være 2.
+            else if (ctx.expr() != null){ //Adding the expressions (which can be an id as well) to the childList. Max 2.
                 for (CFGParser.ExprContext exprContext: ctx.expr()) {
                     FN.childList.add(visitExpr(exprContext));
                 }
@@ -567,29 +590,34 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
             else
                 return null;
 
-            //Vi sætter en bool, der afgør om løkken kører op eller ned.
-            //Incremental == kører opad.
+            //Setting a flag to determine if the for-loops counts up or down(if "upto" or "downto" is used).
             FN.Incremental = ctx.Downto() == null;
 
-            FN.childList.add(visitBlock(ctx.block())); //Her er blokken af koden, der skal udføres.
+            //Adding the body of the for-loop to its childlist.
+            FN.childList.add(visitBlock(ctx.block()));
 
             return FN;
         }
 
-        else if (ctx.While() != null){ //While-noden får en expression og en block.
+        //Creating a whilenode, which consists of the expression(evaluation part) and a block
+        else if (ctx.While() != null){
             WhileNode node = new WhileNode();
-            node.childList.add(visitExpr(ctx.expr(0))); //En while controlstruct kan kun have en expression
+            node.childList.add(visitExpr(ctx.expr(0)));
             node.childList.add(visitBlock(ctx.block()));
             return node;
         }
 
-        else //Burde ikke ske. Vi returnere null, hvis det går helt galt.
+        else //Shouldn't happen, returning null to indicate failure.
             return null;
     }
 
+
+
+    //Creating a node to indicate a if-statement, which consists of the booleanexpression
+    //followed by a block.
     @Override
     public AbstractNode visitAif(CFGParser.AifContext ctx) {
-        IfControlStructureNode ICSN = new IfControlStructureNode(); //Vi smider if'ens egen expr og block ind i blokken.
+        IfControlStructureNode ICSN = new IfControlStructureNode();
         ICSN.childList.add(visitExpr(ctx.expr()));
         ICSN.childList.add(visitBlock(ctx.block()));
 
@@ -597,16 +625,22 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         return ICSN;
     }
 
+    //Creating an idNode an performing actions acoording
+    //to whether or not dot-notation or arrayindexing is used.
     @Override
     public AbstractNode visitId(CFGParser.IdContext ctx) {
         IdNode node = new IdNode();
 
+        //Getting the nodes name
         node.name = ctx.Name().toString();
 
+        //When dot-notation is used.
         while(ctx.id() != null){
             node.name = node.name + "." + ctx.id().Name().toString();
             ctx = ctx.id();
         }
+
+        //If used to arrays indexing.
         if(ctx.Squarel() != null){
             node.name = node.name + "[" + "]";
         }
