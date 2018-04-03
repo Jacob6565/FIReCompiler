@@ -141,7 +141,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         return robotDclBodyNode;
     }
 
-    //THis method handles the dcl rule from the cfg, multiple cases exists since we have different types and
+    //This method handles the dcl rule from the cfg, multiple cases exists since we have different types and
     //multiple declerations can be made at once
     @Override
     public AbstractNode visitDcl(CFGParser.DclContext ctx) {
@@ -215,9 +215,10 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         }
     }
 
+    // Decides the "type" of statement (according to the CFG) and calls the appropriate method for the specific type, it
+    // should never return null
     @Override
     public AbstractNode visitStmt(CFGParser.StmtContext ctx) {
-        //Her afgør vi, hvilken slags statement vi har fat i og kalder den korrekte metode.
         if(ctx.assignStmt() != null){
             return visitAssignStmt(ctx.assignStmt());
         }
@@ -235,6 +236,8 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
 
     }
 
+    // A routine can exist with and without a condition expression, this method construct the routine node accordingly,
+    // by visiting the appropriate visit methods for the input of the RoutineNode constructor.
     @Override
     public AbstractNode visitRoutine(CFGParser.RoutineContext ctx) {
         //Her fremgår de forskellige slags routine-kald. med id, med Val og tom.
@@ -244,6 +247,8 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
             return(new RoutineNode(visitBlock(ctx.block())));
     }
 
+    // Construct the WhenNode by giving the constructor an eventtype and the variable name from the when's parenthesis.
+    // It then adds the block to the when childlist.
     @Override
     public AbstractNode visitWhen(CFGParser.WhenContext ctx) {
         WhenNode when = new WhenNode(visitId(ctx.id().get(0)), visitId(ctx.id().get(1)));
@@ -251,10 +256,12 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         return when;
     }
 
+    // Determines the kind of expression by testing for the expr terminal's different kinds of productions
     @Override
     public AbstractNode visitExpr(CFGParser.ExprContext ctx) {
         AbstractNode node = null;
 
+        //In a production rule with one or zero expr
         if(ctx.expr().size() <= 1) {
             if (ctx.BoolVal() != null)
                 node = CreateBoolNode(ctx);
@@ -269,30 +276,18 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
             else if (ctx.Parenl() != null)
                 node = visitExpr(ctx.expr().get(0));
         }
-        /*
-        else if(!ctx.Hat().toString().isEmpty())
-            node = CreateInFixExprNode(ctx);
-        else if(!ctx.MultiOp().toString().isEmpty()){
-            node = CreateInFixExprNode(ctx);
+        //In a production rule with two expr
+        else {
+            if(ctx.Squarel() == null)
+                node = CreateInFixExprNode(ctx);
+            else if(ctx.Squarel()!= null)
+                node = CreateArrayAccessNode(ctx);
         }
-        else if(!ctx.AdditiveOp().toString().isEmpty()){
-            node = CreateInFixExprNode(ctx);
-        }
-        else if(!ctx.BoolOp().toString().isEmpty()){
-            node = CreateInFixExprNode(ctx);
-        }
-        else if(!ctx.RelativeOp().toString().isEmpty()){
-            node = CreateInFixExprNode(ctx);
-        }
-        */
-        if(ctx.expr().size() > 1 && ctx.Squarel() == null)
-            node = CreateInFixExprNode(ctx);
-        else if(ctx.expr().size() > 1 && ctx.Squarel()!= null)
-            node = CreateArrayAccessNode(ctx);
 
         return node;
     }
 
+    // Help function for visitExpr that creates the BoolNode by using the context
     private BoolNode CreateBoolNode(CFGParser.ExprContext ctx){
         BoolNode node = new BoolNode();
         if(ctx.BoolVal().toString().equals("true"))
@@ -302,6 +297,8 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         return node;
     }
 
+    // Help function for visitExpr that creates the ValNode by using the context, here we determine if the value is a
+    // number or a text
     private ValNode CreateValNode(CFGParser.ExprContext ctx){
         ValNode node;
         if(tryParseDouble(ctx.Val().toString()))
@@ -311,12 +308,14 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         return node;
     }
 
+    // Help function for visitExpr that creates the NotNode by using the context
     private NotNode CreateNotNode(CFGParser.ExprContext ctx){
         NotNode node = new NotNode();
         node.Expression = (ExpressionNode)visitExpr(ctx.expr().get(0));
         return node;
     }
 
+    // Help function for CreateValNode that returns true if the value can be parsed as a double and false otherwise
     private boolean tryParseDouble(String value) {
         try {
             Double.parseDouble(value);
@@ -326,10 +325,12 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         }
     }
 
-
+    // Breaks down the InfixExpression by systematically checking what the context contains and then compare it to what
+    // we know from the CFG.
     private InfixExpressionNode CreateInFixExprNode(CFGParser.ExprContext ctx){
         InfixExpressionNode node = null;
 
+        //It is a expression with a multiplying operator
         if(ctx.MultiOp() != null){
             if(ctx.MultiOp().toString().equals("*"))
                 node = CreateTimesNode(ctx);
@@ -338,12 +339,14 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
             else if(ctx.MultiOp().toString().equals("%"))
                 node = CreateModuloNode(ctx);
         }
+        //It is a expression with an additive operator
         else if(ctx.AdditiveOp() != null){
             if(ctx.AdditiveOp().toString().equals("+"))
                 node = CreatePlusNode(ctx);
             else if(ctx.AdditiveOp().toString().equals("-"))
                 node = CreateMinusNode(ctx);
         }
+        //It is a expression with a boolean operator
         else if(ctx.BoolOp() != null){
             if(ctx.BoolOp().toString().equals("and"))
                 node = CreateAndNode(ctx);
@@ -351,6 +354,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
                 node = CreateOrNode(ctx);
         }
 
+        //It is a expression with a relative operator
         else if(ctx.RelativeOp() != null){
             if(ctx.RelativeOp().toString().equals("<"))
                 node = CreateLessThanNode(ctx);
@@ -365,12 +369,15 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
             else if(ctx.RelativeOp().toString().equals(">="))
                 node = CreateGEQNode(ctx);
         }
+        //It is a exponential expresion
         else if(ctx.Hat() != null)
             node = CreateExponentNode(ctx);
 
         return node;
     }
 
+    //Help function for the CreateInfixExprNode function, that construct the MultiplicationNode and adds its left and
+    // right child.
     private MultiplicationNode CreateTimesNode(CFGParser.ExprContext ctx){
         InfixExpressionNode node = new MultiplicationNode();
 
@@ -380,6 +387,8 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         return (MultiplicationNode) node;
     }
 
+    //Help function for the CreateInfixExprNode function, that construct the DivisionNode and adds its left and right
+    // child.
     private DivisionNode CreateDivisionNode(CFGParser.ExprContext ctx){
         DivisionNode node = new DivisionNode();
         node.LeftChild = (ExpressionNode) visitExpr(ctx.expr().get(0));
@@ -388,6 +397,8 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         return node;
     }
 
+    //Help function for the CreateInfixExprNode function, that construct the ModuloNode and adds its left and right
+    // child.
     private ModuloNode CreateModuloNode(CFGParser.ExprContext ctx){
         ModuloNode node = new ModuloNode();
         node.LeftChild = (ExpressionNode) visitExpr(ctx.expr().get(0));
@@ -396,6 +407,8 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         return node;
     }
 
+    //Help function for the CreateInfixExprNode function, that construct the AdditionNode and adds its left and right
+    // child.
     private AdditionNode CreatePlusNode(CFGParser.ExprContext ctx){
         AdditionNode node = new AdditionNode();
         node.LeftChild = (ExpressionNode) visitExpr(ctx.expr().get(0));
@@ -404,6 +417,8 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         return node;
     }
 
+    //Help function for the CreateInfixExprNode function, that construct the MinusNode and adds its left and right
+    // child.
     private SubtractionNode CreateMinusNode(CFGParser.ExprContext ctx){
         SubtractionNode node = new SubtractionNode();
         node.LeftChild = (ExpressionNode) visitExpr(ctx.expr().get(0));
