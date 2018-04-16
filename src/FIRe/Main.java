@@ -7,6 +7,8 @@ import org.antlr.v4.runtime.*;
 import java.io.*;
 import java.util.Scanner;
 
+import static java.lang.Math.pow;
+
 public class Main {
 
     public static void main(String[] args) throws FileNotFoundException {
@@ -34,8 +36,15 @@ public class Main {
         //cst.children.add(parser.dcl());
         ProgNode ast = (ProgNode) new BuildASTVisitor().visitProg(cst);
         PrintTraversal print = new PrintTraversal();
-      //  print.Print(ast,0);
+        //print.Print(ast,0);
         SymbolTableVisitor STV = new SymbolTableVisitor();
         STV.visit(ast);
+
+        try {
+            print.Print(STV.ST.Search("firepower"),0);
+        }
+        catch (Exception e){
+            System.out.println("Error in Main");
+        }
     }
 }

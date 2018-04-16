@@ -1,5 +1,6 @@
 package FIRe;
 
+import javax.xml.crypto.dsig.keyinfo.KeyValue;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.Stack;
@@ -36,6 +37,17 @@ public class SymbolTable  {
             }
         }
         throw new Exception("Variabel kunne ikke findes");
+    }
+
+    public AbstractNode Search(String name) throws Exception{
+        for (int i = 0; i < stack.Size(); ++i) {
+            for (AbstractNode AN: stack.Get(i).keySet()) {
+                if (AN instanceof DeclarationNode && ((DeclarationNode) AN).Id.equals(name)){
+                    return AN;
+                }
+            }
+        }
+        throw new Exception("The element was not found");
     }
 
     public boolean Contains(String key){

@@ -137,12 +137,19 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
     public AbstractNode visitDcl(CFGParser.DclContext ctx) {
 
         if(ctx.expr() != null){ //Hvis der er en expr går vi ud fra, at det er den første regel.
+
             if(ctx.Type().toString().equals("number")){ //måske det her ikke virker som vi lige tænkte
 
                 NumberDeclarationNode numberDeclarationNode = new NumberDeclarationNode();
                 numberDeclarationNode.childList.add(visitId(ctx.id(0))); //0 fordi vi tror der er tale om det første og eneste element i listen som vi vil tilføje
 
                 numberDeclarationNode.childList.add(visitExpr(ctx.expr()));
+
+                for(AbstractNode AN : numberDeclarationNode.childList){
+                    if (AN instanceof IdNode)
+                        numberDeclarationNode.Id = (IdNode) AN;
+                }
+
                 return numberDeclarationNode;
             }
 
@@ -152,6 +159,11 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
                 textDeclarationNode.childList.add(visitId(ctx.id(0))); //0 fordi vi tror der er tale om det første og eneste element i listen som vi vil tilføje
 
                 textDeclarationNode.childList.add(visitExpr(ctx.expr()));
+                for(AbstractNode AN : textDeclarationNode.childList){
+                    if (AN instanceof IdNode)
+                        textDeclarationNode.Id = (IdNode) AN;
+                }
+
                 return textDeclarationNode;
 
             }
@@ -162,11 +174,14 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
                 booleanDeclarationNode.childList.add(visitId(ctx.id(0))); //0 fordi vi tror der er tale om det første og eneste element i listen som vi vil tilføje
 
                 booleanDeclarationNode.childList.add(visitExpr(ctx.expr()));
+                for(AbstractNode AN : booleanDeclarationNode.childList){
+                    if (AN instanceof IdNode)
+                        booleanDeclarationNode.Id = (IdNode) AN;
+                }
                 return booleanDeclarationNode;
             }
             else
                 return null;
-
         }
         else {//Hvis der er flere declarations i én.
 
@@ -177,6 +192,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
                 for (CFGParser.IdContext idContext:ctx.id()) {
                     numberDeclarationNode.childList.add(visitId(idContext)); //Vi smider alle dcls ind som children
                 }
+
                 return numberDeclarationNode;
 
             }

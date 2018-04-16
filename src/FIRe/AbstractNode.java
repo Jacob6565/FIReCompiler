@@ -64,7 +64,7 @@ abstract class StatementNode extends  AbstractNode{
 }
 
 abstract class DeclarationNode extends AbstractNode{
-
+    public IdNode Id;
 }
 
 abstract class ControlStructureNode extends AbstractNode{
@@ -192,6 +192,18 @@ class ArrayAccessNode extends ExpressionNode{
         v.visit(this);
         id.accept(v);
         index.accept(v);
+    }
+}
+
+class ArrayDeclarationNode extends DeclarationNode{
+    public IdNode Id;
+    public ValNode Size;
+
+    @Override
+    public void accept(ASTVisitor v) throws Exception{
+        v.visit(this);
+        Id.accept(v);
+        Size.accept(v);
     }
 }
 

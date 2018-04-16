@@ -1,5 +1,6 @@
 package FIRe;
 
+@SuppressWarnings("ALL")
 public class SymbolTableVisitor extends ASTVisitor {
 
     public SymbolTable ST = new SymbolTable();
@@ -60,6 +61,7 @@ public class SymbolTableVisitor extends ASTVisitor {
             if (Node != null)
             VisitNode(Node);
         }
+        ST.CloseScope();
     }
 
     @Override
@@ -207,7 +209,7 @@ public class SymbolTableVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(IdNode node) throws Exception {
+    public void visit(IdNode node){
         for (AbstractNode Node: node.childList) {
             if (Node != null)
             VisitNode(Node);
