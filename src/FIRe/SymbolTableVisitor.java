@@ -14,11 +14,14 @@ public class SymbolTableVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(AdditionNode node) {
-        for (AbstractNode Node: node.childList) {
-            if (Node != null)
-            VisitNode(Node);
-        }
+    public void visit(AdditionNode node) throws Exception {
+        VisitNode(node.LeftChild);
+        VisitNode(node.RightChild);
+
+        if(node.LeftChild.type != node.RightChild.type || node.LeftChild.type == "bool")
+            throw new TypeException();
+
+        node.type = node.LeftChild.type;
     }
 
     @Override
@@ -30,11 +33,14 @@ public class SymbolTableVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(AndNode node) {
-        for (AbstractNode Node: node.childList) {
-            if (Node != null)
-            VisitNode(Node);
-        }
+    public void visit(AndNode node) throws Exception{
+        VisitNode(node.LeftChild);
+        VisitNode(node.RightChild);
+
+        if(node.LeftChild.type != "bool" || node.LeftChild.type != node.RightChild.type)
+            throw new TypeException();
+
+        node.type = node.LeftChild.type;
     }
 
 
