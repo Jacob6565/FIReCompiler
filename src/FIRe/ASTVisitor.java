@@ -9,9 +9,9 @@ public abstract class ASTVisitor
     //Har en overloaded visitmetode for hver node.
     //Dette er lavet på baggrund af slide 82 lecture 9
     public abstract void visit(AbstractNode node);
-    public abstract void visit(AdditionNode node);
+    public abstract void visit(AdditionNode node) throws Exception;
     public abstract void visit(ActualParameterNode node);
-    public abstract void visit(AndNode node);
+    public abstract void visit(AndNode node) throws Exception;
     public abstract void visit(ArrayAccessNode node);
     public abstract void visit(AssignNode node);
     public abstract void visit(BlockNode node);

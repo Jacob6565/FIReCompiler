@@ -56,7 +56,7 @@ abstract class AbstractNode
 
 abstract class ExpressionNode extends AbstractNode
 {
-
+    String type;
 }
 
 abstract class StatementNode extends  AbstractNode{
@@ -414,7 +414,7 @@ class NotEqualsNode extends  InfixExpressionNode{
 
 class IdNode extends ExpressionNode {
     public String name;
-    public String type;
+    //public String type;
 
 
     @Override
