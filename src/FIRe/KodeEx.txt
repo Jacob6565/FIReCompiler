@@ -14,7 +14,7 @@ bool turnLeftAndRotate(text currentRival)
 {
    number degrees = 90;
    nameOfRival = currentRival;
-   bool shotAtRival= false;
+   bool shotAtRival = false;
    bool a[];
 
    if (nameOfRival == "WallRider")

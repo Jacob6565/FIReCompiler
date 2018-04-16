@@ -265,6 +265,8 @@ public class PrintTraversal extends ASTVisitor{
         System.out.println(node.Content);
     }
 
+    public void visit(ArrayDeclarationNode node) { System.out.println("Array dcl node");}
+
     @Override
     public void visit(ValNode node) {
         //Doesnt exist
@@ -391,6 +393,8 @@ public class PrintTraversal extends ASTVisitor{
             visit ((WhenNode) node);
         else if (node instanceof WhileNode)
             visit ((WhileNode) node);
+        else if (node instanceof ArrayDeclarationNode)
+            visit ((ArrayDeclarationNode) node);
         else
             System.out.println("Error");
     }
