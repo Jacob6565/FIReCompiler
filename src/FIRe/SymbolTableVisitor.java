@@ -461,6 +461,13 @@ public class SymbolTableVisitor extends ASTVisitor {
         }
     }
 
+    public void visit(ArrayDeclarationNode node){
+        for (AbstractNode Node: node.childList){
+            if (Node != null)
+                VisitNode(Node);
+        }
+    }
+
     @Override
     public void visit(WhileNode node) {
         for (AbstractNode Node: node.childList) {
@@ -561,6 +568,8 @@ public class SymbolTableVisitor extends ASTVisitor {
                 visit((WhenNode) node);
             else if (node instanceof WhileNode)
                 visit((WhileNode) node);
+            else if (node instanceof ArrayDeclarationNode)
+                visit ((ArrayDeclarationNode) node);
             else
                 System.out.println("Error");
         } catch (Exception e){

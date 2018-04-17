@@ -47,7 +47,7 @@ public class SymbolTable  {
     public AbstractNode Search(String name) throws Exception{
         for (int i = 0; i < stack.Size(); ++i) {
             for (AbstractNode AN: stack.Get(i).keySet()) {
-                if (AN instanceof DeclarationNode && ((DeclarationNode) AN).Id.equals(name)){
+                if (AN instanceof DeclarationNode && ((DeclarationNode) AN).Id.name.equals(name)){
                     return AN;
                 }
             }

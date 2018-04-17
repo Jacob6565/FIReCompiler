@@ -144,8 +144,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
     //multiple declerations can be made at once
     @Override
     public AbstractNode visitDcl(CFGParser.DclContext ctx) {
-
-        if(ctx.expr() != null){ // If there is an expr we assume the first rule.
+        if(ctx.expr() != null){ // If there is an expr we assume the first rule
             if(ctx.Type().toString().equals("number")){
 
                 NumberDeclarationNode numberDeclarationNode = new NumberDeclarationNode();
@@ -192,8 +191,17 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
                 return null;
 
         }
-        else {//This else handles the case where multiple declerations are made.
-
+        else {//This else handles the case where multiple declarations are made.
+            if (ctx.children.get(1).getChild(0).toString().contains("[")) {
+                ArrayDeclarationNode ADN = new ArrayDeclarationNode();
+                ADN.childList.add(visit(ctx.id(0)));
+                //ADN.childList.add(visit(ctx.expr()));
+                for (AbstractNode AN : ADN.childList) {
+                    if (AN instanceof IdNode)
+                        ADN.Id = (IdNode) AN;
+                }
+                return ADN;
+            }
             if(ctx.Type().toString().equals("number")){
 
                 NumberDeclarationNode numberDeclarationNode = new NumberDeclarationNode();
@@ -201,9 +209,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
                 for (CFGParser.IdContext idContext:ctx.id()) {
                     numberDeclarationNode.childList.add(visitId(idContext)); //we add the dcls as children
                 }
-
                 return numberDeclarationNode;
-
             }
 
             else if (ctx.Type().toString().equals("text")) {
@@ -227,6 +233,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
             }
             else
                 return null;
+
         }
     }
 
