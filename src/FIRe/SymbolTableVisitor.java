@@ -212,7 +212,7 @@ public class SymbolTableVisitor extends ASTVisitor {
         VisitNode(node.LeftChild);
         VisitNode(node.RightChild);
 
-        if(node.LeftChild.type == "text" || node.LeftChild.type != node.RightChild.type)
+        if(node.LeftChild.type != "number" || node.LeftChild.type != node.RightChild.type)
             throw new TypeException();
 
         node.type = node.LeftChild.type;
@@ -255,7 +255,7 @@ public class SymbolTableVisitor extends ASTVisitor {
         VisitNode(node.LeftChild);
         VisitNode(node.RightChild);
 
-        if(node.LeftChild.type == "text" || node.LeftChild.type != node.RightChild.type)
+        if(node.LeftChild.type != "number" || node.LeftChild.type != node.RightChild.type)
             throw new TypeException();
 
         node.type = node.LeftChild.type;
