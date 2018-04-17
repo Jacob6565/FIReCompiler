@@ -14,21 +14,23 @@ public class SymbolTable  {
     }
 
     //Checks whether a variable is already declared in the current scope and inserts the current input if it isn't.
-    public void Insert(AbstractNode input) throws Exception{
-        if(!stack.Peek().contains(input)) {
-            if (input instanceof DeclarationNode)
-            {
-                if (input instanceof NumberDeclarationNode)
-                    stack.Peek().put(((DeclarationNode)input).Id.name,"number");
-                else if (input instanceof BooleanDeclarationNode)
-                    stack.Peek().put(((DeclarationNode)input).Id.name,"bool");
-                else if (input instanceof TextDeclarationNode)
-                    stack.Peek().put(((DeclarationNode)input).Id.name,"text");
-                else if (input instanceof ArrayDeclarationNode)
-                    stack.Peek().put(((DeclarationNode)input).Id.name,"array");
-                else
-                    throw new Exception();
-            }
+    public void Insert(DeclarationNode input) throws Exception {
+        if (!stack.Peek().contains(input)) {
+
+            if (input instanceof NumberDeclarationNode)
+                stack.Peek().put((input).Id.name, "number");
+            else if (input instanceof BooleanDeclarationNode)
+                stack.Peek().put((input).Id.name, "bool");
+            else if (input instanceof TextDeclarationNode)
+                stack.Peek().put((input).Id.name, "text");
+            else if (input instanceof NumberArrayDeclarationNode)
+                stack.Peek().put((input).Id.name, "number array");
+            else if (input instanceof BoolArrayDeclarationNode)
+                stack.Peek().put((input).Id.name, "bool array");
+            else if (input instanceof TextArrayDeclarationNode)
+                stack.Peek().put((input).Id.name, "text array");
+            else
+                throw new Exception();
             return;
         }
         throw new Exception("Variable already declared");
@@ -46,22 +48,23 @@ public class SymbolTable  {
     }
 
     //Searches through the hashtables (scopes) on the custom stack to see if the used variable is declared.
-    public String Search(AbstractNode key) throws Exception{
+    /*public String Search(AbstractNode key) throws Exception{
         for (int i = 0; i < stack.Size(); i++ ){
             if(stack.Get(i).contains(key)){
                 return stack.Get(i).get(key.hashCode());
             }
         }
         throw new Exception("Variable is not declared");
-    }
+    }*/
 
     //Returns true if the custom stack contains a given key.
     public String Search(String name) throws Exception{
         for (int i = 0; i < stack.Size(); ++i) {
-            for (String str: stack.Get(i).keySet()) {
-                if (str.equals(name))
+            for (int j = 0; j < stack.Get(i).size(); ++j)
+            {
+                if (stack.Get(i).keySet().toArray()[j].equals(name))
                 {
-                    return str;
+                    return (String)stack.Get(i).values().toArray()[j];
                 }
             }
         }

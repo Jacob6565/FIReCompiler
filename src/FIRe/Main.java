@@ -39,16 +39,9 @@ public class Main {
         ProgNode ast = (ProgNode) new BuildASTVisitor().visitProg(cst);
         //Prints the AST to check whether it has all the correct info. (Debug code)
         PrintTraversal print = new PrintTraversal();
-        //  print.Print(ast,0);
+        //print.Print(ast,0);
         //Fills the symbol table
         SymbolTableVisitor STV = new SymbolTableVisitor();
         STV.visit(ast);
-
-        try {
-            System.out.println(STV.ST.Search("hov"));
-        }
-        catch (Exception e){
-            System.out.println("Error in Main");
-        }
     }
 }
