@@ -54,7 +54,7 @@ public abstract class ASTVisitor
     public abstract void visit(RoutineNode node);
     public abstract void visit(StatementNode node);
     public abstract void visit(StrategyDeclarationNode node) throws Exception;
-    public abstract void visit(SubtractionNode node);
+    public abstract void visit(SubtractionNode node) throws Exception;
     public abstract void visit(TextDeclarationNode node) throws Exception;
     public abstract void visit(TextNode node);
     public abstract void visit(ValNode node);
