@@ -67,7 +67,7 @@ public abstract class ASTVisitor
 
     public void VisitNode(AbstractNode node) {
         try {
-            if (node instanceof ProgNode)
+            if (node instanceof ProgNode) //comment so i can commit
                 visit((ProgNode) node);
             else if (node instanceof ActualParameterNode)
                 visit((ActualParameterNode) node);
