@@ -572,7 +572,7 @@ class WhenNode extends AbstractNode{
     }
 }
 
-class EventDeclarationNode extends AbstractNode{
+class EventDeclarationNode extends DeclarationNode{
     @Override
     public void accept(ASTVisitor v) throws Exception {
         v.visit(this);
@@ -593,7 +593,7 @@ class BlockNode extends AbstractNode{
     }
 }
 
-class FunctionDeclarationNode extends AbstractNode{
+class FunctionDeclarationNode extends DeclarationNode{
     String type;
 
     @Override
@@ -615,7 +615,7 @@ class FormalParameterNode extends AbstractNode{
     }
 }
 
-class StrategyDeclarationNode extends AbstractNode{
+class StrategyDeclarationNode extends DeclarationNode{
     public IdNode id;
 
     @Override
