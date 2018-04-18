@@ -42,6 +42,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
     public AbstractNode visitStrategyDcl(CFGParser.StrategyDclContext ctx){
         StrategyDeclarationNode node = new StrategyDeclarationNode();//Makes a new node
 
+        node.childList.add(visitId(ctx.id()));
         node.id = (IdNode)visitId(ctx.id());
         node.childList.add(visitFParamList(ctx.fParamList())); //Add the fParamList
 
