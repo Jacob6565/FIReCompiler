@@ -50,7 +50,7 @@ public class PrintTraversal extends ASTVisitor{
 
     @Override
     public void visit(BodyColorNode node, Object... arg) {
-        System.out.println("Body Color");
+        System.out.println("Body Color: " + node.Color.Color);
     }
 
     @Override
@@ -142,7 +142,7 @@ public class PrintTraversal extends ASTVisitor{
 
     @Override
     public void visit(GunColorNode node, Object... arg) {
-        System.out.println("Gun Color");
+        System.out.println("Gun Color: " + node.Color.Color);
     }
 
     @Override
@@ -227,7 +227,7 @@ public class PrintTraversal extends ASTVisitor{
 
     @Override
     public void visit(RadarColorNode node, Object... arg) {
-        System.out.println("RadarColorNode");
+        System.out.println("Radar Color: " + node.Color.Color);
     }
 
     @Override
@@ -237,7 +237,7 @@ public class PrintTraversal extends ASTVisitor{
 
     @Override
     public void visit(RobotDclBodyNode node, Object... arg) {
-        System.out.println("RobotDclBodyNode");
+        System.out.println("RobotDcl: " + node.robotType + " " + node.robotName);
     }
 
     @Override

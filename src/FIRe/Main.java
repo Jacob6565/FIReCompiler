@@ -49,10 +49,18 @@ public class Main {
             System.out.println("Exception triggered");
         }
         //Prints the AST to check whether it has all the correct info. (Debug code)
-        //PrintTraversal print = new PrintTraversal();
-        //print.Print(ast,0);
+        PrintTraversal print = new PrintTraversal();
+        print.Print(ast,0);
         //Fills the symbol table
-        //SymbolTableVisitor STV = new SymbolTableVisitor();
+        SymbolTable symbolTable = new SymbolTable();
+        SymbolTableVisitor STV = new SymbolTableVisitor(symbolTable);
         //STV.visit(ast);
+
+        FESVisitor fes = new FESVisitor(symbolTable);
+        fes.visit(ast);
+        for (StrategyDeclarationNode node: fes.strategyDeclarationNodes) {
+            System.out.println(node.toString());
+        }
+        STV.visit(ast);
     }
 }

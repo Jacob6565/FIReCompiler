@@ -140,6 +140,9 @@ class RoutineNode extends ControlStructureNode{
 //End control-structures - begin RobotProperties
 
 class RobotDclBodyNode extends  AbstractNode{
+    String robotType;
+    String robotName;
+
     @Override
     public void accept(ASTVisitor v, AbstractNode parent) throws Exception {
         v.visit(this, parent);
@@ -152,6 +155,9 @@ class RobotDclBodyNode extends  AbstractNode{
 
 class GunColorNode extends AbstractNode{
     public ColorValNode Color;
+    GunColorNode(String color){
+        Color = new ColorValNode(color);
+    }
 
     @Override
     public void accept(ASTVisitor v, AbstractNode parent) {
@@ -162,6 +168,10 @@ class GunColorNode extends AbstractNode{
 class BodyColorNode extends AbstractNode{
     public ColorValNode Color;
 
+    BodyColorNode(String color){
+        Color = new ColorValNode(color);
+    }
+
     @Override
     public void accept(ASTVisitor v, AbstractNode parent) {
         //bruges ikke
@@ -170,6 +180,10 @@ class BodyColorNode extends AbstractNode{
 
 class RadarColorNode extends AbstractNode{
     public ColorValNode Color;
+
+    RadarColorNode(String color){
+        Color = new ColorValNode(color);
+    }
 
     @Override
     public void accept(ASTVisitor v, AbstractNode parent) {
@@ -253,7 +267,11 @@ class TextNode extends ValNode{
 }
 
 class ColorValNode extends AbstractNode{
-    public Color Color;
+    String Color;
+
+    ColorValNode(String Color){
+        this.Color = Color;
+    }
 
     @Override
     public void accept(ASTVisitor v, AbstractNode parent) {
@@ -560,7 +578,7 @@ class WhenNode extends AbstractNode{
     }
 }
 
-class EventDeclarationNode extends AbstractNode{
+class EventDeclarationNode extends DeclarationNode{
     @Override
     public void accept(ASTVisitor v, AbstractNode parent) throws Exception {
         v.visit(this, parent);
@@ -582,7 +600,7 @@ class BlockNode extends AbstractNode{
     }
 }
 
-class FunctionDeclarationNode extends AbstractNode{
+class FunctionDeclarationNode extends DeclarationNode{
     String type;
 
     @Override
@@ -604,7 +622,7 @@ class FormalParameterNode extends AbstractNode{
     }
 }
 
-class StrategyDeclarationNode extends AbstractNode{
+class StrategyDeclarationNode extends DeclarationNode{
     public IdNode id;
 
     @Override

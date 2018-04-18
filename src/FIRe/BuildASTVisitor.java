@@ -41,6 +41,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
     public AbstractNode visitStrategyDcl(CFGParser.StrategyDclContext ctx){
         StrategyDeclarationNode node = new StrategyDeclarationNode();//Makes a new node
 
+        node.childList.add(visitId(ctx.id()));
         node.id = (IdNode)visitId(ctx.id());
         node.childList.add(visitFParamList(ctx.fParamList())); //Add the fParamList
 
@@ -93,7 +94,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         return blockNode;
     }
 
-    //deteermines wheter a blockbody is a dcl or stmt
+    //determines wheter a blockbody is a dcl or stmt
     @Override
     public AbstractNode visitBlockBody(CFGParser.BlockBodyContext ctx){
         if(ctx.dcl() != null)
@@ -109,7 +110,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         FormalParameterNode node = new FormalParameterNode();
 
         while(ctx != null) {
-            /* We maå an id to a type in a map (known as a dictionary in C#,
+            /* We map an id to a type in a map (known as a dictionary in C#,
             to easily find the type of an id*/
             node.parameterMap.put(visitId(ctx.id()), ctx.Type().toString());
             //IdNode idnode = (IdNode) visitId(ctx.id());
@@ -134,9 +135,23 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
     public AbstractNode visitRobotDclBody(CFGParser.RobotDclBodyContext ctx) {
 
         RobotDclBodyNode robotDclBodyNode = new RobotDclBodyNode();
+
+        int index = 0;
         for (CFGParser.IdContext idContext: ctx.id())
         {
-            robotDclBodyNode.childList.add(visitId(idContext));
+            //robotDclBodyNode.childList.add(visitId(idContext));
+            if(idContext.Name().toString().equals("RobotType"))
+                robotDclBodyNode.robotType = ctx.id().get(index+1).Name().toString();
+            else if(idContext.Name().toString().equals("RobotName"))
+                robotDclBodyNode.robotName = ctx.id().get(index+1).Name().toString();
+            else if(idContext.Name().toString().equals("GunColor"))
+                robotDclBodyNode.childList.add(new GunColorNode(ctx.id().get(index+1).Name().toString()));
+            else if(idContext.Name().toString().equals("BodyColor"))
+                robotDclBodyNode.childList.add(new BodyColorNode(ctx.id().get(index+1).Name().toString()));
+            else if(idContext.Name().toString().equals("RadarColor"))
+                robotDclBodyNode.childList.add(new RadarColorNode(ctx.id().get(index+1).Name().toString()));
+
+            index++;
         }
 
         return robotDclBodyNode;
