@@ -50,10 +50,10 @@ public class Main {
         }
         //Prints the AST to check whether it has all the correct info. (Debug code)
         PrintTraversal print = new PrintTraversal();
-        print.Print(ast,0);
+        //print.Print(ast,0);
         //Fills the symbol table
         SymbolTable symbolTable = new SymbolTable();
-        SymbolTableVisitor STV = new SymbolTableVisitor(symbolTable);
+        //SymbolTableVisitor STV = new SymbolTableVisitor(symbolTable);
         //STV.visit(ast);
 
         FESVisitor fes = new FESVisitor(symbolTable);
@@ -61,6 +61,6 @@ public class Main {
         for (StrategyDeclarationNode node: fes.strategyDeclarationNodes) {
             System.out.println(node.toString());
         }
-        STV.visit(ast);
+        //STV.visit(ast);
     }
 }
