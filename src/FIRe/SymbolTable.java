@@ -58,8 +58,8 @@ public class SymbolTable  {
     }*/
 
     //Returns true if the custom stack contains a given key.
-    public String Search(String name) throws Exception{
-        for (int i = 0; i < stack.Size(); ++i) {
+    public String Search(String name, int lineNumber) throws SymbolNotFoundException{
+        for (int i = stack.Size() - 1; i >= 0; --i) {
             for (int j = 0; j < stack.Get(i).size(); ++j)
             {
                 if (stack.Get(i).keySet().toArray()[j].equals(name))
@@ -68,7 +68,7 @@ public class SymbolTable  {
                 }
             }
         }
-        throw new Exception("The element was not found");
+        throw new SymbolNotFoundException(name,lineNumber);
     }
 
     public boolean Contains(String key) {
