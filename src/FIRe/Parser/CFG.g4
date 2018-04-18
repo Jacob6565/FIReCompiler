@@ -99,6 +99,7 @@ robotDclBody        : (id Colon id SemiColon)*
                     ;
 dcl                 : Type id Assign expr
                     | Type id (Comma id)*
+                    | Type id Squarel expr Squarer
                     ;
 stmt		        : assignStmt SemiColon
                     | funcCall SemiColon
@@ -140,5 +141,4 @@ aelseif             : Elseif Parenl expr Parenl  block
                     ;
 aelse               : Else  block
                     ;
-id                  : Name ( Dot id)?
-                    | Name Squarel Squarer;
+id                  : Name ( Dot id)?;

@@ -48,6 +48,10 @@ public class SymbolTable  {
 
                 stack.Peek().put(idNode.name, returnType + fparams);
             }
+            else if (input instanceof EventDeclarationNode){
+                IdNode idNode = (IdNode) input.childList.get(0);
+                String fparams = "";
+            }
             else
                 throw new Exception();
             return;
