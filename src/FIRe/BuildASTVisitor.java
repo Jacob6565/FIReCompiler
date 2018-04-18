@@ -91,7 +91,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         return blockNode;
     }
 
-    //deteermines wheter a blockbody is a dcl or stmt
+    //determines wheter a blockbody is a dcl or stmt
     @Override
     public AbstractNode visitBlockBody(CFGParser.BlockBodyContext ctx){
         if(ctx.dcl() != null)
@@ -132,9 +132,24 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
     public AbstractNode visitRobotDclBody(CFGParser.RobotDclBodyContext ctx) {
 
         RobotDclBodyNode robotDclBodyNode = new RobotDclBodyNode();
+
+        int index = 0;
         for (CFGParser.IdContext idContext: ctx.id())
         {
-            robotDclBodyNode.childList.add(visitId(idContext));
+            //robotDclBodyNode.childList.add(visitId(idContext));
+            if(idContext.Name().toString() == "RobotType")
+                robotDclBodyNode.robotType = ctx.id().get(index+1).Name().toString();
+            else if(idContext.Name().toString() == "RobotName")
+                robotDclBodyNode.robotName = ctx.id().get(index+1).Name().toString();
+            else if(idContext.Name().toString() == "GunColor")
+                robotDclBodyNode.childList.add(new GunColorNode(ctx.id().get(index+1).Name().toString()));
+            else if(idContext.Name().toString() == "BodyColor")
+                robotDclBodyNode.childList.add(new BodyColorNode(ctx.id().get(index+1).Name().toString()));
+            else if(idContext.Name().toString() == "RadarColor")
+                robotDclBodyNode.childList.add(new RadarColorNode(ctx.id().get(index+1).Name().toString()));
+
+            index = index++;
+
         }
 
         return robotDclBodyNode;
