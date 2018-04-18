@@ -50,5 +50,6 @@ public class Main {
         for (StrategyDeclarationNode node: fes.strategyDeclarationNodes) {
             System.out.println(node.toString());
         }
+        STV.visit(ast);
     }
 }

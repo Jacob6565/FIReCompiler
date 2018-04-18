@@ -195,10 +195,37 @@ class ArrayAccessNode extends ExpressionNode{
     }
 }
 
-class ArrayDeclarationNode extends DeclarationNode{
+abstract class ArrayDeclarationNode extends DeclarationNode{
     public IdNode Id;
     public ValNode Size;
 
+    @Override
+    public void accept(ASTVisitor v) throws Exception{
+        v.visit(this);
+        Id.accept(v);
+        Size.accept(v);
+    }
+}
+
+class NumberArrayDeclarationNode extends ArrayDeclarationNode{
+    @Override
+    public void accept(ASTVisitor v) throws Exception{
+        v.visit(this);
+        Id.accept(v);
+        Size.accept(v);
+    }
+}
+
+class TextArrayDeclarationNode extends ArrayDeclarationNode{
+    @Override
+    public void accept(ASTVisitor v) throws Exception{
+        v.visit(this);
+        Id.accept(v);
+        Size.accept(v);
+    }
+}
+
+class BoolArrayDeclarationNode extends ArrayDeclarationNode{
     @Override
     public void accept(ASTVisitor v) throws Exception{
         v.visit(this);

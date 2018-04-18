@@ -13,10 +13,11 @@ public abstract class ASTVisitor
     public abstract void visit(ActualParameterNode node);
     public abstract void visit(AndNode node) throws Exception;
     public abstract void visit(ArrayAccessNode node);
-    public abstract void visit(AssignNode node);
+    public abstract void visit(AssignNode node) throws Exception;
     public abstract void visit(BlockNode node);
     public abstract void visit(BodyColorNode node);
     public abstract void visit(BooleanDeclarationNode node) throws Exception;
+    public abstract void visit(BoolArrayDeclarationNode node) throws Exception;
     public abstract void visit(BoolNode node);
     public abstract void visit(Color node);
     public abstract void visit(ColorValNode node);
@@ -35,7 +36,7 @@ public abstract class ASTVisitor
     public abstract void visit(GunColorNode node);
     public abstract void visit(IdNode node) throws Exception;
     public abstract void visit(IfControlStructureNode node);
-    public abstract void visit(InfixExpressionNode node);
+    public abstract void visit(InfixExpressionNode node) throws Exception;
     public abstract void visit(LEQNode node) throws Exception;
     public abstract void visit(LessThanNode node) throws Exception;
     public abstract void visit(ModuloNode node) throws Exception;
@@ -44,6 +45,7 @@ public abstract class ASTVisitor
     public abstract void visit(NotEqualsNode node) throws Exception;
     public abstract void visit(NotNode node);
     public abstract void visit(NumberDeclarationNode node) throws Exception;
+    public abstract void visit(NumberArrayDeclarationNode node) throws Exception;
     public abstract void visit(NumberNode node);
     public abstract void visit(OrNode node) throws Exception;
     public abstract void visit(PowerNode node) throws Exception;
@@ -56,6 +58,7 @@ public abstract class ASTVisitor
     public abstract void visit(StrategyDeclarationNode node) throws Exception;
     public abstract void visit(SubtractionNode node) throws Exception;
     public abstract void visit(TextDeclarationNode node) throws Exception;
+    public abstract void visit(TextArrayDeclarationNode node) throws Exception;
     public abstract void visit(TextNode node);
     public abstract void visit(ValNode node);
     public abstract void visit(WhenNode node);

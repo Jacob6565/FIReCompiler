@@ -10,7 +10,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
 
     //Visitis the very first node of the CST
     @Override
-    public AbstractNode visitProg(CFGParser.ProgContext ctx) {
+    public AbstractNode visitProg(CFGParser.ProgContext ctx){
         ProgNode root = new ProgNode();
 
         root.childList.add(visitRobotDcl(ctx.robotDcl()));
@@ -24,7 +24,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
 
     //Methods has an if-else for each possible node in the xontext ctx.
     @Override
-    public AbstractNode visitProgBody(CFGParser.ProgBodyContext ctx) {
+    public AbstractNode visitProgBody(CFGParser.ProgBodyContext ctx){
         if(ctx.dcl() != null) //finds the right visitmethod and calls it
             return visitDcl(ctx.dcl());
         else if(ctx.funcDcl() != null)
@@ -39,7 +39,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
 
     //Method creates a new StrategyDeclerationNode adds the Fparamlist, and also visitis it's block and routines and when
     @Override
-    public AbstractNode visitStrategyDcl(CFGParser.StrategyDclContext ctx) {
+    public AbstractNode visitStrategyDcl(CFGParser.StrategyDclContext ctx){
         StrategyDeclarationNode node = new StrategyDeclarationNode();//Makes a new node
 
         node.id = (IdNode)visitId(ctx.id());
@@ -58,7 +58,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
 
     //Determines wheter visitWhen should be called or visitRoutine
     @Override
-    public AbstractNode visitStrategyBlock(CFGParser.StrategyBlockContext ctx) {
+    public AbstractNode visitStrategyBlock(CFGParser.StrategyBlockContext ctx){
         if(ctx.when() != null) //Finds the right visit method.
             return(visitWhen(ctx.when()));
         else if(ctx.routine() != null)
@@ -69,7 +69,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
 
     //creates a new FunctionDeclNode, sets the type of it, add the fParamlist and the block
     @Override
-    public AbstractNode visitFuncDcl(CFGParser.FuncDclContext ctx) {
+    public AbstractNode visitFuncDcl(CFGParser.FuncDclContext ctx){
         FunctionDeclarationNode node = new FunctionDeclarationNode();
 
         node.type = ctx.funcType().toString();
@@ -83,7 +83,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
 
     //adds all the blockbodies as children, a blockbody can evaluate to a dcl or a Stmt
     @Override
-    public AbstractNode visitBlock(CFGParser.BlockContext ctx) {
+    public AbstractNode visitBlock(CFGParser.BlockContext ctx){
         BlockNode blockNode = new BlockNode();
         for(CFGParser.BlockBodyContext blockBodyCtx : ctx.blockBody())
             blockNode.childList.add(visitBlockBody(blockBodyCtx)); //Add all the blockbodies as children
@@ -93,7 +93,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
 
     //deteermines wheter a blockbody is a dcl or stmt
     @Override
-    public AbstractNode visitBlockBody(CFGParser.BlockBodyContext ctx) {
+    public AbstractNode visitBlockBody(CFGParser.BlockBodyContext ctx){
         if(ctx.dcl() != null)
             return visitDcl(ctx.dcl());
         else if(ctx.stmt() != null)
@@ -143,76 +143,78 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
     //This method handles the dcl rule from the cfg, multiple cases exists since we have different types and
     //multiple declerations can be made at once
     @Override
-    public AbstractNode visitDcl(CFGParser.DclContext ctx) {
-        if(ctx.expr() != null){ // If there is an expr we assume the first rule
-            if(ctx.Type().toString().equals("number")){
+    public AbstractNode visitDcl(CFGParser.DclContext ctx){
+        if (ctx.expr() != null) { // If there is an expr we assume the first rule
+            if (ctx.Type().toString().equals("number")) {
 
                 NumberDeclarationNode numberDeclarationNode = new NumberDeclarationNode();
                 numberDeclarationNode.childList.add(visitId(ctx.id(0))); //0 beacuse we want to add the first and only element from the list
 
                 numberDeclarationNode.childList.add(visitExpr(ctx.expr()));
 
-                for(AbstractNode AN : numberDeclarationNode.childList){
+                for (AbstractNode AN : numberDeclarationNode.childList) {
                     if (AN instanceof IdNode)
                         numberDeclarationNode.Id = (IdNode) AN;
                 }
 
                 return numberDeclarationNode;
-            }
-
-            else if(ctx.Type().toString().equals("text")){
+            } else if (ctx.Type().toString().equals("text")) {
 
                 TextDeclarationNode textDeclarationNode = new TextDeclarationNode();
                 textDeclarationNode.childList.add(visitId(ctx.id(0))); //0 beacuse we want to add the first and only element from the list
 
                 textDeclarationNode.childList.add(visitExpr(ctx.expr()));
-                for(AbstractNode AN : textDeclarationNode.childList){
+                for (AbstractNode AN : textDeclarationNode.childList) {
                     if (AN instanceof IdNode)
                         textDeclarationNode.Id = (IdNode) AN;
                 }
 
                 return textDeclarationNode;
 
-            }
-
-            else if(ctx.Type().toString().equals("bool")){
+            } else if (ctx.Type().toString().equals("bool")) {
 
                 BooleanDeclarationNode booleanDeclarationNode = new BooleanDeclarationNode();
                 booleanDeclarationNode.childList.add(visitId(ctx.id(0))); //0 beacuse we want to add the first and only element from the list
 
                 booleanDeclarationNode.childList.add(visitExpr(ctx.expr()));
-                for(AbstractNode AN : booleanDeclarationNode.childList){
+                for (AbstractNode AN : booleanDeclarationNode.childList) {
                     if (AN instanceof IdNode)
                         booleanDeclarationNode.Id = (IdNode) AN;
                 }
                 return booleanDeclarationNode;
-            }
-            else
+            } else
                 return null;
 
-        }
-        else {//This else handles the case where multiple declarations are made.
-            if (ctx.children.get(1).getChild(0).toString().contains("[")) {
-                ArrayDeclarationNode ADN = new ArrayDeclarationNode();
-                ADN.childList.add(visit(ctx.id(0)));
-                //ADN.childList.add(visit(ctx.expr()));
-                for (AbstractNode AN : ADN.childList) {
-                    if (AN instanceof IdNode)
-                        ADN.Id = (IdNode) AN;
-                }
-                return ADN;
+        } else if (ctx.children.get(1).getChild(0).toString().contains("[")) {
+            //This else handles the case where multiple declarations are made or an array.
+            ArrayDeclarationNode ADN;
+            if (ctx.Type().toString().equals("number"))
+                ADN = new NumberArrayDeclarationNode();
+            else if (ctx.Type().toString().equals("bool"))
+                ADN = new BoolArrayDeclarationNode();
+            else if (ctx.Type().toString().equals("text"))
+                ADN = new TextArrayDeclarationNode();
+            else {
+                System.out.println("Error in arraydeclaration");
+                ADN = null;
             }
-            if(ctx.Type().toString().equals("number")){
+            ADN.childList.add(visit(ctx.id(0)));
+            //ADN.childList.add(visit(ctx.expr()));
+            for (AbstractNode AN : ADN.childList) {
+                if (AN instanceof IdNode)
+                    ADN.Id = (IdNode) AN;
+            }
+            return ADN;
 
+        } else if (ctx.id().size() > 1)
+            if (ctx.Type().toString().equals("number")) {
                 NumberDeclarationNode numberDeclarationNode = new NumberDeclarationNode();
 
-                for (CFGParser.IdContext idContext:ctx.id()) {
+                for (CFGParser.IdContext idContext : ctx.id()) {
                     numberDeclarationNode.childList.add(visitId(idContext)); //we add the dcls as children
                 }
                 return numberDeclarationNode;
-            }
-
-            else if (ctx.Type().toString().equals("text")) {
+            } else if (ctx.Type().toString().equals("text")) {
 
                 TextDeclarationNode textDeclarationNode = new TextDeclarationNode();
 
@@ -220,9 +222,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
                     textDeclarationNode.childList.add(visitId(idContext));//We add the dcls as children
                 }
                 return textDeclarationNode;
-            }
-
-            else if (ctx.Type().toString().equals("bool")) {
+            } else if (ctx.Type().toString().equals("bool")) {
 
                 BooleanDeclarationNode booleanDeclarationNode = new BooleanDeclarationNode();
 
@@ -230,12 +230,11 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
                     booleanDeclarationNode.childList.add(visitId(idContext));//We add the dcls as children
                 }
                 return booleanDeclarationNode;
-            }
-            else
+            } else
                 return null;
-
-        }
+        return null;
     }
+
 
     // Decides the "type" of statement (according to the CFG) and calls the appropriate method for the specific type, it
     // should never return null
@@ -570,7 +569,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
 
     //Creating Event declaration which consists of and id(eventname) and a body.
     @Override
-    public AbstractNode visitEventDcl(CFGParser.EventDclContext ctx) {
+    public AbstractNode visitEventDcl(CFGParser.EventDclContext ctx){
         EventDeclarationNode CDN = new EventDeclarationNode();
         CDN.childList.add(visitId(ctx.id()));
         CDN.childList.add(visitBlock(ctx.block()));
@@ -592,7 +591,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
     }
 
     @Override
-    public AbstractNode visitCtrlStruct(CFGParser.CtrlStructContext ctx) {
+    public AbstractNode visitCtrlStruct(CFGParser.CtrlStructContext ctx){
 
         //If the constrolstructure is an "if".
         //Then adding all the else-if's.
@@ -653,7 +652,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
     //Creating a node to indicate a if-statement, which consists of the booleanexpression
     //followed by a block.
     @Override
-    public AbstractNode visitAif(CFGParser.AifContext ctx) {
+    public AbstractNode visitAif(CFGParser.AifContext ctx){
         IfControlStructureNode ICSN = new IfControlStructureNode();
         ICSN.childList.add(visitExpr(ctx.expr()));
         ICSN.childList.add(visitBlock(ctx.block()));

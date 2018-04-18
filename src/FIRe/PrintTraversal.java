@@ -59,6 +59,11 @@ public class PrintTraversal extends ASTVisitor{
     }
 
     @Override
+    public void visit(BoolArrayDeclarationNode node) throws Exception {
+        System.out.println("Bool Array Declaration");
+    }
+
+    @Override
     public void visit(BoolNode node) {
         System.out.println("Bool Node");
     }
@@ -201,6 +206,11 @@ public class PrintTraversal extends ASTVisitor{
     }
 
     @Override
+    public void visit(NumberArrayDeclarationNode node) throws Exception {
+        System.out.println("Number Array Declaration");
+    }
+
+    @Override
     public void visit(NumberNode node) {
         System.out.println(node.value);
     }
@@ -258,6 +268,11 @@ public class PrintTraversal extends ASTVisitor{
     @Override
     public void visit(TextDeclarationNode node) {
         System.out.println("TextDeclNode");
+    }
+
+    @Override
+    public void visit(TextArrayDeclarationNode node) throws Exception {
+        System.out.println("Text Array Declaration");
     }
 
     @Override
@@ -396,6 +411,6 @@ public class PrintTraversal extends ASTVisitor{
         else if (node instanceof ArrayDeclarationNode)
             visit ((ArrayDeclarationNode) node);
         else
-            System.out.println("Error");
+            System.out.println("Print Error");
     }
 }
