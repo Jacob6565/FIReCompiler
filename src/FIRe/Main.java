@@ -12,11 +12,14 @@ public class Main {
     public static void main(String[] args) throws FileNotFoundException {
         //Reads from the example program. (Debug code)
         Scanner in = new Scanner(new FileReader("src\\FIRe\\KodeEx.txt"));
+
+        //We use this delimiter, to chop the code into bits. We split by the backslash character \n
+        in.useDelimiter("\n");
+
         //Creates a StringBuilder from the given code file.
         StringBuilder sb = new StringBuilder();
         while(in.hasNext()) {
-            sb.append(in.next());
-            sb.append(" ");
+            sb.append(in.next() + "\n");
         }
         //We append $ because this is the terminal symbol of the program.
         sb.append("$");
@@ -37,12 +40,20 @@ public class Main {
         //cst.children.add(parser.dcl());
         //Builds an AST from the CST
         ProgNode ast = (ProgNode) new BuildASTVisitor().visitProg(cst);
+        PointerASTVisitor PASTV = new PointerASTVisitor();
+        try {
+            ast.accept(PASTV, null);
+        }
+        catch (Exception e)
+        {
+            System.out.println("Exception triggered");
+        }
         //Prints the AST to check whether it has all the correct info. (Debug code)
         PrintTraversal print = new PrintTraversal();
-        print.Print(ast,0);
+        //print.Print(ast,0);
         //Fills the symbol table
         SymbolTable symbolTable = new SymbolTable();
-        SymbolTableVisitor STV = new SymbolTableVisitor(symbolTable);
+        //SymbolTableVisitor STV = new SymbolTableVisitor(symbolTable);
         //STV.visit(ast);
 
         FESVisitor fes = new FESVisitor(symbolTable);
@@ -50,6 +61,6 @@ public class Main {
         for (StrategyDeclarationNode node: fes.strategyDeclarationNodes) {
             System.out.println(node.toString());
         }
-        STV.visit(ast);
+        //STV.visit(ast);
     }
 }

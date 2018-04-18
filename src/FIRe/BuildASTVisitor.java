@@ -12,7 +12,6 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
     @Override
     public AbstractNode visitProg(CFGParser.ProgContext ctx){
         ProgNode root = new ProgNode();
-
         root.childList.add(visitRobotDcl(ctx.robotDcl()));
 
         for(CFGParser.ProgBodyContext progBodyCtx: ctx.progBody()){
@@ -42,6 +41,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
     public AbstractNode visitStrategyDcl(CFGParser.StrategyDclContext ctx){
         StrategyDeclarationNode node = new StrategyDeclarationNode();//Makes a new node
 
+        node.childList.add(visitId(ctx.id()));
         node.id = (IdNode)visitId(ctx.id());
         node.childList.add(visitFParamList(ctx.fParamList())); //Add the fParamList
 
@@ -86,9 +86,12 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
     }
 
     //adds all the blockbodies as children, a blockbody can evaluate to a dcl or a Stmt
+
     @Override
     public AbstractNode visitBlock(CFGParser.BlockContext ctx){
+
         BlockNode blockNode = new BlockNode();
+
         for(CFGParser.BlockBodyContext blockBodyCtx : ctx.blockBody())
             blockNode.childList.add(visitBlockBody(blockBodyCtx)); //Add all the blockbodies as children
 
@@ -171,6 +174,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
 
                 numberDeclarationNode.childList.add(visitExpr(ctx.expr()));
 
+                //Because we want to quickly access the IdNode we assign the field.
                 for (AbstractNode AN : numberDeclarationNode.childList) {
                     if (AN instanceof IdNode)
                         numberDeclarationNode.Id = (IdNode) AN;
@@ -682,12 +686,15 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
 
     //Creating an idNode an performing actions acoording
     //to whether or not dot-notation or arrayindexing is used.
+
     @Override
     public AbstractNode visitId(CFGParser.IdContext ctx) {
         IdNode node = new IdNode();
 
         //Getting the nodes name
         node.name = ctx.Name().toString();
+
+        node.LineNumber = ctx.getStart().getLine();
 
         //When dot-notation is used.
         while(ctx.id() != null){

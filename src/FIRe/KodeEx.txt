@@ -41,7 +41,7 @@ void doSomething(){
     }
 }
 
-strategy Default()
+strategy Default(number et, number to)
 {
     number firepowers[];
     firepowers[1] = 3 ^ 5 ^ (1 + 1);
