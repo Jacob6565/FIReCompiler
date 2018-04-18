@@ -122,12 +122,6 @@ public class FESVisitor extends ASTVisitor{
     @Override
     public void visit(FunctionDeclarationNode node, Object... arg) throws Exception {
         symbolTable.Insert(node);
-
-        for (AbstractNode node1: node.childList) {
-            if(node1 instanceof ReturnNode)
-                VisitNode(node);
-        }
-
     }
 
     @Override
