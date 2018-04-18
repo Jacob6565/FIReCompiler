@@ -41,11 +41,11 @@ public class Main {
         PrintTraversal print = new PrintTraversal();
         print.Print(ast,0);
         //Fills the symbol table
-        SymbolTableVisitor STV = new SymbolTableVisitor();
+        SymbolTable symbolTable = new SymbolTable();
+        SymbolTableVisitor STV = new SymbolTableVisitor(symbolTable);
         //STV.visit(ast);
 
-
-        FESVisitor fes = new FESVisitor();
+        FESVisitor fes = new FESVisitor(symbolTable);
         fes.visit(ast);
         for (StrategyDeclarationNode node: fes.strategyDeclarationNodes) {
             System.out.println(node.toString());

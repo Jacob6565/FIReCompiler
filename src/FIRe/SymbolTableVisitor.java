@@ -2,8 +2,10 @@ package FIRe;
 
 @SuppressWarnings("ALL")
 public class SymbolTableVisitor extends ASTVisitor {
-
-    public SymbolTable ST = new SymbolTable();
+    SymbolTableVisitor(SymbolTable symbolTable){
+        ST = symbolTable;
+    }
+    private SymbolTable ST;
 
     @Override
     public void visit(AbstractNode node) {

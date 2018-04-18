@@ -107,7 +107,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         FormalParameterNode node = new FormalParameterNode();
 
         while(ctx != null) {
-            /* We maå an id to a type in a map (known as a dictionary in C#,
+            /* We map an id to a type in a map (known as a dictionary in C#,
             to easily find the type of an id*/
             node.parameterMap.put(visitId(ctx.id()), ctx.Type().toString());
             //IdNode idnode = (IdNode) visitId(ctx.id());

@@ -5,7 +5,11 @@ import java.util.List;
 
 //Visitor used to check the declerations of functions, events and strategies
 public class FESVisitor extends ASTVisitor{
+    FESVisitor(SymbolTable symbolTable){
+        this.symbolTable = symbolTable;
+    }
 
+    private SymbolTable symbolTable;
     public List<FunctionDeclarationNode> functionDeclarationNodes = new ArrayList<FunctionDeclarationNode>();
     public List<EventDeclarationNode> eventDeclarationNodes = new ArrayList<EventDeclarationNode>();
     public List<StrategyDeclarationNode> strategyDeclarationNodes = new ArrayList<StrategyDeclarationNode>();
@@ -52,6 +56,11 @@ public class FESVisitor extends ASTVisitor{
 
     @Override
     public void visit(BooleanDeclarationNode node) throws Exception {
+
+    }
+
+    @Override
+    public void visit(BoolArrayDeclarationNode node) throws Exception {
 
     }
 
@@ -117,7 +126,7 @@ public class FESVisitor extends ASTVisitor{
 
     @Override
     public void visit(FunctionDeclarationNode node) throws Exception {
-        functionDeclarationNodes.add(node);
+        symbolTable.Insert(node);
 
         for (AbstractNode node1: node.childList) {
             if(node1 instanceof ReturnNode)
@@ -197,6 +206,11 @@ public class FESVisitor extends ASTVisitor{
     }
 
     @Override
+    public void visit(NumberArrayDeclarationNode node) throws Exception {
+
+    }
+
+    @Override
     public void visit(NumberNode node) {
 
     }
@@ -263,6 +277,11 @@ public class FESVisitor extends ASTVisitor{
 
     @Override
     public void visit(TextDeclarationNode node) throws Exception {
+
+    }
+
+    @Override
+    public void visit(TextArrayDeclarationNode node) throws Exception {
 
     }
 

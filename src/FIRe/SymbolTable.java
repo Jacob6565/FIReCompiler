@@ -29,11 +29,50 @@ public class SymbolTable  {
                 stack.Peek().put((input).Id.name, "bool array");
             else if (input instanceof TextArrayDeclarationNode)
                 stack.Peek().put((input).Id.name, "text array");
+            else if(input instanceof FunctionDeclarationNode){
+                IdNode idNode = (IdNode) input.childList.get(0);
+                String fparams = "";
+                String returnType = ((FunctionDeclarationNode) input).type;
+                boolean IsThisTheFirstAdded = true;
+                for (AbstractNode node: input.childList) {
+                    if(tryParseDeclarationNode(node)){
+                        fparams += ",";
+                        DeclarationNode dclNode = (DeclarationNode) node;
+                        fparams += GetDclType(dclNode);
+                    }
+                }
+                stack.Peek().put(idNode.name, returnType + fparams);
+            }
             else
                 throw new Exception();
             return;
         }
         throw new Exception("Variable already declared");
+    }
+    private String GetDclType(DeclarationNode node){
+        if (node instanceof NumberDeclarationNode)
+            return "number";
+        else if (node instanceof BooleanDeclarationNode)
+            return "bool";
+        else if (node instanceof TextDeclarationNode)
+            return "text";
+        else if (node instanceof NumberArrayDeclarationNode)
+            return "number array";
+        else if (node instanceof BoolArrayDeclarationNode)
+            return "bool array";
+        else if (node instanceof TextArrayDeclarationNode)
+            return "text array";
+        else
+            return null;
+    }
+
+    private boolean tryParseDeclarationNode(AbstractNode node) {
+        try {
+            DeclarationNode dclNode = (DeclarationNode) node;
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     //Pushes a new scope in the form of a hashtable to our custom stack.
