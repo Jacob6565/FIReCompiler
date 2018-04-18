@@ -136,6 +136,9 @@ class RoutineNode extends ControlStructureNode{
 //End control-structures - begin RobotProperties
 
 class RobotDclBodyNode extends  AbstractNode{
+    String robotType;
+    String robotName;
+
     @Override
     public void accept(ASTVisitor v) throws Exception {
         v.visit(this);
@@ -148,6 +151,9 @@ class RobotDclBodyNode extends  AbstractNode{
 
 class GunColorNode extends AbstractNode{
     public ColorValNode Color;
+    GunColorNode(String color){
+        Color = new ColorValNode(color);
+    }
 
     @Override
     public void accept(ASTVisitor v) {
@@ -158,6 +164,10 @@ class GunColorNode extends AbstractNode{
 class BodyColorNode extends AbstractNode{
     public ColorValNode Color;
 
+    BodyColorNode(String color){
+        Color = new ColorValNode(color);
+    }
+
     @Override
     public void accept(ASTVisitor v) {
         //bruges ikke
@@ -166,6 +176,10 @@ class BodyColorNode extends AbstractNode{
 
 class RadarColorNode extends AbstractNode{
     public ColorValNode Color;
+
+    RadarColorNode(String color){
+        Color = new ColorValNode(color);
+    }
 
     @Override
     public void accept(ASTVisitor v) {
@@ -249,7 +263,11 @@ class TextNode extends ValNode{
 }
 
 class ColorValNode extends AbstractNode{
-    public Color Color;
+    String Color;
+
+    ColorValNode(String Color){
+        this.Color = Color;
+    }
 
     @Override
     public void accept(ASTVisitor v) {
