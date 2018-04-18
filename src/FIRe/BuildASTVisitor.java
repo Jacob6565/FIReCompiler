@@ -72,7 +72,11 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
     public AbstractNode visitFuncDcl(CFGParser.FuncDclContext ctx){
         FunctionDeclarationNode node = new FunctionDeclarationNode();
 
-        node.type = ctx.funcType().toString();
+        if (ctx.funcType().Type() != null)
+            node.type = ctx.funcType().Type().toString();
+        else
+            node.type = ctx.funcType().Void().toString();
+
         node.childList.add(visitId(ctx.id()));
         if(ctx.fParamList() != null)//fparamlist er optional.
             node.childList.add(visitFParamList(ctx.fParamList()));
@@ -109,7 +113,8 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         while(ctx != null) {
             /* We map an id to a type in a map (known as a dictionary in C#,
             to easily find the type of an id*/
-            node.parameterMap.put(visitId(ctx.id()), ctx.Type().toString());
+            IdNode idNode = (IdNode) visitId(ctx.id());
+            node.parameterMap.put(idNode, ctx.Type().toString());
             //IdNode idnode = (IdNode) visitId(ctx.id());
             //idnode.type = ctx.Type().toString();
             //node.childList.add(idnode);

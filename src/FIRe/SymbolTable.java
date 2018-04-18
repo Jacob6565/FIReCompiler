@@ -33,14 +33,19 @@ public class SymbolTable  {
                 IdNode idNode = (IdNode) input.childList.get(0);
                 String fparams = "";
                 String returnType = ((FunctionDeclarationNode) input).type;
-                boolean IsThisTheFirstAdded = true;
+
                 for (AbstractNode node: input.childList) {
-                    if(tryParseDeclarationNode(node)){
+                    if(tryParseFormalParameterNode(node)){
                         fparams += ",";
-                        DeclarationNode dclNode = (DeclarationNode) node;
-                        fparams += GetDclType(dclNode);
+                        FormalParameterNode fmlNode = (FormalParameterNode) node;
+
+                        for (Map.Entry<IdNode, String> entry : fmlNode.parameterMap.entrySet())
+                        {
+                            fparams += (entry.getKey().name + "," + entry.getValue());
+                        }
                     }
                 }
+
                 stack.Peek().put(idNode.name, returnType + fparams);
             }
             else
@@ -66,9 +71,9 @@ public class SymbolTable  {
             return null;
     }
 
-    private boolean tryParseDeclarationNode(AbstractNode node) {
+    private boolean tryParseFormalParameterNode(AbstractNode node) {
         try {
-            DeclarationNode dclNode = (DeclarationNode) node;
+            FormalParameterNode fmlNode = (FormalParameterNode) node;
             return true;
         } catch (Exception e) {
             return false;

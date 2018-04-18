@@ -111,7 +111,7 @@ public class PrintTraversal extends ASTVisitor{
     @Override
     public void visit(FormalParameterNode node) {
         System.out.println("Formal Parameters");
-        for(Map.Entry<AbstractNode, String> set : node.parameterMap.entrySet())
+        for(Map.Entry<IdNode, String> set : node.parameterMap.entrySet())
         {
             //Just printing the types.
             System.out.print("            " + set.getValue().toString() + ' ');

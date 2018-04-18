@@ -606,7 +606,7 @@ class FunctionDeclarationNode extends DeclarationNode{
 }
 
 class FormalParameterNode extends AbstractNode{
-    Map<AbstractNode, String> parameterMap = new HashMap<AbstractNode, String>();
+    Map<IdNode, String> parameterMap = new HashMap<IdNode, String>();
 
     @Override
     public void accept(ASTVisitor v) {
