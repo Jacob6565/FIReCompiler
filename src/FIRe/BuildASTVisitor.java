@@ -137,19 +137,18 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         for (CFGParser.IdContext idContext: ctx.id())
         {
             //robotDclBodyNode.childList.add(visitId(idContext));
-            if(idContext.Name().toString() == "RobotType")
+            if(idContext.Name().toString().equals("RobotType"))
                 robotDclBodyNode.robotType = ctx.id().get(index+1).Name().toString();
-            else if(idContext.Name().toString() == "RobotName")
+            else if(idContext.Name().toString().equals("RobotName"))
                 robotDclBodyNode.robotName = ctx.id().get(index+1).Name().toString();
-            else if(idContext.Name().toString() == "GunColor")
+            else if(idContext.Name().toString().equals("GunColor"))
                 robotDclBodyNode.childList.add(new GunColorNode(ctx.id().get(index+1).Name().toString()));
-            else if(idContext.Name().toString() == "BodyColor")
+            else if(idContext.Name().toString().equals("BodyColor"))
                 robotDclBodyNode.childList.add(new BodyColorNode(ctx.id().get(index+1).Name().toString()));
-            else if(idContext.Name().toString() == "RadarColor")
+            else if(idContext.Name().toString().equals("RadarColor"))
                 robotDclBodyNode.childList.add(new RadarColorNode(ctx.id().get(index+1).Name().toString()));
 
-            index = index++;
-
+            index++;
         }
 
         return robotDclBodyNode;

@@ -56,6 +56,11 @@ public class FESVisitor extends ASTVisitor{
     }
 
     @Override
+    public void visit(BoolArrayDeclarationNode node) throws Exception {
+
+    }
+
+    @Override
     public void visit(BoolNode node) {
 
     }
@@ -197,6 +202,11 @@ public class FESVisitor extends ASTVisitor{
     }
 
     @Override
+    public void visit(NumberArrayDeclarationNode node) throws Exception {
+
+    }
+
+    @Override
     public void visit(NumberNode node) {
 
     }
@@ -263,6 +273,11 @@ public class FESVisitor extends ASTVisitor{
 
     @Override
     public void visit(TextDeclarationNode node) throws Exception {
+
+    }
+
+    @Override
+    public void visit(TextArrayDeclarationNode node) throws Exception {
 
     }
 
