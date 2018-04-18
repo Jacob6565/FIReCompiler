@@ -31,6 +31,16 @@ bool turnLeftAndRotate(text currentRival)
    return shotAtRival;
 }
 
+void doSomething(){
+    number x = 3.7;
+    if( x > 2){
+        return;
+    }
+    else{
+    x = x + 4.2;
+    }
+}
+
 strategy Default()
 {
     number firepowers[];
