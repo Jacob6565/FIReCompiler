@@ -8,7 +8,7 @@ public class SymbolTableVisitor extends ASTVisitor {
     private SymbolTable ST;
 
     @Override
-    public void visit(AbstractNode node) {
+    public void visit(AbstractNode node, Object... arg) {
         for (AbstractNode Node: node.childList) {
             if (Node != null)
             VisitNode(Node);
@@ -16,7 +16,7 @@ public class SymbolTableVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(AdditionNode node) throws Exception {
+    public void visit(AdditionNode node, Object... arg) throws Exception {
         if (node.LeftChild != null)
         VisitNode(node.LeftChild);
         if (node.RightChild != null)
@@ -29,7 +29,7 @@ public class SymbolTableVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(ActualParameterNode node) {
+    public void visit(ActualParameterNode node, Object... arg) {
         for (AbstractNode Node: node.childList) {
             if (Node != null)
             VisitNode(Node);
@@ -37,7 +37,7 @@ public class SymbolTableVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(AndNode node) throws Exception{
+    public void visit(AndNode node, Object... arg) throws Exception{
         if (node.LeftChild != null)
         VisitNode(node.LeftChild);
         if (node.RightChild != null)
@@ -51,7 +51,7 @@ public class SymbolTableVisitor extends ASTVisitor {
 
 
     @Override
-    public void visit(ArrayAccessNode node) {
+    public void visit(ArrayAccessNode node, Object... arg) {
         for (AbstractNode Node: node.childList) {
             if (Node != null)
             VisitNode(Node);
@@ -59,7 +59,7 @@ public class SymbolTableVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(AssignNode node) throws Exception {
+    public void visit(AssignNode node, Object... arg) throws Exception {
         for (AbstractNode Node: node.childList) {
             if (Node != null)
             VisitNode(Node);
@@ -73,8 +73,17 @@ public class SymbolTableVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(BlockNode node) {
+    public void visit(BlockNode node, Object... arg) {
         ST.OpenScope();
+        if (node.Parent instanceof FunctionDeclarationNode)
+        {
+            for (AbstractNode AN: node.Parent.childList) {
+                if (AN instanceof FormalParameterNode){
+                    System.out.println("");
+
+                }
+            }
+        }
         for (AbstractNode Node: node.childList) {
             if (Node != null)
             VisitNode(Node);
@@ -83,7 +92,7 @@ public class SymbolTableVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(BodyColorNode node) {
+    public void visit(BodyColorNode node, Object... arg) {
         for (AbstractNode Node: node.childList) {
             if (Node != null)
             VisitNode(Node);
@@ -91,7 +100,7 @@ public class SymbolTableVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(BooleanDeclarationNode node) throws Exception {
+    public void visit(BooleanDeclarationNode node, Object... arg) throws Exception {
         ST.Insert(node);
         for (AbstractNode Node: node.childList) {
             if (Node != null)
@@ -100,7 +109,7 @@ public class SymbolTableVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(BoolArrayDeclarationNode node) throws Exception {
+    public void visit(BoolArrayDeclarationNode node, Object... arg) throws Exception {
         ST.Insert(node);
         for (AbstractNode Node: node.childList) {
             if (Node != null)
@@ -109,17 +118,13 @@ public class SymbolTableVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(BoolNode node) {
+    public void visit(BoolNode node, Object... arg) {
         node.type = "bool";
     }
 
-    @Override
-    public void visit(Color node) {
-
-    }
 
     @Override
-    public void visit(ColorValNode node) {
+    public void visit(ColorValNode node, Object... arg) {
         for (AbstractNode Node: node.childList) {
             if (Node != null)
             VisitNode(Node);
@@ -127,7 +132,7 @@ public class SymbolTableVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(ControlStructureNode node) {
+    public void visit(ControlStructureNode node, Object... arg) {
         for (AbstractNode Node: node.childList) {
             if (Node != null)
             VisitNode(Node);
@@ -135,7 +140,7 @@ public class SymbolTableVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(DeclarationNode node) {
+    public void visit(DeclarationNode node, Object... arg) {
         for (AbstractNode Node: node.childList) {
             if (Node != null)
             VisitNode(Node);
@@ -143,7 +148,7 @@ public class SymbolTableVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(DivisionNode node) throws Exception {
+    public void visit(DivisionNode node, Object... arg) throws Exception {
         if (node.LeftChild != null)
         VisitNode(node.LeftChild);
         if (node.RightChild != null)
@@ -156,7 +161,7 @@ public class SymbolTableVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(EventDeclarationNode node) throws Exception {
+    public void visit(EventDeclarationNode node, Object... arg) throws Exception {
         for (AbstractNode Node: node.childList) {
             if (Node != null)
             VisitNode(Node);
@@ -164,7 +169,7 @@ public class SymbolTableVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(EqualsNode node) throws Exception{
+    public void visit(EqualsNode node, Object... arg) throws Exception{
         if (node.LeftChild != null)
         VisitNode(node.LeftChild);
         if (node.RightChild != null)
@@ -177,7 +182,7 @@ public class SymbolTableVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(ExpressionNode node) {
+    public void visit(ExpressionNode node, Object... arg) {
         for (AbstractNode Node: node.childList) {
             if (Node != null)
             VisitNode(Node);
@@ -185,7 +190,7 @@ public class SymbolTableVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(FormalParameterNode node) {
+    public void visit(FormalParameterNode node, Object... arg) {
         for (AbstractNode Node: node.childList) {
             if (Node != null)
             VisitNode(Node);
@@ -193,7 +198,7 @@ public class SymbolTableVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(ForNode node) {
+    public void visit(ForNode node, Object... arg) {
         for (AbstractNode Node: node.childList) {
             if (Node != null)
             VisitNode(Node);
@@ -201,23 +206,23 @@ public class SymbolTableVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(FuncCallNode node) {
+    public void visit(FuncCallNode node, Object... arg) {
         for (AbstractNode Node: node.childList)
             if (Node != null){
-            VisitNode(Node);
+                VisitNode(Node);
         }
     }
 
     @Override
-    public void visit(FunctionDeclarationNode node) throws Exception {
+    public void visit(FunctionDeclarationNode node, Object... arg) throws Exception {
         for (AbstractNode Node: node.childList) {
             if (Node != null)
-            VisitNode(Node);
+                VisitNode(Node);
         }
     }
 
     @Override
-    public void visit(GEQNode node) throws Exception {
+    public void visit(GEQNode node, Object... arg) throws Exception {
         if (node.LeftChild != null)
         VisitNode(node.LeftChild);
         if (node.RightChild != null)
@@ -230,7 +235,7 @@ public class SymbolTableVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(GreaterThanNode node) throws Exception {
+    public void visit(GreaterThanNode node, Object... arg) throws Exception {
         if (node.LeftChild != null)
         VisitNode(node.LeftChild);
         if (node.RightChild != null)
@@ -243,7 +248,7 @@ public class SymbolTableVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(GunColorNode node) {
+    public void visit(GunColorNode node, Object... arg) {
         for (AbstractNode Node: node.childList) {
             if (Node != null)
             VisitNode(Node);
@@ -251,15 +256,17 @@ public class SymbolTableVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(IdNode node){
+    public void visit(IdNode node, Object... arg){
         try {
-             node.type = ST.Search(node.name);
+             node.type = ST.Search(node.name, node.LineNumber);
         }
-        catch(Exception ex){}
+        catch(SymbolNotFoundException ex){
+            System.out.println(ex.getMessage());
+        }
     }
 
     @Override
-    public void visit(IfControlStructureNode node) {
+    public void visit(IfControlStructureNode node, Object... arg) {
         for (AbstractNode Node: node.childList) {
             if (Node != null)
             VisitNode(Node);
@@ -267,7 +274,7 @@ public class SymbolTableVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(InfixExpressionNode node) throws Exception{
+    public void visit(InfixExpressionNode node, Object... arg) throws Exception{
         if (node.LeftChild != null)
         VisitNode(node.LeftChild);
         if (node.RightChild != null)
@@ -280,7 +287,7 @@ public class SymbolTableVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(LEQNode node) throws Exception {
+    public void visit(LEQNode node, Object... arg) throws Exception {
         if (node.LeftChild != null)
         VisitNode(node.LeftChild);
         if (node.RightChild != null)
@@ -293,7 +300,7 @@ public class SymbolTableVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(LessThanNode node) throws Exception {
+    public void visit(LessThanNode node, Object... arg) throws Exception {
         if (node.LeftChild != null)
         VisitNode(node.LeftChild);
         if (node.RightChild != null)
@@ -306,7 +313,7 @@ public class SymbolTableVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(ModuloNode node) throws Exception {
+    public void visit(ModuloNode node, Object... arg) throws Exception {
         if (node.LeftChild != null)
         VisitNode(node.LeftChild);
         if (node.RightChild != null)
@@ -319,7 +326,7 @@ public class SymbolTableVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(MultiplicationNode node) throws Exception {
+    public void visit(MultiplicationNode node, Object... arg) throws Exception {
         if (node.LeftChild != null)
         VisitNode(node.LeftChild);
         if (node.RightChild != null)
@@ -332,12 +339,12 @@ public class SymbolTableVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(NegateNode node) {
+    public void visit(NegateNode node, Object... arg) {
         //Is not used
     }
 
     @Override
-    public void visit(NotEqualsNode node) throws Exception {
+    public void visit(NotEqualsNode node, Object... arg) throws Exception {
         if (node.LeftChild != null)
         VisitNode(node.LeftChild);
         if (node.RightChild != null)
@@ -350,12 +357,12 @@ public class SymbolTableVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(NotNode node) {
+    public void visit(NotNode node, Object... arg) {
         node.type = node.Expression.type;
     }
 
     @Override
-    public void visit(NumberDeclarationNode node) throws Exception {
+    public void visit(NumberDeclarationNode node, Object... arg) throws Exception {
         ST.Insert(node);
         for (AbstractNode Node: node.childList) {
             if (Node != null)
@@ -364,7 +371,7 @@ public class SymbolTableVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(NumberArrayDeclarationNode node) throws Exception {
+    public void visit(NumberArrayDeclarationNode node, Object... arg) throws Exception {
         ST.Insert(node);
         for (AbstractNode Node: node.childList) {
             if (Node != null)
@@ -373,13 +380,13 @@ public class SymbolTableVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(NumberNode node) {
+    public void visit(NumberNode node, Object... arg) {
         node.type = "number";
 
     }
 
     @Override
-    public void visit(OrNode node) throws Exception{
+    public void visit(OrNode node, Object... arg) throws Exception{
         if (node.LeftChild != null)
         VisitNode(node.LeftChild);
         if (node.RightChild != null)
@@ -392,7 +399,7 @@ public class SymbolTableVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(PowerNode node) throws Exception {
+    public void visit(PowerNode node, Object... arg) throws Exception {
         if (node.LeftChild != null)
             VisitNode(node.LeftChild);
         if (node.RightChild != null)
@@ -405,7 +412,7 @@ public class SymbolTableVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(ProgNode node) {
+    public void visit(ProgNode node, Object... arg) {
         for (AbstractNode Node: node.childList) {
             if (Node != null)
             VisitNode(Node);
@@ -413,7 +420,7 @@ public class SymbolTableVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(RadarColorNode node) {
+    public void visit(RadarColorNode node, Object... arg) {
         for (AbstractNode Node: node.childList) {
             if (Node != null)
             VisitNode(Node);
@@ -421,7 +428,7 @@ public class SymbolTableVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(ReturnNode node) {
+    public void visit(ReturnNode node, Object... arg) {
         for (AbstractNode Node: node.childList) {
             if (Node != null)
             VisitNode(Node);
@@ -429,7 +436,7 @@ public class SymbolTableVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(RobotDclBodyNode node) {
+    public void visit(RobotDclBodyNode node, Object... arg) {
         for (AbstractNode Node: node.childList) {
             if (Node != null)
             VisitNode(Node);
@@ -437,7 +444,7 @@ public class SymbolTableVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(RoutineNode node) {
+    public void visit(RoutineNode node, Object... arg) {
         for (AbstractNode Node: node.childList) {
             if (Node != null)
             VisitNode(Node);
@@ -445,7 +452,7 @@ public class SymbolTableVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(StatementNode node) {
+    public void visit(StatementNode node, Object... arg) {
         for (AbstractNode Node: node.childList) {
             if (Node != null)
             VisitNode(Node);
@@ -453,7 +460,7 @@ public class SymbolTableVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(StrategyDeclarationNode node) throws Exception {
+    public void visit(StrategyDeclarationNode node, Object... arg) throws Exception {
         for (AbstractNode Node: node.childList) {
             if (Node != null)
             VisitNode(Node);
@@ -461,7 +468,7 @@ public class SymbolTableVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(SubtractionNode node) throws Exception {
+    public void visit(SubtractionNode node, Object... arg) throws Exception {
         if (node.LeftChild != null)
         VisitNode(node.LeftChild);
         if (node.RightChild != null)
@@ -474,7 +481,7 @@ public class SymbolTableVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(TextDeclarationNode node) throws Exception {
+    public void visit(TextDeclarationNode node, Object... arg) throws Exception {
         ST.Insert(node);
         for (AbstractNode Node: node.childList) {
             if (Node != null)
@@ -483,7 +490,7 @@ public class SymbolTableVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(TextArrayDeclarationNode node) throws Exception {
+    public void visit(TextArrayDeclarationNode node, Object... arg) throws Exception {
         ST.Insert(node);
         for (AbstractNode Node: node.childList) {
             if (Node != null)
@@ -492,12 +499,12 @@ public class SymbolTableVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(TextNode node) {
+    public void visit(TextNode node, Object... arg) {
         node.type = "text";
     }
 
     @Override
-    public void visit(ValNode node) {
+    public void visit(ValNode node, Object... arg) {
         if(node instanceof TextNode)
             node.type = "text";
         else if(node instanceof  NumberNode)
@@ -505,22 +512,15 @@ public class SymbolTableVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(WhenNode node) {
+    public void visit(WhenNode node, Object... arg) {
         for (AbstractNode Node: node.childList) {
             if (Node != null)
             VisitNode(Node);
         }
     }
 
-    public void visit(ArrayDeclarationNode node){
-        for (AbstractNode Node: node.childList){
-            if (Node != null)
-                VisitNode(Node);
-        }
-    }
-
     @Override
-    public void visit(WhileNode node) {
+    public void visit(WhileNode node, Object... arg) {
         for (AbstractNode Node: node.childList) {
             if (Node != null)
             VisitNode(Node);

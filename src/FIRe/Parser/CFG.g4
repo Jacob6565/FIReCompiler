@@ -1,7 +1,7 @@
 grammar CFG;
 //Lexer rules
 //Robocode robot terminals
-//RobotProperty       : 'GunColor' | 'BodyColor' | 'RadarColor' ;
+//RobotProperty     : 'GunColor' | 'BodyColor' | 'RadarColor' ;
 //RobotTypeVal	    : 'advancedRobot' | 'juniorRobot' | 'robot' ;
 //ColorVal	        : 'red' | 'blue' | 'yellow' | 'green' | 'black' | 'white' ;
 Type		        : 'number' | 'text' | 'bool' | 'number[]'

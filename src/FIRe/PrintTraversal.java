@@ -13,103 +13,98 @@ import java.util.Map;
 public class PrintTraversal extends ASTVisitor{
 
     @Override
-    public void visit(AbstractNode node) {
+    public void visit(AbstractNode node, Object... arg) {
 
     }
 
     @Override
-    public void visit(AdditionNode node) {
+    public void visit(AdditionNode node, Object... arg) {
 
         System.out.println("plus");
     }
 
     @Override
-    public void visit(ActualParameterNode node) {
+    public void visit(ActualParameterNode node, Object... arg) {
         System.out.println("Actual Parameters");
     }
 
     @Override
-    public void visit(AndNode node) {
+    public void visit(AndNode node, Object... arg) {
         System.out.println("And");
     }
 
     @Override
-    public void visit(ArrayAccessNode node) {
+    public void visit(ArrayAccessNode node, Object... arg) {
         System.out.println("Array Access");
     }
 
     @Override
-    public void visit(AssignNode node) {
+    public void visit(AssignNode node, Object... arg) {
         System.out.println("Assignment");
     }
 
     @Override
-    public void visit(BlockNode node) {
+    public void visit(BlockNode node, Object... arg) {
         System.out.println("Block");
     }
 
     @Override
-    public void visit(BodyColorNode node) {
+    public void visit(BodyColorNode node, Object... arg) {
         System.out.println("Body Color: " + node.Color.Color);
     }
 
     @Override
-    public void visit(BooleanDeclarationNode node) {
+    public void visit(BooleanDeclarationNode node, Object... arg) {
         System.out.println("Boolean Declaration");
     }
 
     @Override
-    public void visit(BoolArrayDeclarationNode node) throws Exception {
+    public void visit(BoolArrayDeclarationNode node, Object... arg) {
         System.out.println("Bool Array Declaration");
     }
 
     @Override
-    public void visit(BoolNode node) {
+    public void visit(BoolNode node, Object... arg) {
         System.out.println("Bool Node");
     }
 
     @Override
-    public void visit(Color node) {
-        System.out.println("Color");
-    }
-
-    @Override
-    public void visit(ColorValNode node) {
+    public void visit(ColorValNode node, Object... arg) {
         System.out.println("Color Value");
     }
 
     @Override
-    public void visit(EventDeclarationNode node) {
+    public void visit(EventDeclarationNode node, Object... arg) {
         System.out.println("Event Declaration");
     }
 
     @Override
-    public void visit(ControlStructureNode node) {
+    public void visit(ControlStructureNode node, Object... arg) {
         //Abstract - burde
     }
 
     @Override
-    public void visit(DeclarationNode node) {
+    public void visit(DeclarationNode node, Object... arg) {
         //abstract?
     }
 
     @Override
-    public void visit(DivisionNode node) {
+    public void visit(DivisionNode node, Object... arg) {
         System.out.println("Division");
     }
 
     @Override
-    public void visit(EqualsNode node) {
+    public void visit(EqualsNode node, Object... arg) {
         System.out.println("Equals");
     }
 
     @Override
-    public void visit(ExpressionNode node) {
+    public void visit(ExpressionNode node, Object... arg) {
         //abstract
     }
 
     @Override
-    public void visit(FormalParameterNode node) {
+    public void visit(FormalParameterNode node, Object... arg) {
         System.out.println("Formal Parameters");
         for(Map.Entry<AbstractNode, String> set : node.parameterMap.entrySet())
         {
@@ -121,179 +116,177 @@ public class PrintTraversal extends ASTVisitor{
     }
 
     @Override
-    public void visit(ForNode node) {
+    public void visit(ForNode node, Object... arg) {
         System.out.println("For");
     }
 
     @Override
-    public void visit(FuncCallNode node) {
+    public void visit(FuncCallNode node, Object... arg) {
         System.out.println("Function Call");
     }
 
     @Override
-    public void visit(FunctionDeclarationNode node) {
+    public void visit(FunctionDeclarationNode node, Object... arg) {
         System.out.println("Function Declaration");
     }
 
     @Override
-    public void visit(GEQNode node) {
+    public void visit(GEQNode node, Object... arg) {
         System.out.println("Greater than or equal to");
     }
 
     @Override
-    public void visit(GreaterThanNode node) {
+    public void visit(GreaterThanNode node, Object... arg) {
         System.out.println("Greater than");
     }
 
     @Override
-    public void visit(GunColorNode node) {
+    public void visit(GunColorNode node, Object... arg) {
         System.out.println("Gun Color: " + node.Color.Color);
     }
 
     @Override
-    public void visit(IdNode node) {
+    public void visit(IdNode node, Object... arg) {
         System.out.println(node.name);
     }
 
     @Override
-    public void visit(IfControlStructureNode node) {
+    public void visit(IfControlStructureNode node, Object... arg) {
         System.out.println("If");
     }
 
     @Override
-    public void visit(InfixExpressionNode node) {
+    public void visit(InfixExpressionNode node, Object... arg) {
         //abstract
     }
 
     @Override
-    public void visit(LEQNode node) {
+    public void visit(LEQNode node, Object... arg) {
         System.out.println("Less than or equal to");
     }
 
     @Override
-    public void visit(LessThanNode node) {
+    public void visit(LessThanNode node, Object... arg) {
         System.out.println("Less than");
     }
 
     @Override
-    public void visit(ModuloNode node) {
+    public void visit(ModuloNode node, Object... arg) {
         System.out.println("Modulo");
     }
 
     @Override
-    public void visit(MultiplicationNode node) {
+    public void visit(MultiplicationNode node, Object... arg) {
         System.out.println("Multiplication");
     }
 
     @Override
-    public void visit(NegateNode node) {
+    public void visit(NegateNode node, Object... arg) {
         System.out.println("NegateNode");
     }
 
     @Override
-    public void visit(NotEqualsNode node) {
+    public void visit(NotEqualsNode node, Object... arg) {
         System.out.println("NotEqualsNode");
     }
 
     @Override
-    public void visit(NotNode node) {
+    public void visit(NotNode node, Object... arg) {
         System.out.println("NotNode");
     }
 
     @Override
-    public void visit(NumberDeclarationNode node) {
+    public void visit(NumberDeclarationNode node, Object... arg) {
         System.out.println("NumDclNode");
     }
 
     @Override
-    public void visit(NumberArrayDeclarationNode node) throws Exception {
+    public void visit(NumberArrayDeclarationNode node, Object... arg) {
         System.out.println("Number Array Declaration");
     }
 
     @Override
-    public void visit(NumberNode node) {
+    public void visit(NumberNode node, Object... arg) {
         System.out.println(node.value);
     }
 
     @Override
-    public void visit(OrNode node) {
+    public void visit(OrNode node, Object... arg) {
         System.out.println("OrNode");
     }
 
     @Override
-    public void visit(PowerNode node) {
+    public void visit(PowerNode node, Object... arg) {
         System.out.println("PowerNode");
     }
 
     @Override
-    public void visit(ProgNode node) {
+    public void visit(ProgNode node, Object... arg) {
         System.out.println("ProgNode");
     }
 
     @Override
-    public void visit(RadarColorNode node) {
+    public void visit(RadarColorNode node, Object... arg) {
         System.out.println("Radar Color: " + node.Color.Color);
     }
 
     @Override
-    public void visit(ReturnNode node) {
+    public void visit(ReturnNode node, Object... arg) {
         System.out.println("ReturnNode");
     }
 
     @Override
-    public void visit(RobotDclBodyNode node) {
+    public void visit(RobotDclBodyNode node, Object... arg) {
         System.out.println("RobotDcl: " + node.robotType + " " + node.robotName);
     }
 
     @Override
-    public void visit(RoutineNode node) {
+    public void visit(RoutineNode node, Object... arg) {
         System.out.println("RoutineNode");
     }
 
     @Override
-    public void visit(StatementNode node) {
+    public void visit(StatementNode node, Object... arg) {
         System.out.println("StmtNode");
     }
 
     @Override
-    public void visit(StrategyDeclarationNode node) {
+    public void visit(StrategyDeclarationNode node, Object... arg) {
         System.out.println("StratDclNode");
     }
 
     @Override
-    public void visit(SubtractionNode node) {
+    public void visit(SubtractionNode node, Object... arg) {
         System.out.println("SubtractionNode");
     }
 
     @Override
-    public void visit(TextDeclarationNode node) {
+    public void visit(TextDeclarationNode node, Object... arg) {
         System.out.println("TextDeclNode");
     }
 
     @Override
-    public void visit(TextArrayDeclarationNode node) throws Exception {
+    public void visit(TextArrayDeclarationNode node, Object... arg) {
         System.out.println("Text Array Declaration");
     }
 
     @Override
-    public void visit(TextNode node) {
+    public void visit(TextNode node, Object... arg) {
         System.out.println(node.Content);
     }
 
-    public void visit(ArrayDeclarationNode node) { System.out.println("Array dcl node");}
-
     @Override
-    public void visit(ValNode node) {
+    public void visit(ValNode node, Object... arg) {
         //Doesnt exist
     }
 
     @Override
-    public void visit(WhenNode node) {
+    public void visit(WhenNode node, Object... arg) {
         System.out.println("when");
     }
 
     @Override
-    public void visit(WhileNode node) {
+    public void visit(WhileNode node, Object... arg) {
         System.out.println("while");
     }
 
@@ -323,7 +316,7 @@ public class PrintTraversal extends ASTVisitor{
         else if (node instanceof ActualParameterNode)
             visit ((ActualParameterNode) node);
         else if (node instanceof AdditionNode)
-            visit ((AdditionNode) node);
+            visit((AdditionNode) node);
         else if (node instanceof AndNode)
             visit ((AndNode) node);
         else if (node instanceof ArrayAccessNode)
@@ -336,6 +329,8 @@ public class PrintTraversal extends ASTVisitor{
             visit ((BodyColorNode) node);
         else if (node instanceof BooleanDeclarationNode)
             visit ((BooleanDeclarationNode) node);
+        else if (node instanceof BoolArrayDeclarationNode)
+            visit((BoolArrayDeclarationNode) node);
         else if (node instanceof BoolNode)
             visit ((BoolNode) node);
         else if (node instanceof ColorValNode)
@@ -378,6 +373,8 @@ public class PrintTraversal extends ASTVisitor{
             visit ((NotEqualsNode) node);
         else if (node instanceof NotNode)
             visit ((NotNode) node);
+        else if (node instanceof  NumberArrayDeclarationNode)
+            visit((NumberArrayDeclarationNode) node);
         else if (node instanceof NumberDeclarationNode)
             visit ((NumberDeclarationNode) node);
         else if (node instanceof NumberNode)
@@ -400,6 +397,8 @@ public class PrintTraversal extends ASTVisitor{
             visit ((SubtractionNode) node);
         else if (node instanceof TextDeclarationNode)
             visit ((TextDeclarationNode)node);
+        else if (node instanceof TextArrayDeclarationNode)
+            visit((TextArrayDeclarationNode)node);
         else if (node instanceof TextNode)
             visit ((TextNode) node);
         else if (node instanceof ValNode)
@@ -408,8 +407,6 @@ public class PrintTraversal extends ASTVisitor{
             visit ((WhenNode) node);
         else if (node instanceof WhileNode)
             visit ((WhileNode) node);
-        else if (node instanceof ArrayDeclarationNode)
-            visit ((ArrayDeclarationNode) node);
         else
             System.out.println("Print Error");
     }
