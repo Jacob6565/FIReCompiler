@@ -4,8 +4,9 @@ public class PointerASTVisitor extends ASTVisitor{
 
     @Override
     public void visit(AbstractNode node, Object... arg) {
-        node.Parent = arg[0] != null ? (AbstractNode) arg[0] : null;
-        if (node.childList.size()>0)
+        if (arg.length > 0)
+            node.Parent = arg[0] != null ? (AbstractNode) arg[0] : null;
+        /*if (node.childList.size()>0)
             node.LeftMostChild = node.childList.get(0);
         if(node.Parent != null)
         {
@@ -16,7 +17,7 @@ public class PointerASTVisitor extends ASTVisitor{
                     break;
                 }
             }
-        }
+        }*/
     }
 
     @Override
@@ -284,4 +285,3 @@ public class PointerASTVisitor extends ASTVisitor{
         visit((AbstractNode)node,arg);
     }
 }
-

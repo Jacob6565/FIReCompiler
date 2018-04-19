@@ -4,6 +4,7 @@ import javax.xml.crypto.dsig.keyinfo.KeyValue;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.Stack;
+import FIRe.Exceptions.*;
 
 public class SymbolTable  {
 

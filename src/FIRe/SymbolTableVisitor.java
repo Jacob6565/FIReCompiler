@@ -1,5 +1,9 @@
 package FIRe;
 
+import java.util.Map;
+import FIRe.Exceptions.*;
+import javafx.beans.binding.When;
+
 @SuppressWarnings("ALL")
 public class SymbolTableVisitor extends ASTVisitor {
     SymbolTableVisitor(SymbolTable symbolTable){
@@ -73,16 +77,41 @@ public class SymbolTableVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(BlockNode node, Object... arg) {
+    public void visit(BlockNode node, Object... arg) throws Exception {
         ST.OpenScope();
-        if (node.Parent instanceof FunctionDeclarationNode)
+        if (node.Parent instanceof FunctionDeclarationNode || node.Parent instanceof StrategyDeclarationNode)
         {
             for (AbstractNode AN: node.Parent.childList) {
                 if (AN instanceof FormalParameterNode){
-                    System.out.println("");
-
+                    for (Map.Entry<IdNode, String> entry: ((FormalParameterNode) AN).parameterMap.entrySet()) {
+                        switch (entry.getValue()){
+                            case "number":
+                                ST.Insert(new NumberDeclarationNode(entry.getKey()));
+                                break;
+                            case "text":
+                                ST.Insert(new TextDeclarationNode(entry.getKey()));
+                                break;
+                            case "bool":
+                                ST.Insert(new BooleanDeclarationNode(entry.getKey()));
+                                break;
+                            case "number array":
+                                ST.Insert(new NumberArrayDeclarationNode(entry.getKey()));
+                                break;
+                            case "bool array":
+                                ST.Insert(new BoolArrayDeclarationNode(entry.getKey()));
+                                break;
+                            case "text array":
+                                ST.Insert(new TextArrayDeclarationNode(entry.getKey()));
+                            default: //If we don't recognize the type, throw an exception.
+                                throw new NotRecognizedTypeException(entry.getValue());
+                        }
+                    }
                 }
             }
+        }
+        else if (node.Parent instanceof WhenNode){
+            WhenNode Whennode = (WhenNode)node.Parent;
+            ST.Insert(new EventTypeDeclarationNode((IdNode) Whennode.childList.get(1),Whennode.childList.get(0).toString()));
         }
         for (AbstractNode Node: node.childList) {
             if (Node != null)
@@ -258,10 +287,10 @@ public class SymbolTableVisitor extends ASTVisitor {
     @Override
     public void visit(IdNode node, Object... arg){
         try {
-             node.type = ST.Search(node.name, node.LineNumber);
+            node.type = ST.Search(node.name, node.LineNumber);
         }
-        catch(SymbolNotFoundException ex){
-            System.out.println(ex.getMessage());
+        catch (SymbolNotFoundException Ex){
+            System.out.println(Ex.getMessage());
         }
     }
 
