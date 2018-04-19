@@ -122,6 +122,16 @@ public class SymbolTable  {
         throw new SymbolNotFoundException(name,lineNumber);
     }
 
+    //Returns true if the name exists in the symbolTable
+    public boolean Search(String name){
+        for (int i = 0; i < stack.Size(); i++){
+            if(stack.Get(i).containsKey(name)){
+                return true;
+            }
+        }
+        return false;
+    }
+
     public boolean Contains(String key) {
         for (int i = 0; i < stack.Size(); i++) {
             if (stack.Get(i).contains(key)) {

@@ -219,9 +219,9 @@ public class FESVisitor extends ASTVisitor{
         for (AbstractNode Node : node.childList) {
             if(Node != null && Node instanceof FunctionDeclarationNode) // this should be enough since Funcdclsnode will be a direct child of ProgNode
                 VisitNode(Node);
-            if(Node != null && Node instanceof EventDeclarationNode)
+            else if(Node != null && Node instanceof EventDeclarationNode)
                 VisitNode(Node);
-            if(Node != null && Node instanceof StrategyDeclarationNode)
+            else if(Node != null && Node instanceof StrategyDeclarationNode)
                 VisitNode(Node);
         }
     }

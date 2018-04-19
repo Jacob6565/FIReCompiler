@@ -58,6 +58,14 @@ public class Main {
 
         FESVisitor fes = new FESVisitor(symbolTable);
         fes.visit(ast);
+
+        try {
+            System.out.println(symbolTable.Search("Default"));
+        }
+        catch (Exception e){
+            System.out.println("fail");
+        }
+
         for (StrategyDeclarationNode node: fes.strategyDeclarationNodes) {
             System.out.println(node.toString());
         }
