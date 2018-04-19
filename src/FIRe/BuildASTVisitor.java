@@ -575,7 +575,9 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
 
         node.childList.add(visitId(ctx.id()));
         node.childList.add(visitExpr(ctx.expr().get(0)));
-        node.childList.add(visitExpr(ctx.expr().get(1)));
+
+        if(ctx.expr().size() > 1)
+            node.childList.add(visitExpr(ctx.expr().get(1)));
 
         return node;
     }
