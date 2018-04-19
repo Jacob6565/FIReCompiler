@@ -59,6 +59,24 @@ public class SymbolTable  {
                 stack.Peek().put(idNode.name, new SymbolData(input));
 
             }
+            else if(input instanceof StrategyDeclarationNode){
+                IdNode idNode = (IdNode) input.Id;
+                ArrayList<String> sparams = new ArrayList<String>();
+
+                for(AbstractNode node : input.childList){
+                    if(tryParseFormalParameterNode(node)){
+                        FormalParameterNode fmlNode = (FormalParameterNode) node;
+
+                        for(Map.Entry<IdNode, String> entry : fmlNode.parameterMap.entrySet()){
+                            sparams.add(entry.getValue());
+                        }
+                    }
+                }
+                stack.Peek().put(idNode.name, new SymbolData(input,sparams));
+
+
+            }
+
             else
                 throw new Exception();
             
