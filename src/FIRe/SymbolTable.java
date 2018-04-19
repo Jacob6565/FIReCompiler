@@ -1,13 +1,14 @@
 package FIRe;
 
 import javax.xml.crypto.dsig.keyinfo.KeyValue;
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.Stack;
 
 public class SymbolTable  {
 
-    private FIRe.Stack<Hashtable<String, String>> stack = new FIRe.Stack<Hashtable<String,String>>();
+    private FIRe.Stack<Hashtable<String, SymbolData>> stack = new FIRe.Stack<Hashtable<String,SymbolData>>();
     //Opens a scope when for the default constructor. This is the global scope.
     public SymbolTable(){
         OpenScope();
@@ -18,39 +19,33 @@ public class SymbolTable  {
         if (!stack.Peek().contains(input)) {
 
             if (input instanceof NumberDeclarationNode)
-                stack.Peek().put((input).Id.name, "number");
+                stack.Peek().put((input).Id.name, new SymbolData(input, "number"));
             else if (input instanceof BooleanDeclarationNode)
-                stack.Peek().put((input).Id.name, "bool");
+                stack.Peek().put((input).Id.name, new SymbolData(input, "bool"));
             else if (input instanceof TextDeclarationNode)
-                stack.Peek().put((input).Id.name, "text");
+                stack.Peek().put((input).Id.name, new SymbolData(input, "text"));
             else if (input instanceof NumberArrayDeclarationNode)
-                stack.Peek().put((input).Id.name, "number array");
+                stack.Peek().put((input).Id.name, new SymbolData(input, "number array"));
             else if (input instanceof BoolArrayDeclarationNode)
-                stack.Peek().put((input).Id.name, "bool array");
+                stack.Peek().put((input).Id.name, new SymbolData(input, "bool array"));
             else if (input instanceof TextArrayDeclarationNode)
-                stack.Peek().put((input).Id.name, "text array");
+                stack.Peek().put((input).Id.name, new SymbolData(input, "text array"));
             else if(input instanceof FunctionDeclarationNode){
                 IdNode idNode = (IdNode) input.childList.get(0);
-                String fparams = "";
+                ArrayList<String> fparams = new ArrayList<String>();
                 String returnType = ((FunctionDeclarationNode) input).type;
 
                 for (AbstractNode node: input.childList) {
                     if(tryParseFormalParameterNode(node)){
-                        fparams += ",";
                         FormalParameterNode fmlNode = (FormalParameterNode) node;
 
                         for (Map.Entry<IdNode, String> entry : fmlNode.parameterMap.entrySet())
                         {
-                            fparams += (entry.getKey().name + "," + entry.getValue());
+                            fparams.add(entry.getValue());
                         }
                     }
                 }
-
-                stack.Peek().put(idNode.name, returnType + fparams);
-            }
-            else if (input instanceof EventDeclarationNode){
-                IdNode idNode = (IdNode) input.childList.get(0);
-                String fparams = "";
+                stack.Peek().put(idNode.name, new SymbolData(input, returnType, fparams));
             }
             else
                 throw new Exception();
@@ -86,7 +81,7 @@ public class SymbolTable  {
 
     //Pushes a new scope in the form of a hashtable to our custom stack.
     public void OpenScope(){
-        stack.Push(new Hashtable<String, String>());
+        stack.Push(new Hashtable<String, SymbolData>());
     }
 
     //Closes the scope that is the topmost element of the custom stack. This is done by removing (popping) the topmost element.

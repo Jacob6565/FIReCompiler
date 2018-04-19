@@ -1,7 +1,5 @@
 package FIRe;
 
-import FIRe.Parser.CFGLexer;
-import FIRe.Parser.CFGParser;
 import org.antlr.v4.runtime.*;
 
 import java.io.*;
@@ -50,7 +48,7 @@ public class Main {
         }
         //Prints the AST to check whether it has all the correct info. (Debug code)
         PrintTraversal print = new PrintTraversal();
-        //print.Print(ast,0);
+        print.Print(ast,0);
         //Fills the symbol table
         SymbolTable symbolTable = new SymbolTable();
         //SymbolTableVisitor STV = new SymbolTableVisitor(symbolTable);
