@@ -31,7 +31,7 @@ public class SymbolTable  {
             else if (input instanceof TextArrayDeclarationNode)
                 stack.Peek().put((input).Id.name, new SymbolData(input, "text array"));
             else if(input instanceof FunctionDeclarationNode){
-                IdNode idNode = (IdNode) input.childList.get(0);
+                IdNode idNode = (IdNode) input.Id;
                 ArrayList<String> fparams = new ArrayList<String>();
                 String returnType = ((FunctionDeclarationNode) input).type;
 
