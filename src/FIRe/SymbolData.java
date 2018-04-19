@@ -3,6 +3,12 @@ package FIRe;
 import java.util.ArrayList;
 
 public class SymbolData {
+
+    SymbolData(AbstractNode nodeRef, ArrayList<String> parameterTypes){
+        this(nodeRef);
+        this.parameterTypes = parameterTypes;
+    }
+
     SymbolData(AbstractNode nodeRef, String type, ArrayList<String> parameterTypes){
         this.nodeRef = nodeRef;
         this.type = type;
