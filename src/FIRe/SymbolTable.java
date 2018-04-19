@@ -33,7 +33,12 @@ public class SymbolTable  {
             else if(input instanceof FunctionDeclarationNode){
                 IdNode idNode = (IdNode) input.Id;
                 ArrayList<String> fparams = new ArrayList<String>();
-                String returnType = ((FunctionDeclarationNode) input).type;
+                String returnType;
+
+                if (((FunctionDeclarationNode) input).type != null)
+                    returnType = ((FunctionDeclarationNode) input).type;
+                else
+                    returnType = "void";
 
                 for (AbstractNode node: input.childList) {
                     if(tryParseFormalParameterNode(node)){
@@ -46,9 +51,17 @@ public class SymbolTable  {
                     }
                 }
                 stack.Peek().put(idNode.name, new SymbolData(input, returnType, fparams));
+
+            }
+            else if(input instanceof EventDeclarationNode){
+                IdNode idNode = (IdNode) input.Id;
+
+                stack.Peek().put(idNode.name, new SymbolData(input));
+
             }
             else
                 throw new Exception();
+            
             return;
         }
         throw new Exception("Variable already declared");

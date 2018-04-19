@@ -4,15 +4,17 @@ import java.util.ArrayList;
 
 public class SymbolData {
     SymbolData(AbstractNode nodeRef, String type, ArrayList<String> parameterTypes){
-        this.nodeRef = nodeRef;
-        this.type = type;
+        this(nodeRef, type);
         this.parameterTypes = parameterTypes;
     }
     SymbolData(AbstractNode nodeRef, String type){
-        this.nodeRef = nodeRef;
+        this(nodeRef);
         this.type = type;
-        this.parameterTypes = parameterTypes;
     }
+    SymbolData(AbstractNode nodeRef){
+        this.nodeRef = nodeRef;
+    }
+
     public AbstractNode nodeRef;
     public String type;
     public ArrayList<String> parameterTypes;
