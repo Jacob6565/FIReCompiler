@@ -32,24 +32,15 @@ public class SymbolTable  {
                 stack.Peek().put((input).Id.name, new SymbolData(input, "text array"));
             else if(input instanceof FunctionDeclarationNode){
                 IdNode idNode = (IdNode) input.Id;
-                ArrayList<String> fparams = new ArrayList<String>();
+                ArrayList<String> fparams = GetParamTypes(input);
                 String returnType;
 
+                //NOT SURE IF THIS IS NECESSARY
                 if (((FunctionDeclarationNode) input).type != null)
                     returnType = ((FunctionDeclarationNode) input).type;
                 else
                     returnType = "void";
 
-                for (AbstractNode node: input.childList) {
-                    if(tryParseFormalParameterNode(node)){
-                        FormalParameterNode fmlNode = (FormalParameterNode) node;
-
-                        for (Map.Entry<IdNode, String> entry : fmlNode.parameterMap.entrySet())
-                        {
-                            fparams.add(entry.getValue());
-                        }
-                    }
-                }
                 stack.Peek().put(idNode.name, new SymbolData(input, returnType, fparams));
 
             }
@@ -61,44 +52,30 @@ public class SymbolTable  {
             }
             else if(input instanceof StrategyDeclarationNode){
                 IdNode idNode = (IdNode) input.Id;
-                ArrayList<String> sparams = new ArrayList<String>();
-
-                for(AbstractNode node : input.childList){
-                    if(tryParseFormalParameterNode(node)){
-                        FormalParameterNode fmlNode = (FormalParameterNode) node;
-
-                        for(Map.Entry<IdNode, String> entry : fmlNode.parameterMap.entrySet()){
-                            sparams.add(entry.getValue());
-                        }
-                    }
-                }
+                ArrayList<String> sparams = GetParamTypes(input);
                 stack.Peek().put(idNode.name, new SymbolData(input,sparams));
-
-
             }
-
             else
                 throw new Exception();
-            
+
             return;
         }
         throw new Exception("Variable already declared");
     }
-    private String GetDclType(DeclarationNode node){
-        if (node instanceof NumberDeclarationNode)
-            return "number";
-        else if (node instanceof BooleanDeclarationNode)
-            return "bool";
-        else if (node instanceof TextDeclarationNode)
-            return "text";
-        else if (node instanceof NumberArrayDeclarationNode)
-            return "number array";
-        else if (node instanceof BoolArrayDeclarationNode)
-            return "bool array";
-        else if (node instanceof TextArrayDeclarationNode)
-            return "text array";
-        else
-            return null;
+
+    //Help function for Insert. Extracts the parameter types from a FormalParameterNode contained in input's childlist
+    private  ArrayList<String> GetParamTypes(DeclarationNode input){
+        ArrayList<String> params = new ArrayList<String>();
+        for(AbstractNode node : input.childList){
+            if(tryParseFormalParameterNode(node)){
+                FormalParameterNode fmlNode = (FormalParameterNode) node;
+
+                for(Map.Entry<IdNode, String> entry : fmlNode.parameterMap.entrySet()){
+                    params.add(entry.getValue());
+                }
+            }
+        }
+        return params;
     }
 
     private boolean tryParseFormalParameterNode(AbstractNode node) {
