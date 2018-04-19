@@ -572,8 +572,10 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
     public AbstractNode visitAssignStmt(CFGParser.AssignStmtContext ctx) {
         AssignNode node = new AssignNode();
 
+
         node.childList.add(visitId(ctx.id()));
-        node.childList.add(visitExpr(ctx.expr()));
+        node.childList.add(visitExpr(ctx.expr().get(0)));
+        node.childList.add(visitExpr(ctx.expr().get(1)));
 
         return node;
     }
@@ -704,9 +706,10 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         }
 
         //If used to arrays indexing.
-        if(ctx.Squarel() != null){
-            node.name = node.name + "[" + "]";
-        }
+        //if(ctx.Squarel() != null){
+        //    node.name = node.name + "[" + "]";
+        //}
+
 
         return node;
     }
