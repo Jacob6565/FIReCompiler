@@ -69,6 +69,11 @@ abstract class StatementNode extends  AbstractNode{
 
 abstract class DeclarationNode extends AbstractNode{
     public IdNode Id;
+
+    public DeclarationNode(IdNode id){
+        Id = id;
+    }
+    public DeclarationNode(){   }
 }
 
 abstract class ControlStructureNode extends AbstractNode{
@@ -215,7 +220,16 @@ class ArrayAccessNode extends ExpressionNode{
 
 abstract class ArrayDeclarationNode extends DeclarationNode{
     public IdNode Id;
-    public ValNode Size;
+    public ExpressionNode Size;
+
+    public ArrayDeclarationNode(IdNode id)
+    {
+        super(id);
+    }
+
+    public ArrayDeclarationNode(){
+        super();
+    }
 
     @Override
     public void accept(ASTVisitor v, AbstractNode parent) throws Exception{
@@ -232,6 +246,14 @@ class NumberArrayDeclarationNode extends ArrayDeclarationNode{
         Id.accept(v, this);
         Size.accept(v, this);
     }
+    public NumberArrayDeclarationNode(IdNode id)
+    {
+        super(id);
+    }
+
+    public NumberArrayDeclarationNode(){
+        super();
+    }
 }
 
 class TextArrayDeclarationNode extends ArrayDeclarationNode{
@@ -241,6 +263,14 @@ class TextArrayDeclarationNode extends ArrayDeclarationNode{
         Id.accept(v, this);
         Size.accept(v, this);
     }
+    public TextArrayDeclarationNode(IdNode id)
+    {
+        super(id);
+    }
+
+    public TextArrayDeclarationNode(){
+        super();
+    }
 }
 
 class BoolArrayDeclarationNode extends ArrayDeclarationNode{
@@ -249,6 +279,15 @@ class BoolArrayDeclarationNode extends ArrayDeclarationNode{
         v.visit(this, parent);
         Id.accept(v, this);
         Size.accept(v, this);
+    }
+
+    public BoolArrayDeclarationNode(IdNode id)
+    {
+        super(id);
+    }
+
+    public BoolArrayDeclarationNode(){
+        super();
     }
 }
 
@@ -534,7 +573,17 @@ class NumberDeclarationNode extends DeclarationNode{
             if(node != null)
                 node.accept(v, this);
         }
-    } //Jeg ved ikke om vi skal lave typechecking endnu
+    }
+
+    public NumberDeclarationNode(IdNode id)
+    {
+        super(id);
+    }
+
+    public NumberDeclarationNode(){
+        super();
+    }
+
 
 }
 
@@ -548,6 +597,14 @@ class TextDeclarationNode extends DeclarationNode{
                 node.accept(v, this);
         }
     }
+    public TextDeclarationNode(IdNode id)
+    {
+        super(id);
+    }
+
+    public TextDeclarationNode(){
+        super();
+    }
 }
 
 class BooleanDeclarationNode extends DeclarationNode{
@@ -559,6 +616,14 @@ class BooleanDeclarationNode extends DeclarationNode{
             if(node != null)
                 node.accept(v, this);
         }
+    }
+    public BooleanDeclarationNode(IdNode id)
+    {
+        super(id);
+    }
+
+    public BooleanDeclarationNode(){
+        super();
     }
 }
 
@@ -589,7 +654,6 @@ class EventDeclarationNode extends DeclarationNode{
 }
 
 class BlockNode extends AbstractNode{
-    public AbstractNode Parent;
 
     @Override
     public void accept(ASTVisitor v, AbstractNode parent) throws Exception {
@@ -644,5 +708,22 @@ class ProgNode extends AbstractNode{
         for(AbstractNode child : childList)
             if(child != null)
                 child.accept(v, this);
+    }
+}
+
+class EventTypeDeclarationNode extends DeclarationNode{
+    public String Type;
+
+    @Override
+    public void accept(ASTVisitor v, AbstractNode parent) throws Exception { }
+
+    public EventTypeDeclarationNode(IdNode id, String type)
+    {
+        super(id);
+        Type = type;
+    }
+
+    public EventTypeDeclarationNode(){
+        super();
     }
 }

@@ -1,5 +1,9 @@
 package FIRe;
 
+import java.util.Map;
+import FIRe.Exceptions.*;
+import javafx.beans.binding.When;
+
 @SuppressWarnings("ALL")
 public class SymbolTableVisitor extends ASTVisitor {
     SymbolTableVisitor(SymbolTable symbolTable){
@@ -73,16 +77,11 @@ public class SymbolTableVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(BlockNode node, Object... arg) {
+    public void visit(BlockNode node, Object... arg) throws Exception {
         ST.OpenScope();
-        if (node.Parent instanceof FunctionDeclarationNode)
-        {
-            for (AbstractNode AN: node.Parent.childList) {
-                if (AN instanceof FormalParameterNode){
-                    System.out.println("");
-
-                }
-            }
+        if (node.Parent instanceof WhenNode){
+            WhenNode Whennode = (WhenNode)node.Parent;
+            ST.Insert(new EventTypeDeclarationNode((IdNode) Whennode.childList.get(1),Whennode.childList.get(0).toString()));
         }
         for (AbstractNode Node: node.childList) {
             if (Node != null)
@@ -260,8 +259,8 @@ public class SymbolTableVisitor extends ASTVisitor {
         try {
              node.type = ST.Search(node.name, node.LineNumber).type;
         }
-        catch(SymbolNotFoundException ex){
-            System.out.println(ex.getMessage());
+        catch (SymbolNotFoundException Ex){
+            System.out.println(Ex.getMessage());
         }
     }
 

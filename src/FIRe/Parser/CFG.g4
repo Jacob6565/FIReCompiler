@@ -1,7 +1,7 @@
 grammar CFG;
 //Lexer rules
 //Robocode robot terminals
-//RobotProperty     : 'GunColor' | 'BodyColor' | 'RadarColor' ;
+//RobotProperty       : 'GunColor' | 'BodyColor' | 'RadarColor' ;
 //RobotTypeVal	    : 'advancedRobot' | 'juniorRobot' | 'robot' ;
 //ColorVal	        : 'red' | 'blue' | 'yellow' | 'green' | 'black' | 'white' ;
 Type		        : 'number' | 'text' | 'bool' | 'number[]'
@@ -73,9 +73,11 @@ progBody            : dcl SemiColon
                     | strategyDcl
                     | eventDcl
                     ;
-strategyDcl     	: Strategy id Parenl fParamList? Parenr Scopel blockBody* (strategyBlock)* Scoper
+strategyDcl     	: Strategy id Parenl fParamList? Parenr strategyBlock
                     ;
-strategyBlock       : routine
+strategyBlock       : Scopel blockBody* strategyBlockBody* Scoper
+                    ;
+strategyBlockBody   : routine
                     | when
                     ;
 funcDcl	            : funcType id Parenl fParamList? Parenr block

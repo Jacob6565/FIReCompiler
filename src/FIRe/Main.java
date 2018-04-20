@@ -40,7 +40,7 @@ public class Main {
         //cst.children.add(parser.dcl());
         //Builds an AST from the CST
         ProgNode ast = (ProgNode) new BuildASTVisitor().visitProg(cst);
-        PointerASTVisitor PASTV = new PointerASTVisitor();
+        ParentASTVisitor PASTV = new ParentASTVisitor();
         try {
             ast.accept(PASTV, null);
         }
@@ -50,7 +50,7 @@ public class Main {
         }
         //Prints the AST to check whether it has all the correct info. (Debug code)
         PrintTraversal print = new PrintTraversal();
-        print.Print(ast,0);
+        //print.Print(ast,0);
         //Fills the symbol table
         SymbolTable symbolTable = new SymbolTable();
         //SymbolTableVisitor STV = new SymbolTableVisitor(symbolTable);
@@ -58,7 +58,9 @@ public class Main {
 
         FESVisitor fes = new FESVisitor(symbolTable);
         fes.visit(ast);
-
+        for (StrategyDeclarationNode node: fes.strategyDeclarationNodes) {
+            System.out.println(node.toString());
+        }
         //STV.visit(ast);
     }
 }

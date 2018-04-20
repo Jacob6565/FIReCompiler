@@ -115,7 +115,7 @@ public abstract class ASTVisitor
     public abstract void visit(AndNode node, Object... arg) throws Exception;
     public abstract void visit(ArrayAccessNode node, Object... arg);
     public abstract void visit(AssignNode node, Object... arg) throws Exception;
-    public abstract void visit(BlockNode node, Object... arg);
+    public abstract void visit(BlockNode node, Object... arg) throws Exception;
     public abstract void visit(BodyColorNode node, Object... arg);
     public abstract void visit(BooleanDeclarationNode node, Object... arg) throws Exception;
     public abstract void visit(BoolArrayDeclarationNode node, Object... arg) throws Exception;
