@@ -40,7 +40,7 @@ public class Main {
         //cst.children.add(parser.dcl());
         //Builds an AST from the CST
         ProgNode ast = (ProgNode) new BuildASTVisitor().visitProg(cst);
-        PointerASTVisitor PASTV = new PointerASTVisitor();
+        ParentASTVisitor PASTV = new ParentASTVisitor();
         try {
             ast.accept(PASTV, null);
         }

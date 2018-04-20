@@ -1,23 +1,11 @@
 package FIRe;
 
-public class PointerASTVisitor extends ASTVisitor{
+public class ParentASTVisitor extends ASTVisitor{
 
     @Override
     public void visit(AbstractNode node, Object... arg) {
         if (arg.length > 0)
             node.Parent = arg[0] != null ? (AbstractNode) arg[0] : null;
-        /*if (node.childList.size()>0)
-            node.LeftMostChild = node.childList.get(0);
-        if(node.Parent != null)
-        {
-            node.LeftMostSibling = node.Parent.childList.get(0);
-            for (int i = 0; i < node.Parent.childList.size(); ++i){
-                if(node.Parent.childList.get(i).equals(node)){
-                    node.RightSibling = (node.Parent.childList.size() - 1) != i ? node.Parent.childList.get(i + 1) : null;
-                    break;
-                }
-            }
-        }*/
     }
 
     @Override
