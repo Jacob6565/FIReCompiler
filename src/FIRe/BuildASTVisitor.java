@@ -579,7 +579,6 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
     public AbstractNode visitAssignStmt(CFGParser.AssignStmtContext ctx) {
         AssignNode node = new AssignNode();
 
-
         node.childList.add(visitId(ctx.id()));
         node.childList.add(visitExpr(ctx.expr().get(0)));
 

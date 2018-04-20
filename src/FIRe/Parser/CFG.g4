@@ -73,11 +73,9 @@ progBody            : dcl SemiColon
                     | strategyDcl
                     | eventDcl
                     ;
-strategyDcl     	: Strategy id Parenl fParamList? Parenr strategyBlock
+strategyDcl     	: Strategy id Parenl fParamList? Parenr Scopel blockBody* strategyBlock* Scoper
                     ;
-strategyBlock       : Scopel blockBody* strategyBlockBody* Scoper
-                    ;
-strategyBlockBody   : routine
+strategyBlock       : routine
                     | when
                     ;
 funcDcl	            : funcType id Parenl fParamList? Parenr block

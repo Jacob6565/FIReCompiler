@@ -58,9 +58,7 @@ public class Main {
 
         FESVisitor fes = new FESVisitor(symbolTable);
         fes.visit(ast);
-        for (StrategyDeclarationNode node: fes.strategyDeclarationNodes) {
-            System.out.println(node.toString());
-        }
+
         //STV.visit(ast);
     }
 }
