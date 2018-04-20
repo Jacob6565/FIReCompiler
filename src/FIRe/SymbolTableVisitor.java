@@ -258,7 +258,7 @@ public class SymbolTableVisitor extends ASTVisitor {
     @Override
     public void visit(IdNode node, Object... arg){
         try {
-             node.type = ST.Search(node.name, node.LineNumber);
+             node.type = ST.Search(node.name, node.LineNumber).type;
         }
         catch(SymbolNotFoundException ex){
             System.out.println(ex.getMessage());

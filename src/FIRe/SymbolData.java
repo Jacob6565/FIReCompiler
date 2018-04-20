@@ -3,13 +3,13 @@ package FIRe;
 import java.util.ArrayList;
 
 public class SymbolData {
-    SymbolData(AbstractNode nodeRef, String type, ArrayList<String> parameterTypes){
+    SymbolData(AbstractNode nodeRef, String type,  ArrayList<Tuple<String,String>> parameters){
         this(nodeRef, type);
-        this.parameterTypes = parameterTypes;
+        this.parameters = parameters;
     }
-    SymbolData(AbstractNode nodeRef, ArrayList<String> parameterTypes){
+    SymbolData(AbstractNode nodeRef, ArrayList<Tuple<String,String>> parameters){
         this(nodeRef);
-        this.parameterTypes = parameterTypes;
+        this.parameters = parameters;
     }
     SymbolData(AbstractNode nodeRef, String type){
         this(nodeRef);
@@ -21,5 +21,5 @@ public class SymbolData {
 
     public AbstractNode nodeRef;
     public String type;
-    public ArrayList<String> parameterTypes;
+    public ArrayList<Tuple<String,String>> parameters;
 }

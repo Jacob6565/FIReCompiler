@@ -32,7 +32,7 @@ public class SymbolTable  {
                 stack.Peek().put((input).Id.name, new SymbolData(input, "text array"));
             else if(input instanceof FunctionDeclarationNode){
                 IdNode idNode = (IdNode) input.Id;
-                ArrayList<String> fparams = GetParamTypes(input);
+                ArrayList<Tuple<String,String>> fparams = GetParams(input);
                 String returnType;
 
                 //NOT SURE IF THIS IS NECESSARY
@@ -52,7 +52,7 @@ public class SymbolTable  {
             }
             else if(input instanceof StrategyDeclarationNode){
                 IdNode idNode = (IdNode) input.Id;
-                ArrayList<String> sparams = GetParamTypes(input);
+                ArrayList<Tuple<String,String>> sparams = GetParams(input);
                 stack.Peek().put(idNode.name, new SymbolData(input,sparams));
             }
             else
@@ -64,14 +64,15 @@ public class SymbolTable  {
     }
 
     //Help function for Insert. Extracts the parameter types from a FormalParameterNode contained in input's childlist
-    private  ArrayList<String> GetParamTypes(DeclarationNode input){
-        ArrayList<String> params = new ArrayList<String>();
+    private  ArrayList<Tuple<String,String>> GetParams(DeclarationNode input){
+        ArrayList<Tuple<String,String>> params = new ArrayList<Tuple<String,String>>();
         for(AbstractNode node : input.childList){
             if(tryParseFormalParameterNode(node)){
                 FormalParameterNode fmlNode = (FormalParameterNode) node;
 
+                //Saves the id and type of each variable in the formal parameter
                 for(Map.Entry<IdNode, String> entry : fmlNode.parameterMap.entrySet()){
-                    params.add(entry.getValue());
+                    params.add(new Tuple<String, String>(entry.getKey().name,entry.getValue()));
                 }
             }
         }
@@ -108,28 +109,15 @@ public class SymbolTable  {
         throw new Exception("Variable is not declared");
     }*/
 
-    //Returns true if the custom stack contains a given key.
-    public String Search(String name, int lineNumber) throws SymbolNotFoundException{
-        for (int i = stack.Size() - 1; i >= 0; --i) {
-            for (int j = 0; j < stack.Get(i).size(); ++j)
-            {
-                if (stack.Get(i).keySet().toArray()[j].equals(name))
-                {
-                    return (String)stack.Get(i).values().toArray()[j];
-                }
+
+    //Returns true if the name exists in the symbolTable
+    public SymbolData Search(String name, int lineNumber) throws SymbolNotFoundException{
+        for (int i = 0; i < stack.Size(); i++){
+            if(stack.Get(i).containsKey(name)){
+                return stack.Get(i).get(name);
             }
         }
         throw new SymbolNotFoundException(name,lineNumber);
-    }
-
-    //Returns true if the name exists in the symbolTable
-    public boolean Search(String name){
-        for (int i = 0; i < stack.Size(); i++){
-            if(stack.Get(i).containsKey(name)){
-                return true;
-            }
-        }
-        return false;
     }
 
     public boolean Contains(String key) {
