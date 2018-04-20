@@ -10,9 +10,6 @@ public class FESVisitor extends ASTVisitor{
     }
 
     private SymbolTable symbolTable;
-    public List<FunctionDeclarationNode> functionDeclarationNodes = new ArrayList<FunctionDeclarationNode>();
-    public List<EventDeclarationNode> eventDeclarationNodes = new ArrayList<EventDeclarationNode>();
-    public List<StrategyDeclarationNode> strategyDeclarationNodes = new ArrayList<StrategyDeclarationNode>();
 
     @Override
     public void visit(AbstractNode node, Object... arg) {
@@ -91,7 +88,7 @@ public class FESVisitor extends ASTVisitor{
 
     @Override
     public void visit(EventDeclarationNode node, Object... arg) throws Exception {
-        eventDeclarationNodes.add(node);
+        symbolTable.Insert(node);
     }
 
     @Override
@@ -219,9 +216,9 @@ public class FESVisitor extends ASTVisitor{
         for (AbstractNode Node : node.childList) {
             if(Node != null && Node instanceof FunctionDeclarationNode) // this should be enough since Funcdclsnode will be a direct child of ProgNode
                 VisitNode(Node);
-            if(Node != null && Node instanceof EventDeclarationNode)
+            else if(Node != null && Node instanceof EventDeclarationNode)
                 VisitNode(Node);
-            if(Node != null && Node instanceof StrategyDeclarationNode)
+            else if(Node != null && Node instanceof StrategyDeclarationNode)
                 VisitNode(Node);
         }
     }
@@ -233,10 +230,6 @@ public class FESVisitor extends ASTVisitor{
 
     @Override
     public void visit(ReturnNode node, Object... arg) {
-        for (AbstractNode node1: node.childList){
-            VisitNode(node);
-        }
-
     }
 
     @Override
@@ -256,7 +249,7 @@ public class FESVisitor extends ASTVisitor{
 
     @Override
     public void visit(StrategyDeclarationNode node, Object... arg) throws Exception {
-        strategyDeclarationNodes.add(node);
+        symbolTable.Insert(node);
     }
 
     @Override

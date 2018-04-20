@@ -62,7 +62,7 @@ Return              : 'return';
 Not                 : '!';
 Event               : 'event';
 
-Name                : [A-z][A-z0-9]*;
+Name                : [A-Za-z][A-Za-z0-9]*;
 EndOfFile           : '$';
 
 //Parser rules
@@ -125,7 +125,7 @@ expr                : Parenl expr Parenr
                     | id
                     | funcCall
                     ;
-assignStmt	        : id Assign expr
+assignStmt	        : id (Squarel expr Squarer)? Assign expr
                     ;
 funcCall	        : id Parenl aParamList? Parenr
                     ;

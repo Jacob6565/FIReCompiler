@@ -79,37 +79,7 @@ public class SymbolTableVisitor extends ASTVisitor {
     @Override
     public void visit(BlockNode node, Object... arg) throws Exception {
         ST.OpenScope();
-        if (node.Parent instanceof FunctionDeclarationNode || node.Parent instanceof StrategyDeclarationNode)
-        {
-            for (AbstractNode AN: node.Parent.childList) {
-                if (AN instanceof FormalParameterNode){
-                    for (Map.Entry<IdNode, String> entry: ((FormalParameterNode) AN).parameterMap.entrySet()) {
-                        switch (entry.getValue()){
-                            case "number":
-                                ST.Insert(new NumberDeclarationNode(entry.getKey()));
-                                break;
-                            case "text":
-                                ST.Insert(new TextDeclarationNode(entry.getKey()));
-                                break;
-                            case "bool":
-                                ST.Insert(new BooleanDeclarationNode(entry.getKey()));
-                                break;
-                            case "number array":
-                                ST.Insert(new NumberArrayDeclarationNode(entry.getKey()));
-                                break;
-                            case "bool array":
-                                ST.Insert(new BoolArrayDeclarationNode(entry.getKey()));
-                                break;
-                            case "text array":
-                                ST.Insert(new TextArrayDeclarationNode(entry.getKey()));
-                            default: //If we don't recognize the type, throw an exception.
-                                throw new NotRecognizedTypeException(entry.getValue());
-                        }
-                    }
-                }
-            }
-        }
-        else if (node.Parent instanceof WhenNode){
+        if (node.Parent instanceof WhenNode){
             WhenNode Whennode = (WhenNode)node.Parent;
             ST.Insert(new EventTypeDeclarationNode((IdNode) Whennode.childList.get(1),Whennode.childList.get(0).toString()));
         }
@@ -287,7 +257,7 @@ public class SymbolTableVisitor extends ASTVisitor {
     @Override
     public void visit(IdNode node, Object... arg){
         try {
-            node.type = ST.Search(node.name, node.LineNumber);
+             node.type = ST.Search(node.name, node.LineNumber).type;
         }
         catch (SymbolNotFoundException Ex){
             System.out.println(Ex.getMessage());

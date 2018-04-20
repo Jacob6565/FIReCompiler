@@ -41,8 +41,8 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
     public AbstractNode visitStrategyDcl(CFGParser.StrategyDclContext ctx){
         StrategyDeclarationNode node = new StrategyDeclarationNode();//Makes a new node
 
-        node.childList.add(visitId(ctx.id()));
-        node.id = (IdNode)visitId(ctx.id());
+        //node.childList.add(visitId(ctx.id()));
+        node.Id = (IdNode)visitId(ctx.id());
         node.childList.add(visitFParamList(ctx.fParamList())); //Add the fParamList
 
         if(ctx.blockBody() != null)
@@ -77,7 +77,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         else
             node.type = ctx.funcType().Void().toString();
 
-        node.childList.add(visitId(ctx.id()));
+        node.Id = (IdNode) visitId(ctx.id());
         if(ctx.fParamList() != null)//fparamlist er optional.
             node.childList.add(visitFParamList(ctx.fParamList()));
         node.childList.add(visitBlock(ctx.block()));
@@ -579,8 +579,12 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
     public AbstractNode visitAssignStmt(CFGParser.AssignStmtContext ctx) {
         AssignNode node = new AssignNode();
 
+
         node.childList.add(visitId(ctx.id()));
-        node.childList.add(visitExpr(ctx.expr()));
+        node.childList.add(visitExpr(ctx.expr().get(0)));
+
+        if(ctx.expr().size() > 1)
+            node.childList.add(visitExpr(ctx.expr().get(1)));
 
         return node;
     }
@@ -601,7 +605,8 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
     @Override
     public AbstractNode visitEventDcl(CFGParser.EventDclContext ctx){
         EventDeclarationNode CDN = new EventDeclarationNode();
-        CDN.childList.add(visitId(ctx.id()));
+
+        CDN.Id = (IdNode) visitId(ctx.id());
         CDN.childList.add(visitBlock(ctx.block()));
 
         return CDN;
@@ -710,9 +715,10 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         }
 
         //If used to arrays indexing.
-        if(ctx.Squarel() != null){
-            node.name = node.name + "[" + "]";
-        }
+        //if(ctx.Squarel() != null){
+        //    node.name = node.name + "[" + "]";
+        //}
+
 
         return node;
     }

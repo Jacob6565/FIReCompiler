@@ -687,7 +687,7 @@ class FormalParameterNode extends AbstractNode{
 }
 
 class StrategyDeclarationNode extends DeclarationNode{
-    public IdNode id;
+
 
     @Override
     public void accept(ASTVisitor v, AbstractNode parent) throws Exception {
