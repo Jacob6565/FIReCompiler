@@ -41,6 +41,11 @@ public class SymbolTable  {
                 else
                     returnType = "void";
 
+                for (Tuple<String, String> param: fparams) {
+                    //Here we can use peek, because we know a function declaration will only appear at the global scope
+                    if(stack.Peek().containsKey(param.x))
+                        throw new Exception("Variable name in function parameter already used in global scope");
+                }
                 stack.Peek().put(idNode.name, new SymbolData(input, returnType, fparams));
 
             }
@@ -53,6 +58,11 @@ public class SymbolTable  {
             else if(input instanceof StrategyDeclarationNode){
                 IdNode idNode = (IdNode) input.Id;
                 ArrayList<Tuple<String,String>> sparams = GetParams(input);
+                for (Tuple<String, String> param: sparams) {
+                    //Here we can use peek, because we know a strategy declaration will only appear at the global scope
+                    if(stack.Peek().containsKey(param.x))
+                        throw new Exception("Variable name in strategy parameter already used in global scope");
+                }
                 stack.Peek().put(idNode.name, new SymbolData(input,sparams));
             }
             else
