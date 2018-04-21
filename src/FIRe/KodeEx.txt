@@ -7,7 +7,7 @@ RobotProperties
       RadarColor:white;
 }
 
-number firepower = 1;
+number firepower = true;
 text nameOfRival = "SittingDuck";
 
 bool turnLeftAndRotate(text currentRival)
@@ -47,6 +47,8 @@ strategy Default(number et, number to)
     firepowers[1] = 3 ^ 5 ^ (1 + 1);
     firepowers[2] = 2;
     firepowers[3] = 3;
+    number a = 3;
+    number b = 45;
     a = a + b;
 
     routine()

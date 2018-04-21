@@ -1,5 +1,6 @@
 package FIRe;
 
+import java.lang.reflect.Type;
 import java.util.Map;
 import FIRe.Exceptions.*;
 import javafx.beans.binding.When;
@@ -20,14 +21,22 @@ public class SymbolTableVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(AdditionNode node, Object... arg) throws Exception {
+    public void visit(AdditionNode node, Object... arg) throws TypeException {
         if (node.LeftChild != null)
         VisitNode(node.LeftChild);
         if (node.RightChild != null)
         VisitNode(node.RightChild);
 
-        if(node.LeftChild.type != node.RightChild.type || node.LeftChild.type == "bool")
-            throw new TypeException();
+        if (node.LeftChild.type == "bool" && node.RightChild.type == "bool")
+            throw new TypeException("number or text","bool",node.LineNumber);
+        else if (node.LeftChild.type == "number" && node.RightChild.type == "text")
+            throw new TypeException("number", "text", node.LineNumber);
+        else if (node.LeftChild.type == "text" && node.RightChild.type == "number")
+            throw new TypeException("text", "number", node.LineNumber);
+        else if ((node.LeftChild.type == "number" || node.LeftChild.type == "text") && node.RightChild.type != node.LeftChild.type)
+            throw new TypeException(node.LeftChild.type, node.RightChild.type, node.LineNumber);
+        else if ((node.RightChild.type == "number" || node.RightChild.type == "text") && node.LeftChild.type != node.RightChild.type)
+            throw new TypeException(node.RightChild.type, node.LeftChild.type, node.LineNumber);
 
         node.type = node.LeftChild.type;
     }
@@ -41,16 +50,18 @@ public class SymbolTableVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(AndNode node, Object... arg) throws Exception{
+    public void visit(AndNode node, Object... arg) throws TypeException{
         if (node.LeftChild != null)
         VisitNode(node.LeftChild);
         if (node.RightChild != null)
         VisitNode(node.RightChild);
 
-        if(node.LeftChild.type != "bool" || node.LeftChild.type != node.RightChild.type)
-            throw new TypeException();
+        if (node.LeftChild.type != "bool")
+            throw new TypeException("bool", node.LeftChild.type,node.LineNumber);
+        if (node.RightChild.type != "bool")
+            throw new TypeException("bool",node.RightChild.type,node.LineNumber);
 
-        node.type = node.LeftChild.type;
+        node.type = "bool";
     }
 
 
@@ -63,17 +74,18 @@ public class SymbolTableVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(AssignNode node, Object... arg) throws Exception {
+    public void visit(AssignNode node, Object... arg) throws TypeException {
         for (AbstractNode Node: node.childList) {
             if (Node != null)
             VisitNode(Node);
         }
+        if(node.Id.type != node.Expression.type)
+            throw new TypeException(node.Id.type,node.Expression.type, node.LineNumber);
+
         if (node != null && node.Id != null && node.Expression != null) {
             VisitNode(node.Id);
             VisitNode(node.Expression);
         }
-        if(node.Id.type != node.Expression.type)
-            throw new TypeException();
     }
 
     @Override
@@ -105,6 +117,7 @@ public class SymbolTableVisitor extends ASTVisitor {
             if (Node != null)
             VisitNode(Node);
         }
+        node.Id.type = "bool";
     }
 
     @Override
@@ -114,6 +127,7 @@ public class SymbolTableVisitor extends ASTVisitor {
             if (Node != null)
                 VisitNode(Node);
         }
+        node.Id.type = "bool array";
     }
 
     @Override
@@ -147,14 +161,16 @@ public class SymbolTableVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(DivisionNode node, Object... arg) throws Exception {
+    public void visit(DivisionNode node, Object... arg) throws TypeException {
         if (node.LeftChild != null)
         VisitNode(node.LeftChild);
         if (node.RightChild != null)
         VisitNode(node.RightChild);
 
-        if(node.LeftChild.type != "number" || node.LeftChild.type != node.RightChild.type)
-            throw new TypeException();
+        if(node.LeftChild.type != "number")
+            throw new TypeException("number",node.LeftChild.type,node.LineNumber);
+        if(node.RightChild.type != "number")
+            throw new TypeException("number",node.RightChild.type,node.LineNumber);
 
         node.type = node.LeftChild.type;
     }
@@ -168,14 +184,14 @@ public class SymbolTableVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(EqualsNode node, Object... arg) throws Exception{
+    public void visit(EqualsNode node, Object... arg) throws TypeException{
         if (node.LeftChild != null)
         VisitNode(node.LeftChild);
         if (node.RightChild != null)
         VisitNode(node.RightChild);
 
         if(node.LeftChild.type != node.RightChild.type)
-            throw new TypeException();
+            throw new TypeException(node.LeftChild.type,node.RightChild.type,node.LineNumber);
 
         node.type = node.LeftChild.type;
     }
@@ -210,6 +226,7 @@ public class SymbolTableVisitor extends ASTVisitor {
             if (Node != null){
                 VisitNode(Node);
         }
+        //Something needs to happen here
     }
 
     @Override
@@ -227,10 +244,12 @@ public class SymbolTableVisitor extends ASTVisitor {
         if (node.RightChild != null)
         VisitNode(node.RightChild);
 
-        if(node.LeftChild.type == "text" || node.LeftChild.type != node.RightChild.type)
-            throw new TypeException();
+        if (node.LeftChild.type != "number")
+            throw new TypeException("number",node.LeftChild.type,node.LineNumber);
+        if (node.RightChild.type != "number")
+            throw new TypeException("number",node.RightChild.type,node.LineNumber);
 
-        node.type = node.LeftChild.type;
+        node.type = "number";
     }
 
     @Override
@@ -240,10 +259,12 @@ public class SymbolTableVisitor extends ASTVisitor {
         if (node.RightChild != null)
         VisitNode(node.RightChild);
 
-        if(node.LeftChild.type != "number" || node.LeftChild.type != node.RightChild.type)
-            throw new TypeException();
+        if (node.LeftChild.type != "number")
+            throw new TypeException("number",node.LeftChild.type,node.LineNumber);
+        if (node.RightChild.type != "number")
+            throw new TypeException("number",node.RightChild.type,node.LineNumber);
 
-        node.type = node.LeftChild.type;
+        node.type = "number";
     }
 
     @Override
@@ -280,7 +301,7 @@ public class SymbolTableVisitor extends ASTVisitor {
         VisitNode(node.RightChild);
 
         if(node.LeftChild.type != node.RightChild.type)
-            throw new TypeException();
+            throw new TypeException("","",0); //This method  should never be called, because InfixExpression is abstract
 
         node.type = node.LeftChild.type;
     }
@@ -292,10 +313,12 @@ public class SymbolTableVisitor extends ASTVisitor {
         if (node.RightChild != null)
         VisitNode(node.RightChild);
 
-        if(node.LeftChild.type != "number" || node.LeftChild.type != node.RightChild.type)
-            throw new TypeException();
+        if(node.LeftChild.type != "number")
+            throw new TypeException("number",node.LeftChild.type,node.LineNumber);
+        if(node.RightChild.type != "number")
+            throw new TypeException("number",node.RightChild.type,node.LineNumber);
 
-        node.type = node.LeftChild.type;
+        node.type = "number";
     }
 
     @Override
@@ -305,10 +328,12 @@ public class SymbolTableVisitor extends ASTVisitor {
         if (node.RightChild != null)
         VisitNode(node.RightChild);
 
-        if(node.LeftChild.type == "text" || node.LeftChild.type != node.RightChild.type)
-            throw new TypeException();
+        if(node.LeftChild.type != "number")
+            throw new TypeException("number",node.LeftChild.type,node.LineNumber);
+        if(node.RightChild.type != "number")
+            throw new TypeException("number",node.RightChild.type,node.LineNumber);
 
-        node.type = node.LeftChild.type;
+        node.type = "number";
     }
 
     @Override
@@ -318,10 +343,12 @@ public class SymbolTableVisitor extends ASTVisitor {
         if (node.RightChild != null)
         VisitNode(node.RightChild);
 
-        if(node.LeftChild.type != "number" || node.LeftChild.type != node.RightChild.type)
-            throw new TypeException();
+        if(node.LeftChild.type != "number")
+            throw new TypeException("number",node.LeftChild.type,node.LineNumber);
+        if(node.RightChild.type != "number")
+            throw new TypeException("number",node.RightChild.type,node.LineNumber);
 
-        node.type = node.LeftChild.type;
+        node.type = "number";
     }
 
     @Override
@@ -331,10 +358,12 @@ public class SymbolTableVisitor extends ASTVisitor {
         if (node.RightChild != null)
         VisitNode(node.RightChild);
 
-        if(node.LeftChild.type != "number" || node.LeftChild.type != node.RightChild.type)
-            throw new TypeException();
+        if(node.LeftChild.type != "number")
+            throw new TypeException("number",node.LeftChild.type,node.LineNumber);
+        if(node.RightChild.type != "number")
+            throw new TypeException("number",node.RightChild.type,node.LineNumber);
 
-        node.type = node.LeftChild.type;
+        node.type = "number";
     }
 
     @Override
@@ -350,7 +379,7 @@ public class SymbolTableVisitor extends ASTVisitor {
         VisitNode(node.RightChild);
 
         if(node.LeftChild.type != node.RightChild.type)
-            throw new TypeException();
+            throw new TypeException(node.LeftChild.type,node.RightChild.type,node.LineNumber);
 
         node.type = node.LeftChild.type;
     }
@@ -361,12 +390,16 @@ public class SymbolTableVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(NumberDeclarationNode node, Object... arg) throws Exception {
+    public void visit(NumberDeclarationNode node, Object... arg) throws TypeException,Exception {
         ST.Insert(node);
+        node.Id.type = "number";
         for (AbstractNode Node: node.childList) {
             if (Node != null)
             VisitNode(Node);
         }
+        if (node.childList.size() > 1 && ((ExpressionNode)node.childList.get(1)).type != node.Id.type)
+            throw new TypeException(node.Id.type,((ExpressionNode) node.childList.get(1)).type,node.LineNumber);
+
     }
 
     @Override
@@ -376,12 +409,12 @@ public class SymbolTableVisitor extends ASTVisitor {
             if (Node != null)
                 VisitNode(Node);
         }
+        node.Id.type = "number array";
     }
 
     @Override
     public void visit(NumberNode node, Object... arg) {
         node.type = "number";
-
     }
 
     @Override
@@ -391,8 +424,10 @@ public class SymbolTableVisitor extends ASTVisitor {
         if (node.RightChild != null)
         VisitNode(node.RightChild);
 
-        if(node.LeftChild.type != "bool" || node.LeftChild.type != node.RightChild.type)
-            throw new TypeException();
+        if (node.LeftChild.type != "bool")
+            throw new TypeException("bool", node.LeftChild.type,node.LineNumber);
+        if (node.RightChild.type != "bool")
+            throw new TypeException("bool",node.RightChild.type,node.LineNumber);
 
         node.type = node.LeftChild.type;
     }
@@ -404,10 +439,12 @@ public class SymbolTableVisitor extends ASTVisitor {
         if (node.RightChild != null)
         VisitNode(node.RightChild);
 
-        if(node.LeftChild.type != "number" || node.LeftChild.type != node.RightChild.type)
-            throw new TypeException();
+        if(node.LeftChild.type != "number")
+            throw new TypeException("number",node.LeftChild.type,node.LineNumber);
+        if(node.RightChild.type != "number")
+            throw new TypeException("number",node.RightChild.type,node.LineNumber);
 
-        node.type = node.LeftChild.type;
+        node.type = "number";
     }
 
     @Override
@@ -473,10 +510,12 @@ public class SymbolTableVisitor extends ASTVisitor {
         if (node.RightChild != null)
         VisitNode(node.RightChild);
 
-        if(node.LeftChild.type != "number" || node.LeftChild.type != node.RightChild.type)
-            throw new TypeException();
+        if(node.LeftChild.type != "number")
+            throw new TypeException("number",node.LeftChild.type,node.LineNumber);
+        if(node.RightChild.type != "number")
+            throw new TypeException("number",node.RightChild.type,node.LineNumber);
 
-        node.type = node.LeftChild.type;
+        node.type = "number";
     }
 
     @Override
@@ -486,6 +525,7 @@ public class SymbolTableVisitor extends ASTVisitor {
             if (Node != null)
             VisitNode(Node);
         }
+        node.Id.type = "text";
     }
 
     @Override
@@ -495,6 +535,7 @@ public class SymbolTableVisitor extends ASTVisitor {
             if (Node != null)
                 VisitNode(Node);
         }
+        node.Id.type = "text array";
     }
 
     @Override
@@ -525,5 +566,4 @@ public class SymbolTableVisitor extends ASTVisitor {
             VisitNode(Node);
         }
     }
-
 }
