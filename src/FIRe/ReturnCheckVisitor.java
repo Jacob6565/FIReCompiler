@@ -1,5 +1,6 @@
 package FIRe;
 import FIRe.Exceptions.ReturnException;
+import FIRe.Exceptions.VoidReturnException;
 import javafx.beans.binding.When;
 
 
@@ -45,29 +46,34 @@ public class ReturnCheckVisitor extends ASTVisitor {
     @Override
     public void visit(BlockNode node, Object... arg) throws Exception {
 
-        boolean hasreturn = false;
+        SymbolData data = table.Search(node.Parent.toString(),0);
 
-        for (AbstractNode Node : node.childList) {
-            if (Node instanceof ReturnNode) {
-                hasreturn = true; // The block itself contains a return, thus all the branches can inevitably return
-                //Her skal man se om det så er det rigtige der bliver returneret
-            }
-        }
-        if (!hasreturn) { // if however the block does not have a return, it may be hidden under an if-node
+        if(!data.type.equals("void")) {
+            boolean hasreturn = false;
             for (AbstractNode Node : node.childList) {
-                if (Node instanceof IfControlStructureNode) {
-                    VisitNode(Node);
+                if (Node instanceof ReturnNode) {
+                    hasreturn = true; // The block itself contains a return, thus all the branches can inevitably return
+                    //Her skal man se om det så er det rigtige der bliver returneret
                 }
             }
 
 
-        } // Der mangler noget heromkring der sikrer at en parents
-
-      //  SymbolData data = table.Search(node.Parent.toString(),0);
-        //if(hasreturn && data.type == "void"){
-         //   throw new Exception("Ærgerligt");
-       // } // tjek hvad returtypen er for funktionen i symboltable
-
+            if (!hasreturn) { // if however the block does not have a return, it may be hidden under an if-node
+                for (AbstractNode Node : node.childList) {
+                    if (Node instanceof IfControlStructureNode) {
+                        VisitNode(Node);
+                    } else
+                        System.out.println("Ærgerligt");
+                }
+            }
+        }
+        else{
+            for(AbstractNode Node : node.childList){
+                if(Node instanceof ReturnNode){
+                    throw new VoidReturnException();
+                }
+            }
+        }
     }
 
     @Override
