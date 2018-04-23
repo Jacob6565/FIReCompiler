@@ -358,7 +358,12 @@ public class ReturnCheckVisitor extends ASTVisitor {
 
     @Override
     public void visit(RoutineNode node, Object... arg) {
-
+        for(AbstractNode child : node.childList){
+            if(child instanceof BlockNode){
+                VisitNode(child);
+                break;
+            }
+        }
     }
 
     @Override
@@ -372,7 +377,7 @@ public class ReturnCheckVisitor extends ASTVisitor {
 
         for(AbstractNode child : node.childList){
             if(child instanceof ReturnNode){
-                throw new ReturnException();
+                throw new ReturnException("Strategies cannot contain return", child.LineNumber);
             }
             if(child instanceof ControlStructureNode || child instanceof WhenNode)
                 VisitNode(child);
@@ -417,6 +422,11 @@ public class ReturnCheckVisitor extends ASTVisitor {
 
     @Override
     public void visit(WhileNode node, Object... arg) {
-
+        for(AbstractNode child : node.childList){
+            if(child instanceof BlockNode){
+                VisitNode(child);
+                break;
+            }
+        }
     }
 }
