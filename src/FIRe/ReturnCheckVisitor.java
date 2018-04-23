@@ -1,5 +1,6 @@
 package FIRe;
 import FIRe.Exceptions.ReturnException;
+import FIRe.Exceptions.TypeException;
 import javafx.beans.binding.When;
 
 
@@ -46,22 +47,39 @@ public class ReturnCheckVisitor extends ASTVisitor {
     public void visit(BlockNode node, Object... arg) throws Exception {
 
         boolean hasreturn = false;
+        AbstractNode parentNode = null;
+        int returnFlag = 0;
+        ReturnNode returnNode = null;
 
-        for (AbstractNode Node : node.childList) {
-            if (Node instanceof ReturnNode) {
-                hasreturn = true; // The block itself contains a return, thus all the branches can inevitably return
-                //Her skal man se om det så er det rigtige der bliver returneret
+        for(AbstractNode child : node.childList){
+            if(child instanceof ReturnNode){
+                returnFlag++;
+                returnNode = (ReturnNode) child;
+            }
+
+            else if(child instanceof ControlStructureNode)
+                VisitNode(child);
+        }
+
+        if(returnFlag > 1)
+            throw new ReturnException();
+        else if(returnFlag == 1){
+            if(node.Parent != null)
+                parentNode = node.Parent;
+
+            while(parentNode != null){
+                if(parentNode instanceof FunctionDeclarationNode){
+                    if(((FunctionDeclarationNode) parentNode).type != ((ExpressionNode) returnNode.childList.get(0)).type) {
+                        throw new TypeException(((FunctionDeclarationNode) parentNode).type, ((ExpressionNode) returnNode.childList.get(0)).type,((ExpressionNode) returnNode.childList.get(0)).LineNumber );
+                    }
+                }
+                parentNode = parentNode.Parent;
             }
         }
-        if (!hasreturn) { // if however the block does not have a return, it may be hidden under an if-node
-            for (AbstractNode Node : node.childList) {
-                if (Node instanceof IfControlStructureNode) {
-                    VisitNode(Node);
-                }
-            }
 
-
-        } // Der mangler noget heromkring der sikrer at en parents
+        //if(returnFlag == 1)
+            //throw new ReturnException();
+        // Der mangler noget heromkring der sikrer at en parents
 
       //  SymbolData data = table.Search(node.Parent.toString(),0);
         //if(hasreturn && data.type == "void"){
@@ -132,22 +150,22 @@ public class ReturnCheckVisitor extends ASTVisitor {
 
     @Override
     public void visit(ForNode node, Object... arg) throws ReturnException {
-        AbstractNode nodeToCheck = null;
-        int returnOkFlag = 0;
+        /*AbstractNode nodeToCheck = null;
+        int returnFlag = 0;
         AbstractNode parentNode = null;
         String returnType;
-        ReturnNode returnNode = null;
+        ReturnNode returnNode = null;*/
 
         for(AbstractNode child : node.childList){
             if(child instanceof BlockNode){
-                nodeToCheck = child;
+                VisitNode(child);
                 break;
             }
         }
 
-        for(AbstractNode child : nodeToCheck.childList){
+       /* for(AbstractNode child : nodeToCheck.childList){
             if(child instanceof ReturnNode){
-                returnOkFlag++;
+                returnFlag++;
                 returnNode = (ReturnNode) child;
             }
 
@@ -155,16 +173,16 @@ public class ReturnCheckVisitor extends ASTVisitor {
                 VisitNode(child);
         }
 
-        if(returnOkFlag > 1)
+        if(returnFlag > 1)
             throw new ReturnException();
-        else if(returnOkFlag == 1){
+        else if(returnFlag == 1){
             if(node.Parent != null)
                 parentNode = node.Parent;
 
             while(parentNode != null){
                 if(parentNode instanceof FunctionDeclarationNode){
                     if(((FunctionDeclarationNode) parentNode).type == ((ExpressionNode) returnNode.childList.get(0)).type) {
-                        returnOkFlag = 0;
+                        returnFlag = 0;
                         break;
                     }
                 }
@@ -172,8 +190,8 @@ public class ReturnCheckVisitor extends ASTVisitor {
             }
         }
 
-        if(returnOkFlag == 1)
-            throw new ReturnException();
+        if(returnFlag == 1)
+            throw new ReturnException(); */
     }
 
     @Override
