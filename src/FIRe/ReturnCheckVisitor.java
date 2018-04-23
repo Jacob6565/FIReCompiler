@@ -84,7 +84,7 @@ public class ReturnCheckVisitor extends ASTVisitor {
                         if (Node instanceof ControlStructureNode) {
                             VisitNode(Node);
                         } else
-                            throw new ReturnException("You are missing a return");
+                            throw new ReturnException("You are missing a return",node.LineNumber);
                     }
                 }
             } else {
