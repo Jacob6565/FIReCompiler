@@ -46,71 +46,67 @@ public class ReturnCheckVisitor extends ASTVisitor {
 
     @Override
     public void visit(BlockNode node, Object... arg) throws Exception {
-
-        AbstractNode parentNode = null;
-        int returnFlag = 0;
-        ReturnNode returnNode = null;
-
-        for(AbstractNode child : node.childList){
-            if(child instanceof ReturnNode){
-                returnFlag++;
-                returnNode = (ReturnNode) child;
-            }
-
-            else if(child instanceof ControlStructureNode)
-                VisitNode(child);
-        }
-
-        if(returnFlag > 1)
-            throw new ReturnException();
-        else if(returnFlag == 1){
-            if(node.Parent != null)
-                parentNode = node.Parent;
-
-            while(parentNode != null){
-                if(parentNode instanceof FunctionDeclarationNode){
-                    if(!((FunctionDeclarationNode) parentNode).type.equals(((ExpressionNode) returnNode.childList.get(0)).type)) {
-                        throw new TypeException(((FunctionDeclarationNode) parentNode).type, ((ExpressionNode) returnNode.childList.get(0)).type,((ExpressionNode) returnNode.childList.get(0)).LineNumber );
-                    }
-                }
-                parentNode = parentNode.Parent;
-            }
-        }
-
+        
         //if(returnFlag == 1)
-            //throw new ReturnException();
+        //throw new ReturnException();
         // Der mangler noget heromkring der sikrer at en parents
 
-      //  SymbolData data = table.Search(node.Parent.toString(),0);
+        //  SymbolData data = table.Search(node.Parent.toString(),0);
         //if(hasreturn && data.type == "void"){
-         //   throw new Exception("Ærgerligt");
-       // } // tjek hvad returtypen er for funktionen i symboltable
+        //   throw new Exception("Ærgerligt");
+        // } // tjek hvad returtypen er for funktionen i symboltable
 
-        SymbolData data = table.Search(node.Parent.toString(),0);
 
-        if(!data.type.equals("void")) {
-            boolean hasreturn = false;
+        AbstractNode parentFunction = node;
+        SymbolData data = null;
+        // while (!(parentFunction.Parent instanceof FunctionDeclarationNode || !(parentFunction.Parent instanceof StrategyDeclarationNode) || !(parentFunction.Parent instanceof EventDeclarationNode))){
+        //       parentFunction = parentFunction.Parent;
+        //  }
+
+        while (!(parentFunction.Parent instanceof ProgNode)) {
+            parentFunction = parentFunction.Parent;
+        }
+
+        if (parentFunction instanceof FunctionDeclarationNode) {
+            data = table.Search(parentFunction.Parent.toString(), 0);
+
+            if (!data.type.equals("void")) {
+                boolean hasreturn = false;
+                for (AbstractNode Node : node.childList) {
+                    if (Node instanceof ReturnNode) {
+                        hasreturn = true; // The block itself contains a return, thus all the branches can inevitably return
+                        //Her skal man se om det så er det rigtige der bliver returneret
+                    }
+                }
+
+                if (!hasreturn) { // if however the block does not have a return, it may be hidden under an if-node
+                    for (AbstractNode Node : node.childList) {
+                        if (Node instanceof ControlStructureNode) {
+                            VisitNode(Node);
+                        } else
+                            throw new ReturnException("You are missing a return");
+                    }
+                }
+            } else {
+                for (AbstractNode Node : node.childList) {
+                    if (Node instanceof ReturnNode) {
+                        throw new VoidReturnException();
+                    }
+                }
+                for(AbstractNode Node : node.childList){
+                    if(Node instanceof ControlStructureNode){
+                        VisitNode(Node);
+                    }
+                }
+            }
+        } else if (parentFunction instanceof StrategyDeclarationNode || parentFunction instanceof EventDeclarationNode) {
             for (AbstractNode Node : node.childList) {
                 if (Node instanceof ReturnNode) {
-                    hasreturn = true; // The block itself contains a return, thus all the branches can inevitably return
-                    //Her skal man se om det så er det rigtige der bliver returneret
-                }
-            }
+                    throw new ReturnException("",Node.LineNumber); // The block itself contains a return, thus all the branches can inevitably return
 
-
-            if (!hasreturn) { // if however the block does not have a return, it may be hidden under an if-node
-                for (AbstractNode Node : node.childList) {
-                    if (Node instanceof IfControlStructureNode) {
-                        VisitNode(Node);
-                    } else
-                        System.out.println("Ærgerligt");
                 }
-            }
-        }
-        else{
-            for(AbstractNode Node : node.childList){
-                if(Node instanceof ReturnNode){
-                    throw new VoidReturnException();
+                if(Node instanceof ControlStructureNode){
+                    VisitNode(Node);
                 }
             }
         }
@@ -144,6 +140,11 @@ public class ReturnCheckVisitor extends ASTVisitor {
     @Override
     public void visit(ControlStructureNode node, Object... arg) {
 
+        for (AbstractNode Node: node.childList) {
+            if (Node instanceof BlockNode) {
+                VisitNode(Node);
+            }
+        }
     }
 
     @Override
@@ -262,14 +263,7 @@ public class ReturnCheckVisitor extends ASTVisitor {
 
     @Override
     public void visit(IfControlStructureNode node, Object... arg) {
-        for (AbstractNode Node: node.childList) {
-            if (Node instanceof BlockNode) {
-                VisitNode(Node);
-            }
-        }
-         //   if(Node instanceof IfControlStructureNode){ // An ifcontrolstructurenode has block nodes as children. And a node for the boolean evaluation
-         //       VisitNode(Node);
-         //   }
+
     }
 
     @Override
