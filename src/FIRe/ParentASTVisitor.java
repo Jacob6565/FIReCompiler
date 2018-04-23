@@ -9,7 +9,7 @@ public class ParentASTVisitor extends ASTVisitor{
     }
 
     @Override
-    public void visit(AdditionNode node, Object... arg) throws Exception {
+    public void visit(AdditionNode node, Object... arg) {
         visit((AbstractNode)node,arg);
     }
 
@@ -19,7 +19,7 @@ public class ParentASTVisitor extends ASTVisitor{
     }
 
     @Override
-    public void visit(AndNode node, Object... arg) throws Exception {
+    public void visit(AndNode node, Object... arg) {
         visit((AbstractNode)node,arg);
     }
 
@@ -29,7 +29,7 @@ public class ParentASTVisitor extends ASTVisitor{
     }
 
     @Override
-    public void visit(AssignNode node, Object... arg) throws Exception {
+    public void visit(AssignNode node, Object... arg) {
         visit((AbstractNode)node,arg);
     }
 
@@ -44,12 +44,13 @@ public class ParentASTVisitor extends ASTVisitor{
     }
 
     @Override
-    public void visit(BooleanDeclarationNode node, Object... arg) throws Exception {
+    public void visit(BooleanDeclarationNode node, Object... arg) {
         visit((AbstractNode)node,arg);
+
     }
 
     @Override
-    public void visit(BoolArrayDeclarationNode node, Object... arg) throws Exception {
+    public void visit(BoolArrayDeclarationNode node, Object... arg) {
         visit((AbstractNode)node,arg);
     }
 
@@ -74,17 +75,17 @@ public class ParentASTVisitor extends ASTVisitor{
     }
 
     @Override
-    public void visit(DivisionNode node, Object... arg) throws Exception {
+    public void visit(DivisionNode node, Object... arg)  {
         visit((AbstractNode)node,arg);
     }
 
     @Override
-    public void visit(EventDeclarationNode node, Object... arg) throws Exception {
+    public void visit(EventDeclarationNode node, Object... arg) {
         visit((AbstractNode)node,arg);
     }
 
     @Override
-    public void visit(EqualsNode node, Object... arg) throws Exception {
+    public void visit(EqualsNode node, Object... arg) {
         visit((AbstractNode)node,arg);
     }
 
@@ -109,17 +110,17 @@ public class ParentASTVisitor extends ASTVisitor{
     }
 
     @Override
-    public void visit(FunctionDeclarationNode node, Object... arg) throws Exception {
+    public void visit(FunctionDeclarationNode node, Object... arg)  {
         visit((AbstractNode)node,arg);
     }
 
     @Override
-    public void visit(GEQNode node, Object... arg) throws Exception {
+    public void visit(GEQNode node, Object... arg)  {
         visit((AbstractNode)node,arg);
     }
 
     @Override
-    public void visit(GreaterThanNode node, Object... arg) throws Exception {
+    public void visit(GreaterThanNode node, Object... arg)  {
         visit((AbstractNode)node,arg);
     }
 
@@ -129,7 +130,7 @@ public class ParentASTVisitor extends ASTVisitor{
     }
 
     @Override
-    public void visit(IdNode node, Object... arg) throws Exception {
+    public void visit(IdNode node, Object... arg) {
         visit((AbstractNode)node,arg);
     }
 
@@ -139,27 +140,27 @@ public class ParentASTVisitor extends ASTVisitor{
     }
 
     @Override
-    public void visit(InfixExpressionNode node, Object... arg) throws Exception {
+    public void visit(InfixExpressionNode node, Object... arg)  {
         visit((AbstractNode)node,arg);
     }
 
     @Override
-    public void visit(LEQNode node, Object... arg) throws Exception {
+    public void visit(LEQNode node, Object... arg)  {
         visit((AbstractNode)node,arg);
     }
 
     @Override
-    public void visit(LessThanNode node, Object... arg) throws Exception {
+    public void visit(LessThanNode node, Object... arg) {
         visit((AbstractNode)node,arg);
     }
 
     @Override
-    public void visit(ModuloNode node, Object... arg) throws Exception {
+    public void visit(ModuloNode node, Object... arg) {
         visit((AbstractNode)node,arg);
     }
 
     @Override
-    public void visit(MultiplicationNode node, Object... arg) throws Exception {
+    public void visit(MultiplicationNode node, Object... arg)  {
         visit((AbstractNode)node,arg);
     }
 
@@ -169,7 +170,7 @@ public class ParentASTVisitor extends ASTVisitor{
     }
 
     @Override
-    public void visit(NotEqualsNode node, Object... arg) throws Exception {
+    public void visit(NotEqualsNode node, Object... arg) {
         visit((AbstractNode)node,arg);
     }
 
@@ -179,12 +180,12 @@ public class ParentASTVisitor extends ASTVisitor{
     }
 
     @Override
-    public void visit(NumberDeclarationNode node, Object... arg) throws Exception {
+    public void visit(NumberDeclarationNode node, Object... arg)  {
         visit((AbstractNode)node,arg);
     }
 
     @Override
-    public void visit(NumberArrayDeclarationNode node, Object... arg) throws Exception {
+    public void visit(NumberArrayDeclarationNode node, Object... arg)  {
         visit((AbstractNode)node,arg);
     }
 
@@ -194,12 +195,12 @@ public class ParentASTVisitor extends ASTVisitor{
     }
 
     @Override
-    public void visit(OrNode node, Object... arg) throws Exception {
+    public void visit(OrNode node, Object... arg){
         visit((AbstractNode)node,arg);
     }
 
     @Override
-    public void visit(PowerNode node, Object... arg) throws Exception {
+    public void visit(PowerNode node, Object... arg) {
         visit((AbstractNode)node,arg);
     }
 
@@ -234,22 +235,22 @@ public class ParentASTVisitor extends ASTVisitor{
     }
 
     @Override
-    public void visit(StrategyDeclarationNode node, Object... arg) throws Exception {
+    public void visit(StrategyDeclarationNode node, Object... arg)  {
         visit((AbstractNode)node,arg);
     }
 
     @Override
-    public void visit(SubtractionNode node, Object... arg) throws Exception {
+    public void visit(SubtractionNode node, Object... arg) {
         visit((AbstractNode)node,arg);
     }
 
     @Override
-    public void visit(TextDeclarationNode node, Object... arg) throws Exception {
+    public void visit(TextDeclarationNode node, Object... arg)  {
         visit((AbstractNode)node,arg);
     }
 
     @Override
-    public void visit(TextArrayDeclarationNode node, Object... arg) throws Exception {
+    public void visit(TextArrayDeclarationNode node, Object... arg) {
         visit((AbstractNode)node,arg);
     }
 

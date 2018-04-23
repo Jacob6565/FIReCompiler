@@ -47,14 +47,15 @@ public class Main {
         catch (Exception e)
         {
             System.out.println("Exception triggered");
+            System.out.println("Exception type: " + e.getClass() + "Message: " + e.getMessage());
         }
         //Prints the AST to check whether it has all the correct info. (Debug code)
         PrintTraversal print = new PrintTraversal();
         print.Print(ast,0);
         //Fills the symbol table
         SymbolTable symbolTable = new SymbolTable();
-        //SymbolTableVisitor STV = new SymbolTableVisitor(symbolTable);
-        //STV.visit(ast);
+        SymbolTableVisitor STV = new SymbolTableVisitor(symbolTable);
+        STV.visit(ast);
 
         FESVisitor fes = new FESVisitor(symbolTable);
         fes.visit(ast);

@@ -1,4 +1,7 @@
 package FIRe;
+import FIRe.Exceptions.ReturnException;
+import javafx.beans.binding.When;
+
 
 public class ReturnCheckVisitor extends ASTVisitor {
 
@@ -128,8 +131,49 @@ public class ReturnCheckVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(ForNode node, Object... arg) {
+    public void visit(ForNode node, Object... arg) throws ReturnException {
+        AbstractNode nodeToCheck = null;
+        int returnOkFlag = 0;
+        AbstractNode parentNode = null;
+        String returnType;
+        ReturnNode returnNode = null;
 
+        for(AbstractNode child : node.childList){
+            if(child instanceof BlockNode){
+                nodeToCheck = child;
+                break;
+            }
+        }
+
+        for(AbstractNode child : nodeToCheck.childList){
+            if(child instanceof ReturnNode){
+                returnOkFlag++;
+                returnNode = (ReturnNode) child;
+            }
+
+            else if(child instanceof ControlStructureNode)
+                VisitNode(child);
+        }
+
+        if(returnOkFlag > 1)
+            throw new ReturnException();
+        else if(returnOkFlag == 1){
+            if(node.Parent != null)
+                parentNode = node.Parent;
+
+            while(parentNode != null){
+                if(parentNode instanceof FunctionDeclarationNode){
+                    if(((FunctionDeclarationNode) parentNode).type == ((ExpressionNode) returnNode.childList.get(0)).type) {
+                        returnOkFlag = 0;
+                        break;
+                    }
+                }
+                parentNode = parentNode.Parent;
+            }
+        }
+
+        if(returnOkFlag == 1)
+            throw new ReturnException();
     }
 
     @Override
@@ -280,7 +324,16 @@ public class ReturnCheckVisitor extends ASTVisitor {
 
     @Override
     public void visit(StrategyDeclarationNode node, Object... arg) throws Exception {
+        //int returnOkFlag = 0;
 
+        for(AbstractNode child : node.childList){
+            if(child instanceof ReturnNode){
+                throw new ReturnException();
+            }
+            if(child instanceof ControlStructureNode || child instanceof WhenNode)
+                VisitNode(child);
+
+        }
     }
 
     @Override

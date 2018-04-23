@@ -13,7 +13,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
     public AbstractNode visitProg(CFGParser.ProgContext ctx){
         ProgNode root = new ProgNode();
         root.childList.add(visitRobotDcl(ctx.robotDcl()));
-
+        root.LineNumber = ctx.start.getLine();
         for(CFGParser.ProgBodyContext progBodyCtx: ctx.progBody()){
             root.childList.add(visitProgBody(progBodyCtx)); //Vi tilføjer alle  progbodies, idet vi visiter dem.
         }
@@ -40,7 +40,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
     @Override
     public AbstractNode visitStrategyDcl(CFGParser.StrategyDclContext ctx){
         StrategyDeclarationNode node = new StrategyDeclarationNode();//Makes a new node
-
+        node.LineNumber = ctx.start.getLine();
         //node.childList.add(visitId(ctx.id()));
         node.Id = (IdNode)visitId(ctx.id());
         node.childList.add(visitFParamList(ctx.fParamList())); //Add the fParamList
@@ -71,6 +71,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
     @Override
     public AbstractNode visitFuncDcl(CFGParser.FuncDclContext ctx){
         FunctionDeclarationNode node = new FunctionDeclarationNode();
+        node.LineNumber = ctx.start.getLine();
 
         if (ctx.funcType().Type() != null)
             node.type = ctx.funcType().Type().toString();
@@ -91,6 +92,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
     public AbstractNode visitBlock(CFGParser.BlockContext ctx){
 
         BlockNode blockNode = new BlockNode();
+        blockNode.LineNumber = ctx.start.getLine();
 
         for(CFGParser.BlockBodyContext blockBodyCtx : ctx.blockBody())
             blockNode.childList.add(visitBlockBody(blockBodyCtx)); //Add all the blockbodies as children
@@ -112,12 +114,14 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
     @Override
     public AbstractNode visitFParamList(CFGParser.FParamListContext ctx) {
         FormalParameterNode node = new FormalParameterNode();
-
+        if (ctx != null)
+            node.LineNumber = ctx.start.getLine();
         while(ctx != null) {
             /* We map an id to a type in a map (known as a dictionary in C#,
             to easily find the type of an id*/
             IdNode idNode = (IdNode) visitId(ctx.id());
             node.parameterMap.put(idNode, ctx.Type().toString());
+
             //IdNode idnode = (IdNode) visitId(ctx.id());
             //idnode.type = ctx.Type().toString();
             //node.childList.add(idnode);
@@ -140,7 +144,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
     public AbstractNode visitRobotDclBody(CFGParser.RobotDclBodyContext ctx) {
 
         RobotDclBodyNode robotDclBodyNode = new RobotDclBodyNode();
-
+        robotDclBodyNode.LineNumber = ctx.start.getLine();
         int index = 0;
         for (CFGParser.IdContext idContext: ctx.id())
         {
@@ -170,6 +174,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
             if (ctx.Type().toString().equals("number")) {
 
                 NumberDeclarationNode numberDeclarationNode = new NumberDeclarationNode();
+                numberDeclarationNode.LineNumber = ctx.start.getLine();
                 numberDeclarationNode.childList.add(visitId(ctx.id(0))); //0 beacuse we want to add the first and only element from the list
 
                 numberDeclarationNode.childList.add(visitExpr(ctx.expr()));
@@ -180,10 +185,13 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
                         numberDeclarationNode.Id = (IdNode) AN;
                 }
 
+                numberDeclarationNode.Id = (IdNode) numberDeclarationNode.childList.get(0);
+
                 return numberDeclarationNode;
             } else if (ctx.Type().toString().equals("text")) {
 
                 TextDeclarationNode textDeclarationNode = new TextDeclarationNode();
+                textDeclarationNode.LineNumber = ctx.start.getLine();
                 textDeclarationNode.childList.add(visitId(ctx.id(0))); //0 beacuse we want to add the first and only element from the list
 
                 textDeclarationNode.childList.add(visitExpr(ctx.expr()));
@@ -198,7 +206,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
 
                 BooleanDeclarationNode booleanDeclarationNode = new BooleanDeclarationNode();
                 booleanDeclarationNode.childList.add(visitId(ctx.id(0))); //0 beacuse we want to add the first and only element from the list
-
+                booleanDeclarationNode.LineNumber = ctx.start.getLine();
                 booleanDeclarationNode.childList.add(visitExpr(ctx.expr()));
                 for (AbstractNode AN : booleanDeclarationNode.childList) {
                     if (AN instanceof IdNode)
@@ -211,16 +219,19 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         } else if (ctx.children.get(1).getChild(0).toString().contains("[")) {
             //This else handles the case where multiple declarations are made or an array.
             ArrayDeclarationNode ADN;
-            if (ctx.Type().toString().equals("number"))
+            if (ctx.Type().toString().equals("number")) {
                 ADN = new NumberArrayDeclarationNode();
+            }
             else if (ctx.Type().toString().equals("bool"))
                 ADN = new BoolArrayDeclarationNode();
             else if (ctx.Type().toString().equals("text"))
                 ADN = new TextArrayDeclarationNode();
             else {
-                System.out.println("Error in arraydeclaration");
+                System.out.println("Error in arraydeclaration"); //should throw an exception
                 ADN = null;
             }
+
+            ADN.LineNumber = ctx.start.getLine();
             ADN.childList.add(visit(ctx.id(0)));
             if (ctx.expr() != null)
                 ADN.childList.add(visit(ctx.expr()));
@@ -239,7 +250,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         } else if (ctx.id().size() > 1)
             if (ctx.Type().toString().equals("number")) {
                 NumberDeclarationNode numberDeclarationNode = new NumberDeclarationNode();
-
+                numberDeclarationNode.LineNumber = ctx.start.getLine();
                 for (CFGParser.IdContext idContext : ctx.id()) {
                     numberDeclarationNode.childList.add(visitId(idContext)); //we add the dcls as children
                 }
@@ -247,7 +258,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
             } else if (ctx.Type().toString().equals("text")) {
 
                 TextDeclarationNode textDeclarationNode = new TextDeclarationNode();
-
+                textDeclarationNode.LineNumber = ctx.start.getLine();
                 for (CFGParser.IdContext idContext : ctx.id()) {
                     textDeclarationNode.childList.add(visitId(idContext));//We add the dcls as children
                 }
@@ -255,14 +266,14 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
             } else if (ctx.Type().toString().equals("bool")) {
 
                 BooleanDeclarationNode booleanDeclarationNode = new BooleanDeclarationNode();
-
+                booleanDeclarationNode.LineNumber = ctx.start.getLine();
                 for (CFGParser.IdContext idContext : ctx.id()) {
                     booleanDeclarationNode.childList.add(visitId(idContext));//We add the dcls as children
                 }
                 return booleanDeclarationNode;
             } else
-                return null;
-        return null;
+                return null; //Exception?
+        return null; //Exception?
     }
 
 
@@ -293,9 +304,9 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
     public AbstractNode visitRoutine(CFGParser.RoutineContext ctx) {
         //Her fremgår de forskellige slags routine-kald. med id, med Val og tom.
         if(ctx.expr() != null)
-            return (new RoutineNode(visitExpr(ctx.expr()), visitBlock(ctx.block())));
+            return (new RoutineNode(visitExpr(ctx.expr()), visitBlock(ctx.block()),ctx.start.getLine()));
         else
-            return(new RoutineNode(visitBlock(ctx.block())));
+            return(new RoutineNode(visitBlock(ctx.block()),ctx.start.getLine()));
     }
 
     // Construct the WhenNode by giving the constructor an eventtype and the variable name from the when's parenthesis.
@@ -304,6 +315,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
     public AbstractNode visitWhen(CFGParser.WhenContext ctx) {
         WhenNode when = new WhenNode(visitId(ctx.id().get(0)), visitId(ctx.id().get(1)));
         when.childList.add(visitBlock(ctx.block()));
+        when.LineNumber = ctx.start.getLine();
         return when;
     }
 
@@ -345,6 +357,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
             node.value = true;
         else
             node.value = false;
+        node.LineNumber = ctx.start.getLine();
         return node;
     }
 
@@ -356,6 +369,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
             node = new NumberNode(Double.parseDouble(ctx.Val().toString()));
         else
             node = new TextNode(ctx.Val().toString());
+        node.LineNumber = ctx.start.getLine();
         return node;
     }
 
@@ -363,6 +377,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
     private NotNode CreateNotNode(CFGParser.ExprContext ctx){
         NotNode node = new NotNode();
         node.Expression = (ExpressionNode)visitExpr(ctx.expr().get(0));
+        node.LineNumber = ctx.start.getLine();
         return node;
     }
 
@@ -434,7 +449,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
 
         node.LeftChild = (ExpressionNode) visitExpr(ctx.expr().get(0));
         node.RightChild = (ExpressionNode) visitExpr(ctx.expr().get(1));
-
+        node.LineNumber = ctx.start.getLine();
         return (MultiplicationNode) node;
     }
 
@@ -444,7 +459,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         DivisionNode node = new DivisionNode();
         node.LeftChild = (ExpressionNode) visitExpr(ctx.expr().get(0));
         node.RightChild = (ExpressionNode) visitExpr(ctx.expr().get(1));
-
+        node.LineNumber = ctx.start.getLine();
         return node;
     }
 
@@ -454,7 +469,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         ModuloNode node = new ModuloNode();
         node.LeftChild = (ExpressionNode) visitExpr(ctx.expr().get(0));
         node.RightChild = (ExpressionNode) visitExpr(ctx.expr().get(1));
-
+        node.LineNumber = ctx.start.getLine();
         return node;
     }
 
@@ -464,7 +479,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         AdditionNode node = new AdditionNode();
         node.LeftChild = (ExpressionNode) visitExpr(ctx.expr().get(0));
         node.RightChild = (ExpressionNode) visitExpr(ctx.expr().get(1));
-
+        node.LineNumber = ctx.start.getLine();
         return node;
     }
 
@@ -474,7 +489,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         SubtractionNode node = new SubtractionNode();
         node.LeftChild = (ExpressionNode) visitExpr(ctx.expr().get(0));
         node.RightChild = (ExpressionNode) visitExpr(ctx.expr().get(1));
-
+        node.LineNumber = ctx.start.getLine();
         return node;
     }
 
@@ -484,7 +499,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         AndNode node = new AndNode();
         node.LeftChild = (ExpressionNode) visitExpr(ctx.expr().get(0));
         node.RightChild = (ExpressionNode) visitExpr(ctx.expr().get(1));
-
+        node.LineNumber = ctx.start.getLine();
         return node;
     }
 
@@ -493,7 +508,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         OrNode node = new OrNode();
         node.LeftChild = (ExpressionNode) visitExpr(ctx.expr().get(0));
         node.RightChild = (ExpressionNode) visitExpr(ctx.expr().get(1));
-
+        node.LineNumber = ctx.start.getLine();
         return node;
     }
 
@@ -502,7 +517,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         LessThanNode node = new LessThanNode();
         node.LeftChild = (ExpressionNode) visitExpr(ctx.expr().get(0));
         node.RightChild = (ExpressionNode) visitExpr(ctx.expr().get(1));
-
+        node.LineNumber = ctx.start.getLine();
         return node;
     }
 
@@ -511,7 +526,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         GreaterThanNode node = new GreaterThanNode();
         node.LeftChild = (ExpressionNode) visitExpr(ctx.expr().get(0));
         node.RightChild = (ExpressionNode) visitExpr(ctx.expr().get(1));
-
+        node.LineNumber = ctx.start.getLine();
         return node;
     }
 
@@ -520,7 +535,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         EqualsNode node = new EqualsNode();
         node.LeftChild = (ExpressionNode) visitExpr(ctx.expr().get(0));
         node.RightChild = (ExpressionNode) visitExpr(ctx.expr().get(1));
-
+        node.LineNumber = ctx.start.getLine();
         return node;
     }
 
@@ -529,7 +544,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         NotEqualsNode node = new NotEqualsNode();
         node.LeftChild = (ExpressionNode) visitExpr(ctx.expr().get(0));
         node.RightChild = (ExpressionNode) visitExpr(ctx.expr().get(1));
-
+        node.LineNumber = ctx.start.getLine();
         return node;
     }
 
@@ -538,7 +553,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         LEQNode node = new LEQNode();
         node.LeftChild = (ExpressionNode) visitExpr(ctx.expr().get(0));
         node.RightChild = (ExpressionNode) visitExpr(ctx.expr().get(1));
-
+        node.LineNumber = ctx.start.getLine();
         return node;
     }
 
@@ -547,7 +562,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         GEQNode node = new GEQNode();
         node.LeftChild = (ExpressionNode) visitExpr(ctx.expr().get(0));
         node.RightChild = (ExpressionNode) visitExpr(ctx.expr().get(1));
-
+        node.LineNumber = ctx.start.getLine();
         return node;
     }
 
@@ -557,7 +572,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         PowerNode node = new PowerNode();
         node.LeftChild = (ExpressionNode) visitExpr(ctx.expr().get(0));
         node.RightChild = (ExpressionNode) visitExpr(ctx.expr().get(1));
-
+        node.LineNumber = ctx.start.getLine();
         return node;
     }
 
@@ -568,7 +583,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         ArrayAccessNode node = new ArrayAccessNode();
         node.id = (ExpressionNode) visitExpr(ctx.expr().get(0));
         node.index = (ExpressionNode) visitExpr(ctx.expr().get(1));
-
+        node.LineNumber = ctx.start.getLine();
         return node;
     }
 
@@ -584,7 +599,12 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
 
         if(ctx.expr().size() > 1)
             node.childList.add(visitExpr(ctx.expr().get(1)));
-
+        node.LineNumber = ctx.start.getLine();
+        node.Id = (IdNode) node.childList.get(0);
+        if (ctx.expr().size() > 0)
+            node.Expression =(ExpressionNode) node.childList.get(1);
+        else
+            node.Expression =(ExpressionNode) node.childList.get(0);
         return node;
     }
 
@@ -595,7 +615,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         FuncCallNode func = new FuncCallNode();
         func.childList.add(visitId(ctx.id()));
         func.childList.add(visitAParamList(ctx.aParamList()));
-
+        func.LineNumber = ctx.start.getLine();
         return func;
     }
 
@@ -603,12 +623,12 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
     //Creating Event declaration which consists of and id(eventname) and a body.
     @Override
     public AbstractNode visitEventDcl(CFGParser.EventDclContext ctx){
-        EventDeclarationNode CDN = new EventDeclarationNode();
+        EventDeclarationNode node = new EventDeclarationNode();
 
-        CDN.Id = (IdNode) visitId(ctx.id());
-        CDN.childList.add(visitBlock(ctx.block()));
-
-        return CDN;
+        node.Id = (IdNode) visitId(ctx.id());
+        node.childList.add(visitBlock(ctx.block()));
+        node.LineNumber = ctx.start.getLine();
+        return node;
     }
 
     //Creating ActualParameterNode, which consists of an arbitrary number of expression.
@@ -618,6 +638,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
 
         while(ctx != null){
             APN.childList.add(visitExpr(ctx.expr()));//Adding the expressions.
+            APN.childList.get(APN.childList.size() - 1).LineNumber = ctx.start.getLine();
             ctx = ctx.aParamList();
         }
 
@@ -642,7 +663,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
             if (ctx.aelse() != null) { //Adding the else-block if it exists.
                 IfNode.childList.add(visitBlock(ctx.aelse().block()));
             }
-
+            IfNode.LineNumber = ctx.start.getLine();
             return IfNode;
         }
 
@@ -665,7 +686,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
 
             //Adding the body of the for-loop to its childlist.
             FN.childList.add(visitBlock(ctx.block()));
-
+            FN.LineNumber = ctx.start.getLine();
             return FN;
         }
 
@@ -674,6 +695,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
             WhileNode node = new WhileNode();
             node.childList.add(visitExpr(ctx.expr(0)));
             node.childList.add(visitBlock(ctx.block()));
+            node.LineNumber = ctx.start.getLine();
             return node;
         }
 
@@ -690,7 +712,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         IfControlStructureNode ICSN = new IfControlStructureNode();
         ICSN.childList.add(visitExpr(ctx.expr()));
         ICSN.childList.add(visitBlock(ctx.block()));
-
+        ICSN.LineNumber = ctx.start.getLine();
 
         return ICSN;
     }
@@ -718,7 +740,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         //    node.name = node.name + "[" + "]";
         //}
 
-
+        node.LineNumber = ctx.start.getLine();
         return node;
     }
 }

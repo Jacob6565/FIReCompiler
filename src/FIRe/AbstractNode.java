@@ -26,6 +26,7 @@ abstract class AbstractNode
     public AbstractNode LeftMostSibling;
     public AbstractNode LeftMostChild;
     public AbstractNode RightSibling;
+    public int LineNumber;
 
     //Should contain management functions.
     public void connectSibling()
@@ -124,14 +125,16 @@ class ForNode extends ControlStructureNode{
 class RoutineNode extends ControlStructureNode{
     ExpressionNode repeatCondition;
 
-    public RoutineNode(AbstractNode routineBlock) {
+    public RoutineNode(AbstractNode routineBlock, int lineNumber) {
         repeatCondition = null;
         childList.add(routineBlock);
+        LineNumber = lineNumber;
     }
 
-    public RoutineNode(AbstractNode expr, AbstractNode routineBlock){
+    public RoutineNode(AbstractNode expr, AbstractNode routineBlock, int lineNumber){
         repeatCondition = (ExpressionNode) expr;
         childList.add(routineBlock);
+        LineNumber = lineNumber;
     }
 
     @Override
@@ -502,8 +505,6 @@ class NotEqualsNode extends InfixExpressionNode{
 
 class IdNode extends ExpressionNode {
     public String name;
-    public int LineNumber;
-    public AbstractNode Parent;
     //public String type;
 
 

@@ -1,5 +1,8 @@
 package FIRe;
 
+import FIRe.Exceptions.ReturnException;
+import FIRe.Exceptions.TypeException;
+
 import java.beans.Expression;
 
 //Så skal man lave en klasse som nedarver denne klasse og som implementerer
@@ -102,9 +105,11 @@ public abstract class ASTVisitor
                 visit((ArrayDeclarationNode) node);
             else
                 System.out.println("Error");
-        } catch (Exception e) {
-            System.out.println(e);
+        } catch (TypeException e){
 
+        }
+        catch (Exception e) {
+            System.out.println(e.getMessage());
         }
     }
 
@@ -128,7 +133,7 @@ public abstract class ASTVisitor
     public abstract void visit(EqualsNode node, Object... arg) throws Exception;
     public abstract void visit(ExpressionNode node, Object... arg);
     public abstract void visit(FormalParameterNode node, Object... arg);
-    public abstract void visit(ForNode node, Object... arg);
+    public abstract void visit(ForNode node, Object... arg) throws ReturnException;
     public abstract void visit(FuncCallNode node, Object... arg);
     public abstract void visit(FunctionDeclarationNode node, Object... arg) throws Exception;
     public abstract void visit(GEQNode node, Object... arg) throws Exception;
