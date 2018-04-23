@@ -7,4 +7,11 @@ public class Tuple<X, Y> {
         this.x = x;
         this.y = y;
     }
+
+    public X getKey(){
+        return x;
+    }
+    public Y getValue(){
+        return y;
+    }
 }

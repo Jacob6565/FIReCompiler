@@ -53,12 +53,10 @@ public class Main {
         //print.Print(ast,0);
         //Fills the symbol table
         SymbolTable symbolTable = new SymbolTable();
-        SymbolTableVisitor STV = new SymbolTableVisitor(symbolTable);
-        STV.visit(ast);
-
         FESVisitor fes = new FESVisitor(symbolTable);
         fes.visit(ast);
 
-        //STV.visit(ast);
+        SymbolTableVisitor STV = new SymbolTableVisitor(symbolTable);
+        STV.visit(ast);
     }
 }

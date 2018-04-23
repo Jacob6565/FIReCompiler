@@ -137,8 +137,8 @@ ctrlStruct          : aif (aelseif)* (aelse)?
                     ;
 aif                 : If Parenl expr Parenr block
                     ;
-aelseif             : Elseif Parenl expr Parenl  block
+aelseif             : Elseif Parenl expr Parenr block
                     ;
-aelse               : Else  block
+aelse               : Else block
                     ;
 id                  : Name ( Dot id)?;

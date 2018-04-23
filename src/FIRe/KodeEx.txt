@@ -7,7 +7,7 @@ RobotProperties
       RadarColor:white;
 }
 
-number firepower = true;
+number firepower = 100;
 text nameOfRival = "SittingDuck";
 
 bool turnLeftAndRotate(text currentRival)
@@ -16,8 +16,8 @@ bool turnLeftAndRotate(text currentRival)
    nameOfRival = currentRival;
    bool shotAtRival = false;
    bool a[5];
-
-   if (nameOfRival == "WallRider")
+   a[3] = true;
+   if (a[3])
    {
           fire(firepower);
           shotAtRival = true;
@@ -33,7 +33,7 @@ bool turnLeftAndRotate(text currentRival)
 
 void doSomething(){
     number x = 3.7;
-    if( x > 2){
+    if(x == 3.6){
         x = 2;
     }
     else{
@@ -82,7 +82,7 @@ strategy Offensive()
 
 event LowHealth()
 {
-   turnLeftAndRotate("SittingDuck");
+   turnLeftAndRotate("hello");
 
    return getEnergy() <= 50;
 }

@@ -1,9 +1,12 @@
 package FIRe;
 
 import java.lang.reflect.Type;
+import java.net.Proxy;
+import java.util.List;
 import java.util.Map;
 import FIRe.Exceptions.*;
 import javafx.beans.binding.When;
+
 
 @SuppressWarnings("ALL")
 public class SymbolTableVisitor extends ASTVisitor {
@@ -66,26 +69,38 @@ public class SymbolTableVisitor extends ASTVisitor {
 
 
     @Override
-    public void visit(ArrayAccessNode node, Object... arg) {
+    public void visit(ArrayAccessNode node, Object... arg) throws TypeException {
         for (AbstractNode Node: node.childList) {
             if (Node != null)
             VisitNode(Node);
+        }
+        switch(node.id.type){
+            case "bool array":
+                node.type = "bool";
+                break;
+            case "number array":
+                node.type = "number";
+                break;
+            case "text array":
+                node.type = "text";
+                break;
+            default:
+                throw new TypeException("array",node.id.type,node.LineNumber);
         }
     }
 
     @Override
     public void visit(AssignNode node, Object... arg) throws TypeException {
+        if (node != null && node.Id != null && node.Expression != null) {
+            VisitNode(node.Id);
+            VisitNode(node.Expression);
+        }
         for (AbstractNode Node: node.childList) {
             if (Node != null)
             VisitNode(Node);
         }
         if(node.Id.type != node.Expression.type)
             throw new TypeException(node.Id.type,node.Expression.type, node.LineNumber);
-
-        if (node != null && node.Id != null && node.Expression != null) {
-            VisitNode(node.Id);
-            VisitNode(node.Expression);
-        }
     }
 
     @Override
@@ -122,12 +137,15 @@ public class SymbolTableVisitor extends ASTVisitor {
 
     @Override
     public void visit(BoolArrayDeclarationNode node, Object... arg) throws Exception {
+        node.Id.type = "bool array";
         ST.Insert(node);
         for (AbstractNode Node: node.childList) {
             if (Node != null)
                 VisitNode(Node);
         }
-        node.Id.type = "bool array";
+
+        if (node.Size.type != "number")
+            throw new TypeException("number",node.Size.type,node.LineNumber);
     }
 
     @Override
@@ -172,7 +190,7 @@ public class SymbolTableVisitor extends ASTVisitor {
         if(node.RightChild.type != "number")
             throw new TypeException("number",node.RightChild.type,node.LineNumber);
 
-        node.type = node.LeftChild.type;
+        node.type = "number";
     }
 
     @Override
@@ -193,7 +211,7 @@ public class SymbolTableVisitor extends ASTVisitor {
         if(node.LeftChild.type != node.RightChild.type)
             throw new TypeException(node.LeftChild.type,node.RightChild.type,node.LineNumber);
 
-        node.type = node.LeftChild.type;
+        node.type = "bool";
     }
 
     @Override
@@ -213,20 +231,33 @@ public class SymbolTableVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(ForNode node, Object... arg) {
+    public void visit(ForNode node, Object... arg) throws TypeException {
         for (AbstractNode Node: node.childList) {
             if (Node != null)
             VisitNode(Node);
         }
+        if (node.From.type != "number")
+            throw new TypeException("number", node.From.type,node.LineNumber);
+        if (node.To.type != "number")
+            throw new TypeException("number", node.To.type,node.LineNumber);
     }
 
     @Override
-    public void visit(FuncCallNode node, Object... arg) {
+    public void visit(FuncCallNode node, Object... arg) throws SymbolNotFoundException,TypeException,InvalidNumberOfArgumentsException {
         for (AbstractNode Node: node.childList)
             if (Node != null){
                 VisitNode(Node);
         }
-        //Something needs to happen here
+        SymbolData formalParameters = ST.Search(node.Id.name,node.LineNumber);
+        List<AbstractNode> actualParams = node.Aparam.childList;
+
+        if (formalParameters.parameters.size() != actualParams.size())
+            throw new InvalidNumberOfArgumentsException(formalParameters.parameters.size(),actualParams.size(),node.LineNumber);
+        for (int i = 0; i < node.Aparam.childList.size(); ++i) {
+            if(!(formalParameters.parameters.get(i).y.equals(((ExpressionNode)actualParams.get(i)).type)))
+                throw new TypeException(formalParameters.parameters.get(i).y,((ExpressionNode)actualParams.get(i)).type,node.LineNumber);
+        }
+        node.type = formalParameters.type;
     }
 
     @Override
@@ -249,7 +280,7 @@ public class SymbolTableVisitor extends ASTVisitor {
         if (node.RightChild.type != "number")
             throw new TypeException("number",node.RightChild.type,node.LineNumber);
 
-        node.type = "number";
+        node.type = "bool";
     }
 
     @Override
@@ -264,7 +295,7 @@ public class SymbolTableVisitor extends ASTVisitor {
         if (node.RightChild.type != "number")
             throw new TypeException("number",node.RightChild.type,node.LineNumber);
 
-        node.type = "number";
+        node.type = "bool";
     }
 
     @Override
@@ -286,11 +317,14 @@ public class SymbolTableVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(IfControlStructureNode node, Object... arg) {
+    public void visit(IfControlStructureNode node, Object... arg) throws TypeException {
         for (AbstractNode Node: node.childList) {
             if (Node != null)
             VisitNode(Node);
         }
+        for (AbstractNode AN : node.childList)
+             if (AN instanceof ExpressionNode && ((ExpressionNode)AN).type != "bool")
+                throw new TypeException("bool",((ExpressionNode)AN).type,AN.LineNumber);
     }
 
     @Override
@@ -318,7 +352,7 @@ public class SymbolTableVisitor extends ASTVisitor {
         if(node.RightChild.type != "number")
             throw new TypeException("number",node.RightChild.type,node.LineNumber);
 
-        node.type = "number";
+        node.type = "bool";
     }
 
     @Override
@@ -333,7 +367,7 @@ public class SymbolTableVisitor extends ASTVisitor {
         if(node.RightChild.type != "number")
             throw new TypeException("number",node.RightChild.type,node.LineNumber);
 
-        node.type = "number";
+        node.type = "bool";
     }
 
     @Override
@@ -381,7 +415,7 @@ public class SymbolTableVisitor extends ASTVisitor {
         if(node.LeftChild.type != node.RightChild.type)
             throw new TypeException(node.LeftChild.type,node.RightChild.type,node.LineNumber);
 
-        node.type = node.LeftChild.type;
+        node.type = "bool";
     }
 
     @Override
@@ -536,6 +570,9 @@ public class SymbolTableVisitor extends ASTVisitor {
                 VisitNode(Node);
         }
         node.Id.type = "text array";
+
+        if (node.Size.type != "number")
+            throw new TypeException("number",node.Size.type,node.LineNumber);
     }
 
     @Override
@@ -560,10 +597,12 @@ public class SymbolTableVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(WhileNode node, Object... arg) {
+    public void visit(WhileNode node, Object... arg) throws TypeException {
         for (AbstractNode Node: node.childList) {
             if (Node != null)
             VisitNode(Node);
         }
+        if(node.Expression.type != "bool")
+            throw new TypeException("bool",node.Expression.type,node.LineNumber);
     }
 }

@@ -97,9 +97,11 @@ class IfControlStructureNode extends ControlStructureNode{
                 child.accept(v, this);
         }
     }
+    public ExpressionNode Expression;
 }
 
 class WhileNode extends ControlStructureNode{
+    public ExpressionNode Expression;
 
     @Override
     public void accept(ASTVisitor v, AbstractNode parent) throws Exception {
@@ -110,6 +112,9 @@ class WhileNode extends ControlStructureNode{
 }
 
 class ForNode extends ControlStructureNode{
+
+    public ExpressionNode From;
+    public ExpressionNode To;
 
     @Override
     public void accept(ASTVisitor v, AbstractNode parent) throws Exception {
@@ -537,6 +542,9 @@ class FuncCallNode extends ExpressionNode{
         for(AbstractNode node : childList)
             node.accept(v, this);
     }
+    public ActualParameterNode Aparam;
+    public IdNode Id;
+
 }
 
 class ActualParameterNode extends AbstractNode{

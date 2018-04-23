@@ -1,5 +1,6 @@
 package FIRe;
 
+import FIRe.Exceptions.SymbolNotFoundException;
 import FIRe.Exceptions.TypeException;
 
 import java.beans.Expression;
@@ -100,12 +101,14 @@ public abstract class ASTVisitor
                 visit((WhenNode) node);
             else if (node instanceof WhileNode)
                 visit((WhileNode) node);
-            else if (node instanceof ArrayDeclarationNode)
-                visit((ArrayDeclarationNode) node);
+            else if (node instanceof BoolArrayDeclarationNode)
+                visit((BoolArrayDeclarationNode) node);
+            else if (node instanceof TextArrayDeclarationNode)
+                visit((TextArrayDeclarationNode)node);
+            else if (node instanceof NumberArrayDeclarationNode)
+                visit((NumberArrayDeclarationNode)node);
             else
                 System.out.println("Error");
-        } catch (TypeException e){
-
         }
         catch (Exception e) {
             System.out.println(e.getMessage());
@@ -117,7 +120,7 @@ public abstract class ASTVisitor
     public abstract void visit(AdditionNode node, Object... arg) throws Exception;
     public abstract void visit(ActualParameterNode node, Object... arg);
     public abstract void visit(AndNode node, Object... arg) throws Exception;
-    public abstract void visit(ArrayAccessNode node, Object... arg);
+    public abstract void visit(ArrayAccessNode node, Object... arg) throws TypeException;
     public abstract void visit(AssignNode node, Object... arg) throws Exception;
     public abstract void visit(BlockNode node, Object... arg) throws Exception;
     public abstract void visit(BodyColorNode node, Object... arg);
@@ -132,14 +135,14 @@ public abstract class ASTVisitor
     public abstract void visit(EqualsNode node, Object... arg) throws Exception;
     public abstract void visit(ExpressionNode node, Object... arg);
     public abstract void visit(FormalParameterNode node, Object... arg);
-    public abstract void visit(ForNode node, Object... arg);
-    public abstract void visit(FuncCallNode node, Object... arg);
+    public abstract void visit(ForNode node, Object... arg) throws TypeException;
+    public abstract void visit(FuncCallNode node, Object... arg) throws SymbolNotFoundException, Exception;
     public abstract void visit(FunctionDeclarationNode node, Object... arg) throws Exception;
     public abstract void visit(GEQNode node, Object... arg) throws Exception;
     public abstract void visit(GreaterThanNode node, Object... arg) throws Exception;
     public abstract void visit(GunColorNode node, Object... arg);
     public abstract void visit(IdNode node, Object... arg) throws Exception;
-    public abstract void visit(IfControlStructureNode node, Object... arg);
+    public abstract void visit(IfControlStructureNode node, Object... arg) throws TypeException;
     public abstract void visit(InfixExpressionNode node, Object... arg) throws Exception;
     public abstract void visit(LEQNode node, Object... arg) throws Exception;
     public abstract void visit(LessThanNode node, Object... arg) throws Exception;
@@ -166,5 +169,5 @@ public abstract class ASTVisitor
     public abstract void visit(TextNode node, Object... arg);
     public abstract void visit(ValNode node, Object... arg);
     public abstract void visit(WhenNode node, Object... arg);
-    public abstract void visit(WhileNode node, Object... arg);
+    public abstract void visit(WhileNode node, Object... arg) throws TypeException;
 }

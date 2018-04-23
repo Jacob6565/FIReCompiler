@@ -169,113 +169,114 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
     //This method handles the dcl rule from the cfg, multiple cases exists since we have different types and
     //multiple declerations can be made at once
     @Override
-    public AbstractNode visitDcl(CFGParser.DclContext ctx){
+    public AbstractNode visitDcl(CFGParser.DclContext ctx) {
         if (ctx.expr() != null) { // If there is an expr we assume the first rule
-            if (ctx.Type().toString().equals("number")) {
+            if (!ctx.children.get(2).getText().equals("[")) { //If it is not an array
+                if (ctx.Type().toString().equals("number")) {
 
-                NumberDeclarationNode numberDeclarationNode = new NumberDeclarationNode();
-                numberDeclarationNode.LineNumber = ctx.start.getLine();
-                numberDeclarationNode.childList.add(visitId(ctx.id(0))); //0 beacuse we want to add the first and only element from the list
+                    NumberDeclarationNode numberDeclarationNode = new NumberDeclarationNode();
+                    numberDeclarationNode.LineNumber = ctx.start.getLine();
+                    numberDeclarationNode.childList.add(visitId(ctx.id(0))); //0 beacuse we want to add the first and only element from the list
 
-                numberDeclarationNode.childList.add(visitExpr(ctx.expr()));
+                    numberDeclarationNode.childList.add(visitExpr(ctx.expr()));
 
-                //Because we want to quickly access the IdNode we assign the field.
-                for (AbstractNode AN : numberDeclarationNode.childList) {
+                    //Because we want to quickly access the IdNode we assign the field.
+                    for (AbstractNode AN : numberDeclarationNode.childList) {
+                        if (AN instanceof IdNode)
+                            numberDeclarationNode.Id = (IdNode) AN;
+                    }
+
+                    numberDeclarationNode.Id = (IdNode) numberDeclarationNode.childList.get(0);
+
+                    return numberDeclarationNode;
+                } else if (ctx.Type().toString().equals("text")) {
+
+                    TextDeclarationNode textDeclarationNode = new TextDeclarationNode();
+                    textDeclarationNode.LineNumber = ctx.start.getLine();
+                    textDeclarationNode.childList.add(visitId(ctx.id(0))); //0 beacuse we want to add the first and only element from the list
+
+                    textDeclarationNode.childList.add(visitExpr(ctx.expr()));
+                    for (AbstractNode AN : textDeclarationNode.childList) {
+                        if (AN instanceof IdNode)
+                            textDeclarationNode.Id = (IdNode) AN;
+                    }
+
+                    return textDeclarationNode;
+                } else if (ctx.Type().toString().equals("bool")) {
+
+                    BooleanDeclarationNode booleanDeclarationNode = new BooleanDeclarationNode();
+                    booleanDeclarationNode.childList.add(visitId(ctx.id(0))); //0 beacuse we want to add the first and only element from the list
+                    booleanDeclarationNode.LineNumber = ctx.start.getLine();
+                    booleanDeclarationNode.childList.add(visitExpr(ctx.expr()));
+                    for (AbstractNode AN : booleanDeclarationNode.childList) {
+                        if (AN instanceof IdNode)
+                            booleanDeclarationNode.Id = (IdNode) AN;
+                    }
+                    return booleanDeclarationNode;
+                } else
+                    return null;
+            }
+            else if (ctx.id().size() == 1){//If it is an array
+                ArrayDeclarationNode ADN;
+                if (ctx.Type().toString().equals("number")) {
+                    ADN = new NumberArrayDeclarationNode((IdNode) visitId(ctx.id(0)));
+                } else if (ctx.Type().toString().equals("bool"))
+                    ADN = new BoolArrayDeclarationNode((IdNode) visitId(ctx.id(0)));
+                else if (ctx.Type().toString().equals("text"))
+                    ADN = new TextArrayDeclarationNode((IdNode) visitId(ctx.id(0)));
+                else {
+                    System.out.println("Error in arraydeclaration"); //should throw an exception
+                    ADN = null;
+                }
+
+                ADN.LineNumber = ctx.start.getLine();
+                ADN.childList.add(visit(ctx.id(0)));
+                ADN.Id = (IdNode) ADN.childList.get(0);
+                if (ctx.expr() != null) {
+                    ADN.childList.add(visit(ctx.expr()));
+                    ADN.Size = (ExpressionNode)ADN.childList.get(1);
+                }
+                //ADN.childList.add(visit(ctx.expr()));
+                /*for (AbstractNode AN : ADN.childList) {
                     if (AN instanceof IdNode)
-                        numberDeclarationNode.Id = (IdNode) AN;
+                        ADN.Id = (IdNode) AN;
                 }
-
-                numberDeclarationNode.Id = (IdNode) numberDeclarationNode.childList.get(0);
-
-                return numberDeclarationNode;
-            } else if (ctx.Type().toString().equals("text")) {
-
-                TextDeclarationNode textDeclarationNode = new TextDeclarationNode();
-                textDeclarationNode.LineNumber = ctx.start.getLine();
-                textDeclarationNode.childList.add(visitId(ctx.id(0))); //0 beacuse we want to add the first and only element from the list
-
-                textDeclarationNode.childList.add(visitExpr(ctx.expr()));
-                for (AbstractNode AN : textDeclarationNode.childList) {
-                    if (AN instanceof IdNode)
-                        textDeclarationNode.Id = (IdNode) AN;
-                }
-
-                return textDeclarationNode;
-
-            } else if (ctx.Type().toString().equals("bool")) {
-
-                BooleanDeclarationNode booleanDeclarationNode = new BooleanDeclarationNode();
-                booleanDeclarationNode.childList.add(visitId(ctx.id(0))); //0 beacuse we want to add the first and only element from the list
-                booleanDeclarationNode.LineNumber = ctx.start.getLine();
-                booleanDeclarationNode.childList.add(visitExpr(ctx.expr()));
-                for (AbstractNode AN : booleanDeclarationNode.childList) {
-                    if (AN instanceof IdNode)
-                        booleanDeclarationNode.Id = (IdNode) AN;
-                }
-                return booleanDeclarationNode;
-            } else
-                return null;
-
-        } else if (ctx.children.get(1).getChild(0).toString().contains("[")) {
-            //This else handles the case where multiple declarations are made or an array.
-            ArrayDeclarationNode ADN;
-            if (ctx.Type().toString().equals("number")) {
-                ADN = new NumberArrayDeclarationNode();
+                for (AbstractNode AN : ADN.childList) {
+                    if (AN instanceof ExpressionNode)
+                        ADN.Size = (ExpressionNode) AN;
+                }*/
+                return ADN;
             }
-            else if (ctx.Type().toString().equals("bool"))
-                ADN = new BoolArrayDeclarationNode();
-            else if (ctx.Type().toString().equals("text"))
-                ADN = new TextArrayDeclarationNode();
-            else {
-                System.out.println("Error in arraydeclaration"); //should throw an exception
-                ADN = null;
+            else { //Multiple Declarations
+                if (ctx.Type().toString().equals("number")) {
+                    NumberDeclarationNode numberDeclarationNode = new NumberDeclarationNode();
+                    numberDeclarationNode.LineNumber = ctx.start.getLine();
+                    for (CFGParser.IdContext idContext : ctx.id()) {
+                        numberDeclarationNode.childList.add(visitId(idContext)); //we add the dcls as children
+                    }
+                    return numberDeclarationNode;
+                } else if (ctx.Type().toString().equals("text")) {
+
+                    TextDeclarationNode textDeclarationNode = new TextDeclarationNode();
+                    textDeclarationNode.LineNumber = ctx.start.getLine();
+                    for (CFGParser.IdContext idContext : ctx.id()) {
+                        textDeclarationNode.childList.add(visitId(idContext));//We add the dcls as children
+                    }
+                    return textDeclarationNode;
+                } else if (ctx.Type().toString().equals("bool")) {
+
+                    BooleanDeclarationNode booleanDeclarationNode = new BooleanDeclarationNode();
+                    booleanDeclarationNode.LineNumber = ctx.start.getLine();
+                    for (CFGParser.IdContext idContext : ctx.id()) {
+                        booleanDeclarationNode.childList.add(visitId(idContext));//We add the dcls as children
+                    }
+                    return booleanDeclarationNode;
+                } else
+                    return null; //Exception?
             }
-
-            ADN.LineNumber = ctx.start.getLine();
-            ADN.childList.add(visit(ctx.id(0)));
-            if (ctx.expr() != null)
-                ADN.childList.add(visit(ctx.expr()));
-
-            //ADN.childList.add(visit(ctx.expr()));
-            for (AbstractNode AN : ADN.childList) {
-                if (AN instanceof IdNode)
-                    ADN.Id = (IdNode) AN;
-            }
-            for (AbstractNode AN : ADN.childList) {
-                if (AN instanceof ExpressionNode)
-                    ADN.Size = (ExpressionNode) AN;
-            }
-            return ADN;
-
-        } else if (ctx.id().size() > 1)
-            if (ctx.Type().toString().equals("number")) {
-                NumberDeclarationNode numberDeclarationNode = new NumberDeclarationNode();
-                numberDeclarationNode.LineNumber = ctx.start.getLine();
-                for (CFGParser.IdContext idContext : ctx.id()) {
-                    numberDeclarationNode.childList.add(visitId(idContext)); //we add the dcls as children
-                }
-                return numberDeclarationNode;
-            } else if (ctx.Type().toString().equals("text")) {
-
-                TextDeclarationNode textDeclarationNode = new TextDeclarationNode();
-                textDeclarationNode.LineNumber = ctx.start.getLine();
-                for (CFGParser.IdContext idContext : ctx.id()) {
-                    textDeclarationNode.childList.add(visitId(idContext));//We add the dcls as children
-                }
-                return textDeclarationNode;
-            } else if (ctx.Type().toString().equals("bool")) {
-
-                BooleanDeclarationNode booleanDeclarationNode = new BooleanDeclarationNode();
-                booleanDeclarationNode.LineNumber = ctx.start.getLine();
-                for (CFGParser.IdContext idContext : ctx.id()) {
-                    booleanDeclarationNode.childList.add(visitId(idContext));//We add the dcls as children
-                }
-                return booleanDeclarationNode;
-            } else
-                return null; //Exception?
-        return null; //Exception?
+        }
+        return null;
     }
-
 
     // Decides the "type" of statement (according to the CFG) and calls the appropriate method for the specific type, it
     // should never return null
@@ -616,6 +617,8 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         func.childList.add(visitId(ctx.id()));
         func.childList.add(visitAParamList(ctx.aParamList()));
         func.LineNumber = ctx.start.getLine();
+        func.Id = (IdNode)func.childList.get(0);
+        func.Aparam = (ActualParameterNode) func.childList.get(1);
         return func;
     }
 
@@ -638,7 +641,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
 
         while(ctx != null){
             APN.childList.add(visitExpr(ctx.expr()));//Adding the expressions.
-            APN.childList.get(APN.childList.size() - 1).LineNumber = ctx.start.getLine();
+            APN.childList.get(APN.childList.size() - 1).LineNumber = ctx.start.getLine();//Adding Linenumbers to the most recently added child
             ctx = ctx.aParamList();
         }
 
@@ -664,6 +667,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
                 IfNode.childList.add(visitBlock(ctx.aelse().block()));
             }
             IfNode.LineNumber = ctx.start.getLine();
+
             return IfNode;
         }
 
@@ -694,6 +698,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         else if (ctx.While() != null){
             WhileNode node = new WhileNode();
             node.childList.add(visitExpr(ctx.expr(0)));
+            node.Expression = (ExpressionNode) node.childList.get(0);
             node.childList.add(visitBlock(ctx.block()));
             node.LineNumber = ctx.start.getLine();
             return node;
