@@ -1,5 +1,6 @@
 package FIRe;
 
+import FIRe.Exceptions.ReturnException;
 import FIRe.Exceptions.SymbolNotFoundException;
 import FIRe.Exceptions.TypeException;
 
@@ -135,6 +136,8 @@ public abstract class ASTVisitor
     public abstract void visit(EqualsNode node, Object... arg) throws Exception;
     public abstract void visit(ExpressionNode node, Object... arg);
     public abstract void visit(FormalParameterNode node, Object... arg);
+    public abstract void visit(ForNode node, Object... arg) throws ReturnException;
+    public abstract void visit(FuncCallNode node, Object... arg);
     public abstract void visit(ForNode node, Object... arg) throws TypeException;
     public abstract void visit(FuncCallNode node, Object... arg) throws SymbolNotFoundException, Exception;
     public abstract void visit(FunctionDeclarationNode node, Object... arg) throws Exception;

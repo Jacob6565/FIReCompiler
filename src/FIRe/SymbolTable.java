@@ -16,7 +16,7 @@ public class SymbolTable  {
     }
 
     //Checks whether a variable is already declared in the current scope and inserts the current input if it isn't.
-    public void Insert(DeclarationNode input) throws Exception {
+    public void Insert(DeclarationNode input) throws NameAlreadyUsedInGlobalScopeException, Exception {
         if (!stack.Peek().contains(input)) {
 
             if (input instanceof NumberDeclarationNode)
@@ -45,7 +45,7 @@ public class SymbolTable  {
                 for (Tuple<String, String> param: fparams) {
                     //Here we can use peek, because we know a function declaration will only appear at the global scope
                     if(stack.Peek().containsKey(param.x))
-                        throw new Exception("Variable name in function parameter already used in global scope");
+                        throw new NameAlreadyUsedInGlobalScopeException("Variable name in function parameter already used in global scope", param.x);
                 }
                 stack.Peek().put(idNode.name, new SymbolData(input, returnType, fparams));
 
@@ -62,16 +62,16 @@ public class SymbolTable  {
                 for (Tuple<String, String> param: sparams) {
                     //Here we can use peek, because we know a strategy declaration will only appear at the global scope
                     if(stack.Peek().containsKey(param.x))
-                        throw new Exception("Variable name in strategy parameter already used in global scope");
+                        throw new NameAlreadyUsedInGlobalScopeException("Variable name in function parameter already used in global scope", param.x);
                 }
                 stack.Peek().put(idNode.name, new SymbolData(input,sparams));
             }
             else
-                throw new Exception();
+                throw new Exception("This shouldn't happen i think");
 
             return;
         }
-        throw new Exception("Variable already declared");
+        throw new VariableAlreadyDeclaredException("Variable already declared" + input.toString());
     }
 
     //Help function for Insert. Extracts the parameter types from a FormalParameterNode contained in input's childlist

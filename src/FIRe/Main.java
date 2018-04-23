@@ -47,10 +47,11 @@ public class Main {
         catch (Exception e)
         {
             System.out.println("Exception triggered");
+            System.out.println("Exception type: " + e.getClass() + "Message: " + e.getMessage());
         }
         //Prints the AST to check whether it has all the correct info. (Debug code)
         PrintTraversal print = new PrintTraversal();
-        //print.Print(ast,0);
+        print.Print(ast,0);
         //Fills the symbol table
         SymbolTable symbolTable = new SymbolTable();
         FESVisitor fes = new FESVisitor(symbolTable);
@@ -58,5 +59,9 @@ public class Main {
 
         SymbolTableVisitor STV = new SymbolTableVisitor(symbolTable);
         STV.visit(ast);
+        ReturnCheckVisitor returnCheckVisitor = new ReturnCheckVisitor(symbolTable);
+        returnCheckVisitor.visit(ast);
+
+        //STV.visit(ast);
     }
 }
