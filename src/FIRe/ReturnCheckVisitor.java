@@ -69,7 +69,7 @@ public class ReturnCheckVisitor extends ASTVisitor {
 
             while(parentNode != null){
                 if(parentNode instanceof FunctionDeclarationNode){
-                    if(((FunctionDeclarationNode) parentNode).type != ((ExpressionNode) returnNode.childList.get(0)).type) {
+                    if(!((FunctionDeclarationNode) parentNode).type.equals(((ExpressionNode) returnNode.childList.get(0)).type)) {
                         throw new TypeException(((FunctionDeclarationNode) parentNode).type, ((ExpressionNode) returnNode.childList.get(0)).type,((ExpressionNode) returnNode.childList.get(0)).LineNumber );
                     }
                 }
@@ -158,7 +158,11 @@ public class ReturnCheckVisitor extends ASTVisitor {
 
     @Override
     public void visit(EventDeclarationNode node, Object... arg) throws Exception {
-
+        for(AbstractNode child : node.childList){
+            if(child instanceof BlockNode) {
+                VisitNode(child);
+            }
+        }
     }
 
     @Override
@@ -409,7 +413,12 @@ public class ReturnCheckVisitor extends ASTVisitor {
 
     @Override
     public void visit(WhenNode node, Object... arg) {
-
+        for(AbstractNode child : node.childList){
+            if(child instanceof BlockNode){
+                VisitNode(child);
+                break;
+            }
+        }
     }
 
     @Override
