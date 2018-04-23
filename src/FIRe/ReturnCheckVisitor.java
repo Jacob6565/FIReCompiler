@@ -47,7 +47,6 @@ public class ReturnCheckVisitor extends ASTVisitor {
     @Override
     public void visit(BlockNode node, Object... arg) throws Exception {
 
-        boolean hasreturn = false;
         AbstractNode parentNode = null;
         int returnFlag = 0;
         ReturnNode returnNode = null;
