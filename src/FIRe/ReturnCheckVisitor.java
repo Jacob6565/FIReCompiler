@@ -1,9 +1,16 @@
 package FIRe;
-
 import FIRe.Exceptions.ReturnException;
 import javafx.beans.binding.When;
 
+
 public class ReturnCheckVisitor extends ASTVisitor {
+
+    public ReturnCheckVisitor(SymbolTable symbolTable){
+
+        table = symbolTable;
+    }
+
+    private SymbolTable table;
 
     @Override
     public void visit(AbstractNode node, Object... arg) {
@@ -37,6 +44,29 @@ public class ReturnCheckVisitor extends ASTVisitor {
 
     @Override
     public void visit(BlockNode node, Object... arg) throws Exception {
+
+        boolean hasreturn = false;
+
+        for (AbstractNode Node : node.childList) {
+            if (Node instanceof ReturnNode) {
+                hasreturn = true; // The block itself contains a return, thus all the branches can inevitably return
+                //Her skal man se om det så er det rigtige der bliver returneret
+            }
+        }
+        if (!hasreturn) { // if however the block does not have a return, it may be hidden under an if-node
+            for (AbstractNode Node : node.childList) {
+                if (Node instanceof IfControlStructureNode) {
+                    VisitNode(Node);
+                }
+            }
+
+
+        } // Der mangler noget heromkring der sikrer at en parents
+
+      //  SymbolData data = table.Search(node.Parent.toString(),0);
+        //if(hasreturn && data.type == "void"){
+         //   throw new Exception("Ærgerligt");
+       // } // tjek hvad returtypen er for funktionen i symboltable
 
     }
 
@@ -153,7 +183,11 @@ public class ReturnCheckVisitor extends ASTVisitor {
 
     @Override
     public void visit(FunctionDeclarationNode node, Object... arg) throws Exception {
-
+        for (AbstractNode Node: node.childList) {
+            if(Node instanceof BlockNode){
+                VisitNode(Node);  //Visit each block node, since you only are allowed to have a return from within a block
+            }
+        }
     }
 
     @Override
@@ -178,7 +212,14 @@ public class ReturnCheckVisitor extends ASTVisitor {
 
     @Override
     public void visit(IfControlStructureNode node, Object... arg) {
-
+        for (AbstractNode Node: node.childList) {
+            if (Node instanceof BlockNode) {
+                VisitNode(Node);
+            }
+        }
+         //   if(Node instanceof IfControlStructureNode){ // An ifcontrolstructurenode has block nodes as children. And a node for the boolean evaluation
+         //       VisitNode(Node);
+         //   }
     }
 
     @Override
@@ -248,7 +289,9 @@ public class ReturnCheckVisitor extends ASTVisitor {
 
     @Override
     public void visit(ProgNode node, Object... arg) {
-
+        for (AbstractNode Node: node.childList) {
+            VisitNode(Node);
+        }
     }
 
     @Override
@@ -258,6 +301,9 @@ public class ReturnCheckVisitor extends ASTVisitor {
 
     @Override
     public void visit(ReturnNode node, Object... arg) {
+        for (AbstractNode Node: node.childList) {
+            VisitNode(Node);
+        }
 
     }
 
