@@ -1,10 +1,6 @@
 package FIRe;
 
-import FIRe.Exceptions.ReturnException;
-import FIRe.Exceptions.SymbolNotFoundException;
-import FIRe.Exceptions.TypeException;
-
-import java.beans.Expression;
+import FIRe.Exceptions.*;
 
 //Så skal man lave en klasse som nedarver denne klasse og som implementerer
 //en traverse metode for dem alle fx depth-first, som er standarden.
@@ -137,7 +133,7 @@ public abstract class ASTVisitor
     public abstract void visit(ExpressionNode node, Object... arg);
     public abstract void visit(FormalParameterNode node, Object... arg);
     public abstract void visit(ForNode node, Object... arg) throws TypeException,ReturnException;
-    public abstract void visit(FuncCallNode node, Object... arg) throws SymbolNotFoundException, Exception;
+    public abstract void visit(FuncCallNode node, Object... arg) throws Exception;
     public abstract void visit(FunctionDeclarationNode node, Object... arg) throws Exception;
     public abstract void visit(GEQNode node, Object... arg) throws Exception;
     public abstract void visit(GreaterThanNode node, Object... arg) throws Exception;
@@ -161,7 +157,7 @@ public abstract class ASTVisitor
     public abstract void visit(RadarColorNode node, Object... arg);
     public abstract void visit(ReturnNode node, Object... arg);
     public abstract void visit(RobotDclBodyNode node, Object... arg);
-    public abstract void visit(RoutineNode node, Object... arg);
+    public abstract void visit(RoutineNode node, Object... arg) throws TypeException;
     public abstract void visit(StatementNode node, Object... arg);
     public abstract void visit(StrategyDeclarationNode node, Object... arg) throws Exception;
     public abstract void visit(SubtractionNode node, Object... arg) throws Exception;
