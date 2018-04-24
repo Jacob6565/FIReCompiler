@@ -46,22 +46,9 @@ public class ReturnCheckVisitor extends ASTVisitor {
 
     @Override
     public void visit(BlockNode node, Object... arg) throws Exception {
-        
-        //if(returnFlag == 1)
-        //throw new ReturnException();
-        // Der mangler noget heromkring der sikrer at en parents
-
-        //  SymbolData data = table.Search(node.Parent.toString(),0);
-        //if(hasreturn && data.type == "void"){
-        //   throw new Exception("Ærgerligt");
-        // } // tjek hvad returtypen er for funktionen i symboltable
-
 
         AbstractNode parentFunction = node;
         SymbolData data = null;
-        // while (!(parentFunction.Parent instanceof FunctionDeclarationNode || !(parentFunction.Parent instanceof StrategyDeclarationNode) || !(parentFunction.Parent instanceof EventDeclarationNode))){
-        //       parentFunction = parentFunction.Parent;
-        //  }
 
         while (!(parentFunction.Parent instanceof ProgNode)) {
             parentFunction = parentFunction.Parent;
@@ -84,7 +71,7 @@ public class ReturnCheckVisitor extends ASTVisitor {
                         if (Node instanceof ControlStructureNode) {
                             VisitNode(Node);
                         } else
-                            throw new ReturnException("You are missing a return",node.LineNumber);
+                            throw new ReturnException("You are missing a return", Node.LineNumber);
                     }
                 }
             } else {
@@ -99,15 +86,18 @@ public class ReturnCheckVisitor extends ASTVisitor {
                     }
                 }
             }
-        } else if (parentFunction instanceof StrategyDeclarationNode || parentFunction instanceof EventDeclarationNode) {
-            for (AbstractNode Node : node.childList) {
-                if (Node instanceof ReturnNode) {
-                    throw new ReturnException("",Node.LineNumber); // The block itself contains a return, thus all the branches can inevitably return
-
+        } else if (parentFunction instanceof StrategyDeclarationNode) {
+/*            for (AbstractNode Node : parentFunction.childList) {
+                if(Node instanceof ReturnNode){
+                    throw new ReturnException("Stragies must not return", Node.LineNumber);
                 }
+            }*/
+
+            for (AbstractNode Node : parentFunction.childList){
                 if(Node instanceof ControlStructureNode){
                     VisitNode(Node);
                 }
+
             }
         }
     }
@@ -183,48 +173,12 @@ public class ReturnCheckVisitor extends ASTVisitor {
 
     @Override
     public void visit(ForNode node, Object... arg) throws ReturnException {
-        /*AbstractNode nodeToCheck = null;
-        int returnFlag = 0;
-        AbstractNode parentNode = null;
-        String returnType;
-        ReturnNode returnNode = null;*/
-
         for(AbstractNode child : node.childList){
             if(child instanceof BlockNode){
                 VisitNode(child);
                 break;
             }
         }
-
-       /* for(AbstractNode child : nodeToCheck.childList){
-            if(child instanceof ReturnNode){
-                returnFlag++;
-                returnNode = (ReturnNode) child;
-            }
-
-            else if(child instanceof ControlStructureNode)
-                VisitNode(child);
-        }
-
-        if(returnFlag > 1)
-            throw new ReturnException();
-        else if(returnFlag == 1){
-            if(node.Parent != null)
-                parentNode = node.Parent;
-
-            while(parentNode != null){
-                if(parentNode instanceof FunctionDeclarationNode){
-                    if(((FunctionDeclarationNode) parentNode).type == ((ExpressionNode) returnNode.childList.get(0)).type) {
-                        returnFlag = 0;
-                        break;
-                    }
-                }
-                parentNode = parentNode.Parent;
-            }
-        }
-
-        if(returnFlag == 1)
-            throw new ReturnException(); */
     }
 
     @Override
@@ -263,9 +217,22 @@ public class ReturnCheckVisitor extends ASTVisitor {
 
     @Override
     public void visit(IfControlStructureNode node, Object... arg) {
-        for(AbstractNode child : node.childList){
-            if(child instanceof BlockNode){
-                VisitNode(child);
+
+        AbstractNode parentFunction = node;
+
+        while (!(parentFunction.Parent instanceof ProgNode)) {
+            parentFunction = parentFunction.Parent;
+        }
+
+        if(parentFunction instanceof StrategyDeclarationNode){
+            for (AbstractNode Node : node.childList) {
+
+            }
+        }
+
+        for (AbstractNode Node: node.childList) {
+            if (Node instanceof BlockNode) {
+                VisitNode(Node);
             }
         }
     }
@@ -377,15 +344,15 @@ public class ReturnCheckVisitor extends ASTVisitor {
 
     @Override
     public void visit(StrategyDeclarationNode node, Object... arg) throws Exception {
-        //int returnOkFlag = 0;
 
         for(AbstractNode child : node.childList){
             if(child instanceof ReturnNode){
                 throw new ReturnException("Strategies cannot contain return", child.LineNumber);
             }
+        }
+        for(AbstractNode child : node.childList){
             if(child instanceof ControlStructureNode || child instanceof WhenNode)
                 VisitNode(child);
-
         }
     }
 

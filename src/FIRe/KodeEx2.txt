@@ -1,0 +1,27 @@
+RobotProperties{
+RobotType:AdvancedRobot;
+RobotName:OptimusCrime;
+}
+
+strategy DefaultStrategy(){
+
+    number num = 5.0;
+	if(num < 10){
+	    if(num > -30){
+        number partyhard = 7.0;
+        return partyhard;
+        }
+        return num;
+        return "jeg";
+    }
+    return num;
+    return 7;
+}
+
+void TheBestFunction(){
+
+
+
+
+
+}
