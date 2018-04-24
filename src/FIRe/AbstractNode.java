@@ -215,13 +215,13 @@ class ValNode extends ExpressionNode{
 }
 
 class ArrayAccessNode extends ExpressionNode{
-    public ExpressionNode id;
+    public IdNode Id;
     public ExpressionNode index;
 
     @Override
     public void accept(ASTVisitor v, AbstractNode parent) throws Exception {
         v.visit(this, parent);
-        id.accept(v, this);
+        Id.accept(v, this);
         index.accept(v, this);
     }
 }

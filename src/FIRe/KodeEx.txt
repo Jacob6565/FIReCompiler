@@ -65,7 +65,7 @@ strategy Default(number et, number to)
    {
        text currentRival = e.getName();
        turnLeftAndRotate(currentRival);
-       changeStrategy("Offensive");
+       Offensive();
    }
 }
 
@@ -77,7 +77,7 @@ strategy Offensive()
    }
    when(LowHealth a)
    {
-       changeStrategy("Default");
+       Default(100, 50 + 50);
    }
 }
 

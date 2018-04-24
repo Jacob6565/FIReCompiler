@@ -582,9 +582,12 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
     //Both id and index can be an expression, to allow fx f(x)[2+2];
     private ArrayAccessNode CreateArrayAccessNode(CFGParser.ExprContext ctx){
         ArrayAccessNode node = new ArrayAccessNode();
-        node.id = (ExpressionNode) visitExpr(ctx.expr().get(0));
+        node.Id = (IdNode) visitExpr(ctx.expr().get(0));
         node.index = (ExpressionNode) visitExpr(ctx.expr().get(1));
         node.LineNumber = ctx.start.getLine();
+
+        node.childList.add(node.Id);
+        node.childList.add(node.index);
         return node;
     }
 
@@ -604,7 +607,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
             node.Expression = (ExpressionNode)visitExpr(ctx.expr(1));
         }
         else {
-            node.Expression = (ExpressionNode) node.childList.get(0);
+            node.Expression = (ExpressionNode) visitExpr(ctx.expr(0));
         }
         node.childList.add(node.Expression);
         return node;

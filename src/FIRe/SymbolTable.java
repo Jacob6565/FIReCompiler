@@ -31,8 +31,10 @@ public class SymbolTable  {
                 stack.Peek().put((input).Id.name, new SymbolData(input, "bool array"));
             else if (input instanceof TextArrayDeclarationNode)
                 stack.Peek().put((input).Id.name, new SymbolData(input, "text array"));
+            else if (input instanceof EventTypeDeclarationNode)
+                stack.Peek().put((input).Id.name, new SymbolData(input, ((EventTypeDeclarationNode) input).Type));
             else if(input instanceof FunctionDeclarationNode){
-                IdNode idNode = (IdNode) input.Id;
+                IdNode idNode = input.Id;
                 ArrayList<Tuple<String,String>> fparams = GetParams(input);
                 String returnType;
 
@@ -132,8 +134,8 @@ public class SymbolTable  {
     }
 
     public boolean Contains(String key) {
-        for (int i = 0; i < stack.Size(); i++) {
-            if (stack.Get(i).contains(key)) {
+        for (int i = stack.Size() - 1; i >= 0; i--) {
+            if(stack.Get(i).keySet().contains(key)){
                 return true;
             }
         }
