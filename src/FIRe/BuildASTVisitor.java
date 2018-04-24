@@ -292,7 +292,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
             return visitCtrlStruct(ctx.ctrlStruct());
         }
         else if(ctx.expr() != null){
-            return new ReturnNode(visitExpr(ctx.expr()));
+            return new ReturnNode(visitExpr(ctx.expr()),ctx.Return().getSymbol().getLine());
         }
         else
             return  null;
@@ -595,17 +595,18 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
     public AbstractNode visitAssignStmt(CFGParser.AssignStmtContext ctx) {
         AssignNode node = new AssignNode();
 
-        node.childList.add(visitId(ctx.id()));
-        node.childList.add(visitExpr(ctx.expr().get(0)));
-
-        if(ctx.expr().size() > 1)
-            node.childList.add(visitExpr(ctx.expr().get(1)));
+        node.Id = (IdNode)visitId(ctx.id());
+        node.childList.add(node.Id);
         node.LineNumber = ctx.start.getLine();
-        node.Id = (IdNode) node.childList.get(0);
-        if (ctx.expr().size() > 0)
-            node.Expression =(ExpressionNode) node.childList.get(1);
-        else
-            node.Expression =(ExpressionNode) node.childList.get(0);
+
+        if(ctx.expr().size() > 1) {
+            node.Id.ArrayIndex = (NumberNode)visitExpr(ctx.expr(0));
+            node.Expression = (ExpressionNode)visitExpr(ctx.expr(1));
+        }
+        else {
+            node.Expression = (ExpressionNode) node.childList.get(0);
+        }
+        node.childList.add(node.Expression);
         return node;
     }
 

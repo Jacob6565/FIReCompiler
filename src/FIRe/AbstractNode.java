@@ -511,7 +511,7 @@ class NotEqualsNode extends InfixExpressionNode{
 class IdNode extends ExpressionNode {
     public String name;
     //public String type;
-
+    public NumberNode ArrayIndex;
 
     @Override
     public void accept(ASTVisitor v, AbstractNode parent) throws Exception {
@@ -561,8 +561,9 @@ class ActualParameterNode extends AbstractNode{
 
 class ReturnNode extends StatementNode{
 
-    public ReturnNode(AbstractNode node){
+    public ReturnNode(AbstractNode node,int lineNumber){
         childList.add(node);
+        LineNumber = lineNumber;
     }
     @Override
     public void accept(ASTVisitor v, AbstractNode parent) throws Exception {
