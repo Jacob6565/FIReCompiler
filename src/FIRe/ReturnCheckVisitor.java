@@ -263,7 +263,11 @@ public class ReturnCheckVisitor extends ASTVisitor {
 
     @Override
     public void visit(IfControlStructureNode node, Object... arg) {
-
+        for(AbstractNode child : node.childList){
+            if(child instanceof BlockNode){
+                VisitNode(child);
+            }
+        }
     }
 
     @Override
