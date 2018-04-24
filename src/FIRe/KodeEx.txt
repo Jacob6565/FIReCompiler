@@ -26,9 +26,9 @@ bool turnLeftAndRotate(text currentRival)
    for(0 upto 2)
    {
        turnLeft(degrees);
+
    }
 
-   return shotAtRival;
 }
 
 void doSomething(){
@@ -40,6 +40,7 @@ void doSomething(){
     x = x + 4.2;
 
     }
+    return shotAtRival;
 }
 
 strategy Default(number et, number to)
