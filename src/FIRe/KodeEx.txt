@@ -84,7 +84,7 @@ strategy Offensive()
 
 event LowHealth()
 {
-   turnLeftAndRotate("hello");
+   turnLeftAndRotate(30);
 
    return getEnergy() <= 50;
 }
