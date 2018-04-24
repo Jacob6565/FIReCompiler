@@ -99,7 +99,9 @@ public class SymbolTableVisitor extends ASTVisitor {
             if (Node != null)
             VisitNode(Node);
         }
-        if(node.Id.type != node.Expression.type)
+        if(node.Id.type.contains("array") && node.Id.ArrayIndex != null)
+            node.Id.type = node.Id.type.split(" ")[0];
+        if(!node.Id.type.equals(node.Expression.type))
             throw new TypeException(node.Id.type,node.Expression.type, node.LineNumber);
     }
 
