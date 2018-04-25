@@ -20,27 +20,27 @@ public class SymbolTable  {
         if (!stack.Peek().contains(input)) {
 
             if (input instanceof NumberDeclarationNode)
-                stack.Peek().put((input).Id.name, new SymbolData(input, "number"));
+                stack.Peek().put((input).Id.Name, new SymbolData(input, "number"));
             else if (input instanceof BooleanDeclarationNode)
-                stack.Peek().put((input).Id.name, new SymbolData(input, "bool"));
+                stack.Peek().put((input).Id.Name, new SymbolData(input, "bool"));
             else if (input instanceof TextDeclarationNode)
-                stack.Peek().put((input).Id.name, new SymbolData(input, "text"));
+                stack.Peek().put((input).Id.Name, new SymbolData(input, "text"));
             else if (input instanceof NumberArrayDeclarationNode)
-                stack.Peek().put((input).Id.name, new SymbolData(input, "number array"));
+                stack.Peek().put((input).Id.Name, new SymbolData(input, "number array"));
             else if (input instanceof BoolArrayDeclarationNode)
-                stack.Peek().put((input).Id.name, new SymbolData(input, "bool array"));
+                stack.Peek().put((input).Id.Name, new SymbolData(input, "bool array"));
             else if (input instanceof TextArrayDeclarationNode)
-                stack.Peek().put((input).Id.name, new SymbolData(input, "text array"));
+                stack.Peek().put((input).Id.Name, new SymbolData(input, "text array"));
             else if (input instanceof EventTypeDeclarationNode)
-                stack.Peek().put((input).Id.name, new SymbolData(input, ((EventTypeDeclarationNode) input).Type));
+                stack.Peek().put((input).Id.Name, new SymbolData(input, ((EventTypeDeclarationNode) input).Type));
             else if(input instanceof FunctionDeclarationNode){
                 IdNode idNode = input.Id;
                 ArrayList<Tuple<String,String>> fparams = GetParams(input);
                 String returnType;
 
                 //NOT SURE IF THIS IS NECESSARY
-                if (((FunctionDeclarationNode) input).type != null)
-                    returnType = ((FunctionDeclarationNode) input).type;
+                if (((FunctionDeclarationNode) input).Type != null)
+                    returnType = ((FunctionDeclarationNode) input).Type;
                 else
                     returnType = "void";
 
@@ -49,24 +49,24 @@ public class SymbolTable  {
                     if(stack.Peek().containsKey(param.x))
                         throw new NameAlreadyUsedInGlobalScopeException("Variable name in function parameter already used in global scope", param.x);
                 }
-                stack.Peek().put(idNode.name, new SymbolData(input, returnType, fparams));
+                stack.Peek().put(idNode.Name, new SymbolData(input, returnType, fparams));
 
             }
             else if(input instanceof EventDeclarationNode){
-                IdNode idNode = (IdNode) input.Id;
+                IdNode idNode = input.Id;
 
-                stack.Peek().put(idNode.name, new SymbolData(input));
+                stack.Peek().put(idNode.Name, new SymbolData(input, (ArrayList<Tuple<String, String>>) ((EventDeclarationNode)input).Fields));
 
             }
             else if(input instanceof StrategyDeclarationNode){
-                IdNode idNode = (IdNode) input.Id;
+                IdNode idNode = input.Id;
                 ArrayList<Tuple<String,String>> sparams = GetParams(input);
                 for (Tuple<String, String> param: sparams) {
                     //Here we can use peek, because we know a strategy declaration will only appear at the global scope
                     if(stack.Peek().containsKey(param.x))
                         throw new NameAlreadyUsedInGlobalScopeException("Variable name in function parameter already used in global scope", param.x);
                 }
-                stack.Peek().put(idNode.name, new SymbolData(input,sparams));
+                stack.Peek().put(idNode.Name, new SymbolData(input,sparams));
             }
             else
                 throw new Exception("This shouldn't happen i think");
@@ -85,7 +85,7 @@ public class SymbolTable  {
 
                 //Saves the id and type of each variable in the formal parameter
                 for(Map.Entry<IdNode, String> entry : fmlNode.parameterMap.entrySet()){
-                    params.add(new Tuple<String, String>(entry.getKey().name,entry.getValue()));
+                    params.add(new Tuple<String, String>(entry.getKey().Name,entry.getValue()));
                 }
             }
         }

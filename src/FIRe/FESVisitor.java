@@ -213,6 +213,12 @@ public class FESVisitor extends ASTVisitor{
 
     @Override
     public void visit(ProgNode node, Object... arg) {
+        try {
+            ImportRoboCodeMethods();
+        }
+        catch (Exception Ex){
+            System.out.println(Ex.getMessage() + "Error in importing Robocode functions");
+        }
         for (AbstractNode Node : node.childList) {
             if(Node != null && Node instanceof FunctionDeclarationNode) // this should be enough since Funcdclsnode will be a direct child of ProgNode
                 VisitNode(Node);
@@ -222,6 +228,8 @@ public class FESVisitor extends ASTVisitor{
                 VisitNode(Node);
         }
     }
+
+
 
     @Override
     public void visit(RadarColorNode node, Object... arg) {
@@ -285,5 +293,57 @@ public class FESVisitor extends ASTVisitor{
     @Override
     public void visit(WhileNode node, Object... arg) {
 
+    }
+
+    private void ImportRoboCodeMethods() throws Exception {
+        symbolTable.Insert(new FunctionDeclarationNode("ahead","void", new Tuple<>("distance", "number")));
+        symbolTable.Insert(new FunctionDeclarationNode("back", "void", new Tuple<>("distance", "number")));
+        symbolTable.Insert(new FunctionDeclarationNode("doNothing", "void"));
+        symbolTable.Insert(new FunctionDeclarationNode("fire","void", new Tuple<>("power", "number")));
+        symbolTable.Insert(new FunctionDeclarationNode("getBattleFieldHeight","number"));
+        symbolTable.Insert(new FunctionDeclarationNode("getBattleFieldWidth","number"));
+        symbolTable.Insert(new FunctionDeclarationNode("getEnergy","number"));
+        symbolTable.Insert(new FunctionDeclarationNode("getGunHeading","number"));
+        symbolTable.Insert(new FunctionDeclarationNode("getGunHeat","number"));
+        symbolTable.Insert(new FunctionDeclarationNode("getHeading","number"));
+        symbolTable.Insert(new FunctionDeclarationNode("getHeight","number"));
+        symbolTable.Insert(new FunctionDeclarationNode("getName", "text"));
+        symbolTable.Insert(new FunctionDeclarationNode("getNumRounds","number"));
+        symbolTable.Insert(new FunctionDeclarationNode("getNumSentries","number"));
+        symbolTable.Insert(new FunctionDeclarationNode("getOthers","number"));
+        symbolTable.Insert(new FunctionDeclarationNode("getRadarHeading","number"));
+        symbolTable.Insert(new FunctionDeclarationNode("GetRoundNum","number"));
+        symbolTable.Insert(new FunctionDeclarationNode("getSentryBorderSize","number"));
+        symbolTable.Insert(new FunctionDeclarationNode("getTime","number"));
+        symbolTable.Insert(new FunctionDeclarationNode("getVelocity","number"));
+        symbolTable.Insert(new FunctionDeclarationNode("getWidth","number"));
+        symbolTable.Insert(new FunctionDeclarationNode("getX", "number"));
+        symbolTable.Insert(new FunctionDeclarationNode("getY","number"));
+        symbolTable.Insert(new FunctionDeclarationNode("resume","void"));
+        symbolTable.Insert(new FunctionDeclarationNode("scan","void"));
+        symbolTable.Insert(new FunctionDeclarationNode("setAdjustGunForRobotTurn","void",new Tuple<>("independent","bool")));
+        symbolTable.Insert(new FunctionDeclarationNode("setAdjustRadarForGunTurn","void", new Tuple<>("independent","bool")));
+        symbolTable.Insert(new FunctionDeclarationNode("setAdjustRadarForRobotTurn","void", new Tuple<>("independent", "bool")));
+        symbolTable.Insert(new FunctionDeclarationNode("stop","void"));
+        symbolTable.Insert(new FunctionDeclarationNode("turnGunLeft","void", new Tuple<>("degrees", "number")));
+        symbolTable.Insert(new FunctionDeclarationNode("turnGunRight", "void", new Tuple<>("degrees", "number")));
+        symbolTable.Insert(new FunctionDeclarationNode("turnLeft","void", new Tuple<>("degrees", "number")));
+        symbolTable.Insert(new FunctionDeclarationNode("turnRadarLeft","void", new Tuple<>("degrees", "number")));
+        symbolTable.Insert(new FunctionDeclarationNode("turnRadarRight","void", new Tuple<>("degrees", "number")));
+        symbolTable.Insert(new FunctionDeclarationNode("turnRight", "void", new Tuple<>("degrees", "number")));
+        symbolTable.Insert(new EventDeclarationNode("BattleEndedEvent",new Tuple<>("getPriority", "number"), new Tuple<>("isAborted","bool")));
+        symbolTable.Insert(new EventDeclarationNode("BulletHitBulletEvent"));
+        symbolTable.Insert(new EventDeclarationNode("BulletHitEvent", new Tuple<>("getEnergy","number"),new Tuple<>("getName","text")));
+        symbolTable.Insert(new EventDeclarationNode("BulletMissedEvent"));
+        symbolTable.Insert(new EventDeclarationNode("DeathEvent", new Tuple<>("getPriority", "number")));
+        symbolTable.Insert(new EventDeclarationNode("HitByBulletEvent", new Tuple<>("getBearing", "number"),new Tuple<>("getBearingRadians","number"),new Tuple<>("getHeading", "number"), new Tuple<>("getHeadingRadians","number"),new Tuple<>("getName", "text"),new Tuple<>("getPower","number"),new Tuple<>("getVelocity","number")));
+        symbolTable.Insert(new EventDeclarationNode("HitRobotEvent",new Tuple<>("getBearing", "number"),new Tuple<>("getBearingRadians","number"), new Tuple<>("getEnergy","number"), new Tuple<>("getName", "text"),new Tuple<>("isMyFault", "bool")));
+        symbolTable.Insert(new EventDeclarationNode("HitWallEvent", new Tuple<>("getBearing", "number"), new Tuple<>("getBearingRadians","number")));
+        symbolTable.Insert(new EventDeclarationNode("MessageEvent", new Tuple<>("getSender", "text")));
+        symbolTable.Insert(new EventDeclarationNode("RobotDeathEvent", new Tuple<>("getName","text")));
+        symbolTable.Insert(new EventDeclarationNode("RoundEndedEvent", new Tuple<>("getPriority", "number"), new Tuple<>("getRound", "number"), new Tuple<>("getTotalTurns","number"),new Tuple<>("getTurns","number")));
+        symbolTable.Insert(new EventDeclarationNode("ScannedRobotEvent", new Tuple<>("getBearing", "number"), new Tuple<>("getBearingRadians","number"), new Tuple<>("getDistance","number"),new Tuple<>("getEnergy","number"),new Tuple<>("getHeading","number"),new Tuple<>("getHeadingRadians","number"),new Tuple<>("getName","text"),new Tuple<>("getVelocity","number"), new Tuple<>("isSentryRobot", "bool")));
+        symbolTable.Insert(new EventDeclarationNode("SkippedTurnEvent", new Tuple<>("getPriority","number"), new Tuple<>("getSkippedTurn","number")));
+        symbolTable.Insert(new EventDeclarationNode("WinEvent",new Tuple<>("getPriority","number")));
     }
 }

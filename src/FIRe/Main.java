@@ -11,7 +11,7 @@ public class Main {
 
     public static void main(String[] args) throws FileNotFoundException {
         //Reads from the example program. (Debug code)
-        Scanner in = new Scanner(new FileReader("src\\FIRe\\KodeEx2.txt"));
+        Scanner in = new Scanner(new FileReader("src\\FIRe\\KodeEx.txt"));
 
         //We use this delimiter, to chop the code into bits. We split by the backslash character \n
         in.useDelimiter("\n");
@@ -26,6 +26,7 @@ public class Main {
         in.close();
         //Converts the StringBuilder to a string.
         String outString = sb.toString();
+        RobotHeaderTable RHT = new RobotHeaderTable();
 
         //InputStream inputStream = new ByteArrayInputStream(outString.getBytes());
         //CharStream charStream = new ANTLRInputStream(outString);
@@ -58,14 +59,14 @@ public class Main {
         fes.visit(ast);
 
         SymbolTableVisitor STV = new SymbolTableVisitor(symbolTable);
-        STV.visit(ast);
+        STV.visit(ast);/*
         try {
             ReturnCheckVisitor returnCheckVisitor = new ReturnCheckVisitor(symbolTable);
             returnCheckVisitor.visit(ast);
         }
         catch(Exception e){
             System.out.println("Return fejl");
-        }
+        }*/
 
         //STV.visit(ast);
     }
