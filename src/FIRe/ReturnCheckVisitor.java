@@ -8,6 +8,8 @@ import javafx.beans.binding.When;
 public class ReturnCheckVisitor extends ASTVisitor {
 
     String errorMessageForStrategy = "Can not return in strategy";
+    String getErrorMessageForEvent = "Missing return in event";
+
     public ReturnCheckVisitor(SymbolTable symbolTable){
 
         table = symbolTable;
@@ -48,18 +50,20 @@ public class ReturnCheckVisitor extends ASTVisitor {
     @Override
     public void visit(BlockNode node, Object... arg) throws Exception {
 
-        AbstractNode parentFunction = node;
+        AbstractNode ancestor = node;
         SymbolData data = null;
 
         //Finding what node the block belongs to.
-        while (!(parentFunction.Parent instanceof ProgNode)) {
-            parentFunction = parentFunction.Parent;
+        while (!(ancestor.Parent instanceof ProgNode)) {
+            ancestor = ancestor.Parent;
         }
 
-        if (parentFunction instanceof FunctionDeclarationNode) {
-            IdNode functionid = ((FunctionDeclarationNode) parentFunction).Id;
+        if (ancestor instanceof FunctionDeclarationNode) {
+            IdNode functionid = ((FunctionDeclarationNode) ancestor).Id;
             data = table.Search(functionid.name, 0);
 
+
+            //If the returntype isn't void
             if (!data.type.equals("void")) {
                 boolean hasreturn = false;
                 for (AbstractNode Node : node.childList) {
@@ -73,7 +77,7 @@ public class ReturnCheckVisitor extends ASTVisitor {
                         if (Node instanceof ControlStructureNode) {
                             VisitNode(Node);
                         } else
-                            throw new ReturnException("You are missing a return", Node.LineNumber);
+                            throw new ReturnException("You are missing a return in the function", ancestor.LineNumber);
                     }
                 }
             } else {
@@ -88,7 +92,7 @@ public class ReturnCheckVisitor extends ASTVisitor {
                     }
                 }
             }
-        } else if (parentFunction instanceof StrategyDeclarationNode) {
+        } else if (ancestor instanceof StrategyDeclarationNode) {
 
             //So we know that the current block (node) is inside a strategy.
             for (AbstractNode Node : node.childList){
@@ -101,6 +105,31 @@ public class ReturnCheckVisitor extends ASTVisitor {
                 else if(Node instanceof ControlStructureNode){
                     VisitNode(Node);
                 }
+            }
+        }
+        else if(ancestor instanceof EventDeclarationNode)
+        {
+            boolean hasReturn = false;
+            //Checking the current blocknode "node" which is inside an eventdeclaration.
+            for(AbstractNode Node : node.childList)
+            {
+                //If the block got a return.
+                if(Node instanceof ReturnNode)
+                {
+                    hasReturn = true;
+                    break;
+                }
+                //If it do not have a return node, it may contain other
+                // control structures which can contain returns.
+                else if(Node instanceof ControlStructureNode){
+                    VisitNode(Node);
+                }
+            }
+
+            //if no return was found.
+            if(hasReturn == false)
+            {
+                throw new ReturnException(getErrorMessageForEvent, ancestor.LineNumber);
             }
         }
     }
@@ -223,8 +252,6 @@ public class ReturnCheckVisitor extends ASTVisitor {
     public void visit(IfControlStructureNode node, Object... arg) throws Exception{
 
         //Checking each block of a controlstructure.
-        /*Breaking since, when breaking you will call another method
-         which calls this again and therefore no need to check rest of the children*/
         for (AbstractNode Node: node.childList) {
             if (Node instanceof BlockNode) {
                 VisitNode(Node);
@@ -298,7 +325,7 @@ public class ReturnCheckVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(ProgNode node, Object... arg){
+    public void visit(ProgNode node, Object... arg) throws ReturnException {
         //Stating point. Calling its children i.e FunctionDcl.
         for (AbstractNode Node: node.childList) {
             VisitNode(Node);

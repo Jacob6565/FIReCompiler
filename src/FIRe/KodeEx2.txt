@@ -12,7 +12,7 @@ strategy DefaultStrategy(){
 	if(num < 10){
 	    if(num > -30){
         number partyhard = 7.0;
-        return partyhard;
+        return partyhard + 1 + 1 + 1 + 1 + 1 + 1;
         }
         return num;
         return "jeg";
@@ -38,16 +38,14 @@ strategy DefaultStrategy(){
 
 event MyEvent()
 {
-    return 2==2;
+
+     return true;
+
 }
+
+
 
 text TheBestFunction(number et, number to){
 
-    text something = "h";
-
-    while(true){
-    }
-    return;
-
-
+   return "hej";
 }
