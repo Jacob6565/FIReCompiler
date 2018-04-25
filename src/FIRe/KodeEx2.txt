@@ -6,6 +6,9 @@ RobotName:OptimusCrime;
 strategy DefaultStrategy(){
 
     number num = 5.0;
+
+    TheBestFunction(3,3);
+
 	if(num < 10){
 	    if(num > -30){
         number partyhard = 7.0;
@@ -38,10 +41,16 @@ event MyEvent()
     return 2==2;
 }
 
-void TheBestFunction(){
+text TheBestFunction(number et, number to){
 
+    text something = "h";
 
+    if(2==2){
+        return
+    }
+    elseif(2==3){
+        return;
+    }
 
-
-
+    return;
 }

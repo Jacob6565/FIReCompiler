@@ -57,7 +57,8 @@ public class ReturnCheckVisitor extends ASTVisitor {
         }
 
         if (parentFunction instanceof FunctionDeclarationNode) {
-            data = table.Search(parentFunction.Parent.toString(), 0);
+            IdNode functionid = ((FunctionDeclarationNode) parentFunction).Id;
+            data = table.Search(functionid.name, 0);
 
             if (!data.type.equals("void")) {
                 boolean hasreturn = false;
@@ -486,7 +487,6 @@ public class ReturnCheckVisitor extends ASTVisitor {
                 if(Node instanceof ControlStructureNode){
                     VisitNode(Node);
                 }
-
             }
         }
     }
