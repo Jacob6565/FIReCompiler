@@ -2,14 +2,16 @@ package FIRe;
 
 import FIRe.Exceptions.CodeGenException;
 
-public class CodeHolder {
-    String name;
-    String outputCode;
-    StringBuilder sb;
+abstract class CodeHolder {
+    protected StringBuilder sb;
+
 
     CodeHolder(){
         sb = new StringBuilder();
     }
+
+    abstract String getCode();
+
 
     boolean emitNL(String code){
         sb.append(code + "\n");

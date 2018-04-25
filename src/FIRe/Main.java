@@ -51,7 +51,7 @@ public class Main {
         }
         //Prints the AST to check whether it has all the correct info. (Debug code)
         PrintTraversal print = new PrintTraversal();
-        print.Print(ast,0);
+        //print.Print(ast,0);
         //Fills the symbol table
         SymbolTable symbolTable = new SymbolTable();
         FESVisitor fes = new FESVisitor(symbolTable);
@@ -67,6 +67,13 @@ public class Main {
             System.out.println("Return fejl");
         }
 
+        CGTopVisitor codeGenerator = new CGTopVisitor();
+        try {
+            codeGenerator.visit(ast);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        codeGenerator.emitOutputFile();
         //STV.visit(ast);
     }
 }
