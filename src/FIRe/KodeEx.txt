@@ -9,7 +9,6 @@ RobotProperties
 
 number firepower = 100;
 text nameOfRival = "SittingDuck";
-
 bool turnLeftAndRotate(text currentRival)
 {
    number degrees = 90;
@@ -26,7 +25,6 @@ bool turnLeftAndRotate(text currentRival)
    for(0 upto 2)
    {
        turnLeft(degrees);
-
    }
 
 }
@@ -40,7 +38,6 @@ void doSomething(){
     x = x + 4.2;
 
     }
-    return shotAtRival;
 }
 
 strategy Default(number et, number to)
@@ -55,8 +52,8 @@ strategy Default(number et, number to)
 
     routine()
     {
-        turnRadar(360);
-        for(0 upto 2)
+        turnRadarRight(360);
+        for(number i = 0 upto 2)
         {
             ahead(20);
         }
@@ -84,7 +81,7 @@ strategy Offensive()
 
 event LowHealth()
 {
-   turnLeftAndRotate(30);
+   turnLeftAndRotate("30");
 
    return getEnergy() <= 50;
 }
