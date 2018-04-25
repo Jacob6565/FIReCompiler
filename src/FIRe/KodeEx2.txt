@@ -14,8 +14,28 @@ strategy DefaultStrategy(){
         return num;
         return "jeg";
     }
-    return num;
-    return 7;
+    while(2==2)
+    {
+        return num;
+    }
+    routine(6)
+    {
+      return num;
+    }
+    routine(7)
+    {
+        return num;
+    }
+    when (MyEvent e)
+    {
+        return num;
+    }
+
+}
+
+event MyEvent()
+{
+    return 2==2;
 }
 
 void TheBestFunction(){

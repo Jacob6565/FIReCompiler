@@ -139,7 +139,7 @@ public abstract class ASTVisitor
     public abstract void visit(GreaterThanNode node, Object... arg) throws Exception;
     public abstract void visit(GunColorNode node, Object... arg);
     public abstract void visit(IdNode node, Object... arg) throws Exception;
-    public abstract void visit(IfControlStructureNode node, Object... arg) throws TypeException;
+    public abstract void visit(IfControlStructureNode node, Object... arg) throws Exception;
     public abstract void visit(InfixExpressionNode node, Object... arg) throws Exception;
     public abstract void visit(LEQNode node, Object... arg) throws Exception;
     public abstract void visit(LessThanNode node, Object... arg) throws Exception;
@@ -153,7 +153,7 @@ public abstract class ASTVisitor
     public abstract void visit(NumberNode node, Object... arg);
     public abstract void visit(OrNode node, Object... arg) throws Exception;
     public abstract void visit(PowerNode node, Object... arg) throws Exception;
-    public abstract void visit(ProgNode node, Object... arg);
+    public abstract void visit(ProgNode node, Object... arg) throws Exception;
     public abstract void visit(RadarColorNode node, Object... arg);
     public abstract void visit(ReturnNode node, Object... arg);
     public abstract void visit(RobotDclBodyNode node, Object... arg);
