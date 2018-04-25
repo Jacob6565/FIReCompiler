@@ -59,7 +59,7 @@ public class ReturnCheckVisitor extends ASTVisitor {
 
         if (ancestor instanceof FunctionDeclarationNode) {
             IdNode functionid = ((FunctionDeclarationNode) ancestor).Id;
-            data = table.Search(functionid.name, 0);
+            data = table.Search(functionid.Name, 0);
 
 
             //If the returntype isn't void

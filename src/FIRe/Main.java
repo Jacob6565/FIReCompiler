@@ -58,7 +58,7 @@ public class Main {
         FESVisitor fes = new FESVisitor(symbolTable);
         fes.visit(ast);
 
-        SymbolTableVisitor STV = new SymbolTableVisitor(symbolTable);
+        SymbolTableVisitor STV = new SymbolTableVisitor(symbolTable,RHT);
         STV.visit(ast);/*
         try {
             ReturnCheckVisitor returnCheckVisitor = new ReturnCheckVisitor(symbolTable);
