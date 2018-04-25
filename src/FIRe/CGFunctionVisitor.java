@@ -46,7 +46,7 @@ public class CGFunctionVisitor extends ASTVisitor {
 
     @Override
     public void visit(AssignNode node, Object... arg) throws Exception {
-        code.emitNL(node.Id.name + " = " + exprGen.GenerateExprCode(code, node.Expression) + ";");
+        code.emitNL(node.Id.Name + " = " + exprGen.GenerateExprCode(code, node.Expression) + ";");
     }
 
     @Override
@@ -76,16 +76,16 @@ public class CGFunctionVisitor extends ASTVisitor {
 
         for(AbstractNode id : node.childList){
             if(id instanceof IdNode && idCounter > 1){
-                code.emit(((IdNode) id).name + ", ");
+                code.emit(((IdNode) id).Name + ", ");
                 idCounter--;
             }
 
             else if(id instanceof IdNode && exprFlag){
-                code.emit(((IdNode) id).name + " = ");
+                code.emit(((IdNode) id).Name + " = ");
             }
 
             else if(id instanceof IdNode){
-                code.emitNL(((IdNode) id).name + ";");
+                code.emitNL(((IdNode) id).Name + ";");
             }
 
             else if(id instanceof ExpressionNode){
@@ -101,7 +101,7 @@ public class CGFunctionVisitor extends ASTVisitor {
 
         for(AbstractNode id : node.childList){
             if(id instanceof IdNode){
-                code.emit(((IdNode) id).name + "[");
+                code.emit(((IdNode) id).Name + "[");
             }
 
             else if(id instanceof ExpressionNode){
