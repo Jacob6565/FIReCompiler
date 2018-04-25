@@ -157,7 +157,25 @@ public class CGFunctionVisitor extends ASTVisitor {
 
     @Override
     public void visit(ForNode node, Object... arg) throws TypeException, ReturnException {
+        boolean dclUsed = false;
+        code.emit("for(");
+        if (node.Dcl != null && node.Dcl.childList.get(1) instanceof ExpressionNode){
+            code.emit(node.Dcl.Id.Name + " = " + exprGen.GenerateExprCode(code, (ExpressionNode) node.Dcl.childList.get(1)) + ";");
+            dclUsed = true;
+        }
+        else if(node.Dcl != null){
+            code.emit(node.Dcl.Id.Name + " = " + "0;");
+            dclUsed = true;
+        }
+        else if(node.From != null){
+            code.emit(";");
+        }
 
+        if(node.Incremental && dclUsed)
+            code.emit(" " + node.Dcl.Id.Name + " < " + exprGen.GenerateExprCode(code, (ExpressionNode) node.To) + ";");
+        else if(node.Incremental && dclUsed == false)
+            code.emit(" " + node.From + " < " + exprGen.GenerateExprCode(code, (ExpressionNode) node.To) + ";");
+        //MISSING REST
     }
 
     @Override
