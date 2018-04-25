@@ -155,7 +155,7 @@ public abstract class ASTVisitor
     public abstract void visit(PowerNode node, Object... arg) throws Exception;
     public abstract void visit(ProgNode node, Object... arg) throws Exception;
     public abstract void visit(RadarColorNode node, Object... arg);
-    public abstract void visit(ReturnNode node, Object... arg);
+    public abstract void visit(ReturnNode node, Object... arg) throws TypeException;
     public abstract void visit(RobotDclBodyNode node, Object... arg);
     public abstract void visit(RoutineNode node, Object... arg) throws TypeException;
     public abstract void visit(StatementNode node, Object... arg);
