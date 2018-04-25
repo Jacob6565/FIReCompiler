@@ -8,7 +8,6 @@ import javafx.beans.binding.When;
 public class ReturnCheckVisitor extends ASTVisitor {
 
     String errorMessageForStrategy = "Can not return in strategy";
-    String getErrorMessageForEvent = "Missing return in event";
     public ReturnCheckVisitor(SymbolTable symbolTable){
 
         table = symbolTable;
@@ -49,26 +48,23 @@ public class ReturnCheckVisitor extends ASTVisitor {
     @Override
     public void visit(BlockNode node, Object... arg) throws Exception {
 
-        AbstractNode ancestor = node;
+        AbstractNode parentFunction = node;
         SymbolData data = null;
 
         //Finding what node the block belongs to.
-        while (!(ancestor.Parent instanceof ProgNode)) {
-            ancestor = ancestor.Parent;
+        while (!(parentFunction.Parent instanceof ProgNode)) {
+            parentFunction = parentFunction.Parent;
         }
 
-        if (ancestor instanceof FunctionDeclarationNode) {
-            IdNode functionid = ((FunctionDeclarationNode) ancestor).Id;
+        if (parentFunction instanceof FunctionDeclarationNode) {
+            IdNode functionid = ((FunctionDeclarationNode) parentFunction).Id;
             data = table.Search(functionid.name, 0);
 
-
-            //If the returntype isn't void
             if (!data.type.equals("void")) {
                 boolean hasreturn = false;
                 for (AbstractNode Node : node.childList) {
                     if (Node instanceof ReturnNode) {
                         hasreturn = true; // The block itself contains a return, thus all the branches can inevitably return
-
                     }
                 }
 
@@ -77,7 +73,7 @@ public class ReturnCheckVisitor extends ASTVisitor {
                         if (Node instanceof ControlStructureNode) {
                             VisitNode(Node);
                         } else
-                            throw new ReturnException("You are missing a return in the function", ancestor.LineNumber);
+                            throw new ReturnException("You are missing a return", Node.LineNumber);
                     }
                 }
             } else {
@@ -92,7 +88,7 @@ public class ReturnCheckVisitor extends ASTVisitor {
                     }
                 }
             }
-        } else if (ancestor instanceof StrategyDeclarationNode) {
+        } else if (parentFunction instanceof StrategyDeclarationNode) {
 
             //So we know that the current block (node) is inside a strategy.
             for (AbstractNode Node : node.childList){
@@ -105,26 +101,6 @@ public class ReturnCheckVisitor extends ASTVisitor {
                 else if(Node instanceof ControlStructureNode){
                     VisitNode(Node);
                 }
-            }
-        }
-        else if(ancestor instanceof EventDeclarationNode)
-        {
-            boolean hasReturn = false;
-            for(AbstractNode Node : node.childList)
-            {
-                if(Node instanceof ReturnNode)
-                {
-                    hasReturn = true;
-                }
-                else if(Node instanceof ControlStructureNode){
-
-                    VisitNode(Node);
-                }
-            }
-
-            if(hasReturn == false)
-            {
-                throw new ReturnException(getErrorMessageForEvent, ancestor.LineNumber);
             }
         }
     }
@@ -322,7 +298,7 @@ public class ReturnCheckVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(ProgNode node, Object... arg) throws ReturnException {
+    public void visit(ProgNode node, Object... arg){
         //Stating point. Calling its children i.e FunctionDcl.
         for (AbstractNode Node: node.childList) {
             VisitNode(Node);

@@ -38,34 +38,16 @@ strategy DefaultStrategy(){
 
 event MyEvent()
 {
-
-     if(1 ==2)
-     {
-        if(2==2)
-        {
-            return 1
-        }
-        return 1;
-
-     }
-     while(false)
-     {
-         return false;
-     }
-
+    return 2==2;
 }
 
 text TheBestFunction(number et, number to){
 
-    while(1 < 2)
-    {
-
-    }
-
     text something = "h";
 
-    for(number i = 0 upto -5)
-    {
-
+    while(true){
     }
+    return;
+
+
 }
