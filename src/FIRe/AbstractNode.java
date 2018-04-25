@@ -5,9 +5,7 @@ package FIRe;
 
 import java.beans.Expression;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 //begin enums
 enum Color{
@@ -113,6 +111,7 @@ class WhileNode extends ControlStructureNode{
 
 class ForNode extends ControlStructureNode{
 
+    public NumberDeclarationNode Dcl;
     public ExpressionNode From;
     public ExpressionNode To;
 
@@ -509,9 +508,16 @@ class NotEqualsNode extends InfixExpressionNode{
 }
 
 class IdNode extends ExpressionNode {
-    public String name;
+    public String Name;
     //public String type;
     public NumberNode ArrayIndex;
+
+    public IdNode(String name){
+        Name = name;
+    }
+    public IdNode(){
+
+    }
 
     @Override
     public void accept(ASTVisitor v, AbstractNode parent) throws Exception {
@@ -640,9 +646,9 @@ class BooleanDeclarationNode extends DeclarationNode{
 //end declarations - begin Scope nodes
 
 class WhenNode extends AbstractNode{
-    public WhenNode(AbstractNode one, AbstractNode two){
-        childList.add(one);
-        childList.add(two);
+    public WhenNode(AbstractNode eventType, AbstractNode variableName){
+        childList.add(eventType);
+        childList.add(variableName);
     }
 
     @Override
@@ -654,6 +660,17 @@ class WhenNode extends AbstractNode{
 }
 
 class EventDeclarationNode extends DeclarationNode{
+    public List<Tuple<String, String>> Fields;
+
+    public EventDeclarationNode(){ }
+    public EventDeclarationNode(String id, Tuple<String,String>... fields){
+        Id = new IdNode(id);
+        Fields = new ArrayList<Tuple<String, String>>();
+        for (Tuple<String,String> entry: fields) {
+            Fields.add(entry);
+        }
+    }
+
     @Override
     public void accept(ASTVisitor v, AbstractNode parent) throws Exception {
         v.visit(this, parent);
@@ -675,7 +692,16 @@ class BlockNode extends AbstractNode{
 }
 
 class FunctionDeclarationNode extends DeclarationNode{
-    String type;
+    public String Type;
+
+    public FunctionDeclarationNode(String name, String type, Tuple<String, String>... parameters){
+        Id = new IdNode(name);
+        Type = type;
+        childList.add(new FormalParameterNode(parameters));
+    }
+    public FunctionDeclarationNode(){
+
+    }
 
     @Override
     public void accept(ASTVisitor v, AbstractNode parent) throws Exception {
@@ -688,6 +714,12 @@ class FunctionDeclarationNode extends DeclarationNode{
 
 class FormalParameterNode extends AbstractNode{
     Map<IdNode, String> parameterMap = new HashMap<IdNode, String>();
+    public FormalParameterNode(){    }
+    public FormalParameterNode(Tuple<String,String>[] parameters){
+        for (Tuple <String,String> tuple: parameters) {
+            parameterMap.put(new IdNode(tuple.getKey()),tuple.getValue());
+        }
+    }
 
     @Override
     public void accept(ASTVisitor v, AbstractNode parent) {
