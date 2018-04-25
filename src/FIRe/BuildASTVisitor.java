@@ -74,9 +74,9 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         node.LineNumber = ctx.start.getLine();
 
         if (ctx.funcType().Type() != null)
-            node.type = ctx.funcType().Type().toString();
+            node.Type = ctx.funcType().Type().toString();
         else
-            node.type = ctx.funcType().Void().toString();
+            node.Type = ctx.funcType().Void().toString();
 
         node.Id = (IdNode) visitId(ctx.id());
         if(ctx.fParamList() != null)//fparamlist er optional.
@@ -679,12 +679,16 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         else if (ctx.For() != null){
             ForNode FN = new ForNode();
             if (ctx.dcl() != null){//Detemine whether the first part of the for-loops is a declaration.
-                FN.childList.add(visitDcl(ctx.dcl()));
+                FN.Dcl = (NumberDeclarationNode) visitDcl(ctx.dcl());
+                FN.To = (ExpressionNode)(visitExpr(ctx.expr(0)));
+                FN.childList.add(FN.Dcl);
+                FN.childList.add(FN.To);
             }
             else if (ctx.expr() != null){ //Adding the expressions (which can be an id as well) to the childList. Max 2.
-                for (CFGParser.ExprContext exprContext: ctx.expr()) {
-                    FN.childList.add(visitExpr(exprContext));
-                }
+                FN.From = (ExpressionNode)visitExpr(ctx.expr(0));
+                FN.To = (ExpressionNode)visitExpr(ctx.expr(1));
+                FN.childList.add(FN.From);
+                FN.childList.add(FN.To);
             }
             else
                 return null;
@@ -734,13 +738,13 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         IdNode node = new IdNode();
 
         //Getting the nodes name
-        node.name = ctx.Name().toString();
+        node.Name = ctx.Name().toString();
 
         node.LineNumber = ctx.getStart().getLine();
 
         //When dot-notation is used.
         while(ctx.id() != null){
-            node.name = node.name + "." + ctx.id().Name().toString();
+            node.Name = node.Name + "." + ctx.id().Name().toString();
             ctx = ctx.id();
         }
 
