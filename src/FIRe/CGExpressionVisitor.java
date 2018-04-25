@@ -3,7 +3,7 @@ package FIRe;
 import FIRe.Exceptions.ReturnException;
 import FIRe.Exceptions.TypeException;
 
-public class CGExpressionVisitor extends ASTVisitor{
+public class CGExpressionVisitor{
     //ExpressionNode expr;
     CodeHolder code;
 
@@ -15,61 +15,24 @@ public class CGExpressionVisitor extends ASTVisitor{
     }
 
 
-    @Override
-    public void visit(AbstractNode node, Object... arg) {
-
-    }
-
-    @Override
     public void visit(AdditionNode node, Object... arg) throws Exception {
         VisitNode(node.LeftChild);
         code.emit(" + ");
         VisitNode(node.RightChild);
     }
 
-    @Override
-    public void visit(ActualParameterNode node, Object... arg) {
-
-    }
-
-    @Override
     public void visit(AndNode node, Object... arg) throws Exception {
         VisitNode(node.LeftChild);
         code.emit(" && ");
         VisitNode(node.RightChild);
     }
 
-    @Override
     public void visit(ArrayAccessNode node, Object... arg) throws TypeException {
-
+        code.emit(node.Id.name + "[");
+        VisitNode(node.index);
+        code.emit("] ");
     }
 
-    @Override
-    public void visit(AssignNode node, Object... arg) throws Exception {
-
-    }
-
-    @Override
-    public void visit(BlockNode node, Object... arg) throws Exception {
-
-    }
-
-    @Override
-    public void visit(BodyColorNode node, Object... arg) {
-
-    }
-
-    @Override
-    public void visit(BooleanDeclarationNode node, Object... arg) throws Exception {
-
-    }
-
-    @Override
-    public void visit(BoolArrayDeclarationNode node, Object... arg) throws Exception {
-
-    }
-
-    @Override
     public void visit(BoolNode node, Object... arg) {
         if(node.value == true)
             code.emit("true");
@@ -77,169 +40,95 @@ public class CGExpressionVisitor extends ASTVisitor{
             code.emit("false");
     }
 
-    @Override
-    public void visit(ColorValNode node, Object... arg) {
-
-    }
-
-    @Override
-    public void visit(ControlStructureNode node, Object... arg) {
-
-    }
-
-    @Override
-    public void visit(DeclarationNode node, Object... arg) {
-
-    }
-
-    @Override
     public void visit(DivisionNode node, Object... arg) throws Exception {
         VisitNode(node.LeftChild);
         code.emit("/");
         VisitNode(node.RightChild);
     }
 
-    @Override
-    public void visit(EventDeclarationNode node, Object... arg) throws Exception {
-
-    }
-
-    @Override
     public void visit(EqualsNode node, Object... arg) throws Exception {
         VisitNode(node.LeftChild);
         code.emit(" == ");
         VisitNode(node.RightChild);
     }
 
-    @Override
-    public void visit(ExpressionNode node, Object... arg) {
-
-    }
-
-    @Override
-    public void visit(FormalParameterNode node, Object... arg) {
-
-    }
-
-    @Override
-    public void visit(ForNode node, Object... arg) throws TypeException, ReturnException {
-
-    }
-
-    @Override
     public void visit(FuncCallNode node, Object... arg) throws Exception {
-
+        code.emit(node.Id + "(");
+        for(AbstractNode par : node.Aparam.childList)
+            VisitNode(par);
+        code.emit(") ");
     }
 
-    @Override
-    public void visit(FunctionDeclarationNode node, Object... arg) throws Exception {
-
-    }
-
-    @Override
     public void visit(GEQNode node, Object... arg) throws Exception {
         VisitNode(node.LeftChild);
         code.emit(" >= ");
         VisitNode(node.RightChild);
     }
 
-    @Override
     public void visit(GreaterThanNode node, Object... arg) throws Exception {
         VisitNode(node.LeftChild);
         code.emit(" > ");
         VisitNode(node.RightChild);
     }
 
-    @Override
-    public void visit(GunColorNode node, Object... arg) {
-
-    }
-
-    @Override
     public void visit(IdNode node, Object... arg) throws Exception {
-
+        code.emit(node.name);
     }
 
-    @Override
-    public void visit(IfControlStructureNode node, Object... arg) throws Exception {
-
-    }
-
-    @Override
     public void visit(InfixExpressionNode node, Object... arg) throws Exception {
 
     }
 
-    @Override
     public void visit(LEQNode node, Object... arg) throws Exception {
         VisitNode(node.LeftChild);
         code.emit(" <= ");
         VisitNode(node.RightChild);
     }
 
-    @Override
     public void visit(LessThanNode node, Object... arg) throws Exception {
         VisitNode(node.LeftChild);
         code.emit(" < ");
         VisitNode(node.RightChild);
     }
 
-    @Override
     public void visit(ModuloNode node, Object... arg) throws Exception {
         VisitNode(node.LeftChild);
         code.emit(" % ");
         VisitNode(node.RightChild);
     }
 
-    @Override
     public void visit(MultiplicationNode node, Object... arg) throws Exception {
         VisitNode(node.LeftChild);
         code.emit(" * ");
         VisitNode(node.RightChild);
     }
 
-    @Override
     public void visit(NegateNode node, Object... arg) {
         code.emit("-");
-        visit(node.childList.get(0));
+        VisitNode(node.childList.get(0));
     }
 
-    @Override
     public void visit(NotEqualsNode node, Object... arg) throws Exception {
         VisitNode(node.LeftChild);
         code.emit(" != ");
         VisitNode(node.RightChild);
     }
 
-    @Override
     public void visit(NotNode node, Object... arg) {
         code.emit("!");
         VisitNode(node.Expression);
     }
 
-    @Override
-    public void visit(NumberDeclarationNode node, Object... arg) throws Exception {
-
-    }
-
-    @Override
-    public void visit(NumberArrayDeclarationNode node, Object... arg) throws Exception {
-
-    }
-
-    @Override
     public void visit(NumberNode node, Object... arg) {
         code.emit(node.value);
     }
 
-    @Override
     public void visit(OrNode node, Object... arg) throws Exception {
         VisitNode(node.LeftChild);
         code.emit(" || ");
         VisitNode(node.RightChild);
     }
 
-    @Override
     public void visit(PowerNode node, Object... arg) throws Exception {
         code.emit("Math.pow(");
         VisitNode(node.LeftChild);
@@ -248,75 +137,74 @@ public class CGExpressionVisitor extends ASTVisitor{
         code.emit(") ");
     }
 
-    @Override
-    public void visit(ProgNode node, Object... arg) throws Exception {
-
-    }
-
-    @Override
-    public void visit(RadarColorNode node, Object... arg) {
-
-    }
-
-    @Override
-    public void visit(ReturnNode node, Object... arg) {
-
-    }
-
-    @Override
-    public void visit(RobotDclBodyNode node, Object... arg) {
-
-    }
-
-    @Override
-    public void visit(RoutineNode node, Object... arg) throws TypeException {
-
-    }
-
-    @Override
-    public void visit(StatementNode node, Object... arg) {
-
-    }
-
-    @Override
-    public void visit(StrategyDeclarationNode node, Object... arg) throws Exception {
-
-    }
-
-    @Override
     public void visit(SubtractionNode node, Object... arg) throws Exception {
         VisitNode(node.LeftChild);
         code.emit(" - ");
         VisitNode(node.RightChild);
     }
 
-    @Override
-    public void visit(TextDeclarationNode node, Object... arg) throws Exception {
-
-    }
-
-    @Override
-    public void visit(TextArrayDeclarationNode node, Object... arg) throws Exception {
-
-    }
-
-    @Override
     public void visit(TextNode node, Object... arg) {
         code.emit("\"" + node.Content + "\"");
     }
 
-    @Override
     public void visit(ValNode node, Object... arg) {
 
     }
 
-    @Override
-    public void visit(WhenNode node, Object... arg) {
 
-    }
-
-    @Override
-    public void visit(WhileNode node, Object... arg) throws TypeException {
-
+    public void VisitNode(AbstractNode node) {
+        try {
+            if (node instanceof AdditionNode)
+                visit((AdditionNode) node);
+            else if (node instanceof AndNode)
+                visit((AndNode) node);
+            else if (node instanceof ArrayAccessNode)
+                visit((ArrayAccessNode) node);
+            else if (node instanceof BoolNode)
+                visit((BoolNode) node);
+            else if (node instanceof DivisionNode)
+                visit((DivisionNode) node);
+            else if (node instanceof EqualsNode)
+                visit((EqualsNode) node);
+            else if (node instanceof FuncCallNode)
+                visit((FuncCallNode) node);
+            else if (node instanceof GEQNode)
+                visit((GEQNode) node);
+            else if (node instanceof GreaterThanNode)
+                visit((GreaterThanNode) node);
+            else if (node instanceof IdNode)
+                visit((IdNode) node);
+            else if (node instanceof LEQNode)
+                visit((LEQNode) node);
+            else if (node instanceof LessThanNode)
+                visit((LessThanNode) node);
+            else if (node instanceof ModuloNode)
+                visit((ModuloNode) node);
+            else if (node instanceof MultiplicationNode)
+                visit((MultiplicationNode) node);
+            else if (node instanceof NegateNode)
+                visit((NegateNode) node);
+            else if (node instanceof NotEqualsNode)
+                visit((NotEqualsNode) node);
+            else if (node instanceof NotNode)
+                visit((NotNode) node);
+            else if (node instanceof NumberNode)
+                visit((NumberNode) node);
+            else if (node instanceof OrNode)
+                visit((OrNode) node);
+            else if (node instanceof PowerNode)
+                visit((PowerNode) node);
+            else if (node instanceof SubtractionNode)
+                visit((SubtractionNode) node);
+            else if (node instanceof TextNode)
+                visit((TextNode) node);
+            else if (node instanceof ValNode)
+                visit((ValNode) node);
+            else
+                System.out.println("Error");
+        }
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 }
