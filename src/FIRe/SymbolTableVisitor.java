@@ -1,5 +1,6 @@
 package FIRe;
 
+import java.beans.Expression;
 import java.lang.reflect.Type;
 import java.net.Proxy;
 import java.util.List;
@@ -10,6 +11,8 @@ import java.util.function.Function;
 import FIRe.Exceptions.*;
 import FIRe.Parser.CFGParser;
 import javafx.beans.binding.When;
+
+import javax.lang.model.util.AbstractElementVisitor7;
 
 
 @SuppressWarnings("ALL")
@@ -570,11 +573,54 @@ public class SymbolTableVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(ReturnNode node, Object... arg) {
+    public void visit(ReturnNode node, Object... arg) throws TypeException {
+
+        AbstractNode ancestor = node;
+
+        //Finding where the return node belongs to.
+        while (!(ancestor.Parent instanceof ProgNode)) {
+            ancestor = ancestor.Parent;
+        }
+
+        //To save the return nodes type.
+        String returnType = "";
         for (AbstractNode Node: node.childList) {
             if (Node != null)
-            VisitNode(Node);
+            {
+                VisitNode(Node);
+                //We always know that the returnode got 1 child and its an expressionnode;
+                //Casting it to expressionNode in order to access the field "type".
+                ExpressionNode temp = (ExpressionNode) Node;
+                returnType = temp.type;
+            }
         }
+
+        //The only place return nodes can appear legally is inside a function and an event.
+        if(ancestor instanceof FunctionDeclarationNode)
+        {
+            FunctionDeclarationNode temp = (FunctionDeclarationNode) ancestor;
+            if(!returnType.equals(temp.type))
+            {
+                throw new TypeException(temp.type , returnType, node.LineNumber);
+            }
+
+        }
+        else if(ancestor instanceof EventDeclarationNode) {
+            EventDeclarationNode temp = (EventDeclarationNode) ancestor;
+            //Events should always return a boolean.
+            if(!returnType.equals("bool"))
+            {
+                throw new TypeException("bool", returnType, node.LineNumber);
+            }
+        }
+
+
+
+
+
+
+
+
     }
 
     @Override

@@ -2,6 +2,8 @@ package FIRe;
 
 import FIRe.Exceptions.*;
 
+import java.lang.reflect.Type;
+
 //Så skal man lave en klasse som nedarver denne klasse og som implementerer
 //en traverse metode for dem alle fx depth-first, som er standarden.
 public abstract class ASTVisitor
@@ -155,7 +157,7 @@ public abstract class ASTVisitor
     public abstract void visit(PowerNode node, Object... arg) throws Exception;
     public abstract void visit(ProgNode node, Object... arg) throws Exception;
     public abstract void visit(RadarColorNode node, Object... arg) throws TypeException;
-    public abstract void visit(ReturnNode node, Object... arg);
+    public abstract void visit(ReturnNode node, Object... arg) throws TypeException;
     public abstract void visit(RobotDclBodyNode node, Object... arg) throws TypeException;
     public abstract void visit(RoutineNode node, Object... arg) throws TypeException;
     public abstract void visit(StatementNode node, Object... arg);

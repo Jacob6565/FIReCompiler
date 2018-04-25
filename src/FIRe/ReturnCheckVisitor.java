@@ -9,6 +9,7 @@ public class ReturnCheckVisitor extends ASTVisitor {
 
     String errorMessageForStrategy = "Can not return in strategy";
     String getErrorMessageForEvent = "Missing return in event";
+
     public ReturnCheckVisitor(SymbolTable symbolTable){
 
         table = symbolTable;
@@ -110,18 +111,23 @@ public class ReturnCheckVisitor extends ASTVisitor {
         else if(ancestor instanceof EventDeclarationNode)
         {
             boolean hasReturn = false;
+            //Checking the current blocknode "node" which is inside an eventdeclaration.
             for(AbstractNode Node : node.childList)
             {
+                //If the block got a return.
                 if(Node instanceof ReturnNode)
                 {
                     hasReturn = true;
+                    break;
                 }
+                //If it do not have a return node, it may contain other
+                // control structures which can contain returns.
                 else if(Node instanceof ControlStructureNode){
-
                     VisitNode(Node);
                 }
             }
 
+            //if no return was found.
             if(hasReturn == false)
             {
                 throw new ReturnException(getErrorMessageForEvent, ancestor.LineNumber);
@@ -156,7 +162,7 @@ public class ReturnCheckVisitor extends ASTVisitor {
 
     @Override
     public void visit(ControlStructureNode node, Object... arg) {
-
+        
         for (AbstractNode Node: node.childList) {
             if (Node instanceof BlockNode) {
                 VisitNode(Node);
@@ -247,8 +253,6 @@ public class ReturnCheckVisitor extends ASTVisitor {
     public void visit(IfControlStructureNode node, Object... arg) throws Exception{
 
         //Checking each block of a controlstructure.
-        /*Breaking since, when breaking you will call another method
-         which calls this again and therefore no need to check rest of the children*/
         for (AbstractNode Node: node.childList) {
             if (Node instanceof BlockNode) {
                 VisitNode(Node);
