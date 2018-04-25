@@ -16,7 +16,17 @@ public class CodeHolder {
         return true;
     }
 
+    boolean emitNL(Double code){
+        sb.append(code + "\n");
+        return true;
+    }
+
     boolean emit(String code){
+        sb.append(code);
+        return true;
+    }
+
+    boolean emit(Double code){
         sb.append(code);
         return true;
     }
