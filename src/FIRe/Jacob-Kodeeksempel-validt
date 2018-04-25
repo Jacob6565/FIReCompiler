@@ -1,0 +1,96 @@
+RobotProperties
+{
+      RobotName:TheDestroyer;
+      RobotType:advancedRobot;
+      BodyColor:yellow;
+      GunColor:red;
+      RadarColor:white;
+}
+
+number x = 3;
+strategy Default()
+{
+    if(x > 0)
+    {
+         x = power(x);
+    }
+    else
+    {
+        x = 2;
+    }
+
+    routine(6)
+    {
+        x = x + 1;
+    }
+    when (MyLowHealthEvent e)
+    {
+        e.enemy = "SittingDuck";
+    }
+    when (HitRobotEvent f)
+    {
+        if(f.getName() == "SittingDuck")
+        {
+            System.out.println("Got you :)");
+        }
+
+        Offensive(f.getName());
+    }
+}
+
+number power(number x)
+{
+    return x*x;
+}
+
+strategy Offensive(text enemyName)
+{
+    text enemy = enemyName;
+    routine()
+    {
+        turnLeftAndRotate(360);
+        System.out.println("Shoot: " + enemy);
+    }
+    when (ScannedRobotEvent e)
+    {
+        System.out.println("I see you: " + e.getName());
+        enemy = AdvancedCalculation(e.getName());
+    }
+}
+
+text AdvancedCalculation(text enemyName)
+{
+    if(enemy == enemyName)
+    {
+        if(enemyName != "SittingDuck")
+        {
+            if(x < 3)
+            {
+                if(enemyName == WallRider)
+                {
+                    if(x == 2)
+                    {
+                        Default();
+                        return "Crazy";
+                    }
+                    return "SittingDuck";
+                }
+                return "WallRider";
+            }
+            return "Advanced";
+        }
+
+        return "SittingDuck";
+    }
+    else{
+        return "SittingDuck";
+    }
+}
+
+
+event MyLowHealthEvent
+{
+   text enemy = "WallRider";
+
+   return getEnergy() <= 30;
+}
