@@ -1,5 +1,6 @@
 package FIRe;
 
+import FIRe.Exceptions.*;
 import FIRe.Parser.CFGLexer;
 import FIRe.Parser.CFGParser;
 import org.antlr.v4.runtime.*;
@@ -67,6 +68,20 @@ public class Main {
         catch(Exception e) {
             System.out.println("Return fejl");
         }
+
+        CGTopVisitor codeGenerator = new CGTopVisitor();
+        try {
+            codeGenerator.visit(ast);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        codeGenerator.emitOutputFile();
+        }
         //STV.visit(ast);
+        }
+
+
+        CGExpressionVisitor CGE = new CGExpressionVisitor();
+        CGStrategyVisitor CGS = new CGStrategyVisitor();
+
     }
-}

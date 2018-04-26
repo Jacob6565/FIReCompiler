@@ -4,16 +4,15 @@ import FIRe.Exceptions.ReturnException;
 import FIRe.Exceptions.TypeException;
 
 public class CGExpressionVisitor{
-    //ExpressionNode expr;
+    ExpressionNode expr;
     CodeHolder code;
 
-
-    CGExpressionVisitor(CodeHolder CH, ExpressionNode expr){
+    String GenerateExprCode(CodeHolder CH, ExpressionNode expression){
         code = CH;
-        //expr = expression;
+        expr = expression;
         VisitNode(expr);
+        return "";
     }
-
 
     public void visit(AdditionNode node, Object... arg) throws Exception {
         VisitNode(node.LeftChild);
