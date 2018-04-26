@@ -9,12 +9,12 @@ public class UnreachableCodeException extends Exception{
         lines = "";
         for (Integer i : values)
         {
-            lines += i.toString();
+            lines += i.toString() + " ";
         }
     }
 
     @Override
     public String getMessage() {
-        return "Unreachable code at lines: " + lines;
+        return "ERROR: Unreachable code at lines: " + lines;
     }
 }

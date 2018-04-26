@@ -285,10 +285,6 @@ public class CGStrategyVisitor extends ASTVisitor {
 
     }
 
-    @Override
-    public void visit(RobotDclBodyNode node, Object... arg) throws TypeException {
-
-    }
 
     @Override
     public void visit(RoutineNode node, Object... arg) throws TypeException {
@@ -345,6 +341,21 @@ public class CGStrategyVisitor extends ASTVisitor {
 
     @Override
     public void visit(WhileNode node, Object... arg) throws TypeException {
+
+    }
+
+    @Override
+    public void visit(RobotNameNode node, Object... arg) {
+
+    }
+
+    @Override
+    public void visit(RobotTypeNode node, Object... arg) throws TypeException {
+
+    }
+
+    @Override
+    public void visit(RobotPropertiesNode node, Object... arg) {
 
     }
 }

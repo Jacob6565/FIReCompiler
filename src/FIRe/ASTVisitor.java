@@ -82,8 +82,6 @@ public abstract class ASTVisitor
                 visit((RadarColorNode) node);
             else if (node instanceof ReturnNode)
                 visit((ReturnNode) node);
-            else if (node instanceof RobotDclBodyNode)
-                visit((RobotDclBodyNode) node);
             else if (node instanceof RoutineNode)
                 visit((RoutineNode) node);
             else if (node instanceof StrategyDeclarationNode)
@@ -106,17 +104,38 @@ public abstract class ASTVisitor
                 visit((TextArrayDeclarationNode)node);
             else if (node instanceof NumberArrayDeclarationNode)
                 visit((NumberArrayDeclarationNode)node);
+            else if (node instanceof RobotNameNode)
+                visit((RobotNameNode) node);
+            else if (node instanceof RobotTypeNode)
+                visit((RobotTypeNode) node);
+            else if (node instanceof RobotPropertiesNode)
+                visit((RobotPropertiesNode) node);
             else
                 System.out.println("Error");
         }
-        catch (SymbolNotFoundException Ex) {
-            System.out.println(Ex.getMessage());
+        catch (UnreachableCodeException e)
+        {
+            System.out.println(e.getMessage());
+        }
+        catch(VoidReturnException e)
+        {
+            System.out.println(e.getMessage());
+        }
+        catch (SymbolNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
+        catch (TypeException e)
+        {
+            System.out.println(e.getMessage());
+        }
+        catch(ReturnException e)
+        {
+            System.out.println(e.getMessage());
         }
         catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
-
 
     public abstract void visit(AbstractNode node, Object... arg);
     public abstract void visit(AdditionNode node, Object... arg) throws Exception;
@@ -161,7 +180,6 @@ public abstract class ASTVisitor
     public abstract void visit(ProgNode node, Object... arg) throws Exception;
     public abstract void visit(RadarColorNode node, Object... arg) throws TypeException;
     public abstract void visit(ReturnNode node, Object... arg) throws TypeException;
-    public abstract void visit(RobotDclBodyNode node, Object... arg) throws TypeException;
     public abstract void visit(RoutineNode node, Object... arg) throws TypeException;
     public abstract void visit(StatementNode node, Object... arg);
     public abstract void visit(StrategyDeclarationNode node, Object... arg) throws Exception;
@@ -172,4 +190,7 @@ public abstract class ASTVisitor
     public abstract void visit(ValNode node, Object... arg);
     public abstract void visit(WhenNode node, Object... arg);
     public abstract void visit(WhileNode node, Object... arg) throws TypeException;
+    public abstract void visit(RobotNameNode node, Object... arg);
+    public abstract void visit(RobotTypeNode node, Object... arg) throws TypeException;
+    public abstract void visit(RobotPropertiesNode node, Object... arg);
 }
