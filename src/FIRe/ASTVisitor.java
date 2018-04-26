@@ -109,8 +109,24 @@ public abstract class ASTVisitor
             else
                 System.out.println("Error");
         }
-        catch (SymbolNotFoundException Ex) {
-            System.out.println(Ex.getMessage());
+        catch (UnreachableCodeException e)
+        {
+            System.out.println(e.getMessage());
+        }
+        catch(VoidReturnException e)
+        {
+            System.out.println(e.getMessage());
+        }
+        catch (SymbolNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
+        catch (TypeException e)
+        {
+            System.out.println(e.getMessage());
+        }
+        catch(ReturnException e)
+        {
+            System.out.println(e.getMessage());
         }
         catch (Exception e) {
             System.out.println(e.getMessage());

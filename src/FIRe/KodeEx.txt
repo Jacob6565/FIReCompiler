@@ -69,9 +69,11 @@ strategy Default1(number et, number to)
 
 strategy Offensive()
 {
-   routine()
+    return 1;
+    routine()
    {
        fire(1);
+       return 1;
    }
    when(LowHealth a)
    {
@@ -79,9 +81,9 @@ strategy Offensive()
    }
 }
 
-void Function()
+number Function()
 {
-    return;
+    return 2;
     number x = 0;
 }
 

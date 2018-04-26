@@ -1,9 +1,8 @@
 package FIRe;
-import FIRe.Exceptions.ReturnException;
-import FIRe.Exceptions.VoidReturnException;
-import FIRe.Exceptions.TypeException;
+import FIRe.Exceptions.*;
 import javafx.beans.binding.When;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +12,7 @@ public class ReturnCheckVisitor extends ASTVisitor {
     String errorMessageForStrategy = "Can not return in strategy";
     String getErrorMessageForEvent = "Missing return in event";
 
-    public ReturnCheckVisitor(SymbolTable symbolTable){
+    ReturnCheckVisitor(SymbolTable symbolTable){
 
         table = symbolTable;
     }
@@ -52,7 +51,7 @@ public class ReturnCheckVisitor extends ASTVisitor {
 
     //A lot goes on in block node since a constructs has a blocknode
     @Override
-    public void visit(BlockNode node, Object... arg) throws Exception {
+    public void visit(BlockNode node, Object... arg) throws VoidReturnException, TypeException, ReturnException, UnreachableCodeException, SymbolNotFoundException {
 
         //Ancestor is to check if the current block is from a functiondcl or others
         AbstractNode ancestor = node;
@@ -71,82 +70,102 @@ public class ReturnCheckVisitor extends ASTVisitor {
 
             //If the returntype isn't void we check for returns
             if (!data.type.equals("void")) {
-               boolean hasreturn = false;
-                for (AbstractNode Node : node.childList) {
-                    if (Node instanceof ReturnNode) {
-                        hasreturn = true; // The block itself contains a return, thus all branches deeper in the scope can inevitably return
-                    }
-
-                    if(hasreturn){
-                        unreachableLines.add(Node.LineNumber);
-                    }
-                }
-
-                if(!unreachableLines.isEmpty()){
-                    throw new UnreachableCodeException(unreachableLines);
-                }
-
-                if (!hasreturn) { // if however the block does not have a return, it may be hidden under a controlstructue node
-                    for (AbstractNode Node : node.childList) {
-                        if (Node instanceof ControlStructureNode) {
-                            VisitNode(Node);
-                        } else
-                            throw new ReturnException("You are missing a return in the function", ancestor.LineNumber);
-                    }
-                }
+                ChecksFunctionWithNonVoidReturnType(node, ancestor, unreachableLines);
             }
             else {
                 //If this is executed we know the function has return type 'void'
-                for (AbstractNode Node : node.childList) {
-                    if (Node instanceof ReturnNode) {
-                        throw new VoidReturnException(); // we don't allow returns in a void
-                    }
-                }//loop investigating a controlstructues where a return can be 'hidden'
-                for(AbstractNode Node : node.childList){
-                    if(Node instanceof ControlStructureNode){
-                        VisitNode(Node);
-                    }
-                }
+                ChecksFunctionWithVoidReturnType(node, ancestor);
+
             }
         } else if (ancestor instanceof StrategyDeclarationNode) {
             //So we know that the current block (node) is inside a strategy. Note that a strategy can not have blocks as a direct child
-            for (AbstractNode Node : node.childList){
-                //Checking if this block got a return statement.
-                if(Node instanceof ReturnNode)
-                {
-                    throw new ReturnException(errorMessageForStrategy, Node.LineNumber);
-                }
-                //Checking if the nested blocks inside this block contains returns.
-                else if(Node instanceof ControlStructureNode){
-                    VisitNode(Node);
-                }
-            }
+            ChecksStrategy(node);
+
         }
         else if(ancestor instanceof EventDeclarationNode)
         {
-            boolean hasReturn = false;
-            //Checking the current blocknode "node" which is inside an eventdeclaration.
-            for(AbstractNode Node : node.childList)
+            ChecksEvent(node, ancestor);
+
+        }
+    }
+
+    private void ChecksEvent(BlockNode node, AbstractNode ancestor) throws ReturnException {
+        boolean hasReturn = false;
+        //Checking the current blocknode "node" which is inside an eventdeclaration.
+        for(AbstractNode Node : node.childList)
+        {
+            //If the block got a return.
+            if(Node instanceof ReturnNode)
             {
-                //If the block got a return.
-                if(Node instanceof ReturnNode)
-                {
-                    hasReturn = true;
-                    break;
-                }
-                //If it do not have a return node, it may contain other
-                // control structures which can contain returns.
-                else if(Node instanceof ControlStructureNode){
-                    VisitNode(Node);
-                }
+                hasReturn = true;
+                break;
             }
-            //if no return was found.
-            if(hasReturn == false)
+            //If it do not have a return node, it may contain other
+            // control structures which can contain returns.
+            else if(Node instanceof ControlStructureNode){
+                VisitNode(Node);
+            }
+        }
+        //if no return was found.
+        if(!hasReturn)
+        {
+            throw new ReturnException(getErrorMessageForEvent, ancestor.LineNumber);
+        }
+    }
+
+    private void ChecksStrategy(BlockNode node) throws ReturnException {
+        for (AbstractNode Node : node.childList){
+            //Checking if this block got a return statement.
+            if(Node instanceof ReturnNode)
             {
-                throw new ReturnException(getErrorMessageForEvent, ancestor.LineNumber);
+                throw new ReturnException(errorMessageForStrategy, Node.LineNumber);
+            }
+            //Checking if the nested blocks inside this block contains returns.
+            else if(Node instanceof ControlStructureNode){
+                VisitNode(Node);
             }
         }
     }
+
+    private void ChecksFunctionWithVoidReturnType(BlockNode node, AbstractNode ancestor) throws VoidReturnException {
+        for (AbstractNode Node : node.childList) {
+            if (Node instanceof ReturnNode) {
+                throw new VoidReturnException(ancestor.LineNumber, node.LineNumber); // we don't allow returns in a void
+            }
+        }
+        //loop investigating a controlstructues where a return can be 'hidden'
+        for(AbstractNode Node : node.childList){
+            if(Node instanceof ControlStructureNode){
+                VisitNode(Node);
+            }
+        }
+    }
+
+    private void ChecksFunctionWithNonVoidReturnType(BlockNode node, AbstractNode ancestor, List<Integer> unreachableLines) throws UnreachableCodeException, ReturnException {
+        boolean hasreturn = false;
+        for (AbstractNode Node : node.childList) {
+            if (Node instanceof ReturnNode && !hasreturn) {
+                hasreturn = true; // The block itself contains a return, thus all branches deeper in the scope can inevitably return
+            }
+            else if(hasreturn){
+                unreachableLines.add(Node.LineNumber);
+            }
+        }
+
+        if(!unreachableLines.isEmpty()){
+            throw new UnreachableCodeException(unreachableLines);
+        }
+
+        if (!hasreturn) { // if however the block does not have a return, it may be hidden under a controlstructue node
+            for (AbstractNode Node : node.childList) {
+                if (Node instanceof ControlStructureNode) {
+                    VisitNode(Node);
+                } else
+                    throw new ReturnException("You are missing a return in the function", ancestor.LineNumber);
+            }
+        }
+    }
+
 
     @Override
     public void visit(BodyColorNode node, Object... arg) {
@@ -218,7 +237,7 @@ public class ReturnCheckVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(ForNode node, Object... arg) throws ReturnException {
+    public void visit(ForNode node, Object... arg) {
         for(AbstractNode child : node.childList){
             if(child instanceof BlockNode){
                 VisitNode(child);
@@ -233,7 +252,7 @@ public class ReturnCheckVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(FunctionDeclarationNode node, Object... arg) throws Exception {
+    public void visit(FunctionDeclarationNode node, Object... arg){
         //Visit each block node, since you only are allowed to have a return from within a block
         for (AbstractNode Node: node.childList) {
             if (Node instanceof BlockNode) {
@@ -263,7 +282,7 @@ public class ReturnCheckVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(IfControlStructureNode node, Object... arg) throws Exception{
+    public void visit(IfControlStructureNode node, Object... arg){
 
         //Checking each block of a controlstructure.
         for (AbstractNode Node: node.childList) {
@@ -339,7 +358,7 @@ public class ReturnCheckVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(ProgNode node, Object... arg) throws ReturnException {
+    public void visit(ProgNode node, Object... arg) {
         //Stating point. Calling its children i.e FunctionDcl.
         for (AbstractNode Node: node.childList) {
             VisitNode(Node);
@@ -379,7 +398,7 @@ public class ReturnCheckVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(StrategyDeclarationNode node, Object... arg) throws Exception {
+    public void visit(StrategyDeclarationNode node, Object... arg) throws ReturnException {
 
         for(AbstractNode child : node.childList) {
             //This checks is there is a return in the first scope of a strategy.
