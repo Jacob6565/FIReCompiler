@@ -1,5 +1,8 @@
 package FIRe;
 
+import FIRe.Exceptions.MissingDefaultStrategyException;
+import FIRe.Exceptions.ReturnException;
+import FIRe.Exceptions.SymbolNotFoundException;
 import FIRe.Parser.CFGLexer;
 import FIRe.Parser.CFGParser;
 import org.antlr.v4.runtime.*;
@@ -59,14 +62,32 @@ public class Main {
         fes.visit(ast);
 
         SymbolTableVisitor STV = new SymbolTableVisitor(symbolTable,RHT);
+        STV.visit(ast);/*
+        //We now know all the functions, strategies and events in the program.
+        //Therefore checking if the "Default"-strategy exists.
+
+        try {
+            symbolTable.Search("Default", 0);
+        }
+        catch (SymbolNotFoundException e)
+        {
+            //Could not find the strategy with name "Default";
+            try {
+                throw new MissingDefaultStrategyException("No strategy with name: \"Default\" was found");
+            } catch (MissingDefaultStrategyException f) {
+                System.out.println(f.getMessage());
+            }
+        }
+
+        SymbolTableVisitor STV = new SymbolTableVisitor(symbolTable);
         STV.visit(ast);
-        try{
+        try {
             ReturnCheckVisitor returnCheckVisitor = new ReturnCheckVisitor(symbolTable);
             returnCheckVisitor.visit(ast);
         }
         catch(Exception e){
             System.out.println("Return fejl");
-        }
+        }*/
 
         CGTopVisitor codeGenerator = new CGTopVisitor();
         try {
@@ -76,5 +97,5 @@ public class Main {
         }
         codeGenerator.emitOutputFile();
         //STV.visit(ast);
+        }
     }
-}
