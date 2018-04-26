@@ -12,6 +12,33 @@ abstract class CodeHolder {
 
     abstract String getCode();
 
+    // Emitter and indenter
+    boolean emit(String code, int tabIndent) {
+        String indent = "";
+        String lines[] = code.split("\n");
+        String indentedCode = "";
+        for (int i = 0; i < tabIndent; i++){
+            indent += ("\t");
+        }
+        for (String line : lines) {
+            indentedCode += indent + line + "\n";
+        }
+        return emit(indentedCode);
+    }
+
+    // Emitter and indenter
+    boolean emitNL(String code, int tabIndent) {
+        String indent = "";
+        String lines[] = code.split("\n");
+        String indentedCode = "";
+        for (int i = 0; i < tabIndent; i++){
+            indent += ("\t");
+        }
+        for (String line : lines) {
+            indentedCode += indent + line + "\n";
+        }
+        return emit(indentedCode + "\n");
+    }
 
     boolean emitNL(String code){
         sb.append(code + "\n");

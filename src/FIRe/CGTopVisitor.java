@@ -9,10 +9,13 @@ import java.util.ArrayList;
 
 public class CGTopVisitor extends ASTVisitor{
     SetupCodeHolder setup = new SetupCodeHolder();
-    MethodCodeHolder runMethod = new MethodCodeHolder("run", "void");
+    RunMethodCodeHolder runMethod = new RunMethodCodeHolder("run", "void");
     ArrayList<MethodCodeHolder> methods = new ArrayList<MethodCodeHolder>();
-    //ArrayList<CodeHolder> events = new ArrayList<CodeHolder>();
+    ArrayList<EventCodeHolder> events = new ArrayList<EventCodeHolder>();
     //ArrayList<CodeHolder> eventHandlers = new ArrayList<CodeHolder>();
+
+    int insideClassIndent = 1;
+    int insideMethodeIndent = 1;
 
     //Prints the generated code from the CodeHolders into the output file
     public void emitOutputFile(){
@@ -39,8 +42,15 @@ public class CGTopVisitor extends ASTVisitor{
         StringBuilder mergedCode = new StringBuilder();
 
 
-        setup.emit(runMethod.getCode());
+        setup.emit(runMethod.getCode(), insideClassIndent);
+        for (MethodCodeHolder method: methods) {
+            setup.emit(method.getCode(), insideClassIndent);
+        }
+        for (EventCodeHolder event: events) {
+            setup.emit(event.getCode(), insideClassIndent);
+        }
         mergedCode.append(setup.getCode());
+
 
         return mergedCode.toString();
     }
@@ -135,11 +145,11 @@ public class CGTopVisitor extends ASTVisitor{
 
     @Override
     public void visit(EventDeclarationNode node, Object... arg) throws Exception {
-        //CodeHolder eventHandler = new CodeHolder(node.Id.name);
+        EventCodeHolder eventDcl = new EventCodeHolder(node.Id.Name);
 
-        //Generate actual code
+        //Generate actual code to put inside the condition body
 
-        //addEventHandlerCodeHolder(eventHandlers, eventHandler);
+        events.add(eventDcl);
     }
 
     @Override
@@ -169,8 +179,11 @@ public class CGTopVisitor extends ASTVisitor{
 
     @Override
     public void visit(FunctionDeclarationNode node, Object... arg) throws Exception {
+        MethodCodeHolder method = new MethodCodeHolder(node.Id.Name, node.Type);
 
-        //methods.add()
+        //Code generation for method body
+
+        methods.add(method);
     }
 
     @Override
@@ -281,16 +294,32 @@ public class CGTopVisitor extends ASTVisitor{
 
     }
 
+    private String setColorBuilder(String bodyColor, String gunColor, String radarColor){
+        //If any of the colors are null, then they will correctly insert null in the string, which is valid for the java
+        //function SetColors
+        return "SetColors(" + bodyColor + ", " + gunColor + ", " + radarColor +");";
+    }
+
     @Override
     public void visit(RobotDclBodyNode node, Object... arg) {
         setup.name=node.robotName;
         setup.robotType=node.robotType;
+        String  bodyColor = null, gunColor = null, radarColor = null;
         for (AbstractNode abstractNode: node.childList) {
-            if (abstractNode instanceof  GunColorNode){
+            if (abstractNode instanceof  BodyColorNode){
+                BodyColorNode temp = (BodyColorNode) abstractNode;
+                bodyColor = temp.Color.Color;
+            }
+            else if(abstractNode instanceof GunColorNode){
                 GunColorNode temp = (GunColorNode) abstractNode;
-                runMethod.emit("GunColorNode = " + temp.Color.Color + ";\n");
+                gunColor = temp.Color.Color;
+            }
+            else if(abstractNode instanceof  RadarColorNode){
+                RadarColorNode temp = (RadarColorNode) abstractNode;
+                radarColor = temp.Color.Color;
             }
         }
+        runMethod.emit(setColorBuilder(bodyColor, gunColor, radarColor), insideClassIndent + insideMethodeIndent);
     }
 
     @Override
@@ -305,7 +334,11 @@ public class CGTopVisitor extends ASTVisitor{
 
     @Override
     public void visit(StrategyDeclarationNode node, Object... arg) throws Exception {
+        //Generate code equivalent java code for the strategyDecleration
 
+        //Add the body of what is equivalent to the when by calling addEventHandler("eventType", "body");
+
+        //Add the body of what is equivalent to the runMethod by calling runMethod.addToRunMethod("strategyName", "body");
     }
 
     @Override

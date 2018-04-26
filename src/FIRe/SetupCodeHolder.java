@@ -6,7 +6,9 @@ public class SetupCodeHolder extends CodeHolder {
     }
     String name;
     String robotType;
-    String imports = "import java.awt.*;\nimport java.lang.*.*;\nimport robocode.*;\n";
+    String imports = "import java.awt.*;\nimport java.lang.*;\nimport robocode.*;\n";
+
+
     @Override
     String getCode() {
         return imports + "public class " + name + " extends " + robotType + "{\n" + "\tprivate String currentStrategy " +

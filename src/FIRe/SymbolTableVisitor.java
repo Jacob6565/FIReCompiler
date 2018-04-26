@@ -599,9 +599,9 @@ public class SymbolTableVisitor extends ASTVisitor {
         if(ancestor instanceof FunctionDeclarationNode)
         {
             FunctionDeclarationNode temp = (FunctionDeclarationNode) ancestor;
-            if(!returnType.equals(temp.type))
+            if(!returnType.equals(temp.Type))
             {
-                throw new TypeException(temp.type , returnType, node.LineNumber);
+                throw new TypeException(temp.Type , returnType, node.LineNumber);
             }
 
         }
