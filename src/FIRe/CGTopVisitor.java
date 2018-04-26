@@ -14,8 +14,7 @@ public class CGTopVisitor extends ASTVisitor{
     SetupCodeHolder setup = new SetupCodeHolder();
     RunMethodCodeHolder runMethod = new RunMethodCodeHolder("run", "void");
     ArrayList<MethodCodeHolder> methods = new ArrayList<MethodCodeHolder>();
-    ArrayList<EventCodeHolder> events = new ArrayList<EventCodeHolder>();
-    //ArrayList<CodeHolder> eventHandlers = new ArrayList<CodeHolder>();
+    ArrayList<EventHandlerCodeHolder> eventHandlers = new ArrayList<EventHandlerCodeHolder>();
 
     int insideClassIndent = 1;
     int insideMethodeIndent = 1;
@@ -49,8 +48,8 @@ public class CGTopVisitor extends ASTVisitor{
         for (MethodCodeHolder method: methods) {
             setup.emit(method.getCode(), insideClassIndent);
         }
-        for (EventCodeHolder event: events) {
-            setup.emit(event.getCode(), insideClassIndent);
+        for (EventHandlerCodeHolder eventHandler: eventHandlers) {
+            setup.emit(eventHandler.getCode(), insideClassIndent);
         }
         mergedCode.append(setup.getCode());
 
@@ -58,18 +57,27 @@ public class CGTopVisitor extends ASTVisitor{
         return mergedCode.toString();
     }
 
-    private void addEventHandlerCodeHolder(ArrayList<CodeHolder> eventHandlers, CodeHolder eventHandler){
-//        boolean matchFound = false;
-//        for (CodeHolder codeHolder: eventHandlers) {
-//            if (codeHolder.name == eventHandler.name){
-//                matchFound = true;
-//                codeHolder.emit(eventHandler.sb.toString());
-//            }
-//        }
-//
-//        if (!matchFound)
-//            eventHandlers.add(eventHandler);
+    private void addEventHandler(String methodeName, String fparam, String code, String strategyName){
+        if (eventHandlers.size()==0 || getEventHandler(methodeName)== null){
+            EventHandlerCodeHolder newEventHandler = new EventHandlerCodeHolder(methodeName, "void", fparam);
+            newEventHandler.addCase(strategyName, code);
+            eventHandlers.add(newEventHandler);
+        }
+        else{
+            getEventHandler(methodeName).addCase(strategyName, code);
+
+        }
     }
+
+    private EventHandlerCodeHolder getEventHandler(String eventHandlerName){
+        for (EventHandlerCodeHolder eventHandler: eventHandlers) {
+            if (eventHandler.name.equals(eventHandlerName))
+                return eventHandler;
+        }
+        return null;
+
+    }
+
 
     @Override
     public void visit(AbstractNode node, Object... arg) {
@@ -150,9 +158,7 @@ public class CGTopVisitor extends ASTVisitor{
     public void visit(EventDeclarationNode node, Object... arg) throws Exception {
         EventCodeHolder eventDcl = new EventCodeHolder(node.Id.Name);
 
-        //Generate actual code to put inside the condition body
-
-        events.add(eventDcl);
+        runMethod.addConditionDeclaration(eventDcl.getCode());
     }
 
     @Override
@@ -204,8 +210,14 @@ public class CGTopVisitor extends ASTVisitor{
                 }
 
                 //We can do this as we know that set size and collection size is equal
+                boolean firstParam = true;
                 for (int i = 0; i < ids.size(); i++){
-                    params += translateType(types.get(i)) + " " + ids.get(i) + ", ";
+                    if (firstParam){
+                        params += translateType(types.get(i)) + " " + ids.get(i);
+                        firstParam = false;
+                    }
+                    else
+                        params += ", " + translateType(types.get(i)) + " " + ids.get(i);
                 }
             }
         }
@@ -358,6 +370,13 @@ public class CGTopVisitor extends ASTVisitor{
         runMethod.emit(setColorBuilder(bodyColor, gunColor, radarColor), insideMethodeIndent);
     }
 
+    //Help method that constructs the generates the Java setColorBuilder with its' color inputs
+    private String setColorBuilder(String bodyColor, String gunColor, String radarColor){
+        //If any of the colors are null, then they will correctly insert null in the string, which is valid for the java
+        //function SetColors
+        return "SetColors(" + bodyColor + ", " + gunColor + ", " + radarColor +");";
+    }
+
     @Override
     public void visit(RadarColorNode node, Object... arg) {
 
@@ -366,12 +385,6 @@ public class CGTopVisitor extends ASTVisitor{
     @Override
     public void visit(ReturnNode node, Object... arg) {
 
-    }
-
-    private String setColorBuilder(String bodyColor, String gunColor, String radarColor){
-        //If any of the colors are null, then they will correctly insert null in the string, which is valid for the java
-        //function SetColors
-        return "SetColors(" + bodyColor + ", " + gunColor + ", " + radarColor +");";
     }
 
     @Override
@@ -386,6 +399,7 @@ public class CGTopVisitor extends ASTVisitor{
 
     @Override
     public void visit(StrategyDeclarationNode node, Object... arg) throws Exception {
+
         //Generate code equivalent java code for the strategyDecleration
         RunMethodCodeHolder RMCH = new RunMethodCodeHolder("test", "ts");
         CGStrategyVisitor CGS = new CGStrategyVisitor(RMCH);
@@ -393,7 +407,12 @@ public class CGTopVisitor extends ASTVisitor{
 
         //Temporary for printing the generated code
         System.out.println(CGS.CH.sb.toString());
+
+        //TESTING
         runMethod.addToRunMethod("bitch","bitch();\n");
+        for (AbstractNode child : node.childList) {
+            VisitNode(child);
+        }
 
         //Add the body of what is equivalent to the when by calling addEventHandler("eventType", "body");
         //This may be done inside CSGStrategyVisitor
@@ -428,8 +447,57 @@ public class CGTopVisitor extends ASTVisitor{
     }
 
     @Override
+    //This method should belong to CGStrategyVisitor or some other visitor /KRISTOFFER
     public void visit(WhenNode node, Object... arg) {
+        IdNode eventTypeNode = (IdNode) node.childList.get(0);
+        String eventType = eventTypeNode.Name;
 
+
+
+        if(isThisOfficialEvent(eventType)){
+            String fparam;
+            IdNode paramId = (IdNode)node.childList.get(1);
+
+            //ScannedRobotEvent will become ScannedRobot
+            String[] str = eventType.split("Event");
+
+            fparam = eventType + " " + paramId.Name;
+
+            //Parent way : WhenNode -> StrategyDcl
+            StrategyDeclarationNode parentStrategy = (StrategyDeclarationNode) node.Parent;
+            //Accessing strategy name
+            String strategyName = parentStrategy.Id.Name;
+
+            addEventHandler("On" + str[0], fparam, "INSERT CODE HERE\n", strategyName);
+        }
+        //Specialcase for when the when is for a custom event
+        else {
+            
+        }
+    }
+
+    //Help function for visiting a whenNode, the different Event could effectively be excluded to be in something like a file
+    //as FESVisitor also uses this list of names
+    public boolean isThisOfficialEvent(String event){
+        switch (event){
+            case "BattleEndedEvent":
+            case "BulletHitBulletEvent":
+            case "BulletHitEvent":
+            case "BulletMissedEvent":
+            case "DeathEvent":
+            case "HitByBulletEvent":
+            case "HitRobotEvent":
+            case "HitWallEvent":
+            case "MessageEvent":
+            case "RobotDeathEvent":
+            case "RoundEndedEvent":
+            case "ScannedRobotEvent":
+            case "SkippedTurnEvent":
+            case "WinEvent":
+                return  true;
+            default:
+                return false;
+        }
     }
 
     @Override
