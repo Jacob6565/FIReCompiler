@@ -4,6 +4,9 @@ import FIRe.Exceptions.VoidReturnException;
 import FIRe.Exceptions.TypeException;
 import javafx.beans.binding.When;
 
+import java.util.ArrayList;
+import java.util.List;
+
 //Visitor for checking if all branchings can return
 public class ReturnCheckVisitor extends ASTVisitor {
 
@@ -64,14 +67,23 @@ public class ReturnCheckVisitor extends ASTVisitor {
             //The current block must be a successor of a functiondcl thus we search for the function in the symboltable
             IdNode functionid = ((FunctionDeclarationNode) ancestor).Id;
             data = table.Search(functionid.Name, 0);
+            List<Integer> unreachableLines = new ArrayList<Integer>();
 
             //If the returntype isn't void we check for returns
             if (!data.type.equals("void")) {
-                boolean hasreturn = false;
+               boolean hasreturn = false;
                 for (AbstractNode Node : node.childList) {
                     if (Node instanceof ReturnNode) {
                         hasreturn = true; // The block itself contains a return, thus all branches deeper in the scope can inevitably return
                     }
+
+                    if(hasreturn){
+                        unreachableLines.add(Node.LineNumber);
+                    }
+                }
+
+                if(!unreachableLines.isEmpty()){
+                    throw new UnreachableCodeException(unreachableLines);
                 }
 
                 if (!hasreturn) { // if however the block does not have a return, it may be hidden under a controlstructue node

@@ -79,7 +79,7 @@ public class SymbolTableVisitor extends ASTVisitor {
 
 
     @Override
-    public void visit(ArrayAccessNode node, Object... arg) throws TypeException {
+    public void visit(ArrayAccessNode node, Object... arg) throws TypeException, SymbolNotFoundException {
         for (AbstractNode Node : node.childList) {
             if (Node != null)
                 VisitNode(Node);
@@ -333,8 +333,8 @@ public class SymbolTableVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(IdNode node, Object... arg) {
-        try {
+    public void visit(IdNode node, Object... arg) throws SymbolNotFoundException {
+
             if (ST.Contains(node.Name)) //If it is in the synmbol table
                 node.type = ST.Search(node.Name, node.LineNumber).type;
             else if (node.Name.contains(".")){ //If it uses dot-notation
@@ -371,7 +371,8 @@ public class SymbolTableVisitor extends ASTVisitor {
                             return;
                         }
                     }
-                    throw new SymbolNotFoundException(node.Name,node.LineNumber);
+                    //This error is also thrown in visit(FuncDcl), so no need for it here.
+                   //throw new SymbolNotFoundException(node.Name,node.LineNumber);
                 }
                 if (predecessor instanceof EventDeclarationNode) {
                     for (Tuple<String, String> Entry: ST.Search(((EventDeclarationNode) predecessor).Id.Name,node.LineNumber).parameters) {
@@ -556,9 +557,11 @@ public class SymbolTableVisitor extends ASTVisitor {
 
     @Override
     public void visit(ProgNode node, Object... arg) {
+
         for (AbstractNode Node: node.childList) {
             if (Node != null)
             VisitNode(Node);
+
         }
     }
 
