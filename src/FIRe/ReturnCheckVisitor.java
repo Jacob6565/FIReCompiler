@@ -130,7 +130,7 @@ public class ReturnCheckVisitor extends ASTVisitor {
     private void ChecksFunctionWithVoidReturnType(BlockNode node, AbstractNode ancestor) throws VoidReturnException {
         for (AbstractNode Node : node.childList) {
             if (Node instanceof ReturnNode) {
-                throw new VoidReturnException(ancestor.LineNumber, node.LineNumber); // we don't allow returns in a void
+                throw new VoidReturnException(ancestor.LineNumber, Node.LineNumber); // we don't allow returns in a void
             }
         }
         //loop investigating a controlstructues where a return can be 'hidden'
