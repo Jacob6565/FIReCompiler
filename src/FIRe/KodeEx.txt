@@ -82,6 +82,7 @@ strategy Offensive()
 void Function()
 {
     return;
+    number x = 0;
 }
 
 event LowHealth()
