@@ -334,6 +334,10 @@ public class CGTopVisitor extends ASTVisitor{
 
     @Override
     public void visit(StrategyDeclarationNode node, Object... arg) throws Exception {
+        CGExpressionVisitor CGE = new CGExpressionVisitor();
+        CGStrategyVisitor CGS = new CGStrategyVisitor();
+        CGS.VisitNode(node);
+        System.out.println(CGS.CH.sb.toString());
         //Generate code equivalent java code for the strategyDecleration
 
         //Add the body of what is equivalent to the when by calling addEventHandler("eventType", "body");

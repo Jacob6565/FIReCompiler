@@ -1,5 +1,6 @@
 package FIRe;
 import FIRe.Exceptions.ReturnException;
+import FIRe.Exceptions.UnreachableCodeException;
 import FIRe.Exceptions.VoidReturnException;
 import FIRe.Exceptions.TypeException;
 import javafx.beans.binding.When;

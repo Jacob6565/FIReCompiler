@@ -385,10 +385,6 @@ public class SymbolTableVisitor extends ASTVisitor {
                 }
             }
         }
-        catch (SymbolNotFoundException Ex) {
-            System.out.println(Ex.getMessage());
-        }
-    }
 
     @Override
     public void visit(IfControlStructureNode node, Object... arg) throws TypeException {

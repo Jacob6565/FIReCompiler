@@ -40,7 +40,7 @@ void doSomething(){
     }
 }
 
-strategy Default1(number et, number to)
+strategy Default(number et, number to)
 {
     number firepowers[4];
     firepowers[1] = 3 ^ 5 ^ (1 + 1);
