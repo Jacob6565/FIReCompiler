@@ -59,15 +59,14 @@ public class Main {
         fes.visit(ast);
 
         SymbolTableVisitor STV = new SymbolTableVisitor(symbolTable,RHT);
-        STV.visit(ast);/*
+        STV.visit(ast);
         try {
             ReturnCheckVisitor returnCheckVisitor = new ReturnCheckVisitor(symbolTable);
             returnCheckVisitor.visit(ast);
         }
-        catch(Exception e){
+        catch(Exception e) {
             System.out.println("Return fejl");
-        }*/
-
+        }
         //STV.visit(ast);
     }
 }

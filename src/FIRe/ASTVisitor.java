@@ -106,6 +106,12 @@ public abstract class ASTVisitor
                 visit((TextArrayDeclarationNode)node);
             else if (node instanceof NumberArrayDeclarationNode)
                 visit((NumberArrayDeclarationNode)node);
+            else if (node instanceof RobotNameNode)
+                visit((RobotNameNode) node);
+            else if (node instanceof RobotTypeNode)
+                visit((RobotTypeNode) node);
+            else if (node instanceof RobotPropertiesNode)
+                visit((RobotPropertiesNode) node);
             else
                 System.out.println("Error");
         }
@@ -113,7 +119,6 @@ public abstract class ASTVisitor
             System.out.println(e.getMessage());
         }
     }
-
 
     public abstract void visit(AbstractNode node, Object... arg);
     public abstract void visit(AdditionNode node, Object... arg) throws Exception;
@@ -169,4 +174,7 @@ public abstract class ASTVisitor
     public abstract void visit(ValNode node, Object... arg);
     public abstract void visit(WhenNode node, Object... arg);
     public abstract void visit(WhileNode node, Object... arg) throws TypeException;
+    public abstract void visit(RobotNameNode node, Object... arg);
+    public abstract void visit(RobotTypeNode node, Object... arg) throws TypeException;
+    public abstract void visit(RobotPropertiesNode node, Object... arg);
 }

@@ -3,6 +3,8 @@ package FIRe;
 
 import FIRe.Parser.*;
 
+import java.awt.*;
+
 
 public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
 
@@ -135,35 +137,64 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
 //-------------------------------------------------------------------------------
     @Override
     public AbstractNode visitRobotDcl(CFGParser.RobotDclContext ctx) {
+        RobotPropertiesNode robotPropertiesNode = new RobotPropertiesNode();
 
-        return visitRobotDclBody(ctx.robotDclBody());
+        for (int i = 0; i < ctx.robotDclBody().id().size(); ++i) {
+            switch (ctx.robotDclBody().id(i).Name().getText()) {
+                case "RobotName":
+                    robotPropertiesNode.childList.add(new RobotNameNode(ctx.robotDclBody().id(i + 1).getText(), ctx.robotDclBody().id(i + 1).getStart().getLine()));
+                    break;
+                case "RobotType":
+                    robotPropertiesNode.childList.add(new RobotTypeNode(ctx.robotDclBody().id(i + 1).getText(), ctx.robotDclBody().id(i + 1).getStart().getLine()));
+                    break;
+                case "BodyColor":
+                    robotPropertiesNode.childList.add(new BodyColorNode(ctx.robotDclBody().id(i + 1).getText(), ctx.robotDclBody().id(i + 1).getStart().getLine()));
+                    break;
+                case "GunColor":
+                    robotPropertiesNode.childList.add(new GunColorNode(ctx.robotDclBody().id(i + 1).getText(), ctx.robotDclBody().id(i + 1).getStart().getLine()));
+                    break;
+                case "RadarColor":
+                    robotPropertiesNode.childList.add(new RadarColorNode(ctx.robotDclBody().id(i + 1).getText(), ctx.robotDclBody().id(i + 1).getStart().getLine()));
+                    break;
+            }
+            i++;
+        }
+
+
+        return robotPropertiesNode;
     }
 
     //for each idContext we add et as a child to the  robotDclBodyNde
     @Override
     public AbstractNode visitRobotDclBody(CFGParser.RobotDclBodyContext ctx) {
-
-        RobotDclBodyNode robotDclBodyNode = new RobotDclBodyNode();
+       /* RobotDclBodyNode robotDclBodyNode = new RobotDclBodyNode();
         robotDclBodyNode.LineNumber = ctx.start.getLine();
         int index = 0;
         for (CFGParser.IdContext idContext: ctx.id())
         {
             //robotDclBodyNode.childList.add(visitId(idContext));
-            if(idContext.Name().toString().equals("RobotType"))
-                robotDclBodyNode.robotType = ctx.id().get(index+1).Name().toString();
-            else if(idContext.Name().toString().equals("RobotName"))
-                robotDclBodyNode.robotName = ctx.id().get(index+1).Name().toString();
+            if(idContext.Name().toString().equals("RobotType")){
+                RobotTypeNode robotTypeNode = (RobotTypeNode) visitId(ctx.id(index));
+                robotTypeNode.childList.add(visitId(ctx.id(index)));
+                robotDclBodyNode.childList.add((robotTypeNode));
+            }
+            else if(idContext.Name().toString().equals("RobotName")) {
+                RobotNameNode robotNameNode = (RobotNameNode) visitId(ctx.id(index));
+                robotNameNode.childList.add(visitId(ctx.id(index + 1)));
+                robotDclBodyNode.childList.add(robotNameNode);
+            }
             else if(idContext.Name().toString().equals("GunColor"))
-                robotDclBodyNode.childList.add(new GunColorNode(ctx.id().get(index+1).Name().toString()));
+                robotDclBodyNode.childList.add(new GunColorNode(ctx.id().get(index+1).Name().toString(),ctx.start.getLine()));
             else if(idContext.Name().toString().equals("BodyColor"))
-                robotDclBodyNode.childList.add(new BodyColorNode(ctx.id().get(index+1).Name().toString()));
+                robotDclBodyNode.childList.add(new BodyColorNode(ctx.id().get(index+1).Name().toString(),ctx.start.getLine()));
             else if(idContext.Name().toString().equals("RadarColor"))
-                robotDclBodyNode.childList.add(new RadarColorNode(ctx.id().get(index+1).Name().toString()));
+                robotDclBodyNode.childList.add(new RadarColorNode(ctx.id().get(index+1).Name().toString(),ctx.start.getLine()));
 
             index++;
         }
 
-        return robotDclBodyNode;
+        return robotDclBodyNode;*/
+       return null; //provisorisk
     }
 
     //This method handles the dcl rule from the cfg, multiple cases exists since we have different types and
@@ -738,7 +769,8 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         IdNode node = new IdNode();
 
         //Getting the nodes name
-        node.Name = ctx.Name().toString();
+        if  (ctx.Name() != null)
+            node.Name = ctx.Name().toString();
 
         node.LineNumber = ctx.getStart().getLine();
 

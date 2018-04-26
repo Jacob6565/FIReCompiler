@@ -352,6 +352,11 @@ public class ReturnCheckVisitor extends ASTVisitor {
     }
 
     @Override
+    public void visit(RobotPropertiesNode node, Object...arg){
+
+    }
+
+    @Override
     public void visit(RoutineNode node, Object... arg) {
         for(AbstractNode child : node.childList){
             if(child instanceof BlockNode){
@@ -421,6 +426,16 @@ public class ReturnCheckVisitor extends ASTVisitor {
                 VisitNode(child);
             }
         }
+    }
+
+    @Override
+    public void visit(RobotNameNode node, Object... arg) {
+
+    }
+
+    @Override
+    public void visit(RobotTypeNode node, Object... arg) {
+
     }
 }
 /*
