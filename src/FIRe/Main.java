@@ -39,7 +39,6 @@ public class Main {
         CFGLexer lexer = new CFGLexer(CharStreams.fromString(outString));
         CommonTokenStream tokenStream = new CommonTokenStream(lexer);
         CFGParser parser = new CFGParser(tokenStream);
-
         //Performs lexical analysis and builds a CST.
         CFGParser.ProgContext cst = parser.prog();
         //cst.children.add(parser.dcl());
@@ -56,12 +55,14 @@ public class Main {
         }
         //Prints the AST to check whether it has all the correct info. (Debug code)
         PrintTraversal print = new PrintTraversal();
-        print.Print(ast,0);
+        //print.Print(ast,0);
         //Fills the symbol table
         SymbolTable symbolTable = new SymbolTable();
         FESVisitor fes = new FESVisitor(symbolTable);
         fes.visit(ast);
 
+        SymbolTableVisitor STV = new SymbolTableVisitor(symbolTable,RHT);
+        STV.visit(ast);/*
         //We now know all the functions, strategies and events in the program.
         //Therefore checking if the "Default"-strategy exists.
 
@@ -86,6 +87,16 @@ public class Main {
         }
         catch(Exception e){
             System.out.println("Return fejl");
+        }*/
+
+        CGTopVisitor codeGenerator = new CGTopVisitor();
+        try {
+            codeGenerator.visit(ast);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        codeGenerator.emitOutputFile();
+        //STV.visit(ast);
         }
     }
 }

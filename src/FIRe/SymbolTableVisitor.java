@@ -17,11 +17,13 @@ import javax.lang.model.util.AbstractElementVisitor7;
 
 @SuppressWarnings("ALL")
 public class SymbolTableVisitor extends ASTVisitor {
-    SymbolTableVisitor(SymbolTable symbolTable) {
+    SymbolTableVisitor(SymbolTable symbolTable, RobotHeaderTable robotHeaderTable) {
         ST = symbolTable;
+        RHT = robotHeaderTable;
     }
 
     private SymbolTable ST;
+    private RobotHeaderTable RHT;
 
     @Override
     public void visit(AbstractNode node, Object... arg) {
@@ -131,11 +133,13 @@ public class SymbolTableVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(BodyColorNode node, Object... arg) {
+    public void visit(BodyColorNode node, Object... arg) throws TypeException {
         for (AbstractNode Node : node.childList) {
             if (Node != null)
                 VisitNode(Node);
         }
+        if (!RHT.ValidColors.contains(node.Color.Color))
+            throw new TypeException("color", node.Color.Color, node.Color.LineNumber);
     }
 
     @Override
@@ -315,11 +319,13 @@ public class SymbolTableVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(GunColorNode node, Object... arg) {
+    public void visit(GunColorNode node, Object... arg) throws TypeException {
         for (AbstractNode Node : node.childList) {
             if (Node != null)
                 VisitNode(Node);
         }
+        if (!RHT.ValidColors.contains(node.Color.Color))
+            throw new TypeException("color", node.Color.Color, node.Color.LineNumber);
     }
 
     @Override
@@ -554,11 +560,13 @@ public class SymbolTableVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(RadarColorNode node, Object... arg) {
+    public void visit(RadarColorNode node, Object... arg) throws TypeException {
         for (AbstractNode Node: node.childList) {
             if (Node != null)
             VisitNode(Node);
         }
+        if (!RHT.ValidColors.contains(node.Color.Color))
+            throw new TypeException("color", node.Color.Color, node.Color.LineNumber);
     }
 
     @Override
@@ -614,10 +622,13 @@ public class SymbolTableVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(RobotDclBodyNode node, Object... arg) {
+    public void visit(RobotDclBodyNode node, Object... arg) throws TypeException {
         for (AbstractNode Node: node.childList) {
             if (Node != null)
             VisitNode(Node);
+        }
+        if (!RHT.RobotTypes.contains(node.robotType)){
+            throw new TypeException("RobotType", node.robotType,node.LineNumber);
         }
     }
 

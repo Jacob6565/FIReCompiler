@@ -2,6 +2,8 @@ package FIRe;
 
 import FIRe.Exceptions.*;
 
+import java.lang.reflect.Type;
+
 //Så skal man lave en klasse som nedarver denne klasse og som implementerer
 //en traverse metode for dem alle fx depth-first, som er standarden.
 public abstract class ASTVisitor
@@ -123,7 +125,7 @@ public abstract class ASTVisitor
     public abstract void visit(ArrayAccessNode node, Object... arg) throws TypeException, SymbolNotFoundException;
     public abstract void visit(AssignNode node, Object... arg) throws Exception;
     public abstract void visit(BlockNode node, Object... arg) throws Exception;
-    public abstract void visit(BodyColorNode node, Object... arg);
+    public abstract void visit(BodyColorNode node, Object... arg) throws TypeException;
     public abstract void visit(BooleanDeclarationNode node, Object... arg) throws Exception;
     public abstract void visit(BoolArrayDeclarationNode node, Object... arg) throws Exception;
     public abstract void visit(BoolNode node, Object... arg);
@@ -140,7 +142,7 @@ public abstract class ASTVisitor
     public abstract void visit(FunctionDeclarationNode node, Object... arg) throws Exception;
     public abstract void visit(GEQNode node, Object... arg) throws Exception;
     public abstract void visit(GreaterThanNode node, Object... arg) throws Exception;
-    public abstract void visit(GunColorNode node, Object... arg);
+    public abstract void visit(GunColorNode node, Object... arg) throws TypeException;
     public abstract void visit(IdNode node, Object... arg) throws Exception;
     public abstract void visit(IfControlStructureNode node, Object... arg) throws Exception;
     public abstract void visit(InfixExpressionNode node, Object... arg) throws Exception;
@@ -157,9 +159,9 @@ public abstract class ASTVisitor
     public abstract void visit(OrNode node, Object... arg) throws Exception;
     public abstract void visit(PowerNode node, Object... arg) throws Exception;
     public abstract void visit(ProgNode node, Object... arg) throws Exception;
-    public abstract void visit(RadarColorNode node, Object... arg);
+    public abstract void visit(RadarColorNode node, Object... arg) throws TypeException;
     public abstract void visit(ReturnNode node, Object... arg) throws TypeException;
-    public abstract void visit(RobotDclBodyNode node, Object... arg);
+    public abstract void visit(RobotDclBodyNode node, Object... arg) throws TypeException;
     public abstract void visit(RoutineNode node, Object... arg) throws TypeException;
     public abstract void visit(StatementNode node, Object... arg);
     public abstract void visit(StrategyDeclarationNode node, Object... arg) throws Exception;
