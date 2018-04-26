@@ -623,14 +623,6 @@ public class SymbolTableVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(RobotDclBodyNode node, Object... arg) throws TypeException {
-        for (AbstractNode Node: node.childList) {
-            if (Node != null)
-            VisitNode(Node);
-        }
-    }
-
-    @Override
     public void visit(RobotPropertiesNode node,  Object...arg){
         for (AbstractNode Node: node.childList) {
             if (Node != null)
