@@ -152,20 +152,6 @@ class RoutineNode extends ControlStructureNode{
 
 //End control-structures - begin RobotProperties
 
-class RobotDclBodyNode extends  AbstractNode{
-    String robotType;
-    RobotNameNode robotName;
-
-    @Override
-    public void accept(ASTVisitor v, AbstractNode parent) throws Exception {
-        v.visit(this, parent);
-        for (AbstractNode child: childList)
-        {
-            child.accept(v, this);
-        }
-    }
-}
-
 class GunColorNode extends AbstractNode{
     public ColorValNode Color;
     GunColorNode(String color, int lineNumber){

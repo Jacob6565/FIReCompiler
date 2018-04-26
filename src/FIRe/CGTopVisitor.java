@@ -7,6 +7,7 @@ import java.io.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.Set;
 
 public class CGTopVisitor extends ASTVisitor{
@@ -181,26 +182,55 @@ public class CGTopVisitor extends ASTVisitor{
 
     @Override
     public void visit(FunctionDeclarationNode node, Object... arg) throws Exception {
-
         MethodCodeHolder method;
+        String params = null;
+        ArrayList<String> ids = new ArrayList<String>();
+        ArrayList<String> types = new ArrayList<String>();
+
+        //Creates the string for the parameters of a method
         for (AbstractNode child: node.childList) {
             if (child instanceof FormalParameterNode){
+                params = "";
                 FormalParameterNode fparam = (FormalParameterNode) child;
-                Set<IdNode> idNodes = fparam.parameterMap.keySet();
-                Collection<String> types = fparam.parameterMap.values();
+                Set<IdNode> idNodeSet = fparam.parameterMap.keySet();
+                Collection<String> typeCollection = fparam.parameterMap.values();
+
+                for (Iterator<IdNode> it = idNodeSet.iterator(); it.hasNext();){
+                    ids.add(it.next().Name);
+                }
+
+                for (Iterator<String> it = typeCollection.iterator(); it.hasNext();){
+                    types.add(it.next());
+                }
 
                 //We can do this as we know that set size and collection size is equal
-                for (int i = 0; i < idNodes.size(); i++){
-                    //idNodes.
+                for (int i = 0; i < ids.size(); i++){
+                    params += translateType(types.get(i)) + " " + ids.get(i) + ", ";
                 }
             }
-
         }
-        method= new MethodCodeHolder(node.Id.Name, node.Type);
+
+        if (params != null)
+            method= new MethodCodeHolder(node.Id.Name, node.Type, params);
+        else
+            method= new MethodCodeHolder(node.Id.Name, node.Type);
 
         //Code generation for method body
 
         methods.add(method);
+    }
+
+    public String translateType(String FIReType){
+        switch (FIReType){
+            case "bool":
+                return "boolean";
+            case "number":
+                return "double";
+            case "text":
+                return "String";
+            default:
+                return null;
+        }
     }
 
     @Override
@@ -300,6 +330,33 @@ public class CGTopVisitor extends ASTVisitor{
         }
     }
 
+    @Override
+    public void visit(RobotPropertiesNode node, Object... arg) {
+        String  bodyColor = null, gunColor = null, radarColor = null;
+        for (AbstractNode child: node.childList) {
+            if (child instanceof  RobotNameNode){
+                RobotNameNode robotNameNode = (RobotNameNode) child;
+                setup.name=robotNameNode.RobotName.Name;
+            }
+            else if(child instanceof RobotTypeNode){
+                RobotTypeNode robotTypeNode = (RobotTypeNode) child;
+                setup.name = robotTypeNode.RobotType.Name;
+            }
+            else if (child instanceof  BodyColorNode){
+                BodyColorNode temp = (BodyColorNode) child;
+                bodyColor = temp.Color.Color;
+            }
+            else if(child instanceof GunColorNode){
+                GunColorNode temp = (GunColorNode) child;
+                gunColor = temp.Color.Color;
+            }
+            else if(child instanceof  RadarColorNode){
+                RadarColorNode temp = (RadarColorNode) child;
+                radarColor = temp.Color.Color;
+            }
+        }
+        runMethod.emit(setColorBuilder(bodyColor, gunColor, radarColor), insideMethodeIndent);
+    }
 
     @Override
     public void visit(RadarColorNode node, Object... arg) {
@@ -315,28 +372,6 @@ public class CGTopVisitor extends ASTVisitor{
         //If any of the colors are null, then they will correctly insert null in the string, which is valid for the java
         //function SetColors
         return "SetColors(" + bodyColor + ", " + gunColor + ", " + radarColor +");";
-    }
-
-    @Override
-    public void visit(RobotDclBodyNode node, Object... arg) {
-        setup.name=node.robotName;
-        setup.robotType=node.robotType;
-        String  bodyColor = null, gunColor = null, radarColor = null;
-        for (AbstractNode child: node.childList) {
-            if (child instanceof  BodyColorNode){
-                BodyColorNode temp = (BodyColorNode) child;
-                bodyColor = temp.Color.Color;
-            }
-            else if(child instanceof GunColorNode){
-                GunColorNode temp = (GunColorNode) child;
-                gunColor = temp.Color.Color;
-            }
-            else if(child instanceof  RadarColorNode){
-                RadarColorNode temp = (RadarColorNode) child;
-                radarColor = temp.Color.Color;
-            }
-        }
-        runMethod.emit(setColorBuilder(bodyColor, gunColor, radarColor), insideMethodeIndent);
     }
 
     @Override
@@ -357,7 +392,7 @@ public class CGTopVisitor extends ASTVisitor{
 
         //Temporary for printing the generated code
         System.out.println(CGS.CH.sb.toString());
-
+        runMethod.addToRunMethod("bitch","bitch();\n");
 
         //Add the body of what is equivalent to the when by calling addEventHandler("eventType", "body");
         //This may be done inside CSGStrategyVisitor
@@ -398,6 +433,16 @@ public class CGTopVisitor extends ASTVisitor{
 
     @Override
     public void visit(WhileNode node, Object... arg) throws TypeException {
+
+    }
+
+    @Override
+    public void visit(RobotNameNode node, Object... arg) {
+
+    }
+
+    @Override
+    public void visit(RobotTypeNode node, Object... arg) throws TypeException {
 
     }
 }

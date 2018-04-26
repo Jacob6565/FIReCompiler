@@ -220,11 +220,6 @@ public class ParentASTVisitor extends ASTVisitor{
     }
 
     @Override
-    public void visit(RobotDclBodyNode node, Object... arg) {
-        visit((AbstractNode)node,arg);
-    }
-
-    @Override
     public void visit(RobotPropertiesNode node, Object... arg) {visit ((AbstractNode) node, arg);}
 
     @Override

@@ -236,11 +236,6 @@ public class PrintTraversal extends ASTVisitor{
     }
 
     @Override
-    public void visit(RobotDclBodyNode node, Object... arg) {
-        System.out.println("RobotDcl: " + node.robotType + " " + node.robotName);
-    }
-
-    @Override
     public void visit(RoutineNode node, Object... arg) {
         System.out.println("RoutineNode");
     }
@@ -400,8 +395,6 @@ public class PrintTraversal extends ASTVisitor{
             visit ((RadarColorNode) node);
         else if (node instanceof ReturnNode)
             visit ((ReturnNode) node);
-        else if (node instanceof RobotDclBodyNode)
-            visit ((RobotDclBodyNode) node);
         else if (node instanceof RoutineNode)
             visit ((RoutineNode) node);
         else if (node instanceof StrategyDeclarationNode)

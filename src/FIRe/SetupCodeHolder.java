@@ -4,8 +4,8 @@ public class SetupCodeHolder extends CodeHolder {
     SetupCodeHolder(){
         super();
     }
-    String name;
-    String robotType;
+    String name = "UnnamedRobot";
+    String robotType = "AdvancedRobot";
     String imports = "import java.awt.*;\nimport java.lang.*;\nimport robocode.*;\n";
 
 

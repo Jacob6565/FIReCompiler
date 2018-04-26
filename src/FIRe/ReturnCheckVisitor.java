@@ -361,11 +361,6 @@ public class ReturnCheckVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(RobotDclBodyNode node, Object... arg) {
-
-    }
-
-    @Override
     public void visit(RobotPropertiesNode node, Object...arg){
 
     }
