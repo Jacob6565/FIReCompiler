@@ -78,7 +78,7 @@ public class Main {
         codeGenerator.emitOutputFile();
         }
         //STV.visit(ast);
-        }
+        
 
 
         CGExpressionVisitor CGE = new CGExpressionVisitor();
