@@ -77,12 +77,12 @@ public class SymbolTableVisitor extends ASTVisitor {
 
 
     @Override
-    public void visit(ArrayAccessNode node, Object... arg) throws TypeException {
+    public void visit(ArrayAccessNode node, Object... arg) throws TypeException, SymbolNotFoundException {
         for (AbstractNode Node : node.childList) {
             if (Node != null)
                 VisitNode(Node);
         }
-        try {
+
             node.Id.type = ST.Search(node.Id.Name, node.LineNumber).type;
 
             switch (node.Id.type) {
@@ -99,10 +99,6 @@ public class SymbolTableVisitor extends ASTVisitor {
                     throw new TypeException("array", node.Id.type, node.LineNumber);
             }
         }
-        catch (SymbolNotFoundException ex) {
-            System.out.println(ex.getMessage());
-        }
-    }
 
     @Override
     public void visit(AssignNode node, Object... arg) throws TypeException {
@@ -260,14 +256,14 @@ public class SymbolTableVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(FuncCallNode node, Object... arg) throws SymbolNotFoundException, TypeException, InvalidNumberOfArgumentsException {
+    public void visit(FuncCallNode node, Object... arg) throws TypeException, InvalidNumberOfArgumentsException, SymbolNotFoundException {
         for (AbstractNode Node : node.childList) {
             if (Node != null) {
                 VisitNode(Node);
             }
         }
         if(!node.Id.Name.contains(".")) { //If this is not an eventfield, deal with the formal parameters
-            SymbolData formalParameters = ST.Search(node.Id.Name, node.LineNumber);
+            SymbolData formalParameters = ST.Search(node.Id.Name, node.LineNumber); //Nummer
             List<AbstractNode> actualParams = node.Aparam.childList;
 
             if (formalParameters.parameters.size() != actualParams.size())
@@ -327,8 +323,8 @@ public class SymbolTableVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(IdNode node, Object... arg) {
-        try {
+    public void visit(IdNode node, Object... arg) throws SymbolNotFoundException {
+
             if (ST.Contains(node.Name)) //If it is in the synmbol table
                 node.type = ST.Search(node.Name, node.LineNumber).type;
             else if (node.Name.contains(".")){ //If it uses dot-notation
@@ -342,7 +338,7 @@ public class SymbolTableVisitor extends ASTVisitor {
                         return;
                     }
                 }
-                throw new SymbolNotFoundException(node.Name,node.LineNumber);
+                throw new SymbolNotFoundException(node.Name + "linje 341",node.LineNumber);
             }
             else { //Hopefully it is in the formal parameters
                 AbstractNode predecessor = node;
@@ -356,7 +352,7 @@ public class SymbolTableVisitor extends ASTVisitor {
                             return;
                         }
                     }
-                    throw new SymbolNotFoundException(node.Name,node.LineNumber);
+                    throw new SymbolNotFoundException(node.Name + "linje 355",node.LineNumber);
                 }
                 if (predecessor instanceof StrategyDeclarationNode) {
                     for (Tuple<String, String> Entry: ST.Search(((StrategyDeclarationNode) predecessor).Id.Name,node.LineNumber).parameters) {
@@ -365,7 +361,8 @@ public class SymbolTableVisitor extends ASTVisitor {
                             return;
                         }
                     }
-                    throw new SymbolNotFoundException(node.Name,node.LineNumber);
+                    //This error is also thrown in visit(FuncDcl), so no need for it here.
+                   //throw new SymbolNotFoundException(node.Name,node.LineNumber);
                 }
                 if (predecessor instanceof EventDeclarationNode) {
                     for (Tuple<String, String> Entry: ST.Search(((EventDeclarationNode) predecessor).Id.Name,node.LineNumber).parameters) {
@@ -374,14 +371,12 @@ public class SymbolTableVisitor extends ASTVisitor {
                             return;
                         }
                     }
-                    throw new SymbolNotFoundException(node.Name,node.LineNumber);
+                    throw new SymbolNotFoundException(node.Name + "linje 373",node.LineNumber);
                 }
             }
         }
-        catch (SymbolNotFoundException Ex) {
-            System.out.println(Ex.getMessage());
-        }
-    }
+
+
 
     @Override
     public void visit(IfControlStructureNode node, Object... arg) throws TypeException {
@@ -550,9 +545,11 @@ public class SymbolTableVisitor extends ASTVisitor {
 
     @Override
     public void visit(ProgNode node, Object... arg) {
+
         for (AbstractNode Node: node.childList) {
             if (Node != null)
             VisitNode(Node);
+
         }
     }
 
@@ -591,9 +588,10 @@ public class SymbolTableVisitor extends ASTVisitor {
         if(ancestor instanceof FunctionDeclarationNode)
         {
             FunctionDeclarationNode temp = (FunctionDeclarationNode) ancestor;
-            if(!returnType.equals(temp.type))
+
+            if(!returnType.equals(temp.Type))
             {
-                throw new TypeException(temp.type , returnType, node.LineNumber);
+                throw new TypeException(temp.Type , returnType, node.LineNumber);
             }
 
         }
