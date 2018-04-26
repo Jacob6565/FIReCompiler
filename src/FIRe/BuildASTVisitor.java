@@ -3,8 +3,6 @@ package FIRe;
 
 import FIRe.Parser.*;
 
-import java.awt.*;
-
 
 public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
 

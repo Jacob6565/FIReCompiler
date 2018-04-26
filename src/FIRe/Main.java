@@ -21,7 +21,7 @@ public class Main {
 
         //Creates a StringBuilder from the given code file.
         StringBuilder sb = new StringBuilder();
-        while(in.hasNext()) {
+        while (in.hasNext()) {
             sb.append(in.next() + "\n");
         }
 
@@ -33,17 +33,19 @@ public class Main {
         String outString = sb.toString();
         RobotHeaderTable RHT = new RobotHeaderTable();
 
-        //InputStream inputStream = new ByteArrayInputStream(outString.getBytes());
-        //CharStream charStream = new ANTLRInputStream(outString);
-
         //https://stackoverflow.com/questions/18110180/processing-a-string-with-antlr4
         //Setup to perform lexical analysis on the input string.
         CFGLexer lexer = new CFGLexer(CharStreams.fromString(outString));
+
         CommonTokenStream tokenStream = new CommonTokenStream(lexer);
         CFGParser parser = new CFGParser(tokenStream);
+
         //Performs lexical analysis and builds a CST.
         CFGParser.ProgContext cst = parser.prog();
         //cst.children.add(parser.dcl());
+
+
+
         //Builds an AST from the CST
         ProgNode ast = (ProgNode) new BuildASTVisitor().visitProg(cst);
         ParentASTVisitor PASTV = new ParentASTVisitor();
@@ -55,9 +57,6 @@ public class Main {
 
 
         //Prints the AST to check whether it has all the correct info. (Debug code)
-        PrintTraversal print = new PrintTraversal();
-        print.Print(ast,0);
-        //Fills the symbol table
         //PrintTraversal print = new PrintTraversal();
         //print.Print(ast, 0);
 
@@ -97,6 +96,7 @@ public class Main {
 
         //Code generation
         CGTopVisitor codeGenerator = new CGTopVisitor();
+
         try {
             codeGenerator.visit(ast);
         } catch (Exception e) {
@@ -105,6 +105,9 @@ public class Main {
 
         codeGenerator.emitOutputFile();
 
+
+        CGExpressionVisitor CGE = new CGExpressionVisitor();
+        CGStrategyVisitor CGS = new CGStrategyVisitor();
 
     }
 }

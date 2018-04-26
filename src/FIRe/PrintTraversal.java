@@ -6,8 +6,6 @@ package FIRe;
 * To start it all, we just call the accept-method on the root
 * of the AST which then will call its children's accept-methods and so forth.*/
 
-import com.sun.java.accessibility.util.TopLevelWindowListener;
-
 import java.util.Map;
 
 public class PrintTraversal extends ASTVisitor{
