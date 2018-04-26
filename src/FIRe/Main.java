@@ -55,7 +55,7 @@ public class Main {
         }
         //Prints the AST to check whether it has all the correct info. (Debug code)
         PrintTraversal print = new PrintTraversal();
-        //print.Print(ast,0);
+        print.Print(ast,0);
         //Fills the symbol table
         SymbolTable symbolTable = new SymbolTable();
         FESVisitor fes = new FESVisitor(symbolTable);
@@ -99,8 +99,5 @@ public class Main {
         //STV.visit(ast);
         }
 
-
-        CGExpressionVisitor CGE = new CGExpressionVisitor();
-        CGStrategyVisitor CGS = new CGStrategyVisitor();
 
     }

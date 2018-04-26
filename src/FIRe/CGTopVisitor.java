@@ -352,7 +352,8 @@ public class CGTopVisitor extends ASTVisitor{
     @Override
     public void visit(StrategyDeclarationNode node, Object... arg) throws Exception {
         //Generate code equivalent java code for the strategyDecleration
-        CGStrategyVisitor CGS = new CGStrategyVisitor();
+        RunMethodCodeHolder RMCH = new RunMethodCodeHolder("test", "ts");
+        CGStrategyVisitor CGS = new CGStrategyVisitor(RMCH);
         CGS.VisitNode(node);
 
         //Temporary for printing the generated code

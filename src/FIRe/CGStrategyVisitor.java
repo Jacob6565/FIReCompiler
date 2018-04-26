@@ -4,8 +4,15 @@ import FIRe.Exceptions.ReturnException;
 import FIRe.Exceptions.SymbolNotFoundException;
 import FIRe.Exceptions.TypeException;
 
+import java.security.PublicKey;
+
 public class CGStrategyVisitor extends ASTVisitor {
-    CodeHolder CH;
+
+    public CGStrategyVisitor(RunMethodCodeHolder RMCH){
+        CH = RMCH;
+    }
+
+    RunMethodCodeHolder CH;
 
     @Override
     public void visit(AbstractNode node, Object... arg) {
@@ -30,10 +37,33 @@ public class CGStrategyVisitor extends ASTVisitor {
     @Override
     public void visit(ArrayAccessNode node, Object... arg) throws TypeException, SymbolNotFoundException {
 
+        CGExpressionVisitor CGE = new CGExpressionVisitor();
+        CGE.GenerateExprCode(CH, node);
+
+
+        /*for (AbstractNode Node : node.childList) {
+            if(Node instanceof IdNode){
+                if(((IdNode) Node).type.contains("array"));
+                VisitNode(Node);
+                CH.emit(""
+            }
+        }*/
     }
 
     @Override
     public void visit(AssignNode node, Object... arg) throws Exception {
+        CGExpressionVisitor CGE = new CGExpressionVisitor();
+
+        for (AbstractNode Node: node.childList) {
+            if(Node instanceof IdNode){
+                VisitNode(Node);
+            }
+            if(Node instanceof InfixExpressionNode){
+                VisitNode(Node);
+            }
+        }
+
+
 
     }
 
@@ -144,14 +174,6 @@ public class CGStrategyVisitor extends ASTVisitor {
     @Override
     public void visit(IdNode node, Object... arg) throws Exception {
         CH.emit(node.Name);
-
-        CGExpressionVisitor CGE = new CGExpressionVisitor();
-
-        if (node.Parent instanceof ArrayDeclarationNode) {
-            CH.emit("[");
-            CGE.GenerateExprCode(CH,node); //Det er en måske
-            CH.emit("]");
-        }
     }
 
     @Override
@@ -211,14 +233,30 @@ public class CGStrategyVisitor extends ASTVisitor {
     @Override
     public void visit(NumberArrayDeclarationNode node, Object... arg) throws Exception {
         CH.emit("double ");
-        for (AbstractNode Node: node.childList) {
-            VisitNode(Node);
+
+        CGExpressionVisitor CGE = new CGExpressionVisitor();
+
+        for(AbstractNode Node : node.childList){
+            if(Node instanceof IdNode){
+                VisitNode(Node);
+                CH.emit("[]");
+            }
         }
+        CH.emit(" = new double[");
+        for(AbstractNode Node: node.childList){
+            if(Node instanceof NumberNode) {
+                CH.emit("(int)");
+                CGE.GenerateExprCode(CH, (NumberNode)Node);
+                CH.emit("]");
+            }
+        }
+
+        CH.emitNL(";");
     }
 
     @Override
     public void visit(NumberNode node, Object... arg) {
-
+        CH.emit(node.value);
     }
 
     @Override
@@ -228,7 +266,8 @@ public class CGStrategyVisitor extends ASTVisitor {
 
     @Override
     public void visit(PowerNode node, Object... arg) throws Exception {
-
+        CGExpressionVisitor CGE = new CGExpressionVisitor();
+        CGE.GenerateExprCode(CH, node);
     }
 
     @Override
