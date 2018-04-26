@@ -10,7 +10,7 @@ import java.util.Scanner;
 
 public class Main {
 
-    public static void main(String[] args) throws FileNotFoundException {
+    public static void main(String[] args) throws Exception {
 
         //Reads from the example program. (Debug code)
         Scanner in = new Scanner(new FileReader("src\\FIRe\\KodeEx.txt"));
@@ -93,7 +93,11 @@ public class Main {
 
         //Code generation
         CGTopVisitor codeGenerator = new CGTopVisitor();
-        codeGenerator.visit(ast);
+        try {
+            codeGenerator.visit(ast);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         codeGenerator.emitOutputFile();
 
