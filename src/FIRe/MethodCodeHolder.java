@@ -16,7 +16,6 @@ public class MethodCodeHolder extends CodeHolder {
 
 
     String getCode() {
-
         return "public " + type + " " + name + " (" + parameters + "){ \n" + sb.toString() + "\n}\n";
     }
 }

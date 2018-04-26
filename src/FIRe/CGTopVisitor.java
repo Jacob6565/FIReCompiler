@@ -6,6 +6,8 @@ import FIRe.Exceptions.TypeException;
 import java.io.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Set;
 
 public class CGTopVisitor extends ASTVisitor{
     SetupCodeHolder setup = new SetupCodeHolder();
@@ -179,7 +181,22 @@ public class CGTopVisitor extends ASTVisitor{
 
     @Override
     public void visit(FunctionDeclarationNode node, Object... arg) throws Exception {
-        MethodCodeHolder method = new MethodCodeHolder(node.Id.Name, node.Type);
+
+        MethodCodeHolder method;
+        for (AbstractNode child: node.childList) {
+            if (child instanceof FormalParameterNode){
+                FormalParameterNode fparam = (FormalParameterNode) child;
+                Set<IdNode> idNodes = fparam.parameterMap.keySet();
+                Collection<String> types = fparam.parameterMap.values();
+
+                //We can do this as we know that set size and collection size is equal
+                for (int i = 0; i < idNodes.size(); i++){
+                    //idNodes.
+                }
+            }
+
+        }
+        method= new MethodCodeHolder(node.Id.Name, node.Type);
 
         //Code generation for method body
 
@@ -278,8 +295,8 @@ public class CGTopVisitor extends ASTVisitor{
 
     @Override
     public void visit(ProgNode node, Object... arg) throws Exception {
-        for (AbstractNode Node : node.childList) {
-            VisitNode(Node);
+        for (AbstractNode child : node.childList) {
+            VisitNode(child);
         }
     }
 
@@ -305,21 +322,21 @@ public class CGTopVisitor extends ASTVisitor{
         setup.name=node.robotName;
         setup.robotType=node.robotType;
         String  bodyColor = null, gunColor = null, radarColor = null;
-        for (AbstractNode abstractNode: node.childList) {
-            if (abstractNode instanceof  BodyColorNode){
-                BodyColorNode temp = (BodyColorNode) abstractNode;
+        for (AbstractNode child: node.childList) {
+            if (child instanceof  BodyColorNode){
+                BodyColorNode temp = (BodyColorNode) child;
                 bodyColor = temp.Color.Color;
             }
-            else if(abstractNode instanceof GunColorNode){
-                GunColorNode temp = (GunColorNode) abstractNode;
+            else if(child instanceof GunColorNode){
+                GunColorNode temp = (GunColorNode) child;
                 gunColor = temp.Color.Color;
             }
-            else if(abstractNode instanceof  RadarColorNode){
-                RadarColorNode temp = (RadarColorNode) abstractNode;
+            else if(child instanceof  RadarColorNode){
+                RadarColorNode temp = (RadarColorNode) child;
                 radarColor = temp.Color.Color;
             }
         }
-        runMethod.emit(setColorBuilder(bodyColor, gunColor, radarColor), insideClassIndent + insideMethodeIndent);
+        runMethod.emit(setColorBuilder(bodyColor, gunColor, radarColor), insideMethodeIndent);
     }
 
     @Override
@@ -334,15 +351,19 @@ public class CGTopVisitor extends ASTVisitor{
 
     @Override
     public void visit(StrategyDeclarationNode node, Object... arg) throws Exception {
-        CGExpressionVisitor CGE = new CGExpressionVisitor();
+        //Generate code equivalent java code for the strategyDecleration
         CGStrategyVisitor CGS = new CGStrategyVisitor();
         CGS.VisitNode(node);
+
+        //Temporary for printing the generated code
         System.out.println(CGS.CH.sb.toString());
-        //Generate code equivalent java code for the strategyDecleration
+
 
         //Add the body of what is equivalent to the when by calling addEventHandler("eventType", "body");
+        //This may be done inside CSGStrategyVisitor
 
         //Add the body of what is equivalent to the runMethod by calling runMethod.addToRunMethod("strategyName", "body");
+        //This may be done inside CSGStrategyVisitor
     }
 
     @Override
