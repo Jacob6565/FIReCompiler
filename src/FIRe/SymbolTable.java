@@ -17,7 +17,7 @@ public class SymbolTable  {
 
     //Checks whether a variable is already declared in the current scope and inserts the current input if it isn't.
     public void Insert(DeclarationNode input) throws NameAlreadyUsedInGlobalScopeException, Exception {
-        if (!stack.Peek().contains(input)) {
+        if (!Contains(input.Id.Name)) {
 
             if (input instanceof NumberDeclarationNode)
                 stack.Peek().put((input).Id.Name, new SymbolData(input, "number"));
@@ -73,7 +73,7 @@ public class SymbolTable  {
 
             return;
         }
-        throw new VariableAlreadyDeclaredException("Variable already declared" + input.toString());
+        throw new VariableAlreadyDeclaredException("Variable already declared: " + input.Id.Name + " in line " + input.LineNumber);
     }
 
     //Help function for Insert. Extracts the parameter types from a FormalParameterNode contained in input's childlist

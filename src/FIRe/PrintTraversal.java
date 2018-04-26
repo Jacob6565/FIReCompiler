@@ -50,7 +50,7 @@ public class PrintTraversal extends ASTVisitor{
 
     @Override
     public void visit(BodyColorNode node, Object... arg) {
-        System.out.println("Body Color: " + node.Color.Color);
+        System.out.println("Body Color");
     }
 
     @Override
@@ -70,7 +70,7 @@ public class PrintTraversal extends ASTVisitor{
 
     @Override
     public void visit(ColorValNode node, Object... arg) {
-        System.out.println("Color Value");
+        System.out.println(node.Color);
     }
 
     @Override
@@ -142,7 +142,7 @@ public class PrintTraversal extends ASTVisitor{
 
     @Override
     public void visit(GunColorNode node, Object... arg) {
-        System.out.println("Gun Color: " + node.Color.Color);
+        System.out.println("Gun Color");
     }
 
     @Override
@@ -227,7 +227,7 @@ public class PrintTraversal extends ASTVisitor{
 
     @Override
     public void visit(RadarColorNode node, Object... arg) {
-        System.out.println("Radar Color: " + node.Color.Color);
+        System.out.println("Radar Color");
     }
 
     @Override
@@ -279,6 +279,19 @@ public class PrintTraversal extends ASTVisitor{
     public void visit(ValNode node, Object... arg) {
         //Doesnt exist
     }
+
+    @Override
+    public void visit(RobotNameNode node, Object... arg){
+        System.out.println("RobotNameNode");
+    }
+
+    @Override
+    public void visit(RobotTypeNode node, Object... arg){
+        System.out.println("RobotTypeNode");
+    }
+
+    @Override
+    public void visit(RobotPropertiesNode node, Object...arg) {System.out.println("RobotProperties");}
 
     @Override
     public void visit(WhenNode node, Object... arg) {
@@ -407,7 +420,13 @@ public class PrintTraversal extends ASTVisitor{
             visit ((WhenNode) node);
         else if (node instanceof WhileNode)
             visit ((WhileNode) node);
+        else if (node instanceof RobotNameNode)
+            visit((RobotNameNode) node);
+        else if (node instanceof RobotPropertiesNode)
+            visit((RobotPropertiesNode) node);
+        else if (node instanceof RobotTypeNode)
+            visit((RobotTypeNode)node);
         else
-            System.out.println("Print Error");
+            System.out.println("Print Error: Could not find class: " + node.getClass());
     }
 }

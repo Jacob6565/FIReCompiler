@@ -1,8 +1,6 @@
 package FIRe;
 
-import FIRe.Exceptions.MissingDefaultStrategyException;
-import FIRe.Exceptions.ReturnException;
-import FIRe.Exceptions.SymbolNotFoundException;
+import FIRe.Exceptions.*;
 import FIRe.Parser.CFGLexer;
 import FIRe.Parser.CFGParser;
 import org.antlr.v4.runtime.*;
@@ -22,7 +20,7 @@ public class Main {
 
         //Creates a StringBuilder from the given code file.
         StringBuilder sb = new StringBuilder();
-        while(in.hasNext()) {
+        while (in.hasNext()) {
             sb.append(in.next() + "\n");
         }
 
@@ -35,7 +33,6 @@ public class Main {
         RobotHeaderTable RHT = new RobotHeaderTable();
 
 
-
         //https://stackoverflow.com/questions/18110180/processing-a-string-with-antlr4
         //Setup to perform lexical analysis on the input string.
         CFGLexer lexer = new CFGLexer(CharStreams.fromString(outString));
@@ -46,29 +43,23 @@ public class Main {
         //cst.children.add(parser.dcl());
 
 
-
         //Builds an AST from the CST
         ProgNode ast = (ProgNode) new BuildASTVisitor().visitProg(cst);
         ParentASTVisitor PASTV = new ParentASTVisitor();
         try {
             ast.accept(PASTV, null);
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             System.out.println("Exception type: " + e.getClass() + "Message: " + e.getMessage());
         }
 
 
-
         //Prints the AST to check whether it has all the correct info. (Debug code)
         PrintTraversal print = new PrintTraversal();
-        print.Print(ast,0);
-
+        print.Print(ast, 0);
 
 
         //Creating instance of the symboltable
         SymbolTable symbolTable = new SymbolTable();
-
 
 
         //Collecting typeinformation about: Functions, strategies and events.
@@ -76,20 +67,16 @@ public class Main {
         fes.visit(ast);
 
 
-
         //Filling the symboltable
-        SymbolTableVisitor STV = new SymbolTableVisitor(symbolTable,RHT);
+        SymbolTableVisitor STV = new SymbolTableVisitor(symbolTable, RHT);
         STV.visit(ast);
-
 
 
         //We now know all the functions, strategies and events in the program.
         //Therefore checking if the "Default"-strategy exists.
         try {
             symbolTable.Search("Default", 0);
-        }
-        catch (SymbolNotFoundException e)
-        {
+        } catch (SymbolNotFoundException e) {
             //Could not find the strategy with name "Default";
             try {
                 throw new MissingDefaultStrategyException("No strategy with name: \"Default\" was found");
@@ -97,7 +84,6 @@ public class Main {
                 System.out.println(f.getMessage());
             }
         }
-
 
 
         //Checking correct use of returns.
@@ -110,5 +96,10 @@ public class Main {
         codeGenerator.visit(ast);
 
         codeGenerator.emitOutputFile();
+
+
+        CGExpressionVisitor CGE = new CGExpressionVisitor();
+        CGStrategyVisitor CGS = new CGStrategyVisitor();
+
     }
 }

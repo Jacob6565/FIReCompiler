@@ -6,13 +6,18 @@ import FIRe.Exceptions.TypeException;
 import java.io.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Set;
 
 public class CGTopVisitor extends ASTVisitor{
     SetupCodeHolder setup = new SetupCodeHolder();
-    MethodCodeHolder runMethod = new MethodCodeHolder("run", "void");
+    RunMethodCodeHolder runMethod = new RunMethodCodeHolder("run", "void");
     ArrayList<MethodCodeHolder> methods = new ArrayList<MethodCodeHolder>();
-    //ArrayList<CodeHolder> events = new ArrayList<CodeHolder>();
+    ArrayList<EventCodeHolder> events = new ArrayList<EventCodeHolder>();
     //ArrayList<CodeHolder> eventHandlers = new ArrayList<CodeHolder>();
+
+    int insideClassIndent = 1;
+    int insideMethodeIndent = 1;
 
     //Prints the generated code from the CodeHolders into the output file
     public void emitOutputFile(){
@@ -39,8 +44,15 @@ public class CGTopVisitor extends ASTVisitor{
         StringBuilder mergedCode = new StringBuilder();
 
 
-        setup.emit(runMethod.getCode());
+        setup.emit(runMethod.getCode(), insideClassIndent);
+        for (MethodCodeHolder method: methods) {
+            setup.emit(method.getCode(), insideClassIndent);
+        }
+        for (EventCodeHolder event: events) {
+            setup.emit(event.getCode(), insideClassIndent);
+        }
         mergedCode.append(setup.getCode());
+
 
         return mergedCode.toString();
     }
@@ -135,11 +147,11 @@ public class CGTopVisitor extends ASTVisitor{
 
     @Override
     public void visit(EventDeclarationNode node, Object... arg) throws Exception {
-        //CodeHolder eventHandler = new CodeHolder(node.Id.name);
+        EventCodeHolder eventDcl = new EventCodeHolder(node.Id.Name);
 
-        //Generate actual code
+        //Generate actual code to put inside the condition body
 
-        //addEventHandlerCodeHolder(eventHandlers, eventHandler);
+        events.add(eventDcl);
     }
 
     @Override
@@ -170,7 +182,25 @@ public class CGTopVisitor extends ASTVisitor{
     @Override
     public void visit(FunctionDeclarationNode node, Object... arg) throws Exception {
 
-        //methods.add()
+        MethodCodeHolder method;
+        for (AbstractNode child: node.childList) {
+            if (child instanceof FormalParameterNode){
+                FormalParameterNode fparam = (FormalParameterNode) child;
+                Set<IdNode> idNodes = fparam.parameterMap.keySet();
+                Collection<String> types = fparam.parameterMap.values();
+
+                //We can do this as we know that set size and collection size is equal
+                for (int i = 0; i < idNodes.size(); i++){
+                    //idNodes.
+                }
+            }
+
+        }
+        method= new MethodCodeHolder(node.Id.Name, node.Type);
+
+        //Code generation for method body
+
+        methods.add(method);
     }
 
     @Override
@@ -265,8 +295,8 @@ public class CGTopVisitor extends ASTVisitor{
 
     @Override
     public void visit(ProgNode node, Object... arg) throws Exception {
-        for (AbstractNode Node : node.childList) {
-            VisitNode(Node);
+        for (AbstractNode child : node.childList) {
+            VisitNode(child);
         }
     }
 
@@ -281,16 +311,32 @@ public class CGTopVisitor extends ASTVisitor{
 
     }
 
+    private String setColorBuilder(String bodyColor, String gunColor, String radarColor){
+        //If any of the colors are null, then they will correctly insert null in the string, which is valid for the java
+        //function SetColors
+        return "SetColors(" + bodyColor + ", " + gunColor + ", " + radarColor +");";
+    }
+
     @Override
     public void visit(RobotDclBodyNode node, Object... arg) {
         setup.name=node.robotName;
         setup.robotType=node.robotType;
-        for (AbstractNode abstractNode: node.childList) {
-            if (abstractNode instanceof  GunColorNode){
-                GunColorNode temp = (GunColorNode) abstractNode;
-                runMethod.emit("GunColorNode = " + temp.Color.Color + ";\n");
+        String  bodyColor = null, gunColor = null, radarColor = null;
+        for (AbstractNode child: node.childList) {
+            if (child instanceof  BodyColorNode){
+                BodyColorNode temp = (BodyColorNode) child;
+                bodyColor = temp.Color.Color;
+            }
+            else if(child instanceof GunColorNode){
+                GunColorNode temp = (GunColorNode) child;
+                gunColor = temp.Color.Color;
+            }
+            else if(child instanceof  RadarColorNode){
+                RadarColorNode temp = (RadarColorNode) child;
+                radarColor = temp.Color.Color;
             }
         }
+        runMethod.emit(setColorBuilder(bodyColor, gunColor, radarColor), insideMethodeIndent);
     }
 
     @Override
@@ -305,7 +351,19 @@ public class CGTopVisitor extends ASTVisitor{
 
     @Override
     public void visit(StrategyDeclarationNode node, Object... arg) throws Exception {
+        //Generate code equivalent java code for the strategyDecleration
+        CGStrategyVisitor CGS = new CGStrategyVisitor();
+        CGS.VisitNode(node);
 
+        //Temporary for printing the generated code
+        System.out.println(CGS.CH.sb.toString());
+
+
+        //Add the body of what is equivalent to the when by calling addEventHandler("eventType", "body");
+        //This may be done inside CSGStrategyVisitor
+
+        //Add the body of what is equivalent to the runMethod by calling runMethod.addToRunMethod("strategyName", "body");
+        //This may be done inside CSGStrategyVisitor
     }
 
     @Override

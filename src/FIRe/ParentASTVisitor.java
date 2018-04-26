@@ -225,6 +225,9 @@ public class ParentASTVisitor extends ASTVisitor{
     }
 
     @Override
+    public void visit(RobotPropertiesNode node, Object... arg) {visit ((AbstractNode) node, arg);}
+
+    @Override
     public void visit(RoutineNode node, Object... arg) {
         visit((AbstractNode)node,arg);
     }
@@ -273,4 +276,10 @@ public class ParentASTVisitor extends ASTVisitor{
     public void visit(WhileNode node, Object... arg) {
         visit((AbstractNode)node,arg);
     }
+
+    @Override
+    public void visit(RobotNameNode node, Object... arg) { visit((AbstractNode)node,arg); }
+
+    @Override
+    public void visit(RobotTypeNode node, Object... arg) {visit ((AbstractNode)node, arg);}
 }

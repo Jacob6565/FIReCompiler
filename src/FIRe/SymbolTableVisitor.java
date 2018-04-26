@@ -1,5 +1,6 @@
 package FIRe;
 
+import java.awt.*;
 import java.beans.Expression;
 import java.lang.reflect.Type;
 import java.net.Proxy;
@@ -127,7 +128,11 @@ public class SymbolTableVisitor extends ASTVisitor {
         ST.OpenScope();
         if (node.Parent instanceof WhenNode) {
             WhenNode Whennode = (WhenNode) node.Parent;
-            ST.Insert(new EventTypeDeclarationNode((IdNode) Whennode.childList.get(1), ((IdNode)Whennode.childList.get(0)).Name));
+
+            ST.Insert(new EventTypeDeclarationNode((IdNode) Whennode.childList.get(1), ((IdNode)Whennode.childList.get(0)).Name,node.LineNumber));
+        }
+        if (node.Parent instanceof ForNode && ((ForNode)node.Parent).Dcl != null){
+            visit(((ForNode) node.Parent).Dcl);
         }
         for (AbstractNode Node : node.childList) {
             if (Node != null)
@@ -254,7 +259,7 @@ public class SymbolTableVisitor extends ASTVisitor {
     @Override
     public void visit(ForNode node, Object... arg) throws TypeException {
         for (AbstractNode Node : node.childList) {
-            if (Node != null)
+            if (Node != null && !(Node instanceof NumberDeclarationNode))
                 VisitNode(Node);
         }
         if (node.From != null && node.From.type != "number")
@@ -350,9 +355,9 @@ public class SymbolTableVisitor extends ASTVisitor {
                 }
                 throw new SymbolNotFoundException(node.Name,node.LineNumber);
             }
-            else { //Hopefully it is in the formal parameters
+            else { //Hopefully it is in the formal parameters or it is a robotproperty
                 AbstractNode predecessor = node;
-                while (!(predecessor instanceof FunctionDeclarationNode || predecessor instanceof StrategyDeclarationNode || predecessor instanceof EventDeclarationNode)){
+                while (!(predecessor instanceof FunctionDeclarationNode || predecessor instanceof StrategyDeclarationNode || predecessor instanceof EventDeclarationNode || predecessor instanceof RobotPropertiesNode)){
                     predecessor = predecessor.Parent;
                 }
                 if (predecessor instanceof FunctionDeclarationNode) {
@@ -383,8 +388,11 @@ public class SymbolTableVisitor extends ASTVisitor {
                     }
                     throw new SymbolNotFoundException(node.Name,node.LineNumber);
                 }
+                if (predecessor instanceof RobotPropertiesNode){
+                    return;
+                }
             }
-    }
+        }
 
     @Override
     public void visit(IfControlStructureNode node, Object... arg) throws TypeException {
@@ -612,14 +620,6 @@ public class SymbolTableVisitor extends ASTVisitor {
                 throw new TypeException("bool", returnType, node.LineNumber);
             }
         }
-
-
-
-
-
-
-
-
     }
 
     @Override
@@ -628,8 +628,13 @@ public class SymbolTableVisitor extends ASTVisitor {
             if (Node != null)
             VisitNode(Node);
         }
-        if (!RHT.RobotTypes.contains(node.robotType)){
-            throw new TypeException("RobotType", node.robotType,node.LineNumber);
+    }
+
+    @Override
+    public void visit(RobotPropertiesNode node,  Object...arg){
+        for (AbstractNode Node: node.childList) {
+            if (Node != null)
+                VisitNode(Node);
         }
     }
 
@@ -727,5 +732,23 @@ public class SymbolTableVisitor extends ASTVisitor {
         }
         if(node.Expression.type != "bool")
             throw new TypeException("bool",node.Expression.type,node.LineNumber);
+    }
+
+    @Override
+    public void visit(RobotNameNode node, Object... arg) {
+        for (AbstractNode Node: node.childList) {
+            if (Node != null)
+                VisitNode(Node);
+        }
+    }
+
+    @Override
+    public void visit(RobotTypeNode node, Object... arg) throws TypeException {
+        for (AbstractNode Node: node.childList) {
+            if (Node != null)
+                VisitNode(Node);
+        }
+        if (!RHT.RobotTypes.contains(node.RobotType.Name))
+            throw new TypeException("robot, advancedRobot, or juniorRobot",node.RobotType.type,node.LineNumber);
     }
 }

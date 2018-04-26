@@ -3,6 +3,7 @@ package FIRe;
 
 
 
+import javax.sound.sampled.Line;
 import java.beans.Expression;
 import java.lang.reflect.Type;
 import java.util.*;
@@ -153,7 +154,7 @@ class RoutineNode extends ControlStructureNode{
 
 class RobotDclBodyNode extends  AbstractNode{
     String robotType;
-    String robotName;
+    RobotNameNode robotName;
 
     @Override
     public void accept(ASTVisitor v, AbstractNode parent) throws Exception {
@@ -167,39 +168,49 @@ class RobotDclBodyNode extends  AbstractNode{
 
 class GunColorNode extends AbstractNode{
     public ColorValNode Color;
-    GunColorNode(String color){
-        Color = new ColorValNode(color);
+    GunColorNode(String color, int lineNumber){
+        Color = new ColorValNode(color, lineNumber);
+        LineNumber = lineNumber;
+        childList.add(Color);
     }
 
     @Override
-    public void accept(ASTVisitor v, AbstractNode parent) {
-        //bruges ikke
+    public void accept(ASTVisitor v, AbstractNode parent) throws Exception {
+        v.visit(this, parent);
     }
 }
 
 class BodyColorNode extends AbstractNode{
     public ColorValNode Color;
 
-    BodyColorNode(String color){
-        Color = new ColorValNode(color);
+    BodyColorNode(String color,int lineNumber){
+        Color = new ColorValNode(color, lineNumber);
+        LineNumber = lineNumber;
+        childList.add(Color);
     }
 
     @Override
-    public void accept(ASTVisitor v, AbstractNode parent) {
-        //bruges ikke
+    public void accept(ASTVisitor v, AbstractNode parent) throws Exception {
+        for(AbstractNode child : childList)
+            if(child != null)
+                child.accept(v, this);
     }
 }
 
 class RadarColorNode extends AbstractNode{
     public ColorValNode Color;
 
-    RadarColorNode(String color){
-        Color = new ColorValNode(color);
+    RadarColorNode(String color, int lineNumber){
+        Color = new ColorValNode(color, lineNumber);
+        LineNumber = lineNumber;
+        childList.add(Color);
     }
 
     @Override
-    public void accept(ASTVisitor v, AbstractNode parent) {
-        //bruges ikke
+    public void accept(ASTVisitor v, AbstractNode parent) throws Exception {
+        for(AbstractNode child : childList)
+            if(child != null)
+                child.accept(v, this);
     }
 }
 
@@ -315,13 +326,16 @@ class TextNode extends ValNode{
 class ColorValNode extends AbstractNode{
     String Color;
 
-    ColorValNode(String Color){
+    ColorValNode(String Color, int lineNumber){
         this.Color = Color;
+        LineNumber = lineNumber;
     }
 
     @Override
-    public void accept(ASTVisitor v, AbstractNode parent) {
-        //bruges ikke
+    public void accept(ASTVisitor v, AbstractNode parent) throws Exception {
+        for(AbstractNode child : childList)
+            if(child != null)
+                child.accept(v, this);
     }
 }
 
@@ -663,12 +677,13 @@ class EventDeclarationNode extends DeclarationNode{
     public List<Tuple<String, String>> Fields;
 
     public EventDeclarationNode(){ }
-    public EventDeclarationNode(String id, Tuple<String,String>... fields){
+    public EventDeclarationNode(String id, int lineNumber, Tuple<String,String>... fields){
         Id = new IdNode(id);
         Fields = new ArrayList<Tuple<String, String>>();
         for (Tuple<String,String> entry: fields) {
             Fields.add(entry);
         }
+        LineNumber = lineNumber;
     }
 
     @Override
@@ -753,19 +768,66 @@ class ProgNode extends AbstractNode{
     }
 }
 
+class RobotTypeNode extends AbstractNode{
+    public IdNode RobotType;
+
+    public RobotTypeNode(String type, int lineNumber){
+        RobotType = new IdNode(type);
+        childList.add(RobotType);
+        LineNumber = lineNumber;
+    }
+
+    @Override
+    public void accept(ASTVisitor v, AbstractNode parent) throws Exception {
+        v.visit(this, parent);
+        for(AbstractNode child : childList)
+            if(child != null)
+                child.accept(v, this);}
+}
+
+class RobotNameNode extends AbstractNode{
+    public IdNode RobotName;
+
+    public RobotNameNode(String name, int lineNumber){
+        RobotName = new IdNode(name);
+        childList.add(RobotName);
+        LineNumber = lineNumber;
+    }
+
+    @Override
+    public void accept(ASTVisitor v, AbstractNode parent) throws Exception {
+        v.visit(this,parent);
+        for(AbstractNode child : childList)
+            if(child != null)
+                child.accept(v, this);
+    }
+}
+
 class EventTypeDeclarationNode extends DeclarationNode{
     public String Type;
 
     @Override
     public void accept(ASTVisitor v, AbstractNode parent) throws Exception { }
 
-    public EventTypeDeclarationNode(IdNode id, String type)
-    {
+    public EventTypeDeclarationNode(IdNode id, String type, int lineNumber) {
         super(id);
         Type = type;
+        LineNumber = lineNumber;
     }
 
     public EventTypeDeclarationNode(){
         super();
+    }
+}
+
+class RobotPropertiesNode extends AbstractNode{
+    public RobotPropertiesNode(){}
+
+    @Override
+    public void accept(ASTVisitor v, AbstractNode Parent) throws Exception {
+        v.visit(this, Parent);
+        for(AbstractNode child : childList)
+            if(child != null)
+                child.accept(v, this);
     }
 }
