@@ -70,11 +70,9 @@ strategy Default(number et, number to)
 
 strategy Offensive()
 {
-    return 1;
     routine()
    {
        fire(1);
-       return 1;
    }
    when(LowHealth e)
    {

@@ -171,7 +171,7 @@ public abstract class ASTVisitor
     public abstract void visit(MultiplicationNode node, Object... arg) throws Exception;
     public abstract void visit(NegateNode node, Object... arg);
     public abstract void visit(NotEqualsNode node, Object... arg) throws Exception;
-    public abstract void visit(NotNode node, Object... arg);
+    public abstract void visit(NotNode node, Object... arg) throws TypeException;
     public abstract void visit(NumberDeclarationNode node, Object... arg) throws Exception;
     public abstract void visit(NumberArrayDeclarationNode node, Object... arg) throws Exception;
     public abstract void visit(NumberNode node, Object... arg);
