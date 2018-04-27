@@ -105,9 +105,5 @@ public class Main {
 
         codeGenerator.emitOutputFile();
 
-
-        CGExpressionVisitor CGE = new CGExpressionVisitor();
-        CGStrategyVisitor CGS = new CGStrategyVisitor();
-
     }
 }

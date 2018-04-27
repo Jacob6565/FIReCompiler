@@ -8,8 +8,9 @@ public class CGFunctionVisitor extends ASTVisitor {
     FunctionDeclarationNode func;
     CGExpressionVisitor exprGen;
 
-    CGFunctionVisitor(){
+    CGFunctionVisitor(CodeHolder CH){
         exprGen = new CGExpressionVisitor();
+        code = CH;
     }
 
     String GenerateFuncCode(CodeHolder CH, FunctionDeclarationNode funcNode){
@@ -46,7 +47,8 @@ public class CGFunctionVisitor extends ASTVisitor {
 
     @Override
     public void visit(AssignNode node, Object... arg) throws Exception {
-        code.emitNL(node.Id.Name + " = " + exprGen.GenerateExprCode(code, node.Expression) + ";");
+        code.emit(node.Id.Name + " = ");
+        code.emitNL(exprGen.GenerateExprCode(code, node.Expression) + ";");
     }
 
     @Override
@@ -101,7 +103,7 @@ public class CGFunctionVisitor extends ASTVisitor {
 
         for(AbstractNode id : node.childList){
             if(id instanceof IdNode){
-                code.emit(((IdNode) id).Name + "[");
+                code.emit(((IdNode) id).Name + "[(int)");
             }
 
             else if(id instanceof ExpressionNode){
@@ -147,7 +149,7 @@ public class CGFunctionVisitor extends ASTVisitor {
 
     @Override
     public void visit(ExpressionNode node, Object... arg) {
-
+        exprGen.GenerateExprCode(code, node);
     }
 
     @Override
@@ -226,7 +228,61 @@ public class CGFunctionVisitor extends ASTVisitor {
 
     @Override
     public void visit(IfControlStructureNode node, Object... arg) throws Exception {
+        code.emit("if(");
 
+        int icount = 0;
+        int bcount = 0;
+
+        int size = node.childList.size();
+
+        for (AbstractNode Node : node.childList) {
+            if (Node instanceof ExpressionNode) {
+                icount++;
+            } else if (Node instanceof BlockNode) {
+                bcount++;
+            }
+        }
+
+        if (bcount == icount) {
+            boolean firstTime = true;
+            for (AbstractNode Node : node.childList) {
+                if (Node instanceof ExpressionNode && firstTime) {
+                    visit((ExpressionNode) Node);
+                    code.emit(")");
+                    firstTime = false;
+                } else if (Node instanceof BlockNode) {
+                    visit((BlockNode) Node);
+
+                } else if (Node instanceof ExpressionNode && !firstTime) {
+                    code.emit("else if(");
+                    visit((ExpressionNode) Node);
+                    code.emit(")");
+                }
+            }
+        } else if (bcount > icount) {
+            int blocks = 0;
+            int ifs = 0;
+            boolean firstTime = true;
+            for (AbstractNode Node : node.childList) {
+                if (Node instanceof ExpressionNode && firstTime) {
+                    visit((ExpressionNode) Node);
+                    code.emit(")");
+                    firstTime = false;
+                    ifs++;
+                } else if ((bcount -1) == blocks && Node instanceof BlockNode){
+                    code.emit("else");
+                    visit((BlockNode) Node);
+                } else if (Node instanceof BlockNode) {
+                    visit((BlockNode) Node);
+                    blocks++;
+                } else if(Node instanceof ExpressionNode && !firstTime){
+                    code.emit("else if(");
+                    visit((ExpressionNode) Node);
+                    code.emit(")");
+                    ifs++;
+                }
+            }
+        }
     }
 
     @Override
@@ -271,12 +327,51 @@ public class CGFunctionVisitor extends ASTVisitor {
 
     @Override
     public void visit(NumberDeclarationNode node, Object... arg) throws Exception {
+        int idCounter = 0;
+        boolean exprFlag = false;
 
+        for(AbstractNode id : node.childList){
+            if(id instanceof IdNode)
+                idCounter++;
+            else if(id instanceof ExpressionNode)
+                exprFlag = true;
+        }
+
+        code.emit("Double ");
+
+        for(AbstractNode id : node.childList){
+            if(id instanceof IdNode && idCounter > 1){
+                code.emit(((IdNode) id).Name + ", ");
+                idCounter--;
+            }
+
+            else if(id instanceof IdNode && exprFlag){
+                code.emit(((IdNode) id).Name + " = ");
+            }
+
+            else if(id instanceof IdNode){
+                code.emitNL(((IdNode) id).Name + ";");
+            }
+
+            else if(id instanceof ExpressionNode){
+                code.emitNL(exprGen.GenerateExprCode(code, (ExpressionNode) id) + ";");
+            }
+        }
     }
 
     @Override
     public void visit(NumberArrayDeclarationNode node, Object... arg) throws Exception {
+        code.emit("Double ");
 
+        for(AbstractNode id : node.childList){
+            if(id instanceof IdNode){
+                code.emit(((IdNode) id).Name + "[(int)");
+            }
+
+            else if(id instanceof ExpressionNode){
+                code.emitNL(exprGen.GenerateExprCode(code, (ExpressionNode) id) + "];");
+            }
+        }
     }
 
     @Override
@@ -311,6 +406,20 @@ public class CGFunctionVisitor extends ASTVisitor {
 
     @Override
     public void visit(RoutineNode node, Object... arg) throws TypeException {
+        code.emit("while(");
+        if(node.repeatCondition != null)
+            code.emit(exprGen.GenerateExprCode(code, node.repeatCondition) + ")");
+        else
+            code.emit("true)");
+
+        code.emitNL("{");
+
+        for(AbstractNode child : node.childList){
+            if(child instanceof BlockNode)
+                VisitNode(child);
+        }
+
+        code.emitNL("}");
 
     }
 
@@ -331,12 +440,51 @@ public class CGFunctionVisitor extends ASTVisitor {
 
     @Override
     public void visit(TextDeclarationNode node, Object... arg) throws Exception {
+        int idCounter = 0;
+        boolean exprFlag = false;
 
+        for(AbstractNode id : node.childList){
+            if(id instanceof IdNode)
+                idCounter++;
+            else if(id instanceof ExpressionNode)
+                exprFlag = true;
+        }
+
+        code.emit("String ");
+
+        for(AbstractNode id : node.childList){
+            if(id instanceof IdNode && idCounter > 1){
+                code.emit(((IdNode) id).Name + ", ");
+                idCounter--;
+            }
+
+            else if(id instanceof IdNode && exprFlag){
+                code.emit(((IdNode) id).Name + " = ");
+            }
+
+            else if(id instanceof IdNode){
+                code.emitNL(((IdNode) id).Name + ";");
+            }
+
+            else if(id instanceof ExpressionNode){
+                code.emitNL(exprGen.GenerateExprCode(code, (ExpressionNode) id) + ";");
+            }
+        }
     }
 
     @Override
     public void visit(TextArrayDeclarationNode node, Object... arg) throws Exception {
+        code.emit("String ");
 
+        for(AbstractNode id : node.childList){
+            if(id instanceof IdNode){
+                code.emit(((IdNode) id).Name + "[(int)");
+            }
+
+            else if(id instanceof ExpressionNode){
+                code.emitNL(exprGen.GenerateExprCode(code, (ExpressionNode) id) + "];");
+            }
+        }
     }
 
     @Override
@@ -351,12 +499,23 @@ public class CGFunctionVisitor extends ASTVisitor {
 
     @Override
     public void visit(WhenNode node, Object... arg) {
-
+        //code.emitNL("{");
+        for(AbstractNode child : node.childList){
+            if(child instanceof BlockNode)
+                VisitNode(child);
+        }
+        //code.emitNL("}");
     }
 
     @Override
     public void visit(WhileNode node, Object... arg) throws TypeException {
-
+        code.emit("while(" + code.emit(exprGen.GenerateExprCode(code, node.Expression)) + ")");
+        code.emitNL("{");
+        for(AbstractNode child : node.childList){
+            if(child instanceof BlockNode)
+                VisitNode(child);
+        }
+        code.emitNL("}");
     }
 
     @Override
