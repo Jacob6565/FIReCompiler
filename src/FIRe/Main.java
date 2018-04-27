@@ -14,7 +14,7 @@ public class Main {
     public static void main(String[] args) throws FileNotFoundException {
 
         //Reads from the example program. (Debug code)
-        Scanner in = new Scanner(new FileReader("src\\FIRe\\KodeEx.txt"));
+        Scanner in = new Scanner(new FileReader("src\\FIRe\\KodeEx3.txt"));
 
         //We use this delimiter, to chop the code into bits. We split by the backslash character \n
         in.useDelimiter("\n");
@@ -57,7 +57,7 @@ public class Main {
 
 
         //Prints the AST to check whether it has all the correct info. (Debug code)
-        //PrintTraversal print = new PrintTraversal();
+        PrintTraversal print = new PrintTraversal();
         //print.Print(ast, 0);
 
 
