@@ -16,11 +16,20 @@ bool turnLeftAndRotate(text currentRival)
    nameOfRival = currentRival;
    bool shotAtRival = false;
    bool a[5];
-   a[3] = true;
-   if (a[3])
+   a[3.5] = true;
+   if (a["Text"])
    {
           fire(firepower);
           shotAtRival = true;
+   }
+   else if(a[2.5])
+   {
+
+   }
+
+   while("text")
+   {
+
    }
 
    for(number b = 0 upto 2)
@@ -47,9 +56,9 @@ strategy Default(number et, number to)
     firepowers[1] = 3 ^ 5 ^ (1 + 1);
     firepowers[2] = 2;
     firepowers[3] = 3;
-    number a = 3;
+    number c = 3;
     number b = 45;
-    a = a + b;
+    c = c + b;
 
     routine()
     {
@@ -84,8 +93,15 @@ strategy Offensive()
 
 number Function()
 {
+    number a[3];
+
     return 2;
     number x = 0;
+}
+
+void Function2()
+{
+    return;
 }
 
 event LowHealth()

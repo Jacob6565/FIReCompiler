@@ -79,12 +79,37 @@ public class SymbolTableVisitor extends ASTVisitor {
     }
 
 
+    private boolean tryParseInt(String value) {
+        try {
+            Integer.parseInt(value);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
     @Override
-    public void visit(ArrayAccessNode node, Object... arg) throws TypeException, SymbolNotFoundException {
+    public void visit(ArrayAccessNode node, Object... arg) throws TypeException, SymbolNotFoundException, AccessValueIsNotANumberException, AccessValueIsNotAnIntegerException {
         for (AbstractNode Node : node.childList) {
             if (Node != null)
                 VisitNode(Node);
         }
+
+        //Checking if arrayindex is an integer and not a bool or string.
+        if(node.index instanceof NumberNode)
+        {
+            NumberNode temp = (NumberNode)node.index;
+            if(temp.value % 1 != 0)
+            {
+                throw new TypeException("Array index must be integer, found: " + temp.value + ". Line: " + node.LineNumber);
+            }
+        }
+        else
+        {
+            throw new TypeException("number", node.index.type, node.LineNumber);
+        }
+
+
         try {
             node.Id.type = ST.Search(node.Id.Name, node.LineNumber).type;
 
@@ -338,7 +363,7 @@ public class SymbolTableVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(IdNode node, Object... arg) throws SymbolNotFoundException {
+    public void visit(IdNode node, Object... arg) throws SymbolNotFoundException, TypeException {
 
             if (ST.Contains(node.Name)) //If it is in the synmbol table
                 node.type = ST.Search(node.Name, node.LineNumber).type;
@@ -392,7 +417,7 @@ public class SymbolTableVisitor extends ASTVisitor {
                     return;
                 }
             }
-        }
+    }
 
     @Override
     public void visit(IfControlStructureNode node, Object... arg) throws TypeException {
