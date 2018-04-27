@@ -55,7 +55,7 @@ public class CGExpressionVisitor{
         code.emit(node.Id.Name + "(");
         for(AbstractNode par : node.Aparam.childList)
             VisitNode(par);
-        code.emit(") ");
+        code.emitNL(") ");
     }
 
     public void visit(GEQNode node, Object... arg) throws Exception {
