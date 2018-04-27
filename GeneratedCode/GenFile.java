@@ -1,26 +1,44 @@
 import java.awt.*;
 import java.lang.*;
 import robocode.*;
-public class TheDestroyer extends advancedRobot{
+public class TheDestroyer extends AdvancedRobot{
 	private String currentStrategy = "Default";
 	public void run (){ 
-		switch(currentStrategy){
-	
-			SetColors(yellow, red, white);
-	
+		SetColors(yellow, red, white);
+		addCustomEvent(
+			new condition("LowHealth") {
+				public boolean test() {
+					
+				}; 
+			}
+		);
+		while(true){
+			switch(currentStrategy){
+				case "bitch"
+					bitch();
+					break;
+				case "bitch"
+					bitch();
+					break;
+			}
+		}
 	}
-	public bool turnLeftAndRotate (){ 
+	public bool turnLeftAndRotate (String currentRival){ 
 	
 	}
 	public void doSomething (){ 
 	
 	}
-	addCustomEvent(
-		new condition("LowHealth") {
-			public boolean test() {
-				
-			}; 
+	public number Function (){ 
+	
+	}
+	public void onScannedRobot (ScannedRobotEvent e){ 
+		switch(currentStrategy){
+			case "Default"
+				INSERT CODE HERE
+				break;
 		}
-	);
+	
+	}
 
 }

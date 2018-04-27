@@ -163,7 +163,7 @@ public class CGFunctionVisitor extends ASTVisitor {
         boolean dclUsed = false;
         code.emit("for(");
         if (node.Dcl != null && node.Dcl.childList.get(1) instanceof ExpressionNode){
-            code.emit(node.Dcl.Id.Name + " = ");
+            code.emit(node.Dcl.Id.Name + " = (int)");
             code.emit(exprGen.GenerateExprCode(code, (ExpressionNode) node.Dcl.childList.get(1)) + ";");
             dclUsed = true;
         }
@@ -180,7 +180,7 @@ public class CGFunctionVisitor extends ASTVisitor {
             code.emit(exprGen.GenerateExprCode(code, node.To) + ";");
         }
         else if(node.Incremental && !dclUsed) {
-            code.emit(" " + node.From + " < (int)");
+            code.emit(" (int)" + node.From + " < (int)");
             code.emit(exprGen.GenerateExprCode(code, node.To) + ";");
         }
         else if(!node.Incremental && dclUsed) {
@@ -188,10 +188,10 @@ public class CGFunctionVisitor extends ASTVisitor {
             code.emit(exprGen.GenerateExprCode(code, node.To) + ";");
         }
         else if(!node.Incremental && !dclUsed) {
-            code.emit(" " + node.From + " > (int)");
+            code.emit(" (int)" + node.From + " > (int)");
             code.emit(exprGen.GenerateExprCode(code, node.To) + ";");
         }
-        code.emitNL("{");
+        code.emitNL("){");
 
         for(AbstractNode child : node.childList){
             if(child instanceof BlockNode)
