@@ -39,7 +39,7 @@ strategy Default()
             System.out.println("Got you :)");
             t = "28";
         }
-        else if("Hey" == 3)
+        else if(2==2)
         {
             System.out.println("I am good at this");
             SuperOffensive();
@@ -70,8 +70,9 @@ strategy Offensive(text enemyName)
     }
     when (HitRobotEvent f)
     {
-        return;
+        return 2;
     }
+
 }
 
 text AdvancedCalculation(text enemyName)
@@ -105,7 +106,7 @@ text AdvancedCalculation(text enemyName)
 }
 
 
-event MyLowHealthEvent
+event MyLowHealthEvent()
 {
    text enemy = "WallRider";
    text secondEnemy = "SittingDuck";

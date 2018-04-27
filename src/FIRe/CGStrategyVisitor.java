@@ -1,23 +1,18 @@
 package FIRe;
 
 import FIRe.Exceptions.ReturnException;
+import FIRe.Exceptions.SymbolNotFoundException;
 import FIRe.Exceptions.TypeException;
 
-public class CGFunctionVisitor extends ASTVisitor {
-    CodeHolder code;
-    FunctionDeclarationNode func;
-    CGExpressionVisitor exprGen;
+import java.security.PublicKey;
 
-    CGFunctionVisitor(){
-        exprGen = new CGExpressionVisitor();
+public class CGStrategyVisitor extends ASTVisitor {
+
+    public CGStrategyVisitor(RunMethodCodeHolder RMCH){
+        CH = RMCH;
     }
 
-    String GenerateFuncCode(CodeHolder CH, FunctionDeclarationNode funcNode){
-        code = CH;
-        func = funcNode;
-        VisitNode(func);
-        return "";
-    }
+    RunMethodCodeHolder CH;
 
     @Override
     public void visit(AbstractNode node, Object... arg) {
@@ -40,73 +35,61 @@ public class CGFunctionVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(ArrayAccessNode node, Object... arg) throws TypeException {
+    public void visit(ArrayAccessNode node, Object... arg) throws TypeException, SymbolNotFoundException {
 
+        CGExpressionVisitor CGE = new CGExpressionVisitor();
+        CGE.GenerateExprCode(CH, node);
+
+
+        /*for (AbstractNode Node : node.childList) {
+            if(Node instanceof IdNode){
+                if(((IdNode) Node).type.contains("array"));
+                VisitNode(Node);
+                CH.emit(""
+            }
+        }*/
     }
 
     @Override
     public void visit(AssignNode node, Object... arg) throws Exception {
-        code.emitNL(node.Id.Name + " = " + exprGen.GenerateExprCode(code, node.Expression) + ";");
+        CGExpressionVisitor CGE = new CGExpressionVisitor();
+
+        for (AbstractNode Node: node.childList) {
+            if(Node instanceof IdNode){
+                VisitNode(Node);
+            }
+            if(Node instanceof InfixExpressionNode){
+                VisitNode(Node);
+            }
+        }
+
+
+
     }
 
     @Override
     public void visit(BlockNode node, Object... arg) throws Exception {
-        for(AbstractNode child : node.childList)
-            VisitNode(child);
+
     }
 
     @Override
-    public void visit(BodyColorNode node, Object... arg) {
+    public void visit(BodyColorNode node, Object... arg) throws TypeException {
 
     }
 
     @Override
     public void visit(BooleanDeclarationNode node, Object... arg) throws Exception {
-        int idCounter = 0;
-        boolean exprFlag = false;
-
-        for(AbstractNode id : node.childList){
-            if(id instanceof IdNode)
-                idCounter++;
-            else if(id instanceof ExpressionNode)
-                exprFlag = true;
+        CH.emit("boolean");
+        for(AbstractNode Node: node.childList) {
+            VisitNode(Node);
         }
-
-        code.emit("boolean ");
-
-        for(AbstractNode id : node.childList){
-            if(id instanceof IdNode && idCounter > 1){
-                code.emit(((IdNode) id).Name + ", ");
-                idCounter--;
-            }
-
-            else if(id instanceof IdNode && exprFlag){
-                code.emit(((IdNode) id).Name + " = ");
-            }
-
-            else if(id instanceof IdNode){
-                code.emitNL(((IdNode) id).Name + ";");
-            }
-
-            else if(id instanceof ExpressionNode){
-                code.emitNL(exprGen.GenerateExprCode(code, (ExpressionNode) id) + ";");
-            }
-        }
-
     }
 
     @Override
     public void visit(BoolArrayDeclarationNode node, Object... arg) throws Exception {
-        code.emit("boolean ");
-
-        for(AbstractNode id : node.childList){
-            if(id instanceof IdNode){
-                code.emit(((IdNode) id).Name + "[");
-            }
-
-            else if(id instanceof ExpressionNode){
-                code.emitNL(exprGen.GenerateExprCode(code, (ExpressionNode) id) + "];");
-            }
+        CH.emit("boolean");
+        for(AbstractNode Node: node.childList) {
+            VisitNode(Node);
         }
     }
 
@@ -127,6 +110,9 @@ public class CGFunctionVisitor extends ASTVisitor {
 
     @Override
     public void visit(DeclarationNode node, Object... arg) {
+        for (AbstractNode Node:node.childList) {
+            VisitNode(Node);
+        }
 
     }
 
@@ -157,37 +143,7 @@ public class CGFunctionVisitor extends ASTVisitor {
 
     @Override
     public void visit(ForNode node, Object... arg) throws TypeException, ReturnException {
-        boolean dclUsed = false;
-        code.emit("for(");
-        if (node.Dcl != null && node.Dcl.childList.get(1) instanceof ExpressionNode){
-            code.emit(node.Dcl.Id.Name + " = " + exprGen.GenerateExprCode(code, (ExpressionNode) node.Dcl.childList.get(1)) + ";");
-            dclUsed = true;
-        }
-        else if(node.Dcl != null){
-            code.emit(node.Dcl.Id.Name + " = " + "0;");
-            dclUsed = true;
-        }
-        else if(node.From != null){
-            code.emit(";");
-        }
 
-        if(node.Incremental && dclUsed)
-            code.emit(" " + node.Dcl.Id.Name + " < (int)" + exprGen.GenerateExprCode(code, (ExpressionNode) node.To) + ";");
-        else if(node.Incremental && !dclUsed)
-            code.emit(" " + node.From + " < (int)" + exprGen.GenerateExprCode(code, (ExpressionNode) node.To) + ";");
-        else if(!node.Incremental && dclUsed)
-            code.emit(" " + node.Dcl.Id.Name + " > (int)" + exprGen.GenerateExprCode(code, (ExpressionNode) node.To) + ";");
-        else if(!node.Incremental && !dclUsed)
-            code.emit(" " + node.From + " > (int)" + exprGen.GenerateExprCode(code, (ExpressionNode) node.To) + ";");
-
-        code.emitNL("{");
-
-        for(AbstractNode child : node.childList){
-            if(child instanceof BlockNode)
-                VisitNode(child);
-        }
-
-        code.emitNL("}");
     }
 
     @Override
@@ -197,11 +153,7 @@ public class CGFunctionVisitor extends ASTVisitor {
 
     @Override
     public void visit(FunctionDeclarationNode node, Object... arg) throws Exception {
-        for(AbstractNode child : node.childList) {
-            if (child instanceof BlockNode)
-                VisitNode(child);
 
-        }
     }
 
     @Override
@@ -215,13 +167,13 @@ public class CGFunctionVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(GunColorNode node, Object... arg) {
+    public void visit(GunColorNode node, Object... arg) throws TypeException {
 
     }
 
     @Override
     public void visit(IdNode node, Object... arg) throws Exception {
-
+        CH.emit(node.Name);
     }
 
     @Override
@@ -271,17 +223,40 @@ public class CGFunctionVisitor extends ASTVisitor {
 
     @Override
     public void visit(NumberDeclarationNode node, Object... arg) throws Exception {
+        CH.emit("double");
+        for (AbstractNode Node: node.childList) {
+            visit(Node);
+        }
 
     }
 
     @Override
     public void visit(NumberArrayDeclarationNode node, Object... arg) throws Exception {
+        CH.emit("double ");
 
+        CGExpressionVisitor CGE = new CGExpressionVisitor();
+
+        for(AbstractNode Node : node.childList){
+            if(Node instanceof IdNode){
+                VisitNode(Node);
+                CH.emit("[]");
+            }
+        }
+        CH.emit(" = new double[");
+        for(AbstractNode Node: node.childList){
+            if(Node instanceof NumberNode) {
+                CH.emit("(int)");
+                CGE.GenerateExprCode(CH, (NumberNode)Node);
+                CH.emit("]");
+            }
+        }
+
+        CH.emitNL(";");
     }
 
     @Override
     public void visit(NumberNode node, Object... arg) {
-
+        CH.emit(node.value);
     }
 
     @Override
@@ -291,7 +266,8 @@ public class CGFunctionVisitor extends ASTVisitor {
 
     @Override
     public void visit(PowerNode node, Object... arg) throws Exception {
-
+        CGExpressionVisitor CGE = new CGExpressionVisitor();
+        CGE.GenerateExprCode(CH, node);
     }
 
     @Override
@@ -300,14 +276,15 @@ public class CGFunctionVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(RadarColorNode node, Object... arg) {
+    public void visit(RadarColorNode node, Object... arg) throws TypeException {
 
     }
 
     @Override
-    public void visit(ReturnNode node, Object... arg) {
+    public void visit(ReturnNode node, Object... arg) throws TypeException {
 
     }
+
 
     @Override
     public void visit(RoutineNode node, Object... arg) throws TypeException {
@@ -321,7 +298,9 @@ public class CGFunctionVisitor extends ASTVisitor {
 
     @Override
     public void visit(StrategyDeclarationNode node, Object... arg) throws Exception {
-
+        for (AbstractNode Node: node.childList) {
+            VisitNode(Node);
+        }
     }
 
     @Override
@@ -331,12 +310,18 @@ public class CGFunctionVisitor extends ASTVisitor {
 
     @Override
     public void visit(TextDeclarationNode node, Object... arg) throws Exception {
-
+        CH.emit("text");
+        for(AbstractNode Node: node.childList) {
+            VisitNode(Node);
+        }
     }
 
     @Override
     public void visit(TextArrayDeclarationNode node, Object... arg) throws Exception {
-
+        CH.emit("text");
+        for(AbstractNode Node: node.childList) {
+            VisitNode(Node);
+        }
     }
 
     @Override

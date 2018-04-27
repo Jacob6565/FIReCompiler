@@ -75,7 +75,9 @@ public class CGExpressionVisitor{
     }
 
     public void visit(InfixExpressionNode node, Object... arg) throws Exception {
-
+        for (AbstractNode Node: node.childList) {
+            VisitNode(Node);
+        }
     }
 
     public void visit(LEQNode node, Object... arg) throws Exception {
