@@ -52,10 +52,10 @@ public class CGExpressionVisitor{
     }
 
     public void visit(FuncCallNode node, Object... arg) throws Exception {
-        code.emit(node.Id + "(");
+        code.emit(node.Id.Name + "(");
         for(AbstractNode par : node.Aparam.childList)
             VisitNode(par);
-        code.emit(") ");
+        code.emitNL(") ");
     }
 
     public void visit(GEQNode node, Object... arg) throws Exception {
