@@ -155,7 +155,7 @@ public abstract class ASTVisitor
     public abstract void visit(EventDeclarationNode node, Object... arg) throws Exception;
     public abstract void visit(EqualsNode node, Object... arg) throws Exception;
     public abstract void visit(ExpressionNode node, Object... arg);
-    public abstract void visit(FormalParameterNode node, Object... arg);
+    public abstract void visit(FormalParameterNode node, Object... arg) throws Exception;
     public abstract void visit(ForNode node, Object... arg) throws TypeException,ReturnException;
     public abstract void visit(FuncCallNode node, Object... arg) throws Exception;
     public abstract void visit(FunctionDeclarationNode node, Object... arg) throws Exception;

@@ -2,6 +2,7 @@ package FIRe;
 
 import java.lang.reflect.Type;
 import java.util.List;
+import java.util.Map;
 
 
 import FIRe.Exceptions.*;
@@ -146,6 +147,7 @@ public class SymbolTableVisitor extends ASTVisitor {
             visit(((ForNode) node.Parent).Dcl);
         }
 
+
         //Then we visit each child
         for (AbstractNode Node : node.childList) {
             if (Node != null)
@@ -275,11 +277,39 @@ public class SymbolTableVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(FormalParameterNode node, Object... arg) {
+    public void visit(FormalParameterNode node, Object... arg) throws Exception {
         for (AbstractNode Node : node.childList) {
             if (Node != null)
                 VisitNode(Node);
         }
+        if (node.Parent instanceof StrategyDeclarationNode || node.Parent instanceof FunctionDeclarationNode)
+
+            if ( node.Parent instanceof StrategyDeclarationNode && ((StrategyDeclarationNode) node.Parent).Id.Name.equals("Default") && node.parameterMap.size() > 0)
+                throw new InvalidNumberOfArgumentsException(0,node.parameterMap.size(),node.LineNumber);
+            for (Map.Entry<IdNode, String> entry : node.parameterMap.entrySet()) {
+                switch (entry.getValue()) {
+                    case "number":
+                        ST.Insert(new NumberDeclarationNode(entry.getKey(),entry.getKey().LineNumber));
+                        break;
+                    case "bool":
+                        ST.Insert(new BooleanDeclarationNode(entry.getKey(),entry.getKey().LineNumber));
+                        break;
+                    case "text":
+                        ST.Insert(new TextDeclarationNode(entry.getKey(),entry.getKey().LineNumber));
+                        break;
+                    case "number array":
+                        ST.Insert(new NumberArrayDeclarationNode(entry.getKey(),entry.getKey().LineNumber));
+                        break;
+                    case "bool array":
+                        ST.Insert(new BoolArrayDeclarationNode(entry.getKey(),entry.getKey().LineNumber));
+                        break;
+                    case "text array":
+                        ST.Insert(new TextArrayDeclarationNode(entry.getKey(),entry.getKey().LineNumber));
+                        break;
+                    default:
+                        throw new NotRecognizedTypeException(entry.getValue());
+                }
+            }
     }
 
     @Override
@@ -760,10 +790,14 @@ public class SymbolTableVisitor extends ASTVisitor {
 
     @Override
     public void visit(StrategyDeclarationNode node, Object... arg) throws Exception {
+        ST.OpenScope();
         for (AbstractNode Node: node.childList) {
-            if (Node != null)
-            VisitNode(Node);
+            if (Node != null) {
+
+                VisitNode(Node);
+            }
         }
+        ST.CloseScope();
     }
 
     @Override

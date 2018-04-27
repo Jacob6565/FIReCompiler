@@ -10,6 +10,71 @@ RobotProperties
 number firepower = 100;
 text nameOfRival = "SittingDuck";
 
+void doSomething(number array){
+
+    number x = 3.7;
+
+    if(x == 3.6){
+        x = 2;
+    }
+    else{
+    x = x + 4.2;
+
+    }
+}
+
+strategy Default()
+{
+    number firepowers[4];
+    firepowers[1] = 3 ^ 5 ^ (1 + 1);
+    firepowers[2] = 2;
+    firepowers[3] = 3;
+    number a = 3;
+    number b = a;
+
+    routine()
+    {
+        turnRadarRight(360);
+        for(number i = 0 upto 2)
+        {
+            ahead(20);
+        }
+    }
+
+   when (ScannedRobotEvent e)
+   {
+       text currentRival = e.getName();
+       turnLeftAndRotate(currentRival);
+       Offensive(true);
+   }
+}
+
+strategy Offensive(bool west){
+
+    bool value = west;
+
+   routine()
+   {
+       fire(1);
+   }
+   when(LowHealth e)
+   {
+       Default();
+   }
+}
+
+number Function(text name)
+{
+    return 2;
+}
+
+event LowHealth()
+{
+   turnLeftAndRotate("30");
+
+   return getEnergy() <= 50;
+}
+
 bool turnLeftAndRotate(text currentRival)
 {
    number degrees = 90;
@@ -28,67 +93,4 @@ bool turnLeftAndRotate(text currentRival)
        turnLeft(b);
    }
     return a[1];
-}
-
-void doSomething(){
-    number x = 3.7;
-    if(x == 3.6){
-        x = 2;
-    }
-    else{
-    x = x + 4.2;
-
-    }
-}
-
-strategy Default(number et, number to)
-{
-    number firepowers[4];
-    firepowers[1] = 3 ^ 5 ^ (1 + 1);
-    firepowers[2] = 2;
-    firepowers[3] = 3;
-    number a = 3;
-    number b = 45;
-    a = a + b;
-
-    routine()
-    {
-        turnRadarRight(360);
-        for(number i = 0 upto 2)
-        {
-            ahead(20);
-        }
-    }
-
-   when (ScannedRobotEvent e)
-   {
-       text currentRival = e.getName();
-       turnLeftAndRotate(currentRival);
-       Offensive();
-   }
-}
-
-strategy Offensive()
-{
-    routine()
-   {
-       fire(1);
-   }
-   when(LowHealth e)
-   {
-       Default(100, 50 + 50);
-   }
-}
-
-number Function()
-{
-    return 2;
-    number x = 0;
-}
-
-event LowHealth()
-{
-   turnLeftAndRotate("30");
-
-   return getEnergy() <= 50;
 }
