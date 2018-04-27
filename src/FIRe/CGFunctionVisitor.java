@@ -101,7 +101,7 @@ public class CGFunctionVisitor extends ASTVisitor {
 
         for(AbstractNode id : node.childList){
             if(id instanceof IdNode){
-                code.emit(((IdNode) id).Name + "[");
+                code.emit(((IdNode) id).Name + "[(int)");
             }
 
             else if(id instanceof ExpressionNode){
@@ -331,12 +331,51 @@ public class CGFunctionVisitor extends ASTVisitor {
 
     @Override
     public void visit(TextDeclarationNode node, Object... arg) throws Exception {
+        int idCounter = 0;
+        boolean exprFlag = false;
 
+        for(AbstractNode id : node.childList){
+            if(id instanceof IdNode)
+                idCounter++;
+            else if(id instanceof ExpressionNode)
+                exprFlag = true;
+        }
+
+        code.emit("String ");
+
+        for(AbstractNode id : node.childList){
+            if(id instanceof IdNode && idCounter > 1){
+                code.emit(((IdNode) id).Name + ", ");
+                idCounter--;
+            }
+
+            else if(id instanceof IdNode && exprFlag){
+                code.emit(((IdNode) id).Name + " = ");
+            }
+
+            else if(id instanceof IdNode){
+                code.emitNL(((IdNode) id).Name + ";");
+            }
+
+            else if(id instanceof ExpressionNode){
+                code.emitNL(exprGen.GenerateExprCode(code, (ExpressionNode) id) + ";");
+            }
+        }
     }
 
     @Override
     public void visit(TextArrayDeclarationNode node, Object... arg) throws Exception {
+        code.emit("String ");
 
+        for(AbstractNode id : node.childList){
+            if(id instanceof IdNode){
+                code.emit(((IdNode) id).Name + "[(int)");
+            }
+
+            else if(id instanceof ExpressionNode){
+                code.emitNL(exprGen.GenerateExprCode(code, (ExpressionNode) id) + "];");
+            }
+        }
     }
 
     @Override
@@ -351,12 +390,23 @@ public class CGFunctionVisitor extends ASTVisitor {
 
     @Override
     public void visit(WhenNode node, Object... arg) {
-
+        //code.emitNL("{");
+        for(AbstractNode child : node.childList){
+            if(child instanceof BlockNode)
+                VisitNode(child);
+        }
+        //code.emitNL("}");
     }
 
     @Override
     public void visit(WhileNode node, Object... arg) throws TypeException {
-
+        code.emit("while(" + code.emit(exprGen.GenerateExprCode(code, node.Expression)) + ")");
+        code.emitNL("{");
+        for(AbstractNode child : node.childList){
+            if(child instanceof BlockNode)
+                VisitNode(child);
+        }
+        code.emitNL("}");
     }
 
     @Override
