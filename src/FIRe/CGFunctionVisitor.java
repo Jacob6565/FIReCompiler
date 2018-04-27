@@ -65,6 +65,7 @@ public class CGFunctionVisitor extends ASTVisitor {
         int idCounter = 0;
         boolean exprFlag = false;
 
+
         for(AbstractNode id : node.childList){
             if(id instanceof IdNode)
                 idCounter++;
@@ -382,7 +383,8 @@ public class CGFunctionVisitor extends ASTVisitor {
 
     @Override
     public void visit(StrategyDeclarationNode node, Object... arg) throws Exception {
-
+        for(AbstractNode child : node.childList)
+            VisitNode(child);
     }
 
     @Override
