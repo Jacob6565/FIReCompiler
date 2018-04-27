@@ -163,12 +163,12 @@ public class CGFunctionVisitor extends ASTVisitor {
         boolean dclUsed = false;
         code.emit("for(");
         if (node.Dcl != null && node.Dcl.childList.get(1) instanceof ExpressionNode){
-            code.emit(node.Dcl.Id.Name + " = (int)");
+            code.emit("int " + node.Dcl.Id.Name + " = (int)");
             code.emit(exprGen.GenerateExprCode(code, (ExpressionNode) node.Dcl.childList.get(1)) + ";");
             dclUsed = true;
         }
         else if(node.Dcl != null){
-            code.emit(node.Dcl.Id.Name + " = " + "0;");
+            code.emit("int " + node.Dcl.Id.Name + " = " + "0;");
             dclUsed = true;
         }
         else if(node.From != null){
