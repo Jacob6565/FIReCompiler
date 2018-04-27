@@ -172,7 +172,8 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
 
                     NumberDeclarationNode numberDeclarationNode = new NumberDeclarationNode();
                     numberDeclarationNode.LineNumber = ctx.start.getLine();
-                    numberDeclarationNode.childList.add(visitId(ctx.id(0))); //0 beacuse we want to add the first and only element from the list
+                    numberDeclarationNode.Id = (IdNode) visitId(ctx.id(0));
+                    numberDeclarationNode.childList.add(numberDeclarationNode.Id);
 
                     numberDeclarationNode.childList.add(visitExpr(ctx.expr()));
 
@@ -189,7 +190,8 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
 
                     TextDeclarationNode textDeclarationNode = new TextDeclarationNode();
                     textDeclarationNode.LineNumber = ctx.start.getLine();
-                    textDeclarationNode.childList.add(visitId(ctx.id(0))); //0 beacuse we want to add the first and only element from the list
+                    textDeclarationNode.Id = (IdNode) visitId(ctx.id(0));
+                    textDeclarationNode.childList.add(textDeclarationNode.Id);
 
                     textDeclarationNode.childList.add(visitExpr(ctx.expr()));
                     for (AbstractNode AN : textDeclarationNode.childList) {
@@ -201,13 +203,11 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
                 } else if (ctx.Type().toString().equals("bool")) {
 
                     BooleanDeclarationNode booleanDeclarationNode = new BooleanDeclarationNode();
-                    booleanDeclarationNode.childList.add(visitId(ctx.id(0))); //0 beacuse we want to add the first and only element from the list
+                    booleanDeclarationNode.Id =  (IdNode) visitId(ctx.id(0));
                     booleanDeclarationNode.LineNumber = ctx.start.getLine();
                     booleanDeclarationNode.childList.add(visitExpr(ctx.expr()));
-                    for (AbstractNode AN : booleanDeclarationNode.childList) {
-                        if (AN instanceof IdNode)
-                            booleanDeclarationNode.Id = (IdNode) AN;
-                    }
+                    booleanDeclarationNode.childList.add(booleanDeclarationNode.Id);
+
                     return booleanDeclarationNode;
                 } else
                     return null;
@@ -295,7 +295,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
 
     }
 
-    // A routine can exist with and without a condition expression, this method construct the routine node accordingly,
+    // A routine can exist with or without a condition expression, this method construct the routine node accordingly,
     // by visiting the appropriate visit methods for the input of the RoutineNode constructor.
     @Override
     public AbstractNode visitRoutine(CFGParser.RoutineContext ctx) {
@@ -375,6 +375,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         NotNode node = new NotNode();
         node.Expression = (ExpressionNode)visitExpr(ctx.expr().get(0));
         node.LineNumber = ctx.start.getLine();
+        node.childList.add(node.Expression);
         return node;
     }
 

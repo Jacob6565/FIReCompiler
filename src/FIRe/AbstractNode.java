@@ -138,6 +138,7 @@ class RoutineNode extends ControlStructureNode{
 
     public RoutineNode(AbstractNode expr, AbstractNode routineBlock, int lineNumber){
         repeatCondition = (ExpressionNode) expr;
+        childList.add(repeatCondition);
         childList.add(routineBlock);
         LineNumber = lineNumber;
     }
