@@ -22,7 +22,7 @@ bool turnLeftAndRotate(text currentRival)
           fire(firepower);
           shotAtRival = true;
    }
-   else if(a[2.5])
+   else if(a[2])
    {
 
    }

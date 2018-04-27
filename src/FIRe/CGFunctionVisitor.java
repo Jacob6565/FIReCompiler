@@ -51,8 +51,10 @@ public class CGFunctionVisitor extends ASTVisitor {
 
     @Override
     public void visit(BlockNode node, Object... arg) throws Exception {
+        code.emitNL("{");
         for(AbstractNode child : node.childList)
             VisitNode(child);
+        code.emitNL("}");
     }
 
     @Override
