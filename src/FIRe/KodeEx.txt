@@ -1,7 +1,7 @@
 RobotProperties
 {
       RobotName:TheDestroyer;
-      RobotType:AdvancedRobot;
+      RobotType:advancedRobot;
       BodyColor:yellow;
       GunColor:red;
       RadarColor:white;
@@ -53,7 +53,7 @@ strategy Offensive(bool west){
 
     bool value = west;
 
-   routine()
+   routine(5^5)
    {
        fire(1);
    }
@@ -63,8 +63,11 @@ strategy Offensive(bool west){
    }
 }
 
+
 number Function(text name)
 {
+
+    name = "2 == 2" + name;
     return 2;
 }
 

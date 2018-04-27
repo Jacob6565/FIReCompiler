@@ -123,11 +123,11 @@ public class SymbolTableVisitor extends ASTVisitor {
             VisitNode(node.Expression);
         }
         //If it is an array, we cut away the "array" part
-        if (node.Id.type.contains("array") && node.Id.ArrayIndex != null)
+        if (node.Id.type != null && node.Id.type.contains("array") && node.Id.ArrayIndex != null)
             node.Id.type = node.Id.type.split(" ")[0];
 
         //If the children are not of the same type, throw an exception.
-        if (!node.Id.type.equals(node.Expression.type))
+        if (node.Id.type != null && !node.Id.type.equals(node.Expression.type))
             throw new TypeException(node.Id.type, node.Expression.type, node.LineNumber);
     }
 
@@ -146,7 +146,6 @@ public class SymbolTableVisitor extends ASTVisitor {
         if (node.Parent instanceof ForNode && ((ForNode)node.Parent).Dcl != null){
             visit(((ForNode) node.Parent).Dcl);
         }
-
 
         //Then we visit each child
         for (AbstractNode Node : node.childList) {
@@ -245,12 +244,17 @@ public class SymbolTableVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(EventDeclarationNode node, Object... arg) {
+    public void visit(EventDeclarationNode node, Object... arg) throws InvalidNumberOfArgumentsException {
         //The FESVisitor deals with event declarations
         for (AbstractNode Node : node.childList) {
-            if (Node != null)
+            if (Node != null) {
+                if (Node instanceof FormalParameterNode && ((FormalParameterNode) Node).parameterMap.size() > 0)
+                    throw new InvalidNumberOfArgumentsException(0, ((FormalParameterNode)Node).parameterMap.size(),node.LineNumber);
                 VisitNode(Node);
+
+            }
         }
+
     }
 
     @Override
@@ -282,7 +286,7 @@ public class SymbolTableVisitor extends ASTVisitor {
             if (Node != null)
                 VisitNode(Node);
         }
-        if (node.Parent instanceof StrategyDeclarationNode || node.Parent instanceof FunctionDeclarationNode)
+        if (node.Parent instanceof StrategyDeclarationNode)
 
             if ( node.Parent instanceof StrategyDeclarationNode && ((StrategyDeclarationNode) node.Parent).Id.Name.equals("Default") && node.parameterMap.size() > 0)
                 throw new InvalidNumberOfArgumentsException(0,node.parameterMap.size(),node.LineNumber);
@@ -615,7 +619,7 @@ public class SymbolTableVisitor extends ASTVisitor {
     public void visit(NotNode node, Object... arg) throws TypeException {
 
         //If the expression is not a bool, throw an expression
-        if(node.Expression.type != "bool")
+        if(node.Expression.type != null && !node.Expression.type.equals("bool"))
             throw new TypeException("bool", node.Expression.type,node.LineNumber);
 
         //The result is a bool

@@ -8,20 +8,10 @@ RobotProperties
 }
 
 strategy Default(){
-    number a = 2;
-    number b[4];
-    number c[true];
+    bool b = true;
 
-    if (a < 22 and 23 < 24){
-        a = Grisen("hejsa");
-    }
-    else if ("Text" == "hejsa")
-    {
-        Gris();
-    }
-    else
-    {
-      a = Grisen("a");
+    if (!(b == 3)){
+        ahead(12);
     }
 }
 
