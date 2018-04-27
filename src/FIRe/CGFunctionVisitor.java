@@ -172,10 +172,22 @@ public class CGFunctionVisitor extends ASTVisitor {
         }
 
         if(node.Incremental && dclUsed)
-            code.emit(" " + node.Dcl.Id.Name + " < " + exprGen.GenerateExprCode(code, (ExpressionNode) node.To) + ";");
-        else if(node.Incremental && dclUsed == false)
-            code.emit(" " + node.From + " < " + exprGen.GenerateExprCode(code, (ExpressionNode) node.To) + ";");
-        //MISSING REST
+            code.emit(" " + node.Dcl.Id.Name + " < (int)" + exprGen.GenerateExprCode(code, (ExpressionNode) node.To) + ";");
+        else if(node.Incremental && !dclUsed)
+            code.emit(" " + node.From + " < (int)" + exprGen.GenerateExprCode(code, (ExpressionNode) node.To) + ";");
+        else if(!node.Incremental && dclUsed)
+            code.emit(" " + node.Dcl.Id.Name + " > (int)" + exprGen.GenerateExprCode(code, (ExpressionNode) node.To) + ";");
+        else if(!node.Incremental && !dclUsed)
+            code.emit(" " + node.From + " > (int)" + exprGen.GenerateExprCode(code, (ExpressionNode) node.To) + ";");
+
+        code.emitNL("{");
+
+        for(AbstractNode child : node.childList){
+            if(child instanceof BlockNode)
+                VisitNode(child);
+        }
+
+        code.emitNL("}");
     }
 
     @Override
