@@ -5,7 +5,7 @@ public class NameAlreadyUsedInGlobalScopeException extends Exception{
         super(message);
     }
     public NameAlreadyUsedInGlobalScopeException(String message, String param){
-        super("Message: " + message + " Parameter already used: " + param);
+        super("ERROR: " + message + " Parameter already used: " + param);
     }
 
 }

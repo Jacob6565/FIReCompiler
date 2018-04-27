@@ -36,6 +36,9 @@ public class SymbolTableVisitor extends ASTVisitor {
         if (node.RightChild != null)
             VisitNode(node.RightChild);
 
+        //We will set the type as the type of one of the children.
+        node.type = node.LeftChild.type;
+
         //Addition should only work if the children are of the same type and neither of them are bool
 
         if (node.LeftChild.type == "bool" && node.RightChild.type == "bool")
@@ -52,9 +55,6 @@ public class SymbolTableVisitor extends ASTVisitor {
 
         else if ((node.RightChild.type == "number" || node.RightChild.type == "text") && node.LeftChild.type != node.RightChild.type)
             throw new TypeException(node.RightChild.type, node.LeftChild.type, node.LineNumber);
-
-        //If there is not an exception, we will set the type as the type of one of the children.
-        node.type = node.LeftChild.type;
     }
 
     @Override
@@ -274,11 +274,13 @@ public class SymbolTableVisitor extends ASTVisitor {
         //The FESVisitor deals with event declarations
         for (AbstractNode Node : node.childList) {
             if (Node != null) {
+                //deal with formal parameters
                 if (Node instanceof FormalParameterNode && ((FormalParameterNode) Node).parameterMap.size() > 0)
                     throw new InvalidNumberOfArgumentsException(0, ((FormalParameterNode)Node).parameterMap.size(),node.LineNumber);
                 VisitNode(Node);
-
             }
+
+
         }
 
     }
@@ -366,6 +368,7 @@ public class SymbolTableVisitor extends ASTVisitor {
                 VisitNode(Node);
             }
         }
+        node.type = node.Id.type;
         //If this is not an eventfield, deal with the formal parameters
         //Event methods do not have parameters
         if(!node.Id.Name.contains(".")) {
@@ -383,7 +386,7 @@ public class SymbolTableVisitor extends ASTVisitor {
                 if (!(formalParameters.parameters.get(i).y.equals(((ExpressionNode) actualParams.get(i)).type)))
                     throw new TypeException(formalParameters.parameters.get(i).y, ((ExpressionNode) actualParams.get(i)).type, node.LineNumber);
             }
-            node.type = formalParameters.type;
+
         }
     }
 
@@ -443,7 +446,7 @@ public class SymbolTableVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(IdNode node, Object... arg) throws SymbolNotFoundException, TypeException {
+    public void visit(IdNode node, Object... arg) throws SymbolNotFoundException, TypeException, CustomEventFieldAccessException {
         //Here we go
 
         //If it is in the symbol table
@@ -463,6 +466,10 @@ public class SymbolTableVisitor extends ASTVisitor {
 
             //Then we look up THAT type, and find all its fields.
             SymbolData SD = ST.Search(EventType, node.LineNumber);
+
+            //If the event is a custom event, it should not have any accessible fields.
+            if (SD.parameters == null)
+                throw new CustomEventFieldAccessException(node.LineNumber);
 
             //If there is an entry that matches the name of the field, we set that type
             for (Tuple<String, String> entry : SD.parameters) {
@@ -579,11 +586,8 @@ public class SymbolTableVisitor extends ASTVisitor {
         //The if contains expressions and blocks for each if/else if/else in the chain
         //each of the expressions must be a bool
         for (AbstractNode AN : node.childList)
-            //This if is used to avoid nullpointerreference when performing type.equals in the nested if.
-            if(AN instanceof ExpressionNode && ((ExpressionNode)AN).type != null) {
-                if (!((ExpressionNode) AN).type.equals("bool")) {
-                    throw new TypeException("bool", ((ExpressionNode) AN).type, AN.LineNumber);
-                }
+            if(AN instanceof ExpressionNode && ((ExpressionNode)AN).type != null && !((ExpressionNode) AN).type.equals("bool")) {
+                throw new TypeException("bool", ((ExpressionNode) AN).type, AN.LineNumber);
             }
     }
 
@@ -813,7 +817,8 @@ public class SymbolTableVisitor extends ASTVisitor {
                 //We always know that the returnode got 1 child and its an expressionnode;
                 //Casting it to expressionNode in order to access the field "type".
                 ExpressionNode temp = (ExpressionNode) Node;
-                returnType = temp.type;
+                if (temp.type != null)
+                    returnType = temp.type;
             }
         }
 
@@ -821,7 +826,7 @@ public class SymbolTableVisitor extends ASTVisitor {
         if(ancestor instanceof FunctionDeclarationNode)
         {
             FunctionDeclarationNode temp = (FunctionDeclarationNode) ancestor;
-            if(!returnType.equals(temp.Type) && !temp.Type.equals("void"))
+            if(temp.Type != null && !returnType.equals(temp.Type) && !temp.Type.equals("void"))
             {
                 throw new TypeException(temp.Type , returnType, node.LineNumber);
             }
@@ -830,7 +835,7 @@ public class SymbolTableVisitor extends ASTVisitor {
         else if(ancestor instanceof EventDeclarationNode) {
             EventDeclarationNode temp = (EventDeclarationNode) ancestor;
             //Events should always return a boolean.
-            if(!returnType.equals("bool"))
+            if(returnType != null && !returnType.equals("bool"))
             {
                 throw new TypeException("bool", returnType, node.LineNumber);
             }
@@ -853,7 +858,7 @@ public class SymbolTableVisitor extends ASTVisitor {
         }
 
         //If there is an expression node in the routine, it must be a number, otherwise throw an exception
-        if (node.repeatCondition != null && !node.repeatCondition.type.equals("number")){
+        if (node.repeatCondition != null && node.repeatCondition.type != null && !node.repeatCondition.type.equals("number")){
             throw new TypeException("number", node.repeatCondition.type,node.LineNumber);
         }
     }

@@ -194,10 +194,6 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
                     textDeclarationNode.childList.add(textDeclarationNode.Id);
 
                     textDeclarationNode.childList.add(visitExpr(ctx.expr()));
-                    for (AbstractNode AN : textDeclarationNode.childList) {
-                        if (AN instanceof IdNode)
-                            textDeclarationNode.Id = (IdNode) AN;
-                    }
 
                     return textDeclarationNode;
                 } else if (ctx.Type().toString().equals("bool")) {

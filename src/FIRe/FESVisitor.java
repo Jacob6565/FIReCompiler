@@ -328,6 +328,7 @@ public class FESVisitor extends ASTVisitor{
         symbolTable.Insert(new FunctionDeclarationNode("getWidth","number"));
         symbolTable.Insert(new FunctionDeclarationNode("getX", "number"));
         symbolTable.Insert(new FunctionDeclarationNode("getY","number"));
+        symbolTable.Insert(new FunctionDeclarationNode("print","void", new Tuple<>("line", "text")));
         symbolTable.Insert(new FunctionDeclarationNode("resume","void"));
         symbolTable.Insert(new FunctionDeclarationNode("scan","void"));
         symbolTable.Insert(new FunctionDeclarationNode("setAdjustGunForRobotTurn","void",new Tuple<>("independent","bool")));
