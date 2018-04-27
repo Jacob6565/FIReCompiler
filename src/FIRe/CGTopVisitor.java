@@ -39,10 +39,9 @@ public class CGTopVisitor extends ASTVisitor{
         }
     }
 
-    //Merges all the inputted CodeHolders and returns one single CodeHolder with one single string
+    //Merges all the inputted CodeHolders correctly and returns them as one single String
     private String mergeCodeHolders(){
         StringBuilder mergedCode = new StringBuilder();
-
 
         setup.emit(runMethod.getCode(), insideClassIndent);
         for (MethodCodeHolder method: methods) {
@@ -51,12 +50,13 @@ public class CGTopVisitor extends ASTVisitor{
         for (EventHandlerCodeHolder eventHandler: eventHandlers) {
             setup.emit(eventHandler.getCode(), insideClassIndent);
         }
-        mergedCode.append(setup.getCode());
 
+        mergedCode.append(setup.getCode());
 
         return mergedCode.toString();
     }
 
+    //Used
     private void addEventHandler(String methodeName, String fparam, String code, String strategyName){
         if (eventHandlers.size()==0 || getEventHandler(methodeName)== null){
             EventHandlerCodeHolder newEventHandler = new EventHandlerCodeHolder(methodeName, "void", fparam);
@@ -65,7 +65,6 @@ public class CGTopVisitor extends ASTVisitor{
         }
         else{
             getEventHandler(methodeName).addCase(strategyName, code);
-
         }
     }
 
@@ -75,7 +74,6 @@ public class CGTopVisitor extends ASTVisitor{
                 return eventHandler;
         }
         return null;
-
     }
 
 
@@ -346,15 +344,7 @@ public class CGTopVisitor extends ASTVisitor{
     public void visit(RobotPropertiesNode node, Object... arg) {
         String  bodyColor = null, gunColor = null, radarColor = null;
         for (AbstractNode child: node.childList) {
-            if (child instanceof  RobotNameNode){
-                RobotNameNode robotNameNode = (RobotNameNode) child;
-                setup.name=robotNameNode.RobotName.Name;
-            }
-            else if(child instanceof RobotTypeNode){
-                RobotTypeNode robotTypeNode = (RobotTypeNode) child;
-                setup.name = robotTypeNode.RobotType.Name;
-            }
-            else if (child instanceof  BodyColorNode){
+            if (child instanceof  BodyColorNode){
                 BodyColorNode temp = (BodyColorNode) child;
                 bodyColor = temp.Color.Color;
             }
@@ -366,6 +356,8 @@ public class CGTopVisitor extends ASTVisitor{
                 RadarColorNode temp = (RadarColorNode) child;
                 radarColor = temp.Color.Color;
             }
+            else
+                VisitNode(child);
         }
         runMethod.emit(setColorBuilder(bodyColor, gunColor, radarColor), insideMethodeIndent);
     }
@@ -468,11 +460,11 @@ public class CGTopVisitor extends ASTVisitor{
             //Accessing strategy name
             String strategyName = parentStrategy.Id.Name;
 
-            addEventHandler("On" + str[0], fparam, "INSERT CODE HERE\n", strategyName);
+            addEventHandler("on" + str[0], fparam, "INSERT CODE HERE\n", strategyName);
         }
-        //Specialcase for when the when is for a custom event
+        //Specialcase for when the when is for a custom event /KRISTOFFER
         else {
-            
+
         }
     }
 
@@ -507,11 +499,11 @@ public class CGTopVisitor extends ASTVisitor{
 
     @Override
     public void visit(RobotNameNode node, Object... arg) {
-
+        setup.name=node.RobotName.Name;
     }
 
     @Override
     public void visit(RobotTypeNode node, Object... arg) throws TypeException {
-
+        setup.robotType = node.RobotType.Name;
     }
 }
