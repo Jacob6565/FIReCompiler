@@ -243,33 +243,33 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
                 }*/
                 return ADN;
             }
-            else { //Multiple Declarations
-                if (ctx.Type().toString().equals("number")) {
-                    NumberDeclarationNode numberDeclarationNode = new NumberDeclarationNode();
-                    numberDeclarationNode.LineNumber = ctx.start.getLine();
-                    for (CFGParser.IdContext idContext : ctx.id()) {
-                        numberDeclarationNode.childList.add(visitId(idContext)); //we add the dcls as children
-                    }
-                    return numberDeclarationNode;
-                } else if (ctx.Type().toString().equals("text")) {
+        }
+        else if(ctx.Comma() != null){ //Multiple Declarations
+            if (ctx.Type().toString().equals("number")) {
+                NumberDeclarationNode numberDeclarationNode = new NumberDeclarationNode();
+                numberDeclarationNode.LineNumber = ctx.start.getLine();
+                for (CFGParser.IdContext idContext : ctx.id()) {
+                    numberDeclarationNode.childList.add(visitId(idContext)); //we add the dcls as children
+                }
+                return numberDeclarationNode;
+            } else if (ctx.Type().toString().equals("text")) {
 
-                    TextDeclarationNode textDeclarationNode = new TextDeclarationNode();
-                    textDeclarationNode.LineNumber = ctx.start.getLine();
-                    for (CFGParser.IdContext idContext : ctx.id()) {
-                        textDeclarationNode.childList.add(visitId(idContext));//We add the dcls as children
-                    }
-                    return textDeclarationNode;
-                } else if (ctx.Type().toString().equals("bool")) {
+                TextDeclarationNode textDeclarationNode = new TextDeclarationNode();
+                textDeclarationNode.LineNumber = ctx.start.getLine();
+                for (CFGParser.IdContext idContext : ctx.id()) {
+                    textDeclarationNode.childList.add(visitId(idContext));//We add the dcls as children
+                }
+                return textDeclarationNode;
+            } else if (ctx.Type().toString().equals("bool")) {
 
-                    BooleanDeclarationNode booleanDeclarationNode = new BooleanDeclarationNode();
-                    booleanDeclarationNode.LineNumber = ctx.start.getLine();
-                    for (CFGParser.IdContext idContext : ctx.id()) {
-                        booleanDeclarationNode.childList.add(visitId(idContext));//We add the dcls as children
-                    }
-                    return booleanDeclarationNode;
-                } else
-                    return null; //Exception?
-            }
+                BooleanDeclarationNode booleanDeclarationNode = new BooleanDeclarationNode();
+                booleanDeclarationNode.LineNumber = ctx.start.getLine();
+                for (CFGParser.IdContext idContext : ctx.id()) {
+                    booleanDeclarationNode.childList.add(visitId(idContext));//We add the dcls as children
+                }
+                return booleanDeclarationNode;
+            } else
+                return null; //Exception?
         }
         return null;
     }

@@ -145,7 +145,7 @@ public class CGExpressionVisitor{
     }
 
     public void visit(TextNode node, Object... arg) {
-        code.emit("\"" + node.Content + "\"");
+        code.emit(node.Content);
     }
 
     public void visit(ValNode node, Object... arg) {
