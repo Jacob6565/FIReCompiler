@@ -160,7 +160,8 @@ public class CGFunctionVisitor extends ASTVisitor {
         boolean dclUsed = false;
         code.emit("for(");
         if (node.Dcl != null && node.Dcl.childList.get(1) instanceof ExpressionNode){
-            code.emit(node.Dcl.Id.Name + " = " + exprGen.GenerateExprCode(code, (ExpressionNode) node.Dcl.childList.get(1)) + ";");
+            code.emit(node.Dcl.Id.Name + " = ");
+            code.emit(exprGen.GenerateExprCode(code, (ExpressionNode) node.Dcl.childList.get(1)) + ";");
             dclUsed = true;
         }
         else if(node.Dcl != null){
@@ -171,15 +172,22 @@ public class CGFunctionVisitor extends ASTVisitor {
             code.emit(";");
         }
 
-        if(node.Incremental && dclUsed)
-            code.emit(" " + node.Dcl.Id.Name + " < (int)" + exprGen.GenerateExprCode(code, (ExpressionNode) node.To) + ";");
-        else if(node.Incremental && !dclUsed)
-            code.emit(" " + node.From + " < (int)" + exprGen.GenerateExprCode(code, (ExpressionNode) node.To) + ";");
-        else if(!node.Incremental && dclUsed)
-            code.emit(" " + node.Dcl.Id.Name + " > (int)" + exprGen.GenerateExprCode(code, (ExpressionNode) node.To) + ";");
-        else if(!node.Incremental && !dclUsed)
-            code.emit(" " + node.From + " > (int)" + exprGen.GenerateExprCode(code, (ExpressionNode) node.To) + ";");
-
+        if(node.Incremental && dclUsed) {
+            code.emit(" " + node.Dcl.Id.Name + " < (int)");
+            code.emit(exprGen.GenerateExprCode(code, (ExpressionNode) node.To) + ";");
+        }
+        else if(node.Incremental && !dclUsed) {
+            code.emit(" " + node.From + " < (int)");
+            code.emit(exprGen.GenerateExprCode(code, (ExpressionNode) node.To) + ";");
+        }
+        else if(!node.Incremental && dclUsed) {
+            code.emit(" " + node.Dcl.Id.Name + " > (int)");
+            code.emit(exprGen.GenerateExprCode(code, (ExpressionNode) node.To) + ";");
+        }
+        else if(!node.Incremental && !dclUsed) {
+            code.emit(" " + node.From + " > (int)");
+            code.emit(exprGen.GenerateExprCode(code, (ExpressionNode) node.To) + ";");
+        }
         code.emitNL("{");
 
         for(AbstractNode child : node.childList){
@@ -453,7 +461,8 @@ public class CGFunctionVisitor extends ASTVisitor {
 
     @Override
     public void visit(WhileNode node, Object... arg) throws TypeException {
-        code.emit("while(" + code.emit(exprGen.GenerateExprCode(code, node.Expression)) + ")");
+        code.emit("while(");
+        code.emit(exprGen.GenerateExprCode(code, node.Expression) + ")");
         code.emitNL("{");
         for(AbstractNode child : node.childList){
             if(child instanceof BlockNode)
