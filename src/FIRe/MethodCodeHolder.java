@@ -1,7 +1,7 @@
 package FIRe;
 
 public class MethodCodeHolder extends CodeHolder {
-    MethodCodeHolder(String name, String type, String parameters){
+    protected MethodCodeHolder(String name, String type, String parameters){
         this(name, type);
         this.parameters = parameters;
     }
@@ -10,12 +10,11 @@ public class MethodCodeHolder extends CodeHolder {
         this.type = type;
     }
 
-    String name;
-    String type;
-    String parameters = "";
+    protected String name;
+    public String type;
+    public String parameters = "";
 
-
-    String getCode() {
+    public String getCode() {
         return "public " + type + " " + name + " (" + parameters + "){ \n" + sb.toString() + "\n}\n";
     }
 }
