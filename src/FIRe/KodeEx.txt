@@ -1,86 +1,19 @@
 RobotProperties
 {
       RobotName:TheDestroyer;
-      RobotType:advancedRobot;
+      RobotType:AdvancedRobot;
       BodyColor:yellow;
       GunColor:red;
       RadarColor:white;
 }
 
-number firepower = 100;
+number firepower, shield;
 text nameOfRival = "SittingDuck";
-
-void doSomething(number array){
-
-    number x = 3.7;
-
-    if(x == 3.6){
-        x = 2;
-    }
-    else{
-    x = x + 4.2;
-
-    }
-}
-
-strategy Default()
-{
-    number firepowers[4];
-    firepowers[1] = 3 ^ 5 ^ (1 + 1);
-    firepowers[2] = 2;
-    firepowers[3] = 3;
-    number a = 3;
-    number b = a;
-
-    routine()
-    {
-        turnRadarRight(360);
-        for(number i = 0 upto 2)
-        {
-            ahead(20);
-        }
-    }
-
-   when (ScannedRobotEvent e)
-   {
-       text currentRival = e.getName();
-       turnLeftAndRotate(currentRival);
-       Offensive(true);
-   }
-}
-
-strategy Offensive(bool west){
-
-    bool value = west;
-
-   routine(5^5)
-   {
-       fire(1);
-   }
-   when(LowHealth e)
-   {
-       Default();
-   }
-}
-
-
-number Function(text name)
-{
-
-    name = "2 == 2" + name;
-    return 2;
-}
-
-event LowHealth()
-{
-   turnLeftAndRotate("30");
-
-   return getEnergy() <= 50;
-}
 
 bool turnLeftAndRotate(text currentRival)
 {
-   number degrees = 90;
+   number uno = 1;
+   number RobinHood, LilleJohn = 5.2;
    nameOfRival = currentRival;
    bool shotAtRival = false;
    bool a[5];
@@ -96,4 +29,66 @@ bool turnLeftAndRotate(text currentRival)
        turnLeft(b);
    }
     return a[1];
+}
+
+void doSomething(){
+    if(x == 3.6){
+        x = 2;
+    }
+    else{
+    x = x + 4.2;
+
+    }
+}
+
+strategy Default(number et, number to)
+{
+    number firepowers[4];
+    firepowers[1] = 3 ^ 5 ^ (1 + 1);
+    firepowers[2] = 2;
+    firepowers[3] = 3;
+    a = a + b;
+    text string = "something";
+    bool val = true;
+
+    routine()
+    {
+        turnRadarRight(360);
+        for(number i = 0 upto 2)
+        {
+            ahead(20);
+        }
+    }
+
+   when (ScannedRobotEvent e)
+   {
+       text currentRival = e.getName();
+       turnLeftAndRotate(currentRival);
+       Offensive();
+   }
+}
+
+strategy Offensive()
+{
+    routine()
+   {
+       fire(1);
+   }
+   when(LowHealth e)
+   {
+       Default(100, 50 + 50);
+   }
+}
+
+number Function()
+{
+    return 2;
+    number x = 0;
+}
+
+event LowHealth()
+{
+   turnLeftAndRotate("30");
+
+   return getEnergy() <= 50;
 }

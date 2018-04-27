@@ -95,7 +95,7 @@ public class Main {
 
 
         //Code generation
-        /*CGTopVisitor codeGenerator = new CGTopVisitor();
+        CGTopVisitor codeGenerator = new CGTopVisitor();
 
         try {
             codeGenerator.visit(ast);
@@ -105,9 +105,5 @@ public class Main {
 
         codeGenerator.emitOutputFile();
 
-
-        CGExpressionVisitor CGE = new CGExpressionVisitor();
-        CGStrategyVisitor CGS = new CGStrategyVisitor();
-*/
     }
 }

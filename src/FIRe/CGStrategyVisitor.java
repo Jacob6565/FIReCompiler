@@ -39,15 +39,6 @@ public class CGStrategyVisitor extends ASTVisitor {
 
         CGExpressionVisitor CGE = new CGExpressionVisitor();
         CGE.GenerateExprCode(CH, node);
-
-
-        /*for (AbstractNode Node : node.childList) {
-            if(Node instanceof IdNode){
-                if(((IdNode) Node).type.contains("array"));
-                VisitNode(Node);
-                CH.emit(""
-            }
-        }*/
     }
 
     @Override
@@ -56,14 +47,33 @@ public class CGStrategyVisitor extends ASTVisitor {
 
         for (AbstractNode Node: node.childList) {
             if(Node instanceof IdNode){
-                VisitNode(Node);
+                if(((IdNode) Node).ArrayIndex == null){
+                    VisitNode(Node);
+                }
+                else{
+                    VisitNode(Node);
+                    CH.emit("[");
+                    NumberNode temp =  ((IdNode) Node).ArrayIndex;
+                    CGE.GenerateExprCode(CH, temp);
+                    CH.emit("] = ");
+                }
             }
             if(Node instanceof InfixExpressionNode){
                 VisitNode(Node);
+
+            }
+
+            if(Node instanceof NumberNode){
+                NumberNode temp = (NumberNode)Node;
+                CGE.GenerateExprCode(CH, temp);
+            }
+            if(Node instanceof AdditionNode){
+                AdditionNode temp = (AdditionNode)Node;
+                CH.emit(" = ");
+                CGE.GenerateExprCode(CH, temp);
             }
         }
-
-
+        CH.emitNL(";");
 
     }
 
@@ -79,9 +89,38 @@ public class CGStrategyVisitor extends ASTVisitor {
 
     @Override
     public void visit(BooleanDeclarationNode node, Object... arg) throws Exception {
-        CH.emit("boolean");
-        for(AbstractNode Node: node.childList) {
-            VisitNode(Node);
+
+        CGExpressionVisitor CGE = new CGExpressionVisitor();
+
+        int idCounter = 0;
+        boolean exprFlag = false;
+
+        for(AbstractNode id : node.childList){
+            if(id instanceof IdNode)
+                idCounter++;
+            else if(id instanceof ExpressionNode)
+                exprFlag = true;
+        }
+
+        CH.emit("boolean ");
+
+        for(AbstractNode id : node.childList){
+            if(id instanceof IdNode && idCounter > 1){
+                CH.emit(((IdNode) id).Name + ", ");
+                idCounter--;
+            }
+
+            else if(id instanceof IdNode && exprFlag){
+                CH.emit(((IdNode) id).Name + " = ");
+            }
+
+            else if(id instanceof IdNode){
+                CH.emitNL(((IdNode) id).Name + ";");
+            }
+
+            else if(id instanceof ExpressionNode){
+                CH.emitNL(CGE.GenerateExprCode(CH, (ExpressionNode) id) + ";");
+            }
         }
     }
 
@@ -95,7 +134,8 @@ public class CGStrategyVisitor extends ASTVisitor {
 
     @Override
     public void visit(BoolNode node, Object... arg) {
-
+        CGExpressionVisitor CGE = new CGExpressionVisitor();
+        CGE.GenerateExprCode(CH,node);
     }
 
     @Override
@@ -223,29 +263,38 @@ public class CGStrategyVisitor extends ASTVisitor {
 
     @Override
     public void visit(NumberDeclarationNode node, Object... arg) throws Exception {
-        CH.emit("double");
+        CH.emit("double ");
         for (AbstractNode Node: node.childList) {
-            visit(Node);
+            if(Node instanceof IdNode){
+                IdNode temp = (IdNode)Node;
+                visit(temp);
+            }
         }
-
+        CH.emit(" = ");
+        for (AbstractNode Node: node.childList) {
+            if(Node instanceof NumberNode){
+                VisitNode(Node);
+            }
+        }
+        CH.emitNL(";");
     }
 
     @Override
     public void visit(NumberArrayDeclarationNode node, Object... arg) throws Exception {
-        CH.emit("double ");
+        CH.emit("double "); // we know we need to write a double
 
         CGExpressionVisitor CGE = new CGExpressionVisitor();
 
         for(AbstractNode Node : node.childList){
             if(Node instanceof IdNode){
                 VisitNode(Node);
-                CH.emit("[]");
+                CH.emit("[]"); // After we have visited the ID we know we shoould emit this
             }
         }
-        CH.emit(" = new double[");
+        CH.emit(" = new double["); // In java you need to allocate a new array on the heap.
         for(AbstractNode Node: node.childList){
             if(Node instanceof NumberNode) {
-                CH.emit("(int)");
+                CH.emit("(int)"); // Necessary since we need to write it as an int
                 CGE.GenerateExprCode(CH, (NumberNode)Node);
                 CH.emit("]");
             }
@@ -310,9 +359,16 @@ public class CGStrategyVisitor extends ASTVisitor {
 
     @Override
     public void visit(TextDeclarationNode node, Object... arg) throws Exception {
-        CH.emit("text");
+        CH.emit("String ");
         for(AbstractNode Node: node.childList) {
-            VisitNode(Node);
+            if(Node instanceof IdNode) {
+                VisitNode(Node);
+            }
+            if(Node instanceof TextNode){
+                CH.emit(" = ");
+                VisitNode(Node);
+                CH.emitNL(";");
+            }
         }
     }
 
@@ -327,10 +383,13 @@ public class CGStrategyVisitor extends ASTVisitor {
     @Override
     public void visit(TextNode node, Object... arg) {
 
+        CGExpressionVisitor CGE = new CGExpressionVisitor();
+        CGE.GenerateExprCode(CH, node);
     }
 
     @Override
     public void visit(ValNode node, Object... arg) {
+
 
     }
 

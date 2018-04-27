@@ -84,13 +84,37 @@ public class SymbolTableVisitor extends ASTVisitor {
     }
 
 
+    private boolean tryParseInt(String value) {
+        try {
+            Integer.parseInt(value);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
     @Override
-    public void visit(ArrayAccessNode node, Object... arg) throws TypeException {
+    public void visit(ArrayAccessNode node, Object... arg) throws TypeException, SymbolNotFoundException {
         for (AbstractNode Node : node.childList) {
             if (Node != null)
                 VisitNode(Node);
         }
-        //maybe we should try/catch somewhere else
+
+        //Checking if arrayindex is an integer and not a bool or string.
+        if(node.index instanceof NumberNode)
+        {
+            NumberNode temp = (NumberNode)node.index;
+            if(temp.value % 1 != 0)
+            {
+                throw new TypeException("Array index must be integer, found: " + temp.value + ". Line: " + node.LineNumber);
+            }
+        }
+        else
+        {
+            throw new TypeException("number", node.index.type, node.LineNumber);
+        }
+
+
         try {
             SymbolData data = ST.Search(node.Id.Name, node.LineNumber);
             node.Id.type = data.type;
@@ -126,6 +150,7 @@ public class SymbolTableVisitor extends ASTVisitor {
         if (node.Id.type != null && node.Id.type.contains("array") && node.Id.ArrayIndex != null)
             node.Id.type = node.Id.type.split(" ")[0];
 
+
         //If the children are not of the same type, throw an exception.
         if (node.Id.type != null && !node.Id.type.equals(node.Expression.type))
             throw new TypeException(node.Id.type, node.Expression.type, node.LineNumber);
@@ -146,6 +171,7 @@ public class SymbolTableVisitor extends ASTVisitor {
         if (node.Parent instanceof ForNode && ((ForNode)node.Parent).Dcl != null){
             visit(((ForNode) node.Parent).Dcl);
         }
+
 
         //Then we visit each child
         for (AbstractNode Node : node.childList) {
@@ -417,7 +443,7 @@ public class SymbolTableVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(IdNode node, Object... arg) throws SymbolNotFoundException {
+    public void visit(IdNode node, Object... arg) throws SymbolNotFoundException, TypeException {
         //Here we go
 
         //If it is in the symbol table
@@ -497,6 +523,50 @@ public class SymbolTableVisitor extends ASTVisitor {
                 return;
             }
         }
+
+        //When we declare an array, the id nodes parent will be an instance of an arraydcl node.
+        if(node.Parent instanceof ArrayDeclarationNode)
+        {
+            //Then we typecasts it to an arraydeclarationnode in order to access its fields.
+            ArrayDeclarationNode tempArrayNode = (ArrayDeclarationNode) node.Parent;
+            //Then checks if the array index is a number.
+            if(tempArrayNode.Size instanceof NumberNode)
+            {
+                //Typecasts it to a numbernode in order to access its fields.
+                NumberNode tempNumberNode = (NumberNode) tempArrayNode.Size;
+                //Checks if it is an integervalue.
+                if(tempNumberNode.value % 1 != 0)
+                {
+                    throw new TypeException("Array index must be integer, found: " + tempNumberNode.value + ". Line: " + node.LineNumber);
+                }
+
+            }
+            //If array index is not a number.
+            else
+            {
+                throw new TypeException("number", tempArrayNode.Size.type, node.LineNumber);
+            }
+
+
+        }
+        //If the idnode got an array index then it is an arrayaccess.
+        else if(node.ArrayIndex != null)
+        {
+            //Checks if the array index is a numbernode
+            if(node.ArrayIndex instanceof NumberNode) {
+                NumberNode tempNumberNode = (NumberNode) node.ArrayIndex;
+                //Checks if it is an integervalue.
+                if (tempNumberNode.value % 1 != 0) {
+                    throw new TypeException("Array index must be integer, found: " + tempNumberNode.value + ". Line: " + node.LineNumber);
+                }
+            }
+            //If array index is not a number.
+            else
+            {
+                throw new TypeException("number", node.ArrayIndex.type, node.LineNumber);
+            }
+        }
+
     }
 
     @Override
@@ -509,8 +579,12 @@ public class SymbolTableVisitor extends ASTVisitor {
         //The if contains expressions and blocks for each if/else if/else in the chain
         //each of the expressions must be a bool
         for (AbstractNode AN : node.childList)
-             if (AN instanceof ExpressionNode && ((ExpressionNode)AN).type != "bool")
-                throw new TypeException("bool",((ExpressionNode)AN).type,AN.LineNumber);
+            //This if is used to avoid nullpointerreference when performing type.equals in the nested if.
+            if(AN instanceof ExpressionNode && ((ExpressionNode)AN).type != null) {
+                if (!((ExpressionNode) AN).type.equals("bool")) {
+                    throw new TypeException("bool", ((ExpressionNode) AN).type, AN.LineNumber);
+                }
+            }
     }
 
     @Override
