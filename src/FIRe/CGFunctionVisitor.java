@@ -53,10 +53,8 @@ public class CGFunctionVisitor extends ASTVisitor {
 
     @Override
     public void visit(BlockNode node, Object... arg) throws Exception {
-        code.emitNL("{");
         for(AbstractNode child : node.childList)
             VisitNode(child);
-        code.emitNL("}");
     }
 
     @Override
@@ -262,8 +260,9 @@ public class CGFunctionVisitor extends ASTVisitor {
                     code.emit(")");
                     firstTime = false;
                 } else if (Node instanceof BlockNode) {
+                    code.emitNL("{");
                     visit((BlockNode) Node);
-
+                    code.emitNL("}");
                 } else if (Node instanceof ExpressionNode && !firstTime) {
                     code.emit("else if(");
                     visit((ExpressionNode) Node);
@@ -282,9 +281,13 @@ public class CGFunctionVisitor extends ASTVisitor {
                     ifs++;
                 } else if ((bcount -1) == blocks && Node instanceof BlockNode){
                     code.emit("else");
+                    code.emitNL("{");
                     visit((BlockNode) Node);
+                    code.emitNL("}");
                 } else if (Node instanceof BlockNode) {
+                    code.emitNL("{");
                     visit((BlockNode) Node);
+                    code.emitNL("}");
                     blocks++;
                 } else if(Node instanceof ExpressionNode && !firstTime){
                     code.emit("else if(");
