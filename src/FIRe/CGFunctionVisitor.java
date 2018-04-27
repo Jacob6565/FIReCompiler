@@ -175,19 +175,19 @@ public class CGFunctionVisitor extends ASTVisitor {
 
         if(node.Incremental && dclUsed) {
             code.emit(" " + node.Dcl.Id.Name + " < (int)");
-            code.emit(exprGen.GenerateExprCode(code, (ExpressionNode) node.To) + ";");
+            code.emit(exprGen.GenerateExprCode(code, node.To) + ";");
         }
         else if(node.Incremental && !dclUsed) {
             code.emit(" " + node.From + " < (int)");
-            code.emit(exprGen.GenerateExprCode(code, (ExpressionNode) node.To) + ";");
+            code.emit(exprGen.GenerateExprCode(code, node.To) + ";");
         }
         else if(!node.Incremental && dclUsed) {
             code.emit(" " + node.Dcl.Id.Name + " > (int)");
-            code.emit(exprGen.GenerateExprCode(code, (ExpressionNode) node.To) + ";");
+            code.emit(exprGen.GenerateExprCode(code, node.To) + ";");
         }
         else if(!node.Incremental && !dclUsed) {
             code.emit(" " + node.From + " > (int)");
-            code.emit(exprGen.GenerateExprCode(code, (ExpressionNode) node.To) + ";");
+            code.emit(exprGen.GenerateExprCode(code, node.To) + ";");
         }
         code.emitNL("{");
 

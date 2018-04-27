@@ -7,7 +7,7 @@ RobotProperties
       RadarColor:white;
 }
 
-number firepower = 100;
+number firepower;
 text nameOfRival = "SittingDuck";
 
 bool turnLeftAndRotate(text currentRival)
