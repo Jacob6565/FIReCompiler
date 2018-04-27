@@ -14,7 +14,7 @@ public class Main {
     public static void main(String[] args) throws FileNotFoundException {
 
         //Reads from the example program. (Debug code)
-        Scanner in = new Scanner(new FileReader("src\\FIRe\\InvalidtKodeEx.txt"));
+        Scanner in = new Scanner(new FileReader("src\\FIRe\\KodeEx.txt"));
 
         //We use this delimiter, to chop the code into bits. We split by the backslash character \n
         in.useDelimiter("\n");
@@ -32,25 +32,19 @@ public class Main {
         //Converts the StringBuilder to a string.
         String outString = sb.toString();
         RobotHeaderTable RHT = new RobotHeaderTable();
-        CFGParser.ProgContext cst = null;
-        try {
-            //https://stackoverflow.com/questions/18110180/processing-a-string-with-antlr4
-            //Setup to perform lexical analysis on the input string.
-            CFGLexer lexer = new CFGLexer(CharStreams.fromString(outString));
-            lexer.removeErrorListeners();
-            lexer.addErrorListener(AntlrException.INSTANCE);
-            CommonTokenStream tokenStream = new CommonTokenStream(lexer);
-            CFGParser parser = new CFGParser(tokenStream);
-            parser.removeErrorListeners();
-            parser.addErrorListener(AntlrException.INSTANCE);
-            //Performs lexical analysis and builds a CST.
-            cst = parser.prog();
-            //cst.children.add(parser.dcl());
-        }
-        catch (ParseCancellationException e)
-        {
-            System.out.println(e.getMessage());
-        }
+
+        //https://stackoverflow.com/questions/18110180/processing-a-string-with-antlr4
+        //Setup to perform lexical analysis on the input string.
+        CFGLexer lexer = new CFGLexer(CharStreams.fromString(outString));
+
+        CommonTokenStream tokenStream = new CommonTokenStream(lexer);
+        CFGParser parser = new CFGParser(tokenStream);
+
+        //Performs lexical analysis and builds a CST.
+        CFGParser.ProgContext cst = parser.prog();
+        //cst.children.add(parser.dcl());
+
+
 
         //Builds an AST from the CST
         ProgNode ast = (ProgNode) new BuildASTVisitor().visitProg(cst);
@@ -101,7 +95,8 @@ public class Main {
 
 
         //Code generation
-        CGTopVisitor codeGenerator = new CGTopVisitor();
+        /*CGTopVisitor codeGenerator = new CGTopVisitor();
+
         try {
             codeGenerator.visit(ast);
         } catch (Exception e) {
@@ -113,6 +108,6 @@ public class Main {
 
         CGExpressionVisitor CGE = new CGExpressionVisitor();
         CGStrategyVisitor CGS = new CGStrategyVisitor();
-
+*/
     }
 }

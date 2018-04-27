@@ -1,9 +1,8 @@
 package FIRe;
 
 public class RunMethodCodeHolder extends MethodCodeHolder {
-    int caseNumber = 0;
     StringBuilder generatedSwitch = new StringBuilder();
-
+    StringBuilder conditionDeclarations = new StringBuilder();
     RunMethodCodeHolder(String name, String type) {
         super(name, type);
         generatedSwitch.append(indent("while(true){", 1));
@@ -12,15 +11,21 @@ public class RunMethodCodeHolder extends MethodCodeHolder {
 
     public void addToRunMethod(String strategyName, String body) {
         generatedSwitch.append(indent("case " + "\"" + strategyName + "\"", 3));
-        generatedSwitch.append(indent(body + "\n break;", 4));
+        generatedSwitch.append(indent(body + "break;", 4));
     }
 
+    public void addConditionDeclaration(String code){
+        conditionDeclarations.append(code);
+    }
+
+
     @Override
-    String getCode() {
+    public String getCode() {
+        sb.append(indent(conditionDeclarations.toString(), 1));
         generatedSwitch.append(indent("}\n", 2));
         generatedSwitch.append(indent("}\n", 1));
         generatedSwitch.append("}\n");
         sb.append(generatedSwitch.toString());
-        return "public " + type + " " + name + " (" + parameters + "){ \n" + sb.toString() + "\n}\n";
+        return "public " + type + " " + name + " (" + parameters + "){ \n" + sb.toString();
     }
 }

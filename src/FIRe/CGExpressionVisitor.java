@@ -27,7 +27,7 @@ public class CGExpressionVisitor{
     }
 
     public void visit(ArrayAccessNode node, Object... arg) throws TypeException {
-        code.emit(node.Id.Name + "[");
+        code.emit(node.Id.Name + "[(int)");
         VisitNode(node.index);
         code.emit("] ");
     }
@@ -75,7 +75,9 @@ public class CGExpressionVisitor{
     }
 
     public void visit(InfixExpressionNode node, Object... arg) throws Exception {
-
+        for (AbstractNode Node: node.childList) {
+            VisitNode(Node);
+        }
     }
 
     public void visit(LEQNode node, Object... arg) throws Exception {

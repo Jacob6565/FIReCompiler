@@ -1,0 +1,35 @@
+RobotProperties
+{
+      RobotName:TheDestroyer;
+      RobotType:advancedRobot;
+      BodyColor:yellow;
+      GunColor:red;
+      RadarColor:white;
+}
+
+strategy Default(){
+    number a = 2;
+    number b[4];
+    number c[true];
+
+    if (a < 22 and 23 < 24){
+        a = Grisen("hejsa");
+    }
+    else if ("Text" == "hejsa")
+    {
+        Gris();
+    }
+    else
+    {
+      a = Grisen("a");
+    }
+}
+
+void Gris()
+{
+}
+
+number Grisen (text i)
+{
+    return 2;
+}

@@ -258,6 +258,10 @@ class NumberArrayDeclarationNode extends ArrayDeclarationNode{
     public NumberArrayDeclarationNode(){
         super();
     }
+    public NumberArrayDeclarationNode(IdNode key, int lineNumber) {
+        super(key);
+        LineNumber = lineNumber;
+    }
 }
 
 class TextArrayDeclarationNode extends ArrayDeclarationNode{
@@ -274,6 +278,11 @@ class TextArrayDeclarationNode extends ArrayDeclarationNode{
 
     public TextArrayDeclarationNode(){
         super();
+    }
+
+    public TextArrayDeclarationNode(IdNode key, int lineNumber) {
+        super(key);
+        LineNumber = lineNumber;
     }
 }
 
@@ -292,6 +301,10 @@ class BoolArrayDeclarationNode extends ArrayDeclarationNode{
 
     public BoolArrayDeclarationNode(){
         super();
+    }
+    public BoolArrayDeclarationNode(IdNode key, int lineNumber) {
+        super(key);
+        LineNumber = lineNumber;
     }
 }
 
@@ -582,6 +595,11 @@ class ReturnNode extends StatementNode{
 //end statements begin declarations
 
 class NumberDeclarationNode extends DeclarationNode{
+    public NumberDeclarationNode(IdNode key, int lineNumber) {
+        super(key);
+        LineNumber = lineNumber;
+    }
+
     @Override
     public void accept(ASTVisitor v, AbstractNode parent) throws Exception {
         v.visit(this, parent);
@@ -621,6 +639,10 @@ class TextDeclarationNode extends DeclarationNode{
     public TextDeclarationNode(){
         super();
     }
+    public TextDeclarationNode(IdNode key, int lineNumber) {
+        super(key);
+        LineNumber = lineNumber;
+    }
 }
 
 class BooleanDeclarationNode extends DeclarationNode{
@@ -640,6 +662,10 @@ class BooleanDeclarationNode extends DeclarationNode{
 
     public BooleanDeclarationNode(){
         super();
+    }
+    public BooleanDeclarationNode(IdNode key, int lineNumber) {
+        super(key);
+        LineNumber = lineNumber;
     }
 }
 
@@ -723,7 +749,7 @@ class FormalParameterNode extends AbstractNode{
     }
 
     @Override
-    public void accept(ASTVisitor v, AbstractNode parent) {
+    public void accept(ASTVisitor v, AbstractNode parent) throws Exception {
         //Hvor man inde i denne visit metode så printer elementerne i mappen.
         v.visit(this, parent);
     }

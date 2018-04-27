@@ -10,7 +10,7 @@ abstract class CodeHolder {
         sb = new StringBuilder();
     }
 
-    abstract String getCode();
+    public abstract String getCode();
 
     public String indent(String code, int tabIndent){
         String indent = "";
@@ -56,5 +56,4 @@ abstract class CodeHolder {
         sb.append(code);
         return true;
     }
-
 }
