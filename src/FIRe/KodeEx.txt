@@ -26,8 +26,10 @@ bool turnLeftAndRotate(text currentRival)
 
    for(number b = 0 upto 2)
    {
-       turnLeft(b);
    }
+
+   turnLeft(b);
+
     return a[1];
 }
 

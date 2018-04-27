@@ -195,8 +195,11 @@ public class CGFunctionVisitor extends ASTVisitor {
         code.emitNL("){");
 
         for(AbstractNode child : node.childList){
-            if(child instanceof BlockNode)
+            if(child instanceof BlockNode) {
                 VisitNode(child);
+            } else if (child instanceof ExpressionNode){
+                visit(child);
+            }
         }
 
         code.emitNL("}");
@@ -204,7 +207,7 @@ public class CGFunctionVisitor extends ASTVisitor {
 
     @Override
     public void visit(FuncCallNode node, Object... arg) throws Exception {
-
+        exprGen.GenerateExprCode(code, node);
     }
 
     @Override
