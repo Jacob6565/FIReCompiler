@@ -352,7 +352,7 @@ public class CGFunctionVisitor extends ASTVisitor {
                 exprFlag = true;
         }
 
-        code.emit("Double ");
+        code.emit("double ");
 
         for(AbstractNode id : node.childList){
             if(id instanceof IdNode && idCounter > 1){
@@ -376,7 +376,7 @@ public class CGFunctionVisitor extends ASTVisitor {
 
     @Override
     public void visit(NumberArrayDeclarationNode node, Object... arg) throws Exception {
-        code.emit("Double ");
+        code.emit("double ");
 
         for(AbstractNode id : node.childList){
             if(id instanceof IdNode){
