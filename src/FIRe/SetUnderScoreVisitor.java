@@ -7,6 +7,10 @@ import FIRe.Exceptions.TypeException;
 import java.util.Map;
 
 public class SetUnderScoreVisitor extends ASTVisitor {
+    SymbolTable st;
+    SetUnderScoreVisitor(SymbolTable table){
+        st = table;
+    }
     @Override
     public void visit(AbstractNode node, Object... arg) {
 
@@ -131,6 +135,8 @@ public class SetUnderScoreVisitor extends ASTVisitor {
 
     @Override
     public void visit(FuncCallNode node, Object... arg) throws Exception {
+
+
         VisitNode(node.Id);
 
         if(node.Aparam != null)

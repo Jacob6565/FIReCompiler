@@ -92,7 +92,7 @@ public class Main {
         ReturnCheckVisitor returnCheckVisitor = new ReturnCheckVisitor(symbolTable);
         returnCheckVisitor.visit(ast);
 
-        SetUnderScoreVisitor underscoreVis = new SetUnderScoreVisitor();
+        SetUnderScoreVisitor underscoreVis = new SetUnderScoreVisitor(symbolTable);
         underscoreVis.visit(ast);
 
         //Code generation
