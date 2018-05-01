@@ -34,8 +34,14 @@ bool turnLeftAndRotate(text currentRival)
                x = 3;
            }
            else if( x == 0.0){
-
+                x=3;
            }
+       }
+
+       for( x upto 100){
+            while(true){
+                x = 3;
+            }
        }
 
    if (a[3])

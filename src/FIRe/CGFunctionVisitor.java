@@ -272,7 +272,7 @@ public class CGFunctionVisitor extends ASTVisitor {
             }
         }
 
-        if (bcount == icount) {
+        if (bcount == icount) { // this is determines if the if-else chain ends with an else if
             boolean firstTime = true;
             for (AbstractNode Node : node.childList) {
                 if (Node instanceof ExpressionNode && firstTime) {
@@ -287,15 +287,15 @@ public class CGFunctionVisitor extends ASTVisitor {
                     }
                     code.emitNL("}");
                 } else if (Node instanceof ExpressionNode && !firstTime) {
-                    code.emit("else if(");
-                    visit((ExpressionNode) Node);
                     for(int i = 0; i < CalculateTabs(Node); i++){
                         code.emit("\t");
                     }
+                    code.emit("else if(");
+                    visit((ExpressionNode) Node);
                     code.emit(")");
                 }
             }
-        } else if (bcount > icount) {
+        } else if (bcount > icount)  { // this else if is used if the if-else chain ends with an else
             int blocks = 0;
             int ifs = 0;
             boolean firstTime = true;
@@ -577,31 +577,19 @@ public class CGFunctionVisitor extends ASTVisitor {
     public void visit(RobotPropertiesNode node, Object... arg) {
 
     }
-
+    //method for calculating number of needed indentions
     public int CalculateTabs(AbstractNode node){
 
         AbstractNode temp = node;
         int indentions = 0;
 
         while (!(temp.Parent.Parent instanceof FunctionDeclarationNode) && !(temp.Parent.Parent instanceof StrategyDeclarationNode)) {
-            temp = temp.Parent;
+            temp = temp.Parent; //we only increase the value, if we are at a blocknode.
             if (temp instanceof BlockNode) {
-                indentions++;
+                indentions++; // we know we need to indent if we are at a blocknode
             }
         }
 
-        return indentions;
+        return indentions; //returns the number of indentions
     }
-
-    public int CalculateTabIndention(BlockNode node){
-        BlockNode temp = node;
-        int indention = 0;
-
-        while(temp.Parent.Parent instanceof BlockNode){
-            indention++;
-        }
-
-        return indention;
-    }
-
 }
