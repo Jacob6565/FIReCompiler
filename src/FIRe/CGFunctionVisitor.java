@@ -209,8 +209,10 @@ public class CGFunctionVisitor extends ASTVisitor {
 
         for(AbstractNode child : node.childList){
             if(child instanceof BlockNode) {
-
                 VisitNode(child);
+                for(int i = 0; i < CalculateTabs(child); i++){
+                    code.emit("\t");
+                }
             } else if (child instanceof ExpressionNode){
                 visit(child);
             }
