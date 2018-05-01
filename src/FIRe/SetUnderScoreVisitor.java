@@ -32,14 +32,19 @@ public class SetUnderScoreVisitor extends ASTVisitor {
 
     @Override
     public void visit(ArrayAccessNode node, Object... arg) throws TypeException, SymbolNotFoundException {
-        VisitNode(node.Id);
-        VisitNode(node.index);
+        if(node.Id != null)
+            VisitNode(node.Id);
+        if(node.index != null)
+            VisitNode(node.index);
     }
 
     @Override
     public void visit(AssignNode node, Object... arg) throws Exception {
-        VisitNode(node.Id);
-        VisitNode(node.Expression);
+        if(node.Id != null)
+            VisitNode(node.Id);
+
+        if(node.Expression != null)
+            VisitNode(node.Expression);
     }
 
     @Override
@@ -94,7 +99,8 @@ public class SetUnderScoreVisitor extends ASTVisitor {
 
     @Override
     public void visit(EventDeclarationNode node, Object... arg) throws Exception {
-        VisitNode(node.Id);
+        if(node.Id != null)
+            VisitNode(node.Id);
         for(AbstractNode child : node.childList)
             VisitNode(child);
     }
@@ -126,7 +132,9 @@ public class SetUnderScoreVisitor extends ASTVisitor {
     @Override
     public void visit(FuncCallNode node, Object... arg) throws Exception {
         VisitNode(node.Id);
-        VisitNode(node.Aparam);
+
+        if(node.Aparam != null)
+            VisitNode(node.Aparam);
     }
 
     @Override
@@ -160,7 +168,8 @@ public class SetUnderScoreVisitor extends ASTVisitor {
 
     @Override
     public void visit(IfControlStructureNode node, Object... arg) throws Exception {
-        VisitNode(node.Expression);
+        if(node.Expression != null)
+            VisitNode(node.Expression);
         for(AbstractNode child : node.childList)
             VisitNode(child);
     }
@@ -261,7 +270,8 @@ public class SetUnderScoreVisitor extends ASTVisitor {
 
     @Override
     public void visit(RoutineNode node, Object... arg) throws TypeException {
-        visit(node.repeatCondition);
+        if(node.repeatCondition != null)
+            visit(node.repeatCondition);
 
         for(AbstractNode child : node.childList)
             VisitNode(child);
