@@ -184,16 +184,20 @@ public class CGFunctionVisitor extends ASTVisitor {
             code.emit(exprGen.GenerateExprCode(code, node.To) + "; " + node.Dcl.Id.Name + "++");
         }
         else if(node.Incremental && !dclUsed) {
-            code.emit(" (int)" + node.From + " < (int)");
-            code.emit(exprGen.GenerateExprCode(code, node.To) + "; " + node.From + "++");
+            code.emit(" (int)");
+            code.emit(exprGen.GenerateExprCode(code, node.From) + " < (int)");
+            code.emit(exprGen.GenerateExprCode(code, node.To) + "; ");
+            code.emit(exprGen.GenerateExprCode(code, node.From) + "++");
         }
         else if(!node.Incremental && dclUsed) {
             code.emit(" _" + node.Dcl.Id.Name + " > (int)");
-            code.emit(exprGen.GenerateExprCode(code, node.To) + "; " + node.Dcl.Id.Name + "--");
+            code.emit(exprGen.GenerateExprCode(code, node.To) + "; " + "_" + node.Dcl.Id.Name + "--");
         }
         else if(!node.Incremental && !dclUsed) {
-            code.emit(" (int)" + node.From + " > (int)");
-            code.emit(exprGen.GenerateExprCode(code, node.To) + "; " + node.From + "--");
+            code.emit(" (int)");
+            code.emit(exprGen.GenerateExprCode(code, node.From) + " > (int)");
+            code.emit(exprGen.GenerateExprCode(code, node.To) + "; ");
+            code.emit(exprGen.GenerateExprCode(code, node.From) + "--");
         }
 
         code.emitNL("){");

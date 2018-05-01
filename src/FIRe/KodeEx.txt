@@ -59,6 +59,8 @@ strategy Default(number et, number to)
         {
             ahead(20);
         }
+
+        for(x downto -9128.9182){}
     }
 
    when (ScannedRobotEvent e)

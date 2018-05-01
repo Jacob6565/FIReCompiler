@@ -24,6 +24,8 @@ public class TheDestroyer extends AdvancedRobot{
 						ahead(20.0)
 					;
 					}
+						for(; (int)_x > (int)-9128.9182; _x--){
+					}
 					}
 					break;
 				case "Offensive"
