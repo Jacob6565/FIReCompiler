@@ -11,8 +11,7 @@ RobotProperties     : 'RobotProperties'
                     ;
 //Events types and whens
 When                : 'when';
-SingleLineComment   : '//' [\u0000-\u007E]* -> skip;
-MultiLineComment    : '/*' ([\u0000-\u007E]* '*')* '/' -> skip;
+SingleLineComment   : '//' [\u0020-\u0022\u0025\u0027-\u003F\u0041-\u005F\u0061-\u007B\u007D]* -> skip;
 WhiteSpace          : [ \r\n\t]+ -> skip;
 Val	                : [-]? [0-9]+ ('.' [0-9]+)?
                     | '"' [\u0020-\u0021\u0023-\u007E]* '"'

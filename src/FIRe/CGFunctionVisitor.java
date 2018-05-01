@@ -52,12 +52,18 @@ public class CGFunctionVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(BlockNode node, Object... arg) throws Exception {
+    public void visit(BlockNode node,Object... arg) throws Exception {
+        int numberOfIdents = 0;
+
         for(AbstractNode child : node.childList) {
-            code.emit("\t");
+            numberOfIdents = CalculateTabs(child);
+            for(int i = 0; i < numberOfIdents; i++){
+                code.emit("\t");
+            }
             VisitNode(child);
         }
     }
+
 
     @Override
     public void visit(BodyColorNode node, Object... arg) {
@@ -76,7 +82,6 @@ public class CGFunctionVisitor extends ASTVisitor {
             else if(id instanceof ExpressionNode)
                 exprFlag = true;
         }
-
         code.emit("boolean ");
 
         for(AbstractNode id : node.childList){
@@ -180,28 +185,34 @@ public class CGFunctionVisitor extends ASTVisitor {
         }
 
         if(node.Incremental && dclUsed) {
-            code.emit(" " + node.Dcl.Id.Name + " < (int)");
-            code.emit(exprGen.GenerateExprCode(code, node.To) + ";" + node.Dcl.Id.Name + "++");
+            code.emit(node.Dcl.Id.Name + " < (int)");
+            code.emit(exprGen.GenerateExprCode(code, node.To) + "; " + node.Dcl.Id.Name + "++");
         }
         else if(node.Incremental && !dclUsed) {
-            code.emit(" (int)" + node.From + " < (int)");
-            code.emit(exprGen.GenerateExprCode(code, node.To) + ";" + node.From + "++");
+            code.emit(" (int)");
+            code.emit(exprGen.GenerateExprCode(code, node.From) + " < (int)");
+            code.emit(exprGen.GenerateExprCode(code, node.To) + "; ");
+            code.emit(exprGen.GenerateExprCode(code, node.From) + "++");
         }
         else if(!node.Incremental && dclUsed) {
-            code.emit(" " + node.Dcl.Id.Name + " > (int)");
-            code.emit(exprGen.GenerateExprCode(code, node.To) + ";" + node.Dcl.Id.Name + "--");
+            code.emit(node.Dcl.Id.Name + " > (int)");
+            code.emit(exprGen.GenerateExprCode(code, node.To) + "; " + node.Dcl.Id.Name + "--");
         }
         else if(!node.Incremental && !dclUsed) {
-            code.emit(" (int)" + node.From + " > (int)");
-            code.emit(exprGen.GenerateExprCode(code, node.To) + ";" + node.From + "--");
+            code.emit(" (int)");
+            code.emit(exprGen.GenerateExprCode(code, node.From) + " > (int)");
+            code.emit(exprGen.GenerateExprCode(code, node.To) + "; ");
+            code.emit(exprGen.GenerateExprCode(code, node.From) + "--");
         }
 
         code.emitNL("){");
 
         for(AbstractNode child : node.childList){
             if(child instanceof BlockNode) {
-
                 VisitNode(child);
+                for(int i = 0; i < CalculateTabs(child); i++){
+                    code.emit("\t");
+                }
             } else if (child instanceof ExpressionNode){
                 visit(child);
             }
@@ -263,7 +274,7 @@ public class CGFunctionVisitor extends ASTVisitor {
             }
         }
 
-        if (bcount == icount) {
+        if (bcount == icount) { // this is determines if the if-else chain ends with an else if
             boolean firstTime = true;
             for (AbstractNode Node : node.childList) {
                 if (Node instanceof ExpressionNode && firstTime) {
@@ -273,14 +284,20 @@ public class CGFunctionVisitor extends ASTVisitor {
                 } else if (Node instanceof BlockNode) {
                     code.emitNL("{");
                     visit((BlockNode) Node);
+                    for(int i = 0; i < CalculateTabs(Node); i++){
+                        code.emit("\t");
+                    }
                     code.emitNL("}");
                 } else if (Node instanceof ExpressionNode && !firstTime) {
+                    for(int i = 0; i < CalculateTabs(Node); i++){
+                        code.emit("\t");
+                    }
                     code.emit("else if(");
                     visit((ExpressionNode) Node);
                     code.emit(")");
                 }
             }
-        } else if (bcount > icount) {
+        } else if (bcount > icount)  { // this else if is used if the if-else chain ends with an else
             int blocks = 0;
             int ifs = 0;
             boolean firstTime = true;
@@ -542,9 +559,14 @@ public class CGFunctionVisitor extends ASTVisitor {
         code.emitNL("{");
         for(AbstractNode child : node.childList){
             if(child instanceof BlockNode) {
+
                 VisitNode(child);
+                for(int i = 0; i < CalculateTabs(child); i++){
+                    code.emit("\t");
+                }
             }
         }
+
         code.emitNL("}");
     }
 
@@ -561,5 +583,20 @@ public class CGFunctionVisitor extends ASTVisitor {
     @Override
     public void visit(RobotPropertiesNode node, Object... arg) {
 
+    }
+    //method for calculating number of needed indentions
+    public int CalculateTabs(AbstractNode node){
+
+        AbstractNode temp = node;
+        int indentions = 0;
+
+        while (!(temp.Parent.Parent instanceof FunctionDeclarationNode) && !(temp.Parent.Parent instanceof StrategyDeclarationNode)) {
+            temp = temp.Parent; //we only increase the value, if we are at a blocknode.
+            if (temp instanceof BlockNode) {
+                indentions++; // we know we need to indent if we are at a blocknode
+            }
+        }
+
+        return indentions; //returns the number of indentions
     }
 }

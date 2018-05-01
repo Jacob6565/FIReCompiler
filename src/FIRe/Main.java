@@ -4,14 +4,13 @@ import FIRe.Exceptions.*;
 import FIRe.Parser.CFGLexer;
 import FIRe.Parser.CFGParser;
 import org.antlr.v4.runtime.*;
-import org.antlr.v4.runtime.misc.ParseCancellationException;
 
 import java.io.*;
 import java.util.Scanner;
 
 public class Main {
 
-    public static void main(String[] args) throws FileNotFoundException {
+    public static void main(String[] args) throws Exception {
 
         //Reads from the example program. (Debug code)
         Scanner in = new Scanner(new FileReader("src\\FIRe\\KodeEx.txt"));
@@ -93,6 +92,8 @@ public class Main {
         ReturnCheckVisitor returnCheckVisitor = new ReturnCheckVisitor(symbolTable);
         returnCheckVisitor.visit(ast);
 
+        SetUnderScoreVisitor underscoreVis = new SetUnderScoreVisitor();
+        underscoreVis.visit(ast);
 
         //Code generation
         CGTopVisitor codeGenerator = new CGTopVisitor();

@@ -1,92 +1,91 @@
 import java.awt.*;
 import java.lang.*;
 import robocode.*;
-public class TheDestroyer extends AdvancedRobot{
+public class TheDestroyer extends advancedRobot{
 	private String currentStrategy = "Default";
 	public void run (){ 
 		SetColors(yellow, red, white);
 		addCustomEvent(
-			new condition("LowHealth") {
+			new condition("_LowHealth") {
 				public boolean test() {
-						turnLeftAndRotate("30") 
-		;
-			
+					
 				}; 
 			}
 		);
 		while(true){
 			switch(currentStrategy){
-				case "Default"
+				case "_Default"
 					while(true){
-						turnRadarRight(360.0) 
-					;
-						for(int i = (int)0.0; i < (int)2.0;i++){
-						ahead(20.0) 
-					;
+						_turnRadarRight(360.0);
+						for(int _i = (int)0.0;_i < (int)2.0; _i++){
+							_ahead(20.0);
+					}
+						for(; (int)_x > (int)-9128.9182; _x--){
 					}
 					}
 					break;
-				case "Offensive"
+				case "_Offensive"
 					while(true){
-						fire(1.0) 
-					;
+						_fire(1.0);
 					}
 					break;
 			}
 		}
 	}
-	public boolean turnLeftAndRotate (String currentRival){ 
-		double uno = 1.0;
-		double RobinHood, LilleJohn;
-		nameOfRival = currentRival;
-		boolean false;
-	shotAtRival = 	boolean a[(int)5.0];
-		a = true;
-		if(a[(int)3.0] ){
-		fire(firepower) 
-	;
-		shotAtRival = true;
-	}
-		for(int b = (int)0.0; b < (int)2.0;b++){
-		turnLeft(b) 
-	;
-	}
-		
-	}
-	public void doSomething (){ 
-		if(x == 3.6){
-		x = 2.0;
-	}
-	else{
-		x = x + 4.2;
-	}
-	
-	}
-	public double Function (){ 
-			double x = 0.0;
-	
-	}
-	public void onScannedRobot (ScannedRobotEvent e){ 
-		switch(currentStrategy){
-			case "Default"
-					String currentRival = e.getName() 
-				;
-					turnLeftAndRotate(currentRival) 
-				;
-					Offensive() 
-				;
-				break;
+	public boolean _turnLeftAndRotate (String _currentRival){ 
+	boolean _asd = false;
+	boolean _was = true;
+	boolean _wefas[(int)5.0];
+	double _uno = 1.0;
+	double _x = 3.6;
+	double _RobinHood, _LilleJohn;
+	_nameOfRival = _currentRival;
+	boolean _shotAtRival = false;
+	boolean _a[(int)5.0];
+	_a = true;
+	if(_x == 3.6){
+		_x = 2.0;
+		if(_x == 5.2){
+			_x = 3.0;
 		}
+	else if(_x == 0.0	){
+		}
+	}
+	if(_a[(int)3.0] ){
+		_fire(_firepower);
+		_shotAtRival = true;
+	}
+	for(int _b = (int)0.0;_b < (int)2.0; _b++){
+		_turnLeft(_b);
+	}
+	
+	}
+	public void _doSomething (){ 
+	if(_x == 2.0){
+		_x = _x + 4.2;
+	}
+	
+	}
+	public double _Function (){ 
+	double _x = 0.0;
 	
 	}
 	public void onCustomEvent (CustomEvent e){ 
 		String condition = e.getCondition().getName();
 		switch (condition) { 
-			case LowHealth:
+			case _ScannedRobotEvent:
 				switch (currentStrategy) { 
-					case Offensive:
-							Default(100.050.0 + 50.0) 
-						;
+					case _Default:
+							String _currentRival = _e.getName();
+							_turnLeftAndRotate(_currentRival);
+							_Offensive();
+						break;
+				}
+				break;
+			case _LowHealth:
+				switch (currentStrategy) { 
+					case _Offensive:
+							_Default(100.0, 50.0 + 50.0);
 						break;
 				}
 				break;
