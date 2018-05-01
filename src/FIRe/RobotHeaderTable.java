@@ -48,9 +48,9 @@ public class RobotHeaderTable {
         ValidColors.add("YELLOW");
 
         //Fills the robot type list with all valid robot types
-        RobotTypes.add("advancedRobot");
-        RobotTypes.add("robot");
-        RobotTypes.add("juniorRobot");
+        RobotTypes.add("AdvancedRobot");
+        RobotTypes.add("Robot");
+        RobotTypes.add("JuniorRobot");
     }
 
 }

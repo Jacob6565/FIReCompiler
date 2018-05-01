@@ -1,11 +1,13 @@
 RobotProperties
 {
       RobotName:TheDestroyer;
-      RobotType:advancedRobot;
+      RobotType:AdvancedRobot;
       BodyColor:yellow;
       GunColor:red;
       RadarColor:white;
 }
+
+//This is a single line comment
 
 number firepower, shield;
 text nameOfRival = "SittingDuck";
