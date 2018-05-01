@@ -52,12 +52,18 @@ public class CGFunctionVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(BlockNode node, Object... arg) throws Exception {
+    public void visit(BlockNode node,Object... arg) throws Exception {
+        int numberOfIdents = 0;
+
         for(AbstractNode child : node.childList) {
-            code.emit("\t");
+            numberOfIdents = CalculateTabs(child);
+            for(int i = 0; i < numberOfIdents; i++){
+                code.emit("\t");
+            }
             VisitNode(child);
         }
     }
+
 
     @Override
     public void visit(BodyColorNode node, Object... arg) {
@@ -277,10 +283,16 @@ public class CGFunctionVisitor extends ASTVisitor {
                 } else if (Node instanceof BlockNode) {
                     code.emitNL("{");
                     visit((BlockNode) Node);
+                    for(int i = 0; i < CalculateTabs(Node); i++){
+                        code.emit("\t");
+                    }
                     code.emitNL("}");
                 } else if (Node instanceof ExpressionNode && !firstTime) {
                     code.emit("else if(");
                     visit((ExpressionNode) Node);
+                    for(int i = 0; i < CalculateTabs(Node); i++){
+                        code.emit("\t");
+                    }
                     code.emit(")");
                 }
             }
@@ -566,4 +578,31 @@ public class CGFunctionVisitor extends ASTVisitor {
     public void visit(RobotPropertiesNode node, Object... arg) {
 
     }
+
+    public int CalculateTabs(AbstractNode node){
+
+        AbstractNode temp = node;
+        int indentions = 0;
+
+        while (!(temp.Parent.Parent instanceof FunctionDeclarationNode) && !(temp.Parent.Parent instanceof StrategyDeclarationNode)) {
+            temp = temp.Parent;
+            if (temp instanceof BlockNode) {
+                indentions++;
+            }
+        }
+
+        return indentions;
+    }
+
+    public int CalculateTabIndention(BlockNode node){
+        BlockNode temp = node;
+        int indention = 0;
+
+        while(temp.Parent.Parent instanceof BlockNode){
+            indention++;
+        }
+
+        return indention;
+    }
+
 }

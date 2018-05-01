@@ -66,7 +66,7 @@ public class CGExpressionVisitor{
                 numOfParams--;
             }
         }
-        code.emitNL(")");
+        code.emit(")");
     }
 
     public void visit(GEQNode node, Object... arg) throws Exception {
