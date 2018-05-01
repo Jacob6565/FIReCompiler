@@ -1,7 +1,7 @@
 import java.awt.*;
 import java.lang.*;
 import robocode.*;
-public class TheDestroyer extends AdvancedRobot{
+public class TheDestroyer extends advancedRobot{
 	private String currentStrategy = "Default";
 	public void run (){ 
 		SetColors(yellow, red, white);
@@ -48,7 +48,7 @@ public class TheDestroyer extends AdvancedRobot{
 		if(_x == 5.2){
 			_x = 3.0;
 		}
-		if(_x == 0.0){
+	else if(_x == 0.0	){
 		}
 	}
 	if(_a[(int)3.0] ){
@@ -61,6 +61,9 @@ public class TheDestroyer extends AdvancedRobot{
 	
 	}
 	public void _doSomething (){ 
+	if(_x == 2.0){
+		_x = _x + 4.2;
+	}
 	
 	}
 	public double _Function (){ 
