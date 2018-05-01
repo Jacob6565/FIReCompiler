@@ -8,7 +8,7 @@ public class TheDestroyer extends AdvancedRobot{
 		addCustomEvent(
 			new condition("LowHealth") {
 				public boolean test() {
-						turnLeftAndRotate("30") 
+						turnLeftAndRotate("30")
 		;
 			
 				}; 
@@ -18,17 +18,19 @@ public class TheDestroyer extends AdvancedRobot{
 			switch(currentStrategy){
 				case "Default"
 					while(true){
-						turnRadarRight(360.0) 
+						turnRadarRight(360.0)
 					;
-						for(int i = (int)0.0; i < (int)2.0;i++){
-						ahead(20.0) 
+						for(int _i = (int)0.0; _i < (int)2.0; i++){
+						ahead(20.0)
 					;
+					}
+						for(; (int)_x > (int)-9128.9182; _x--){
 					}
 					}
 					break;
 				case "Offensive"
 					while(true){
-						fire(1.0) 
+						fire(1.0)
 					;
 					}
 					break;
@@ -36,44 +38,44 @@ public class TheDestroyer extends AdvancedRobot{
 		}
 	}
 	public boolean turnLeftAndRotate (String currentRival){ 
-		double uno = 1.0;
-		double RobinHood, LilleJohn;
-		nameOfRival = currentRival;
+		double _uno = 1.0;
+		double _RobinHood, _LilleJohn;
+		_nameOfRival = _currentRival;
 		boolean false;
-	shotAtRival = 	boolean a[(int)5.0];
-		a = true;
-		if(a[(int)3.0] ){
-		fire(firepower) 
+	_shotAtRival = 	boolean _a[(int)5.0];
+		_a = true;
+		if(_a[(int)3.0] ){
+		fire(_firepower)
 	;
-		shotAtRival = true;
+		_shotAtRival = true;
 	}
-		for(int b = (int)0.0; b < (int)2.0;b++){
-		turnLeft(b) 
+		for(int _b = (int)0.0; _b < (int)2.0; b++){
+		turnLeft(_b)
 	;
 	}
 		
 	}
 	public void doSomething (){ 
-		if(x == 3.6){
-		x = 2.0;
+		if(_x == 3.6){
+		_x = 2.0;
 	}
 	else{
-		x = x + 4.2;
+		_x = _x + 4.2;
 	}
 	
 	}
 	public double Function (){ 
-			double x = 0.0;
+			double _x = 0.0;
 	
 	}
 	public void onScannedRobot (ScannedRobotEvent e){ 
 		switch(currentStrategy){
 			case "Default"
-					String currentRival = e.getName() 
+					String _currentRival = e.getName()
 				;
-					turnLeftAndRotate(currentRival) 
+					turnLeftAndRotate(_currentRival)
 				;
-					Offensive() 
+					Offensive()
 				;
 				break;
 		}
@@ -85,7 +87,7 @@ public class TheDestroyer extends AdvancedRobot{
 			case LowHealth:
 				switch (currentStrategy) { 
 					case Offensive:
-							Default(100.050.0 + 50.0) 
+							Default(100.0, 50.0 + 50.0)
 						;
 						break;
 				}
