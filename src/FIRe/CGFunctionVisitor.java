@@ -557,9 +557,14 @@ public class CGFunctionVisitor extends ASTVisitor {
         code.emitNL("{");
         for(AbstractNode child : node.childList){
             if(child instanceof BlockNode) {
+
                 VisitNode(child);
+                for(int i = 0; i < CalculateTabs(child); i++){
+                    code.emit("\t");
+                }
             }
         }
+
         code.emitNL("}");
     }
 
