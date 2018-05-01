@@ -27,7 +27,7 @@ public class CGExpressionVisitor{
     }
 
     public void visit(ArrayAccessNode node, Object... arg) throws TypeException {
-        code.emit(node.Id.Name + "[(int)");
+        code.emit("_" + node.Id.Name + "[(int)");
         VisitNode(node.index);
         code.emit("] ");
     }
@@ -52,10 +52,20 @@ public class CGExpressionVisitor{
     }
 
     public void visit(FuncCallNode node, Object... arg) throws Exception {
-        code.emit(node.Id.Name + "(");
+        int numOfParams = 0;
+
         for(AbstractNode par : node.Aparam.childList)
+            numOfParams++;
+
+        code.emit(node.Id.Name + "(");
+        for(AbstractNode par : node.Aparam.childList) {
             VisitNode(par);
-        code.emitNL(") ");
+            if(numOfParams != 1) {
+                code.emit(", ");
+                numOfParams--;
+            }
+        }
+        code.emitNL(")");
     }
 
     public void visit(GEQNode node, Object... arg) throws Exception {
@@ -71,7 +81,7 @@ public class CGExpressionVisitor{
     }
 
     public void visit(IdNode node, Object... arg) throws Exception {
-        code.emit(node.Name);
+        code.emit("_"+node.Name);
     }
 
     public void visit(InfixExpressionNode node, Object... arg) throws Exception {
