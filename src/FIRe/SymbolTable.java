@@ -123,7 +123,7 @@ public class SymbolTable  {
     }*/
 
 
-    //Returns true if the name exists in the symbolTable
+    //Returns the SymbolData if the name exists in the symbolTable
     public SymbolData Search(String name, int lineNumber) throws SymbolNotFoundException{
         for (int i = 0; i < stack.Size(); i++){
             if(stack.Get(i).containsKey(name)){
@@ -131,6 +131,16 @@ public class SymbolTable  {
             }
         }
         throw new SymbolNotFoundException(name,lineNumber);
+    }
+
+    //Returns the SymbolData if the name exists in the symbolTable or null if it doesn't.
+    public SymbolData Search(String name){
+        for (int i = 0; i < stack.Size(); i++){
+            if(stack.Get(i).containsKey(name)){
+                return stack.Get(i).get(name);
+            }
+        }
+        return null;
     }
 
     public boolean Contains(String key) {

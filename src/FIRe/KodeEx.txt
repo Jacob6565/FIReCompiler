@@ -1,11 +1,13 @@
 RobotProperties
 {
       RobotName:TheDestroyer;
-      RobotType:advancedRobot;
+      RobotType:AdvancedRobot;
       BodyColor:yellow;
       GunColor:red;
       RadarColor:white;
 }
+
+//This is a single line comment
 
 number firepower, shield;
 text nameOfRival = "SittingDuck";
@@ -32,8 +34,14 @@ bool turnLeftAndRotate(text currentRival)
                x = 3;
            }
            else if( x == 0.0){
-
+                x=3;
            }
+       }
+
+       for( x upto 100){
+            while(true){
+                x = 3;
+            }
        }
 
    if (a[3])
