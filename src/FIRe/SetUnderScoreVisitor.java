@@ -136,8 +136,8 @@ public class SetUnderScoreVisitor extends ASTVisitor {
     @Override
     public void visit(FuncCallNode node, Object... arg) throws Exception {
 
-
-        VisitNode(node.Id);
+        if(!st.Contains(node.Id.Name))
+            VisitNode(node.Id);
 
         if(node.Aparam != null)
             VisitNode(node.Aparam);
