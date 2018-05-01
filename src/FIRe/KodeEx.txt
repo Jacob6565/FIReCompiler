@@ -13,11 +13,24 @@ text nameOfRival = "SittingDuck";
 bool turnLeftAndRotate(text currentRival)
 {
    number uno = 1;
+   number x = 3.6;
    number RobinHood, LilleJohn = 5.2;
    nameOfRival = currentRival;
    bool shotAtRival = false;
    bool a[5];
    a[3] = true;
+
+       if(x == 3.6){
+           x = 2;
+
+           if(x == 5.2){
+               x = 3;
+           }
+           if( x == 0.0){
+
+           }
+       }
+
    if (a[3])
    {
           fire(firepower);
@@ -33,9 +46,6 @@ bool turnLeftAndRotate(text currentRival)
 }
 
 void doSomething(){
-    if(x == 3.6){
-        x = 2;
-    }
     else{
     x = x + 4.2;
 

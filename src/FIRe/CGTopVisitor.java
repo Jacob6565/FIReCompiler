@@ -88,9 +88,6 @@ public class CGTopVisitor extends ASTVisitor{
     }
 
 
-
-
-
     @Override
     public void visit(AbstractNode node, Object... arg) {
 
@@ -206,6 +203,10 @@ public class CGTopVisitor extends ASTVisitor{
 
     @Override
     public void visit(FunctionDeclarationNode node, Object... arg) throws Exception {
+
+        CodeHolder CH = new MethodCodeHolder("test", "test");
+        CGFunctionVisitor CGF = new CGFunctionVisitor(CH);
+
         MethodCodeHolder method;
         String params = null;
         ArrayList<String> ids = new ArrayList<String>();
@@ -250,6 +251,9 @@ public class CGTopVisitor extends ASTVisitor{
         CGFunctionVisitor test = new CGFunctionVisitor(te);
         test.VisitNode(node);
         method.emit(te.sb.toString());
+        //Code generation for method body
+        CGF.VisitNode(node);
+        System.out.println(CGF.code.sb.toString());
 
         methods.add(method);
     }
@@ -433,7 +437,7 @@ public class CGTopVisitor extends ASTVisitor{
         CGS.VisitNode(node);
 
         //Temporary for printing the generated code
-        System.out.println(CGS.CH.sb.toString());
+        //System.out.println(CGS.CH.sb.toString());
 
         //TESTING: THIS AND THE VISIT OF WHEN SHOULD NOT BE DONE IN CGTopVisitor / KRISTOFFER
         for (AbstractNode child : node.childList) {
