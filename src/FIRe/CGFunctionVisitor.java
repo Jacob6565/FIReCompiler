@@ -142,7 +142,9 @@ public class CGFunctionVisitor extends ASTVisitor {
 
     @Override
     public void visit(EventDeclarationNode node, Object... arg) throws Exception {
-
+        for (AbstractNode child: node.childList) {
+            VisitNode(child);
+        }
     }
 
     @Override

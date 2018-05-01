@@ -22,6 +22,7 @@ public class CGTopVisitor extends ASTVisitor{
     //Prints the generated code from the CodeHolders into the output file
     public void emitOutputFile(){
         String code = mergeCodeHolders();
+        //This fileName should be the same as the class name/robot name /KRISTOFFER
         printToFile("GeneratedCode\\GenFile.java", code);
     }
 
@@ -56,15 +57,25 @@ public class CGTopVisitor extends ASTVisitor{
         return mergedCode.toString();
     }
 
-    //Used
-    private void addEventHandler(String methodeName, String fparam, String code, String strategyName){
+    private EventHandlerCodeHolder addEventHandler(String methodeName, String fparam){
         if (eventHandlers.size()==0 || getEventHandler(methodeName)== null){
             EventHandlerCodeHolder newEventHandler = new EventHandlerCodeHolder(methodeName, "void", fparam);
-            newEventHandler.addCase(strategyName, code);
             eventHandlers.add(newEventHandler);
+            return newEventHandler;
         }
         else{
-            getEventHandler(methodeName).addCase(strategyName, code);
+            return getEventHandler(methodeName);
+        }
+    }
+
+    private CustomEventHandlerCodeHolder addCustomEventHandler(String methodeName, String fparam){
+        if (eventHandlers.size()==0 || getEventHandler(methodeName)== null){
+            CustomEventHandlerCodeHolder newEventHandler = new CustomEventHandlerCodeHolder(methodeName, "void", fparam);
+            eventHandlers.add(newEventHandler);
+            return newEventHandler;
+        }
+        else{
+            return (CustomEventHandlerCodeHolder) getEventHandler(methodeName);
         }
     }
 
@@ -75,6 +86,9 @@ public class CGTopVisitor extends ASTVisitor{
         }
         return null;
     }
+
+
+
 
 
     @Override
@@ -156,6 +170,12 @@ public class CGTopVisitor extends ASTVisitor{
     public void visit(EventDeclarationNode node, Object... arg) throws Exception {
         EventCodeHolder eventDcl = new EventCodeHolder(node.Id.Name);
 
+        //CODE GENERATION SOMEWHERE HERE / THIS IS A BAD WAY OF DOING IT /KRISTOFFER
+        CodeHolder te = new EventCodeHolder("test");
+        CGFunctionVisitor test = new CGFunctionVisitor(te);
+        test.VisitNode(node);
+        eventDcl.emit(te.sb.toString());
+
         runMethod.addConditionDeclaration(eventDcl.getCode());
     }
 
@@ -221,11 +241,15 @@ public class CGTopVisitor extends ASTVisitor{
         }
 
         if (params != null)
-            method= new MethodCodeHolder(node.Id.Name, node.Type, params);
+            method= new MethodCodeHolder(node.Id.Name, translateType(node.Type), params);
         else
-            method= new MethodCodeHolder(node.Id.Name, node.Type);
+            method= new MethodCodeHolder(node.Id.Name, translateType(node.Type));
 
-        //Code generation for method body
+        //CODE GENERATION SOMEWHERE HERE / THIS IS A BAD WAY OF DOING IT /KRISTOFFER
+        CodeHolder te = new MethodCodeHolder("test","test");
+        CGFunctionVisitor test = new CGFunctionVisitor(te);
+        test.VisitNode(node);
+        method.emit(te.sb.toString());
 
         methods.add(method);
     }
@@ -238,6 +262,8 @@ public class CGTopVisitor extends ASTVisitor{
                 return "double";
             case "text":
                 return "String";
+            case "void":
+                return "void";
             default:
                 return null;
         }
@@ -364,8 +390,8 @@ public class CGTopVisitor extends ASTVisitor{
 
     //Help method that constructs the generates the Java setColorBuilder with its' color inputs
     private String setColorBuilder(String bodyColor, String gunColor, String radarColor){
-        //If any of the colors are null, then they will correctly insert null in the string, which is valid for the java
-        //function SetColors
+        //If any of the colors are null, then they will correctly insert null in the string, which is valid for the
+        // robocode java function SetColors
         return "SetColors(" + bodyColor + ", " + gunColor + ", " + radarColor +");";
     }
 
@@ -381,7 +407,16 @@ public class CGTopVisitor extends ASTVisitor{
 
     @Override
     public void visit(RoutineNode node, Object... arg) throws TypeException {
+        //THE GENERATED CODE SHOULD NOT BE ADDED LIKE THIS /KRISTOFFER
+        CodeHolder te = new MethodCodeHolder("test","test");
+        CGFunctionVisitor test = new CGFunctionVisitor(te);
+        test.VisitNode(node);
 
+        //Parent way : WhenNode -> StrategyDcl
+        StrategyDeclarationNode parentStrategy = (StrategyDeclarationNode) node.Parent;
+        String strategyName = parentStrategy.Id.Name;
+
+        runMethod.addToRunMethod(strategyName,te.sb.toString());
     }
 
     @Override
@@ -400,8 +435,7 @@ public class CGTopVisitor extends ASTVisitor{
         //Temporary for printing the generated code
         System.out.println(CGS.CH.sb.toString());
 
-        //TESTING
-        runMethod.addToRunMethod("bitch","bitch();\n");
+        //TESTING: THIS AND THE VISIT OF WHEN SHOULD NOT BE DONE IN CGTopVisitor / KRISTOFFER
         for (AbstractNode child : node.childList) {
             VisitNode(child);
         }
@@ -444,27 +478,37 @@ public class CGTopVisitor extends ASTVisitor{
         IdNode eventTypeNode = (IdNode) node.childList.get(0);
         String eventType = eventTypeNode.Name;
 
+        //Parent way : WhenNode -> StrategyDcl
+        StrategyDeclarationNode parentStrategy = (StrategyDeclarationNode) node.Parent;
+        String strategyName = parentStrategy.Id.Name;
 
-
+        //This case is for whens handling robocode events /KRISTOFFER
         if(isThisOfficialEvent(eventType)){
-            String fparam;
             IdNode paramId = (IdNode)node.childList.get(1);
 
-            //ScannedRobotEvent will become ScannedRobot
+            //ScannedRobotEvent will become ScannedRobot, a when can only have one parameter
             String[] str = eventType.split("Event");
+            String fparam = eventType + " " + paramId.Name;
 
-            fparam = eventType + " " + paramId.Name;
+            EventHandlerCodeHolder eventHandler = addEventHandler("on" + str[0], fparam);
 
-            //Parent way : WhenNode -> StrategyDcl
-            StrategyDeclarationNode parentStrategy = (StrategyDeclarationNode) node.Parent;
-            //Accessing strategy name
-            String strategyName = parentStrategy.Id.Name;
+            //CODE GENERATION SOMEWHERE HERE / THIS IS A BAD WAY OF DOING IT /KRISTOFFER
+            CodeHolder te = new MethodCodeHolder("test","test");
+            CGFunctionVisitor test = new CGFunctionVisitor(te);
+            test.VisitNode(node);
 
-            addEventHandler("on" + str[0], fparam, "INSERT CODE HERE\n", strategyName);
+            eventHandler.addCase(strategyName, te.sb.toString());
         }
-        //Specialcase for when the when is for a custom event /KRISTOFFER
+        //This case is for whens handling custom events /KRISTOFFER
         else {
+            CustomEventHandlerCodeHolder customEventHandler = addCustomEventHandler ("onCustomEvent",
+                                                                                    "CustomEvent e");
+            //CODE GENERATION SOMEWHERE HERE / THIS IS A BAD WAY OF DOING IT /KRISTOFFER
+            CodeHolder te = new MethodCodeHolder("test","test");
+            CGFunctionVisitor test = new CGFunctionVisitor(te);
+            test.VisitNode(node);
 
+            customEventHandler.addCase(eventType, strategyName, te.sb.toString());
         }
     }
 
