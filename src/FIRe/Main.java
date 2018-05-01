@@ -4,7 +4,6 @@ import FIRe.Exceptions.*;
 import FIRe.Parser.CFGLexer;
 import FIRe.Parser.CFGParser;
 import org.antlr.v4.runtime.*;
-import org.antlr.v4.runtime.misc.ParseCancellationException;
 
 import java.io.*;
 import java.util.Scanner;

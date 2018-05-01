@@ -1,7 +1,7 @@
 RobotProperties
 {
       RobotName:TheDestroyer;
-      RobotType:AdvancedRobot;
+      RobotType:advancedRobot;
       BodyColor:yellow;
       GunColor:red;
       RadarColor:white;
@@ -14,7 +14,7 @@ bool turnLeftAndRotate(text currentRival)
 {
    number uno = 1;
    number x = 3.6;
-   number RobinHood, LilleJohn = 5.2;
+   number RobinHood, LilleJohn;
    nameOfRival = currentRival;
    bool shotAtRival = false;
    bool a[5];
@@ -26,7 +26,7 @@ bool turnLeftAndRotate(text currentRival)
            if(x == 5.2){
                x = 3;
            }
-           if( x == 0.0){
+           else if( x == 0.0){
 
            }
        }
@@ -46,7 +46,7 @@ bool turnLeftAndRotate(text currentRival)
 }
 
 void doSomething(){
-    else{
+    if (x == 2){
     x = x + 4.2;
 
     }
