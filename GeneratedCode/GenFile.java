@@ -8,9 +8,7 @@ public class TheDestroyer extends AdvancedRobot{
 		addCustomEvent(
 			new condition("_LowHealth") {
 				public boolean test() {
-						_turnLeftAndRotate("30")
-		;
-			
+					
 				}; 
 			}
 		);
@@ -18,11 +16,9 @@ public class TheDestroyer extends AdvancedRobot{
 			switch(currentStrategy){
 				case "_Default"
 					while(true){
-						_turnRadarRight(360.0)
-					;
-						for(int __i = (int)0.0;__i < (int)2.0; __i++){
-						_ahead(20.0)
-					;
+						_turnRadarRight(360.0);
+						for(int _i = (int)0.0;_i < (int)2.0; _i++){
+							_ahead(20.0);
 					}
 						for(; (int)_x > (int)-9128.9182; _x--){
 					}
@@ -30,42 +26,45 @@ public class TheDestroyer extends AdvancedRobot{
 					break;
 				case "_Offensive"
 					while(true){
-						_fire(1.0)
-					;
+						_fire(1.0);
 					}
 					break;
 			}
 		}
 	}
 	public boolean _turnLeftAndRotate (String _currentRival){ 
-		double __uno = 1.0;
-		double _RobinHood, _LilleJohn;
-		_nameOfRival = _currentRival;
-		boolean false;
-	__shotAtRival = 	boolean __a[(int)5.0];
-		_a = true;
-		if(_a[(int)3.0] ){
-		_fire(_firepower)
-	;
+	boolean _asd = false;
+	boolean _was = true;
+	boolean _wefas[(int)5.0];
+	double _uno = 1.0;
+	double _x = 3.6;
+	double _RobinHood, _LilleJohn;
+	_nameOfRival = _currentRival;
+	boolean _shotAtRival = false;
+	boolean _a[(int)5.0];
+	_a = true;
+	if(_x == 3.6){
+		_x = 2.0;
+		if(_x == 5.2){
+			_x = 3.0;
+		}
+		if(_x == 0.0){
+		}
+	}
+	if(_a[(int)3.0] ){
+		_fire(_firepower);
 		_shotAtRival = true;
 	}
-		for(int __b = (int)0.0;__b < (int)2.0; __b++){
-		_turnLeft(_b)
-	;
-	}
-		
-	}
-	public void _doSomething (){ 
-		if(_x == 3.6){
-		_x = 2.0;
-	}
-	else{
-		_x = _x + 4.2;
+	for(int _b = (int)0.0;_b < (int)2.0; _b++){
+		_turnLeft(_b);
 	}
 	
 	}
+	public void _doSomething (){ 
+	
+	}
 	public double _Function (){ 
-			double __x = 0.0;
+	double _x = 0.0;
 	
 	}
 	public void onCustomEvent (CustomEvent e){ 
@@ -74,20 +73,16 @@ public class TheDestroyer extends AdvancedRobot{
 			case _ScannedRobotEvent:
 				switch (currentStrategy) { 
 					case _Default:
-							String __currentRival = _e.getName()
-						;
-							_turnLeftAndRotate(_currentRival)
-						;
-							_Offensive()
-						;
+							String _currentRival = _e.getName();
+							_turnLeftAndRotate(_currentRival);
+							_Offensive();
 						break;
 				}
 				break;
 			case _LowHealth:
 				switch (currentStrategy) { 
 					case _Offensive:
-							_Default(100.0, 50.0 + 50.0)
-						;
+							_Default(100.0, 50.0 + 50.0);
 						break;
 				}
 				break;

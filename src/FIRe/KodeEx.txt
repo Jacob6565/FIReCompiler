@@ -9,9 +9,14 @@ RobotProperties
 
 number firepower, shield;
 text nameOfRival = "SittingDuck";
+bool asd = false;
+bool was = true;
 
 bool turnLeftAndRotate(text currentRival)
 {
+   bool asd = false;
+   bool was = true;
+   bool wefas[5];
    number uno = 1;
    number x = 3.6;
    number RobinHood, LilleJohn = 5.2;

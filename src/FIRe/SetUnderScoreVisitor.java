@@ -55,14 +55,14 @@ public class SetUnderScoreVisitor extends ASTVisitor {
 
     @Override
     public void visit(BooleanDeclarationNode node, Object... arg) throws Exception {
-        VisitNode(node.Id);
+        //VisitNode(node.Id);
         for(AbstractNode child : node.childList)
             VisitNode(child);
     }
 
     @Override
     public void visit(BoolArrayDeclarationNode node, Object... arg) throws Exception {
-        VisitNode(node.Id);
+        //VisitNode(node.Id);
         for(AbstractNode child : node.childList)
             VisitNode(child);
     }
@@ -95,7 +95,6 @@ public class SetUnderScoreVisitor extends ASTVisitor {
     @Override
     public void visit(EventDeclarationNode node, Object... arg) throws Exception {
         VisitNode(node.Id);
-        //What the shit
         for(AbstractNode child : node.childList)
             VisitNode(child);
     }
@@ -213,14 +212,14 @@ public class SetUnderScoreVisitor extends ASTVisitor {
 
     @Override
     public void visit(NumberDeclarationNode node, Object... arg) throws Exception {
-        VisitNode(node.Id);
+        //VisitNode(node.Id);
         for(AbstractNode child : node.childList)
             VisitNode(child);
     }
 
     @Override
     public void visit(NumberArrayDeclarationNode node, Object... arg) throws Exception {
-        VisitNode(node.Id);
+        //VisitNode(node.Id);
         for(AbstractNode child : node.childList)
             VisitNode(child);
 
@@ -288,14 +287,14 @@ public class SetUnderScoreVisitor extends ASTVisitor {
 
     @Override
     public void visit(TextDeclarationNode node, Object... arg) throws Exception {
-        VisitNode(node.Id);
+        //VisitNode(node.Id);
         for(AbstractNode child : node.childList)
             VisitNode(child);
     }
 
     @Override
     public void visit(TextArrayDeclarationNode node, Object... arg) throws Exception {
-        VisitNode(node.Id);
+        //VisitNode(node.Id);
         for(AbstractNode child : node.childList)
             VisitNode(child);
     }

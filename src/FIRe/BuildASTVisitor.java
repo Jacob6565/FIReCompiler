@@ -201,8 +201,8 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
                     BooleanDeclarationNode booleanDeclarationNode = new BooleanDeclarationNode();
                     booleanDeclarationNode.Id =  (IdNode) visitId(ctx.id(0));
                     booleanDeclarationNode.LineNumber = ctx.start.getLine();
-                    booleanDeclarationNode.childList.add(visitExpr(ctx.expr()));
                     booleanDeclarationNode.childList.add(booleanDeclarationNode.Id);
+                    booleanDeclarationNode.childList.add(visitExpr(ctx.expr()));
 
                     return booleanDeclarationNode;
                 } else

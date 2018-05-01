@@ -82,7 +82,6 @@ public class CGFunctionVisitor extends ASTVisitor {
             else if(id instanceof ExpressionNode)
                 exprFlag = true;
         }
-
         code.emit("boolean ");
 
         for(AbstractNode id : node.childList){
