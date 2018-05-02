@@ -167,8 +167,8 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
     //multiple declerations can be made at once
     @Override
     public AbstractNode visitDcl(CFGParser.DclContext ctx) {
-        if (ctx.expr() != null) { // If there is an expr we assume the first rule
-            if (!ctx.children.get(2).getText().equals("[")) { //If it is not an array
+        if (ctx.id().size() == 1) { // If there is an expr we assume the first rule
+            if (ctx.children.size() <= 2 || !ctx.children.get(2).getText().equals("[")) { //If it is not an array
                 if (ctx.Type().toString().equals("number")) {
 
                     NumberDeclarationNode numberDeclarationNode = new NumberDeclarationNode();
@@ -176,7 +176,10 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
                     numberDeclarationNode.Id = (IdNode) visitId(ctx.id(0));
                     numberDeclarationNode.childList.add(numberDeclarationNode.Id);
 
-                    numberDeclarationNode.childList.add(visitExpr(ctx.expr()));
+                    if (ctx.expr() != null)
+                        numberDeclarationNode.childList.add(visitExpr(ctx.expr()));
+                    else
+                        numberDeclarationNode.childList.add(new NumberNode(0));
 
                     //Because we want to quickly access the IdNode we assign the field.
                     for (AbstractNode AN : numberDeclarationNode.childList) {
@@ -185,7 +188,6 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
                     }
 
                     numberDeclarationNode.Id = (IdNode) numberDeclarationNode.childList.get(0);
-
                     return numberDeclarationNode;
                 } else if (ctx.Type().toString().equals("text")) {
 
@@ -194,7 +196,10 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
                     textDeclarationNode.Id = (IdNode) visitId(ctx.id(0));
                     textDeclarationNode.childList.add(textDeclarationNode.Id);
 
-                    textDeclarationNode.childList.add(visitExpr(ctx.expr()));
+                    if (ctx.expr() != null)
+                        textDeclarationNode.childList.add(visitExpr(ctx.expr()));
+                    else
+                        textDeclarationNode.childList.add(new TextNode(""));
 
                     return textDeclarationNode;
                 } else if (ctx.Type().toString().equals("bool")) {
@@ -203,7 +208,11 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
                     booleanDeclarationNode.Id =  (IdNode) visitId(ctx.id(0));
                     booleanDeclarationNode.LineNumber = ctx.start.getLine();
                     booleanDeclarationNode.childList.add(booleanDeclarationNode.Id);
-                    booleanDeclarationNode.childList.add(visitExpr(ctx.expr()));
+
+                    if (ctx.expr() != null)
+                        booleanDeclarationNode.childList.add(visitExpr(ctx.expr()));
+                    else
+                        booleanDeclarationNode.childList.add(new BoolNode(false));
 
                     return booleanDeclarationNode;
                 } else
@@ -346,7 +355,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
 
     // Help function for visitExpr that creates the BoolNode by using the context
     private BoolNode CreateBoolNode(CFGParser.ExprContext ctx){
-        BoolNode node = new BoolNode();
+        BoolNode node = new BoolNode(false);
         if(ctx.BoolVal().toString().equals("true"))
             node.value = true;
         else
