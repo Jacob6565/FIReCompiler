@@ -19,6 +19,7 @@ public class CustomEventHandlerCodeHolder extends EventHandlerCodeHolder{
 
     public String getCode() {
         sb.append(indent(bodySwitch.getCode(),1));
+        sb.append(indent("return;",1));
         return "public " + type + " " + name + " (" + parameters + "){ \n" + sb.toString() + "\n}\n";
     }
 }

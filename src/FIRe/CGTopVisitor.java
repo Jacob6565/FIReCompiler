@@ -11,11 +11,14 @@ import java.util.Iterator;
 import java.util.Set;
 
 public class CGTopVisitor extends ASTVisitor{
+    CGTopVisitor(SymbolTable symbolTable){
+        bodyVisitor = new CGFunctionVisitor(symbolTable);
+    }
     ProgCodeHolder progCode = new ProgCodeHolder();
 
     int blockIndent = 1;
 
-    CGFunctionVisitor bodyVisitor = new CGFunctionVisitor();
+    CGFunctionVisitor bodyVisitor;
 
     //Prints the generated code from the CodeHolders into the output file
     public void emitOutputFile(){

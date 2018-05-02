@@ -4,14 +4,19 @@ import FIRe.Exceptions.ReturnException;
 import FIRe.Exceptions.TypeException;
 
 public class CGFunctionVisitor extends ASTVisitor {
-    CodeHolder code;
-    FunctionDeclarationNode func;
-    private CGExpressionVisitor exprGen;
-
+    CGFunctionVisitor(SymbolTable symbolTable){
+        this();
+        this.symbolTable = symbolTable;
+    }
     CGFunctionVisitor(){
         exprGen = new CGExpressionVisitor();
         code = new MethodCodeHolder("bodyCode", "void");
     }
+
+    CodeHolder code;
+    FunctionDeclarationNode func;
+    private CGExpressionVisitor exprGen;
+    private SymbolTable symbolTable;
 
     String GenerateBodyCode(AbstractNode node){
         code = new MethodCodeHolder("bodyCode", "void");
@@ -222,7 +227,16 @@ public class CGFunctionVisitor extends ASTVisitor {
 
     @Override
     public void visit(FuncCallNode node, Object... arg) throws Exception {
-        exprGen.GenerateExprCode(code, node);
+        String name = node.Id.Name;
+
+        //Here we use the substring of name that begins on index 1, to avoid the underscore of the name when searching
+        SymbolData symbolData = symbolTable.Search(name.substring(1));
+        if (symbolData != null && symbolData.nodeRef instanceof StrategyDeclarationNode){
+            code.emit("changeStrategy = \"" + node.Id.Name + "\"\n" + "return");
+        }
+
+        else
+            exprGen.GenerateExprCode(code, node);
         code.emitNL(";");
     }
 
@@ -586,17 +600,15 @@ public class CGFunctionVisitor extends ASTVisitor {
     }
     //method for calculating number of needed indentions
     public int CalculateTabs(AbstractNode node){
-
-        AbstractNode temp = node;
         int indentions = 0;
 
-        while (!(temp.Parent.Parent instanceof FunctionDeclarationNode) && !(temp.Parent.Parent instanceof StrategyDeclarationNode)) {
-            temp = temp.Parent; //we only increase the value, if we are at a blocknode.
-            if (temp instanceof BlockNode) {
+        while (node.Parent != null && !(node.Parent.Parent instanceof FunctionDeclarationNode) && !(node.Parent.Parent
+                                                                                instanceof StrategyDeclarationNode)) {
+            node = node.Parent; //we only increase the value, if we are at a blocknode.
+            if (node instanceof BlockNode) {
                 indentions++; // we know we need to indent if we are at a blocknode
             }
         }
-
         return indentions; //returns the number of indentions
     }
 }
