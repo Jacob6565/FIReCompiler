@@ -356,4 +356,58 @@ public class FESVisitor extends ASTVisitor{
         symbolTable.Insert(new EventDeclarationNode("SkippedTurnEvent",0, new Tuple<>("getPriority","number"), new Tuple<>("getSkippedTurn","number")));
         symbolTable.Insert(new EventDeclarationNode("WinEvent",0,new Tuple<>("getPriority","number")));
     }
+
+    private void RemoveRoboCodeMethods() throws Exception {
+        symbolTable.Remove("ahead");
+        symbolTable.Remove("back");
+        symbolTable.Remove("doNothing");
+        symbolTable.Remove("fire");
+        symbolTable.Remove("getBattleFieldHeight");
+        symbolTable.Remove("getBattleFieldWidth");
+        symbolTable.Remove("getEnergy");
+        symbolTable.Remove("getGunHeading");
+        symbolTable.Remove("getGunHeat");
+        symbolTable.Remove("getHeading");
+        symbolTable.Remove("getHeight");
+        symbolTable.Remove("getName");
+        symbolTable.Insert(new FunctionDeclarationNode("getName", "text"));
+        symbolTable.Insert(new FunctionDeclarationNode("getNumRounds","number"));
+        symbolTable.Insert(new FunctionDeclarationNode("getNumSentries","number"));
+        symbolTable.Insert(new FunctionDeclarationNode("getOthers","number"));
+        symbolTable.Insert(new FunctionDeclarationNode("getRadarHeading","number"));
+        symbolTable.Insert(new FunctionDeclarationNode("GetRoundNum","number"));
+        symbolTable.Insert(new FunctionDeclarationNode("getSentryBorderSize","number"));
+        symbolTable.Insert(new FunctionDeclarationNode("getTime","number"));
+        symbolTable.Insert(new FunctionDeclarationNode("getVelocity","number"));
+        symbolTable.Insert(new FunctionDeclarationNode("getWidth","number"));
+        symbolTable.Insert(new FunctionDeclarationNode("getX", "number"));
+        symbolTable.Insert(new FunctionDeclarationNode("getY","number"));
+        symbolTable.Insert(new FunctionDeclarationNode("print","void", new Tuple<>("line", "text")));
+        symbolTable.Insert(new FunctionDeclarationNode("resume","void"));
+        symbolTable.Insert(new FunctionDeclarationNode("scan","void"));
+        symbolTable.Insert(new FunctionDeclarationNode("setAdjustGunForRobotTurn","void",new Tuple<>("independent","bool")));
+        symbolTable.Insert(new FunctionDeclarationNode("setAdjustRadarForGunTurn","void", new Tuple<>("independent","bool")));
+        symbolTable.Insert(new FunctionDeclarationNode("setAdjustRadarForRobotTurn","void", new Tuple<>("independent", "bool")));
+        symbolTable.Insert(new FunctionDeclarationNode("stop","void"));
+        symbolTable.Insert(new FunctionDeclarationNode("turnGunLeft","void", new Tuple<>("degrees", "number")));
+        symbolTable.Insert(new FunctionDeclarationNode("turnGunRight", "void", new Tuple<>("degrees", "number")));
+        symbolTable.Insert(new FunctionDeclarationNode("turnLeft","void", new Tuple<>("degrees", "number")));
+        symbolTable.Insert(new FunctionDeclarationNode("turnRadarLeft","void", new Tuple<>("degrees", "number")));
+        symbolTable.Insert(new FunctionDeclarationNode("turnRadarRight","void", new Tuple<>("degrees", "number")));
+        symbolTable.Insert(new FunctionDeclarationNode("turnRight", "void", new Tuple<>("degrees", "number")));
+        symbolTable.Insert(new EventDeclarationNode("BattleEndedEvent",0,new Tuple<>("getPriority", "number"), new Tuple<>("isAborted","bool")));
+        symbolTable.Insert(new EventDeclarationNode("BulletHitBulletEvent",0));
+        symbolTable.Insert(new EventDeclarationNode("BulletHitEvent",0, new Tuple<String,String>("getEnergy","number"),new Tuple<>("getName","text")));
+        symbolTable.Insert(new EventDeclarationNode("BulletMissedEvent",0));
+        symbolTable.Insert(new EventDeclarationNode("DeathEvent",0, new Tuple<>("getPriority", "number")));
+        symbolTable.Insert(new EventDeclarationNode("HitByBulletEvent",0, new Tuple<>("getBearing", "number"),new Tuple<>("getBearingRadians","number"),new Tuple<>("getHeading", "number"), new Tuple<>("getHeadingRadians","number"),new Tuple<>("getName", "text"),new Tuple<>("getPower","number"),new Tuple<>("getVelocity","number")));
+        symbolTable.Insert(new EventDeclarationNode("HitRobotEvent",0,new Tuple<>("getBearing", "number"),new Tuple<>("getBearingRadians","number"), new Tuple<>("getEnergy","number"), new Tuple<>("getName", "text"),new Tuple<>("isMyFault", "bool")));
+        symbolTable.Insert(new EventDeclarationNode("HitWallEvent",0, new Tuple<>("getBearing", "number"), new Tuple<>("getBearingRadians","number")));
+        symbolTable.Insert(new EventDeclarationNode("MessageEvent",0, new Tuple<>("getSender", "text")));
+        symbolTable.Insert(new EventDeclarationNode("RobotDeathEvent",0, new Tuple<>("getName","text")));
+        symbolTable.Insert(new EventDeclarationNode("RoundEndedEvent",0, new Tuple<>("getPriority", "number"), new Tuple<>("getRound", "number"), new Tuple<>("getTotalTurns","number"),new Tuple<>("getTurns","number")));
+        symbolTable.Insert(new EventDeclarationNode("ScannedRobotEvent",0, new Tuple<>("getBearing", "number"), new Tuple<>("getBearingRadians","number"), new Tuple<>("getDistance","number"),new Tuple<>("getEnergy","number"),new Tuple<>("getHeading","number"),new Tuple<>("getHeadingRadians","number"),new Tuple<>("getName","text"),new Tuple<>("getVelocity","number"), new Tuple<>("isSentryRobot", "bool")));
+        symbolTable.Insert(new EventDeclarationNode("SkippedTurnEvent",0, new Tuple<>("getPriority","number"), new Tuple<>("getSkippedTurn","number")));
+        symbolTable.Insert(new EventDeclarationNode("WinEvent",0,new Tuple<>("getPriority","number")));
+    }
 }

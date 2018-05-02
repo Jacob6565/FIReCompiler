@@ -151,4 +151,9 @@ public class SymbolTable  {
         }
         return false;
     }
+
+    public void Remove(String key) {
+        if (stack.Peek().containsKey(key))
+            stack.Peek().remove(key);
+    }
 }

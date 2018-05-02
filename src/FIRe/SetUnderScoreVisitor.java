@@ -136,11 +136,12 @@ public class SetUnderScoreVisitor extends ASTVisitor {
     @Override
     public void visit(FuncCallNode node, Object... arg) throws Exception {
 
-        if(!st.Contains(node.Id.Name))
+        if(st.Contains(node.Id.Name)) {
             VisitNode(node.Id);
 
-        if(node.Aparam != null)
-            VisitNode(node.Aparam);
+            if (node.Aparam != null)
+                VisitNode(node.Aparam);
+        }
     }
 
     @Override
@@ -350,6 +351,7 @@ public class SetUnderScoreVisitor extends ASTVisitor {
 
     @Override
     public void visit(RobotPropertiesNode node, Object... arg) {
-
+        for(AbstractNode child : node.childList)
+            VisitNode(child);
     }
 }

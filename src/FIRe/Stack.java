@@ -28,7 +28,6 @@ public class Stack<T> {
         list.remove(Peek());
         return element;
     }
-
     public int Size(){
         return list.size();
     }

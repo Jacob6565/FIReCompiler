@@ -8,13 +8,13 @@ public class CGFunctionVisitor extends ASTVisitor {
     FunctionDeclarationNode func;
     CGExpressionVisitor exprGen;
 
-    CGFunctionVisitor(CodeHolder CH){
+    CGFunctionVisitor(){
         exprGen = new CGExpressionVisitor();
-        code = CH;
+        code = new MethodCodeHolder("bodyCode", "void");
     }
 
-    String GenerateFuncCode(CodeHolder CH, FunctionDeclarationNode funcNode){
-        code = CH;
+    String GenerateFuncCode(FunctionDeclarationNode funcNode){
+        code = new MethodCodeHolder("bodyCode", "void");
         func = funcNode;
         VisitNode(func);
         return "";
