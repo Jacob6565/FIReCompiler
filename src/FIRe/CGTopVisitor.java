@@ -170,7 +170,7 @@ public class CGTopVisitor extends ASTVisitor{
         //CODE GENERATION SOMEWHERE HERE / THIS IS A BAD WAY OF DOING IT /KRISTOFFER
         CodeHolder te = new EventCodeHolder("test");
         CGFunctionVisitor test = new CGFunctionVisitor(te);
-        test.VisitNode(node);
+        test.visitNode(node);
         eventDcl.emit(te.sb.toString());
 
         runMethod.addConditionDeclaration(eventDcl.getCode());
@@ -249,10 +249,10 @@ public class CGTopVisitor extends ASTVisitor{
         //CODE GENERATION SOMEWHERE HERE / THIS IS A BAD WAY OF DOING IT /KRISTOFFER
         CodeHolder te = new MethodCodeHolder("test","test");
         CGFunctionVisitor test = new CGFunctionVisitor(te);
-        test.VisitNode(node);
+        test.visitNode(node);
         method.emit(te.sb.toString());
         //Code generation for method body
-        CGF.VisitNode(node);
+        CGF.visitNode(node);
         System.out.println(CGF.code.sb.toString());
 
         methods.add(method);
@@ -366,7 +366,7 @@ public class CGTopVisitor extends ASTVisitor{
     @Override
     public void visit(ProgNode node, Object... arg) throws Exception {
         for (AbstractNode child : node.childList) {
-            VisitNode(child);
+            visitNode(child);
         }
     }
 
@@ -387,7 +387,7 @@ public class CGTopVisitor extends ASTVisitor{
                 radarColor = temp.Color.Color;
             }
             else
-                VisitNode(child);
+                visitNode(child);
         }
         runMethod.emit(setColorBuilder(bodyColor, gunColor, radarColor), insideMethodeIndent);
     }
@@ -414,7 +414,7 @@ public class CGTopVisitor extends ASTVisitor{
         //THE GENERATED CODE SHOULD NOT BE ADDED LIKE THIS /KRISTOFFER
         CodeHolder te = new MethodCodeHolder("test","test");
         CGFunctionVisitor test = new CGFunctionVisitor(te);
-        test.VisitNode(node);
+        test.visitNode(node);
 
         //Parent way : WhenNode -> StrategyDcl
         StrategyDeclarationNode parentStrategy = (StrategyDeclarationNode) node.Parent;
@@ -434,14 +434,14 @@ public class CGTopVisitor extends ASTVisitor{
         //Generate code equivalent java code for the strategyDecleration
         RunMethodCodeHolder RMCH = new RunMethodCodeHolder("test", "ts");
         CGStrategyVisitor CGS = new CGStrategyVisitor(RMCH);
-        CGS.VisitNode(node);
+        CGS.visitNode(node);
 
         //Temporary for printing the generated code
         //System.out.println(CGS.CH.sb.toString());
 
         //TESTING: THIS AND THE VISIT OF WHEN SHOULD NOT BE DONE IN CGTopVisitor / KRISTOFFER
         for (AbstractNode child : node.childList) {
-            VisitNode(child);
+            visitNode(child);
         }
 
         //Add the body of what is equivalent to the when by calling addEventHandler("eventType", "body");
@@ -499,7 +499,7 @@ public class CGTopVisitor extends ASTVisitor{
             //CODE GENERATION SOMEWHERE HERE / THIS IS A BAD WAY OF DOING IT /KRISTOFFER
             CodeHolder te = new MethodCodeHolder("test","test");
             CGFunctionVisitor test = new CGFunctionVisitor(te);
-            test.VisitNode(node);
+            test.visitNode(node);
 
             eventHandler.addCase(strategyName, te.sb.toString());
         }
@@ -510,7 +510,7 @@ public class CGTopVisitor extends ASTVisitor{
             //CODE GENERATION SOMEWHERE HERE / THIS IS A BAD WAY OF DOING IT /KRISTOFFER
             CodeHolder te = new MethodCodeHolder("test","test");
             CGFunctionVisitor test = new CGFunctionVisitor(te);
-            test.VisitNode(node);
+            test.visitNode(node);
 
             customEventHandler.addCase(eventType, strategyName, te.sb.toString());
         }

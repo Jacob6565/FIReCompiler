@@ -4,8 +4,6 @@ import FIRe.Exceptions.ReturnException;
 import FIRe.Exceptions.SymbolNotFoundException;
 import FIRe.Exceptions.TypeException;
 
-import java.security.PublicKey;
-
 public class CGStrategyVisitor extends ASTVisitor {
 
     public CGStrategyVisitor(RunMethodCodeHolder RMCH){
@@ -48,10 +46,10 @@ public class CGStrategyVisitor extends ASTVisitor {
         for (AbstractNode Node: node.childList) {
             if(Node instanceof IdNode){
                 if(((IdNode) Node).ArrayIndex == null){
-                    VisitNode(Node);
+                    visitNode(Node);
                 }
                 else{
-                    VisitNode(Node);
+                    visitNode(Node);
                     CH.emit("[");
                     NumberNode temp =  ((IdNode) Node).ArrayIndex;
                     CGE.GenerateExprCode(CH, temp);
@@ -59,7 +57,7 @@ public class CGStrategyVisitor extends ASTVisitor {
                 }
             }
             if(Node instanceof InfixExpressionNode){
-                VisitNode(Node);
+                visitNode(Node);
 
             }
 
@@ -128,7 +126,7 @@ public class CGStrategyVisitor extends ASTVisitor {
     public void visit(BoolArrayDeclarationNode node, Object... arg) throws Exception {
         CH.emit("boolean");
         for(AbstractNode Node: node.childList) {
-            VisitNode(Node);
+            visitNode(Node);
         }
     }
 
@@ -151,7 +149,7 @@ public class CGStrategyVisitor extends ASTVisitor {
     @Override
     public void visit(DeclarationNode node, Object... arg) {
         for (AbstractNode Node:node.childList) {
-            VisitNode(Node);
+            visitNode(Node);
         }
 
     }
@@ -273,7 +271,7 @@ public class CGStrategyVisitor extends ASTVisitor {
         CH.emit(" = ");
         for (AbstractNode Node: node.childList) {
             if(Node instanceof NumberNode){
-                VisitNode(Node);
+                visitNode(Node);
             }
         }
         CH.emitNL(";");
@@ -287,7 +285,7 @@ public class CGStrategyVisitor extends ASTVisitor {
 
         for(AbstractNode Node : node.childList){
             if(Node instanceof IdNode){
-                VisitNode(Node);
+                visitNode(Node);
                 CH.emit("[]"); // After we have visited the ID we know we shoould emit this
             }
         }
@@ -348,7 +346,7 @@ public class CGStrategyVisitor extends ASTVisitor {
     @Override
     public void visit(StrategyDeclarationNode node, Object... arg) throws Exception {
         for (AbstractNode Node: node.childList) {
-            VisitNode(Node);
+            visitNode(Node);
         }
     }
 
@@ -362,11 +360,11 @@ public class CGStrategyVisitor extends ASTVisitor {
         CH.emit("String ");
         for(AbstractNode Node: node.childList) {
             if(Node instanceof IdNode) {
-                VisitNode(Node);
+                visitNode(Node);
             }
             if(Node instanceof TextNode){
                 CH.emit(" = ");
-                VisitNode(Node);
+                visitNode(Node);
                 CH.emitNL(";");
             }
         }
@@ -376,7 +374,7 @@ public class CGStrategyVisitor extends ASTVisitor {
     public void visit(TextArrayDeclarationNode node, Object... arg) throws Exception {
         CH.emit("text");
         for(AbstractNode Node: node.childList) {
-            VisitNode(Node);
+            visitNode(Node);
         }
     }
 

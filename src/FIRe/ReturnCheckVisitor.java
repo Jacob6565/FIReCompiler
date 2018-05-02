@@ -2,7 +2,6 @@ package FIRe;
 import FIRe.Exceptions.*;
 
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -103,7 +102,7 @@ public class ReturnCheckVisitor extends ASTVisitor {
             //If it do not have a return node, it may contain other
             // control structures which can contain returns.
             else if(Node instanceof ControlStructureNode){
-                VisitNode(Node);
+                visitNode(Node);
             }
         }
         //if no return was found.
@@ -122,7 +121,7 @@ public class ReturnCheckVisitor extends ASTVisitor {
             }
             //Checking if the nested blocks inside this block contains returns.
             else if(Node instanceof ControlStructureNode){
-                VisitNode(Node);
+                visitNode(Node);
             }
         }
     }
@@ -136,7 +135,7 @@ public class ReturnCheckVisitor extends ASTVisitor {
         //loop investigating a controlstructues where a return can be 'hidden'
         for(AbstractNode Node : node.childList){
             if(Node instanceof ControlStructureNode){
-                VisitNode(Node);
+                visitNode(Node);
             }
         }
     }
@@ -159,7 +158,7 @@ public class ReturnCheckVisitor extends ASTVisitor {
         if (!hasreturn) { // if however the block does not have a return, it may be hidden under a controlstructue node
             for (AbstractNode Node : node.childList) {
                 if (Node instanceof ControlStructureNode) {
-                    VisitNode(Node);
+                    visitNode(Node);
                 } else
                     throw new ReturnException("You are missing a return in the function", ancestor.LineNumber);
             }
@@ -197,7 +196,7 @@ public class ReturnCheckVisitor extends ASTVisitor {
 
         for (AbstractNode Node: node.childList) {
             if (Node instanceof BlockNode) {
-                VisitNode(Node);
+                visitNode(Node);
             }
         }
     }
@@ -216,7 +215,7 @@ public class ReturnCheckVisitor extends ASTVisitor {
     public void visit(EventDeclarationNode node, Object... arg) throws Exception {
         for(AbstractNode child : node.childList){
             if(child instanceof BlockNode) {
-                VisitNode(child);
+                visitNode(child);
             }
         }
     }
@@ -240,7 +239,7 @@ public class ReturnCheckVisitor extends ASTVisitor {
     public void visit(ForNode node, Object... arg) {
         for(AbstractNode child : node.childList){
             if(child instanceof BlockNode){
-                VisitNode(child);
+                visitNode(child);
 
             }
         }
@@ -256,7 +255,7 @@ public class ReturnCheckVisitor extends ASTVisitor {
         //Visit each block node, since you only are allowed to have a return from within a block
         for (AbstractNode Node: node.childList) {
             if (Node instanceof BlockNode) {
-                VisitNode(Node);
+                visitNode(Node);
             }
         }
     }
@@ -287,7 +286,7 @@ public class ReturnCheckVisitor extends ASTVisitor {
         //Checking each block of a controlstructure.
         for (AbstractNode Node: node.childList) {
             if (Node instanceof BlockNode) {
-                VisitNode(Node);
+                visitNode(Node);
             }
         }
     }
@@ -361,7 +360,7 @@ public class ReturnCheckVisitor extends ASTVisitor {
     public void visit(ProgNode node, Object... arg) {
         //Stating point. Calling its children i.e FunctionDcl.
         for (AbstractNode Node: node.childList) {
-            VisitNode(Node);
+            visitNode(Node);
         }
     }
 
@@ -373,7 +372,7 @@ public class ReturnCheckVisitor extends ASTVisitor {
     @Override
     public void visit(ReturnNode node, Object... arg) {
         for (AbstractNode Node: node.childList) {
-            VisitNode(Node);
+            visitNode(Node);
         }
 
     }
@@ -387,7 +386,7 @@ public class ReturnCheckVisitor extends ASTVisitor {
     public void visit(RoutineNode node, Object... arg) {
         for(AbstractNode child : node.childList){
             if(child instanceof BlockNode){
-                VisitNode(child);
+                visitNode(child);
             }
         }
     }
@@ -407,7 +406,7 @@ public class ReturnCheckVisitor extends ASTVisitor {
             }
             //Checking if returns exist in all the nested scopes.
             else if (child instanceof ControlStructureNode || child instanceof WhenNode) {
-                VisitNode(child);
+                visitNode(child);
             }
         }
     }
@@ -441,7 +440,7 @@ public class ReturnCheckVisitor extends ASTVisitor {
     public void visit(WhenNode node, Object... arg) {
         for(AbstractNode child : node.childList){
             if(child instanceof BlockNode){
-                VisitNode(child);
+                visitNode(child);
             }
         }
     }
@@ -450,7 +449,7 @@ public class ReturnCheckVisitor extends ASTVisitor {
     public void visit(WhileNode node, Object... arg) {
         for(AbstractNode child : node.childList){
             if(child instanceof BlockNode){
-                VisitNode(child);
+                visitNode(child);
             }
         }
     }

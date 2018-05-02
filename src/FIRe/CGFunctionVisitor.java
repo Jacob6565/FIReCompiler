@@ -15,7 +15,7 @@ public class CGFunctionVisitor extends ASTVisitor {
 
     String GenerateBodyCode(AbstractNode node){
         code = new MethodCodeHolder("bodyCode", "void");
-        VisitNode(node);
+        visitNode(node);
         return code.sb.toString();
     }
 
@@ -59,7 +59,7 @@ public class CGFunctionVisitor extends ASTVisitor {
             for(int i = 0; i < numberOfIdents; i++){
                 code.emit("\t");
             }
-            VisitNode(child);
+            visitNode(child);
         }
     }
 
@@ -147,7 +147,7 @@ public class CGFunctionVisitor extends ASTVisitor {
     @Override
     public void visit(EventDeclarationNode node, Object... arg) throws Exception {
         for (AbstractNode child: node.childList) {
-            VisitNode(child);
+            visitNode(child);
         }
     }
 
@@ -208,7 +208,7 @@ public class CGFunctionVisitor extends ASTVisitor {
 
         for(AbstractNode child : node.childList){
             if(child instanceof BlockNode) {
-                VisitNode(child);
+                visitNode(child);
                 for(int i = 0; i < CalculateTabs(child); i++){
                     code.emit("\t");
                 }
@@ -230,7 +230,7 @@ public class CGFunctionVisitor extends ASTVisitor {
     public void visit(FunctionDeclarationNode node, Object... arg) throws Exception {
         for(AbstractNode child : node.childList) {
             if (child instanceof BlockNode) {
-                VisitNode(child);
+                visitNode(child);
             }
 
         }
@@ -457,7 +457,7 @@ public class CGFunctionVisitor extends ASTVisitor {
 
         for(AbstractNode child : node.childList){
             if(child instanceof BlockNode) {
-                VisitNode(child);
+                visitNode(child);
             }
         }
 
@@ -473,7 +473,7 @@ public class CGFunctionVisitor extends ASTVisitor {
     @Override
     public void visit(StrategyDeclarationNode node, Object... arg) throws Exception {
         for(AbstractNode child : node.childList)
-            VisitNode(child);
+            visitNode(child);
     }
 
     @Override
@@ -545,7 +545,7 @@ public class CGFunctionVisitor extends ASTVisitor {
         //code.emitNL("{");
         for(AbstractNode child : node.childList){
             if(child instanceof BlockNode) {
-                VisitNode(child);
+                visitNode(child);
             }
         }
         //code.emitNL("}");
@@ -559,7 +559,7 @@ public class CGFunctionVisitor extends ASTVisitor {
         for(AbstractNode child : node.childList){
             if(child instanceof BlockNode) {
 
-                VisitNode(child);
+                visitNode(child);
                 for(int i = 0; i < CalculateTabs(child); i++){
                     code.emit("\t");
                 }
