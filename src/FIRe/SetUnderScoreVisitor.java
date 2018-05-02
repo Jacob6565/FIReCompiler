@@ -11,7 +11,7 @@ public class SetUnderScoreVisitor extends ASTVisitor {
     SetUnderScoreVisitor(SymbolTable table) throws Exception {
         _symbolTable = table;
         try {
-            RemoveRoboCodeMethods();
+            //RemoveRoboCodeMethods();
         } catch (Exception e) {
             System.out.println(e.getMessage() + "Error in removing Robocode functions");
         }
@@ -141,12 +141,12 @@ public class SetUnderScoreVisitor extends ASTVisitor {
     @Override
     public void visit(FuncCallNode node, Object... arg) throws Exception {
 
-        if(_symbolTable.Contains(node.Id.Name)) {
-            visitNode(node.Id);
-
-            if (node.Aparam != null)
-                visitNode(node.Aparam);
+        if(!CheckIfRoboCodeMethod(node.Id.Name)) {
+            VisitNode(node.Id);
         }
+        if (node.Aparam != null)
+            VisitNode(node.Aparam);
+
     }
 
     @Override
@@ -358,6 +358,60 @@ public class SetUnderScoreVisitor extends ASTVisitor {
     public void visit(RobotPropertiesNode node, Object... arg) {
         for(AbstractNode child : node.childList)
             visitNode(child);
+    }
+
+    private boolean CheckIfRoboCodeMethod(String str){
+        switch(str){
+            case "ahead": return true;
+            case "back": return true;
+            case "fire": return true;
+            case "doNothing": return true;
+            case "getBattleFieldHeight": return true;
+            case "getBattleFieldWidth": return true;
+            case "getEnergy": return true;
+            case "getGunHeading": return true;
+            case "getGunHeat": return true;
+            case "getHeading": return true;
+            case "getHeight": return true;
+            case "getName": return true;
+            case "getNumRounds": return true;
+            case "getNumSentries": return true;
+            case "getOthers": return true;
+            case "getRadarHeading": return true;
+            case "getRoundNum": return true;
+            case "getSentryBorderSize": return true;
+            case "getTime": return true;
+            case "getVelocity": return true;
+            case "getWidth": return true;
+            case "getX": return true;
+            case "getY": return true;
+            case "print": return true;
+            case "resume": return true;
+            case "scan": return true;
+            case "setAdjustGunForRobotTurn": return true;
+            case "setAdjustRadarForGunTurn": return true;
+            case "setAdjustRadarForRobotTurn": return true;
+            case "stop": return true;
+            case "turnGunLeft": return true;
+            case "turnGunRight": return true;
+            case "turnLeft": return true;
+            case "turnRight": return true;
+            case "turnRadarLeft": return true;
+            case "turnRadarRight": return true;
+            case "BattleEndedEvent": return true;
+            case "BulletHitBulletEvent": return true;
+            case "BulletMissedEvent": return true;
+            case "DeathEvent": return true;
+            case "HitByBulletEvent": return true;
+            case "HitWallEvent": return true;
+            case "MessageEvent": return true;
+            case "RobotDeathEvent": return true;
+            case "RoundEndedEvent": return true;
+            case "ScannedRobotEvent": return true;
+            case "SkippedTurnEvent": return true;
+            case "WinEvent": return true;
+            default: return false;
+        }
     }
 
     private void RemoveRoboCodeMethods() throws Exception {

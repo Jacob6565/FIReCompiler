@@ -16,7 +16,7 @@ bool was = true;
 
 bool turnLeftAndRotate(text currentRival)
 {
-   bool asd = false;
+   fire();
    bool was = true;
    bool weasdasdasds[5];
    number uno = 1;
