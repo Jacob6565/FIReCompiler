@@ -92,11 +92,11 @@ public class Main {
         ReturnCheckVisitor returnCheckVisitor = new ReturnCheckVisitor(symbolTable);
         returnCheckVisitor.visit(ast);
 
-//        SetUnderScoreVisitor underscoreVis = new SetUnderScoreVisitor(symbolTable);
-//        underscoreVis.visit(ast);
+        SetUnderScoreVisitor underscoreVis = new SetUnderScoreVisitor(symbolTable);
+        underscoreVis.visit(ast);
 
         //Code generation
-        CGTopVisitor codeGenerator = new CGTopVisitor();
+        CGTopVisitor codeGenerator = new CGTopVisitor(symbolTable);
 
         try {
             codeGenerator.visit(ast);

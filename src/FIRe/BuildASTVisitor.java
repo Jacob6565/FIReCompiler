@@ -52,7 +52,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
 
         for(CFGParser.StrategyBlockContext strategyBlockCtx : ctx.strategyBlock())
             node.childList.add(visitStrategyBlock(strategyBlockCtx)); //And it's strategy block (routines og whens)
-
+        node.childList.add(node.Id);
         return node;
     }
 
@@ -82,6 +82,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         if(ctx.fParamList() != null)//fparamlist er optional.
             node.childList.add(visitFParamList(ctx.fParamList()));
         node.childList.add(visitBlock(ctx.block()));
+        node.childList.add(node.Id);
 
         return node;
     }
