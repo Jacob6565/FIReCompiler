@@ -11,19 +11,17 @@ import java.util.Iterator;
 import java.util.Set;
 
 public class CGTopVisitor extends ASTVisitor{
-    SetupCodeHolder setup = new SetupCodeHolder();
-    RunMethodCodeHolder runMethod = new RunMethodCodeHolder("run", "void");
-    ArrayList<MethodCodeHolder> methods = new ArrayList<MethodCodeHolder>();
-    ArrayList<EventHandlerCodeHolder> eventHandlers = new ArrayList<EventHandlerCodeHolder>();
+    ProgCodeHolder progCode = new ProgCodeHolder();
 
-    int insideClassIndent = 1;
-    int insideMethodeIndent = 1;
+    int blockIndent = 1;
+
+    CGFunctionVisitor bodyVisitor = new CGFunctionVisitor();
 
     //Prints the generated code from the CodeHolders into the output file
     public void emitOutputFile(){
-        String code = mergeCodeHolders();
-        //This fileName should be the same as the class name/robot name /KRISTOFFER
-        printToFile("GeneratedCode\\GenFile.java", code);
+        String code = progCode.getCode();
+        //This fileName should be the same as the class name/robot name
+        printToFile("GeneratedCode\\" + progCode.setup.name + ".java", code);
     }
 
     //Creates the output file and writes the code in it
@@ -38,53 +36,6 @@ public class CGTopVisitor extends ASTVisitor{
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    //Merges all the inputted CodeHolders correctly and returns them as one single String
-    private String mergeCodeHolders(){
-        StringBuilder mergedCode = new StringBuilder();
-
-        setup.emit(runMethod.getCode(), insideClassIndent);
-        for (MethodCodeHolder method: methods) {
-            setup.emit(method.getCode(), insideClassIndent);
-        }
-        for (EventHandlerCodeHolder eventHandler: eventHandlers) {
-            setup.emit(eventHandler.getCode(), insideClassIndent);
-        }
-
-        mergedCode.append(setup.getCode());
-
-        return mergedCode.toString();
-    }
-
-    private EventHandlerCodeHolder addEventHandler(String methodeName, String fparam){
-        if (eventHandlers.size()==0 || getEventHandler(methodeName)== null){
-            EventHandlerCodeHolder newEventHandler = new EventHandlerCodeHolder(methodeName, "void", fparam);
-            eventHandlers.add(newEventHandler);
-            return newEventHandler;
-        }
-        else{
-            return getEventHandler(methodeName);
-        }
-    }
-
-    private CustomEventHandlerCodeHolder addCustomEventHandler(String methodeName, String fparam){
-        if (eventHandlers.size()==0 || getEventHandler(methodeName)== null){
-            CustomEventHandlerCodeHolder newEventHandler = new CustomEventHandlerCodeHolder(methodeName, "void", fparam);
-            eventHandlers.add(newEventHandler);
-            return newEventHandler;
-        }
-        else{
-            return (CustomEventHandlerCodeHolder) getEventHandler(methodeName);
-        }
-    }
-
-    private EventHandlerCodeHolder getEventHandler(String eventHandlerName){
-        for (EventHandlerCodeHolder eventHandler: eventHandlers) {
-            if (eventHandler.name.equals(eventHandlerName))
-                return eventHandler;
-        }
-        return null;
     }
 
 
@@ -130,12 +81,12 @@ public class CGTopVisitor extends ASTVisitor{
 
     @Override
     public void visit(BooleanDeclarationNode node, Object... arg) throws Exception {
-
+        progCode.setup.emit(bodyVisitor.GenerateBodyCode(node), blockIndent);
     }
 
     @Override
     public void visit(BoolArrayDeclarationNode node, Object... arg) throws Exception {
-
+        progCode.setup.emit(bodyVisitor.GenerateBodyCode(node), blockIndent);
     }
 
     @Override
@@ -155,7 +106,6 @@ public class CGTopVisitor extends ASTVisitor{
 
     @Override
     public void visit(DeclarationNode node, Object... arg) {
-
     }
 
     @Override
@@ -167,13 +117,11 @@ public class CGTopVisitor extends ASTVisitor{
     public void visit(EventDeclarationNode node, Object... arg) throws Exception {
         EventCodeHolder eventDcl = new EventCodeHolder(node.Id.Name);
 
-        //CODE GENERATION SOMEWHERE HERE / THIS IS A BAD WAY OF DOING IT /KRISTOFFER
-        CodeHolder te = new EventCodeHolder("test");
-        CGFunctionVisitor test = new CGFunctionVisitor(te);
-        test.visitNode(node);
-        eventDcl.emit(te.sb.toString());
+        String test = bodyVisitor.GenerateBodyCode(node);
+        //Code generation for eventDcl body
+        eventDcl.emit(test, blockIndent);
 
-        runMethod.addConditionDeclaration(eventDcl.getCode());
+        progCode.runMethod.addConditionDeclaration(eventDcl.getCode());
     }
 
     @Override
@@ -203,9 +151,6 @@ public class CGTopVisitor extends ASTVisitor{
 
     @Override
     public void visit(FunctionDeclarationNode node, Object... arg) throws Exception {
-
-        CodeHolder CH = new MethodCodeHolder("test", "test");
-        CGFunctionVisitor CGF = new CGFunctionVisitor(CH);
 
         MethodCodeHolder method;
         String params = null;
@@ -246,16 +191,10 @@ public class CGTopVisitor extends ASTVisitor{
         else
             method= new MethodCodeHolder(node.Id.Name, translateType(node.Type));
 
-        //CODE GENERATION SOMEWHERE HERE / THIS IS A BAD WAY OF DOING IT /KRISTOFFER
-        CodeHolder te = new MethodCodeHolder("test","test");
-        CGFunctionVisitor test = new CGFunctionVisitor(te);
-        test.visitNode(node);
-        method.emit(te.sb.toString());
         //Code generation for method body
-        CGF.visitNode(node);
-        System.out.println(CGF.code.sb.toString());
+        method.emit(bodyVisitor.GenerateBodyCode(node), blockIndent);
 
-        methods.add(method);
+        progCode.methods.add(method);
     }
 
     public String translateType(String FIReType){
@@ -340,12 +279,12 @@ public class CGTopVisitor extends ASTVisitor{
 
     @Override
     public void visit(NumberDeclarationNode node, Object... arg) throws Exception {
-
+        progCode.setup.emit(bodyVisitor.GenerateBodyCode(node), blockIndent);
     }
 
     @Override
     public void visit(NumberArrayDeclarationNode node, Object... arg) throws Exception {
-
+        progCode.setup.emit(bodyVisitor.GenerateBodyCode(node), blockIndent);
     }
 
     @Override
@@ -366,7 +305,7 @@ public class CGTopVisitor extends ASTVisitor{
     @Override
     public void visit(ProgNode node, Object... arg) throws Exception {
         for (AbstractNode child : node.childList) {
-            visitNode(child);
+            VisitNode(child);
         }
     }
 
@@ -387,16 +326,16 @@ public class CGTopVisitor extends ASTVisitor{
                 radarColor = temp.Color.Color;
             }
             else
-                visitNode(child);
+                VisitNode(child);
         }
-        runMethod.emit(setColorBuilder(bodyColor, gunColor, radarColor), insideMethodeIndent);
+        progCode.runMethod.emit(setColorBuilder(bodyColor, gunColor, radarColor), blockIndent);
     }
 
     //Help method that constructs the generates the Java setColorBuilder with its' color inputs
     private String setColorBuilder(String bodyColor, String gunColor, String radarColor){
         //If any of the colors are null, then they will correctly insert null in the string, which is valid for the
         // robocode java function SetColors
-        return "SetColors(" + bodyColor + ", " + gunColor + ", " + radarColor +");";
+        return "setColors(" + bodyColor + ", " + gunColor + ", " + radarColor +");";
     }
 
     @Override
@@ -411,16 +350,12 @@ public class CGTopVisitor extends ASTVisitor{
 
     @Override
     public void visit(RoutineNode node, Object... arg) throws TypeException {
-        //THE GENERATED CODE SHOULD NOT BE ADDED LIKE THIS /KRISTOFFER
-        CodeHolder te = new MethodCodeHolder("test","test");
-        CGFunctionVisitor test = new CGFunctionVisitor(te);
-        test.visitNode(node);
 
         //Parent way : WhenNode -> StrategyDcl
         StrategyDeclarationNode parentStrategy = (StrategyDeclarationNode) node.Parent;
         String strategyName = parentStrategy.Id.Name;
 
-        runMethod.addToRunMethod(strategyName,te.sb.toString());
+        progCode.runMethod.addToRunMethod(strategyName, bodyVisitor.GenerateBodyCode(node));
     }
 
     @Override
@@ -431,24 +366,11 @@ public class CGTopVisitor extends ASTVisitor{
     @Override
     public void visit(StrategyDeclarationNode node, Object... arg) throws Exception {
 
-        //Generate code equivalent java code for the strategyDecleration
-        RunMethodCodeHolder RMCH = new RunMethodCodeHolder("test", "ts");
-        CGStrategyVisitor CGS = new CGStrategyVisitor(RMCH);
-        CGS.visitNode(node);
-
-        //Temporary for printing the generated code
-        //System.out.println(CGS.CH.sb.toString());
-
-        //TESTING: THIS AND THE VISIT OF WHEN SHOULD NOT BE DONE IN CGTopVisitor / KRISTOFFER
+        //Visit the routine and whens of the strategy in this class so their codeHandlers can be prepared
         for (AbstractNode child : node.childList) {
-            visitNode(child);
+
+             VisitNode(child);
         }
-
-        //Add the body of what is equivalent to the when by calling addEventHandler("eventType", "body");
-        //This may be done inside CSGStrategyVisitor
-
-        //Add the body of what is equivalent to the runMethod by calling runMethod.addToRunMethod("strategyName", "body");
-        //This may be done inside CSGStrategyVisitor
     }
 
     @Override
@@ -458,12 +380,12 @@ public class CGTopVisitor extends ASTVisitor{
 
     @Override
     public void visit(TextDeclarationNode node, Object... arg) throws Exception {
-
+        progCode.setup.emit(bodyVisitor.GenerateBodyCode(node), blockIndent);
     }
 
     @Override
     public void visit(TextArrayDeclarationNode node, Object... arg) throws Exception {
-
+        progCode.setup.emit(bodyVisitor.GenerateBodyCode(node), blockIndent);
     }
 
     @Override
@@ -477,7 +399,6 @@ public class CGTopVisitor extends ASTVisitor{
     }
 
     @Override
-    //This method should belong to CGStrategyVisitor or some other visitor /KRISTOFFER
     public void visit(WhenNode node, Object... arg) {
         IdNode eventTypeNode = (IdNode) node.childList.get(0);
         String eventType = eventTypeNode.Name;
@@ -486,33 +407,27 @@ public class CGTopVisitor extends ASTVisitor{
         StrategyDeclarationNode parentStrategy = (StrategyDeclarationNode) node.Parent;
         String strategyName = parentStrategy.Id.Name;
 
-        //This case is for whens handling robocode events /KRISTOFFER
+        //This case is for whens handling robocode events
         if(isThisOfficialEvent(eventType)){
             IdNode paramId = (IdNode)node.childList.get(1);
 
-            //ScannedRobotEvent will become ScannedRobot, a when can only have one parameter
+            //ScannedRobotEvent will become ScannedRobot, a when can only have one parameter /KRISTOFFER
             String[] str = eventType.split("Event");
             String fparam = eventType + " " + paramId.Name;
 
-            EventHandlerCodeHolder eventHandler = addEventHandler("on" + str[0], fparam);
+            //Generates an entirely eventHandler "shell" if it does not already exist
+            EventHandlerCodeHolder eventHandler = progCode.addEventHandler("on" + str[0], fparam);
 
-            //CODE GENERATION SOMEWHERE HERE / THIS IS A BAD WAY OF DOING IT /KRISTOFFER
-            CodeHolder te = new MethodCodeHolder("test","test");
-            CGFunctionVisitor test = new CGFunctionVisitor(te);
-            test.visitNode(node);
-
-            eventHandler.addCase(strategyName, te.sb.toString());
+            // Adds the strategy specific eventhandler as a case in the switch of the generated eventhandler
+            eventHandler.addCase(strategyName, bodyVisitor.GenerateBodyCode(node));
         }
         //This case is for whens handling custom events /KRISTOFFER
         else {
-            CustomEventHandlerCodeHolder customEventHandler = addCustomEventHandler ("onCustomEvent",
-                                                                                    "CustomEvent e");
-            //CODE GENERATION SOMEWHERE HERE / THIS IS A BAD WAY OF DOING IT /KRISTOFFER
-            CodeHolder te = new MethodCodeHolder("test","test");
-            CGFunctionVisitor test = new CGFunctionVisitor(te);
-            test.visitNode(node);
-
-            customEventHandler.addCase(eventType, strategyName, te.sb.toString());
+            //Generates an entirely eventHandler "shell" if it does not already exist
+            CustomEventHandlerCodeHolder customEventHandler = progCode.addCustomEventHandler ("onCustomEvent",
+                    "CustomEvent _e");
+            // Adds the strategy specific eventhandler as a case in the switch of the generated eventhandler
+            customEventHandler.addCase(eventType, strategyName, bodyVisitor.GenerateBodyCode(node));
         }
     }
 
@@ -547,11 +462,9 @@ public class CGTopVisitor extends ASTVisitor{
 
     @Override
     public void visit(RobotNameNode node, Object... arg) {
-        setup.name=node.RobotName.Name;
+        progCode.setup.name=node.RobotName.Name;
     }
 
     @Override
-    public void visit(RobotTypeNode node, Object... arg) throws TypeException {
-        setup.robotType = node.RobotType.Name;
-    }
+    public void visit(RobotTypeNode node, Object... arg) throws TypeException { progCode.setup.robotType = node.RobotType.Name; }
 }
