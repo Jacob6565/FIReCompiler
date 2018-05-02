@@ -1,0 +1,4 @@
+Methods: getMyName();
+Formelle parametre: ThisIsAFormalParameter;
+public variabler: thisIsAPublicVariable;
+private variabler: _thisIsAPrivateVariable;
