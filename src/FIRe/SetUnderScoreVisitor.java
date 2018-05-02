@@ -178,11 +178,13 @@ public class SetUnderScoreVisitor extends ASTVisitor {
         AbstractNode ancestor = node;
 
         while(ancestor.Parent != null) {
-            if (ancestor.Parent instanceof StrategyDeclarationNode)
+            if (ancestor.Parent instanceof StrategyDeclarationNode && !(node.Parent.Parent instanceof ProgNode))
                 node.Name = node.Name + ((StrategyDeclarationNode) ancestor.Parent).Id.Name;
             ancestor = ancestor.Parent;
         }
-        node.Name = "_" + node.Name;
+
+        if(node.Name.charAt(0) != '_')
+            node.Name = "_" + node.Name;
     }
 
     @Override
