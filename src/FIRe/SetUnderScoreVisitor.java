@@ -178,10 +178,13 @@ public class SetUnderScoreVisitor extends ASTVisitor {
     @Override
     public void visit(IdNode node, Object... arg) throws Exception {
         AbstractNode ancestor = node;
+        String firstStr;
+        String secondString;
         if(!node.Name.contains(".")) {
             while (ancestor.Parent != null) {
-                if (ancestor.Parent instanceof StrategyDeclarationNode && !(node.Parent.Parent instanceof ProgNode) && !(node.Parent instanceof WhenNode))
+                if (ancestor.Parent instanceof StrategyDeclarationNode && !(node.Parent.Parent instanceof ProgNode) && !(node.Parent instanceof WhenNode) && !(node.Parent instanceof FuncCallNode)) {
                         node.Name = node.Name + ((StrategyDeclarationNode) ancestor.Parent).Id.Name;
+                }
                 ancestor = ancestor.Parent;
             }
         }
