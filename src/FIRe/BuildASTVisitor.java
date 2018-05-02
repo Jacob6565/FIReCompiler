@@ -578,6 +578,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         node.Id = (IdNode) visitExpr(ctx.expr().get(0));
         node.index = (ExpressionNode) visitExpr(ctx.expr().get(1));
         node.LineNumber = ctx.start.getLine();
+        node.Id.ArrayIndex = node.index;
 
         node.childList.add(node.Id);
         node.childList.add(node.index);
@@ -729,6 +730,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
     @Override
     public AbstractNode visitId(CFGParser.IdContext ctx) {
         IdNode node = new IdNode();
+
 
         //Getting the nodes name
         if  (ctx.Name() != null)

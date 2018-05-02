@@ -524,7 +524,7 @@ class NotEqualsNode extends InfixExpressionNode{
 class IdNode extends ExpressionNode {
     public String Name;
     //public String type;
-    public NumberNode ArrayIndex;
+    public ExpressionNode ArrayIndex;
 
     public IdNode(String name){
         Name = name;

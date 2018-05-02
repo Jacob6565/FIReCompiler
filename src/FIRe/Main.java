@@ -13,7 +13,7 @@ public class Main {
     public static void main(String[] args) throws Exception {
 
         //Reads from the example program. (Debug code)
-        Scanner in = new Scanner(new FileReader("src\\FIRe\\KodeEx.txt"));
+        Scanner in = new Scanner(new FileReader("src\\FIRe\\KodeEx3.txt"));
 
         //We use this delimiter, to chop the code into bits. We split by the backslash character \n
         in.useDelimiter("\n");
