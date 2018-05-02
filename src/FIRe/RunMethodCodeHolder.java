@@ -23,11 +23,11 @@ public class RunMethodCodeHolder extends MethodCodeHolder {
     @Override
     public String getCode() {
         sb.append(indent(conditionDeclarations.toString(), 1));
-        generatedSwitch.append(indent("}\n", 2));
-        generatedSwitch.append(indent("}\n", 1));
-        generatedSwitch.append("}\n");
         sb.append(generatedSwitch.toString());
+        sb.append(indent("}\n", 2));
+        sb.append(indent("}\n", 1));
         sb.append(indent("return;",1));
+        sb.append("}\n");
         return "public " + type + " " + name + " (" + parameters + "){ \n" + sb.toString();
     }
 }

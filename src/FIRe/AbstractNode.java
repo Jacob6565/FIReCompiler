@@ -349,6 +349,10 @@ class NumberNode extends ValNode{
 }
 
 class BoolNode extends ExpressionNode{
+    public BoolNode(boolean val){
+        value = val;
+    }
+
     public boolean value;
 
     @Override

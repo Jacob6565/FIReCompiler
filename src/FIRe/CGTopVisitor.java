@@ -1,5 +1,7 @@
 package FIRe;
 
+import java.awt.*;
+
 import FIRe.Exceptions.ReturnException;
 import FIRe.Exceptions.TypeException;
 
@@ -69,12 +71,14 @@ public class CGTopVisitor extends ASTVisitor{
 
     @Override
     public void visit(AssignNode node, Object... arg) throws Exception {
-
+        progCode.setup.emit(bodyVisitor.GenerateBodyCode(node),blockIndent);
     }
 
     @Override
     public void visit(BlockNode node, Object... arg) throws Exception {
-
+        for (AbstractNode child:node.childList) {
+            visitNode(child);
+        }
     }
 
     @Override
@@ -84,11 +88,15 @@ public class CGTopVisitor extends ASTVisitor{
 
     @Override
     public void visit(BooleanDeclarationNode node, Object... arg) throws Exception {
+        //This is not the best way of saying that a declarationNode from strategy can be generated globally /Kristoffer
+        node.Parent = null;
         progCode.setup.emit(bodyVisitor.GenerateBodyCode(node), blockIndent);
     }
 
     @Override
     public void visit(BoolArrayDeclarationNode node, Object... arg) throws Exception {
+        //This is not the best way of saying that a declarationNode from strategy can be generated globally /Kristoffer
+        node.Parent = null;
         progCode.setup.emit(bodyVisitor.GenerateBodyCode(node), blockIndent);
     }
 
@@ -282,11 +290,15 @@ public class CGTopVisitor extends ASTVisitor{
 
     @Override
     public void visit(NumberDeclarationNode node, Object... arg) throws Exception {
+        //This is not the best way of saying that a declarationNode from strategy can be generated globally /Kristoffer
+        node.Parent = null;
         progCode.setup.emit(bodyVisitor.GenerateBodyCode(node), blockIndent);
     }
 
     @Override
     public void visit(NumberArrayDeclarationNode node, Object... arg) throws Exception {
+        //This is not the best way of saying that a declarationNode from strategy can be generated globally /Kristoffer
+        node.Parent = null;
         progCode.setup.emit(bodyVisitor.GenerateBodyCode(node), blockIndent);
     }
 
@@ -318,15 +330,15 @@ public class CGTopVisitor extends ASTVisitor{
         for (AbstractNode child: node.childList) {
             if (child instanceof  BodyColorNode){
                 BodyColorNode temp = (BodyColorNode) child;
-                bodyColor = temp.Color.Color;
+                bodyColor = translateColor(temp.Color.Color);
             }
             else if(child instanceof GunColorNode){
                 GunColorNode temp = (GunColorNode) child;
-                gunColor = temp.Color.Color;
+                gunColor = translateColor(temp.Color.Color);
             }
             else if(child instanceof  RadarColorNode){
                 RadarColorNode temp = (RadarColorNode) child;
-                radarColor = temp.Color.Color;
+                radarColor = translateColor(temp.Color.Color);
             }
             else
                 visitNode(child);
@@ -334,10 +346,14 @@ public class CGTopVisitor extends ASTVisitor{
         progCode.runMethod.emit(setColorBuilder(bodyColor, gunColor, radarColor), blockIndent);
     }
 
+    private String translateColor(String color){
+        return "Color."+color;
+    }
+
     //Help method that constructs the generates the Java setColorBuilder with its' color inputs
     private String setColorBuilder(String bodyColor, String gunColor, String radarColor){
         //If any of the colors are null, then they will correctly insert null in the string, which is valid for the
-        // robocode java function SetColors
+        // robocode java function setColors
         return "setColors(" + bodyColor + ", " + gunColor + ", " + radarColor +");";
     }
 
@@ -370,9 +386,9 @@ public class CGTopVisitor extends ASTVisitor{
     public void visit(StrategyDeclarationNode node, Object... arg) throws Exception {
 
         //Visit the routine and whens of the strategy in this class so their codeHandlers can be prepared
+        //Additionally we also visit the variable declarations of the strategy as they must be generated globally
         for (AbstractNode child : node.childList) {
-            if ((child instanceof RoutineNode) || (child instanceof WhenNode))
-                 visitNode(child);
+            visitNode(child);
         }
     }
 
@@ -383,11 +399,15 @@ public class CGTopVisitor extends ASTVisitor{
 
     @Override
     public void visit(TextDeclarationNode node, Object... arg) throws Exception {
+        //This is not the best way of saying that a declarationNode from strategy can be generated globally /Kristoffer
+        node.Parent = null;
         progCode.setup.emit(bodyVisitor.GenerateBodyCode(node), blockIndent);
     }
 
     @Override
     public void visit(TextArrayDeclarationNode node, Object... arg) throws Exception {
+        //This is not the best way of saying that a declarationNode from strategy can be generated globally /Kristoffer
+        node.Parent = null;
         progCode.setup.emit(bodyVisitor.GenerateBodyCode(node), blockIndent);
     }
 

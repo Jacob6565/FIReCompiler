@@ -11,7 +11,7 @@ public class SetupCodeHolder extends CodeHolder {
 
     @Override
     public String getCode() {
-        return imports + "public class " + name + " extends " + robotType + "{\n" + "\tprivate String currentStrategy " +
+        return imports + "public class " + name + " extends " + robotType + "{\n" + "\tString currentStrategy " +
                 "= \"_Default\";\n" + sb.toString() + "\n}";
     }
 }
