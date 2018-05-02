@@ -142,10 +142,10 @@ public class SetUnderScoreVisitor extends ASTVisitor {
     public void visit(FuncCallNode node, Object... arg) throws Exception {
 
         if(!CheckIfRoboCodeMethod(node.Id.Name)) {
-            VisitNode(node.Id);
+            visitNode(node.Id);
         }
         if (node.Aparam != null)
-            VisitNode(node.Aparam);
+            visitNode(node.Aparam);
 
     }
 

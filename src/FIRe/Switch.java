@@ -19,7 +19,7 @@ public class Switch extends Indenter {
             getSwitchCases(condition).bodySwitch.addStrategyCase(strategyName, body);
         }
         else{
-            switchCases.add(new Case(condition, new Switch("currentStrategy", new Case(strategyName, body))));
+            switchCases.add(new Case(condition, new Switch("_currentStrategy", new Case(strategyName, body))));
         }
     }
 

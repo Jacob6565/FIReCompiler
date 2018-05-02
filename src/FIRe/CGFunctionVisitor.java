@@ -228,7 +228,9 @@ public class CGFunctionVisitor extends ASTVisitor {
     @Override
     public void visit(FuncCallNode node, Object... arg) throws Exception {
         String name = node.Id.Name;
-        SymbolData symbolData = symbolTable.Search(name);
+
+        //Here we use the substring of name that begins on index 1, to avoid the underscore of the name when searching
+        SymbolData symbolData = symbolTable.Search(name.substring(1));
         if (symbolData != null && symbolData.nodeRef instanceof StrategyDeclarationNode){
             code.emit("changeStrategy = \"" + node.Id.Name + "\"\n" + "return");
         }
