@@ -24,6 +24,12 @@ public class CGFunctionVisitor extends ASTVisitor {
         return code.sb.toString();
     }
 
+    private boolean isStrategyVarDcl(AbstractNode node){
+        if (node != null && node.Parent.Parent instanceof StrategyDeclarationNode)
+                return true;
+        return false;
+    }
+
     @Override
     public void visit(AbstractNode node, Object... arg) {
 
@@ -82,50 +88,47 @@ public class CGFunctionVisitor extends ASTVisitor {
 
     @Override
     public void visit(BooleanDeclarationNode node, Object... arg) throws Exception {
-        int idCounter = 0;
-        boolean exprFlag = false;
+        if (!isStrategyVarDcl(node)) {
+            int idCounter = 0;
+            boolean exprFlag = false;
 
 
-        for(AbstractNode id : node.childList){
-            if(id instanceof IdNode)
-                idCounter++;
-            else if(id instanceof ExpressionNode)
-                exprFlag = true;
-        }
-        code.emit("boolean ");
-
-        for(AbstractNode id : node.childList){
-            if(id instanceof IdNode && idCounter > 1){
-                code.emit(((IdNode) id).Name + ", ");
-                idCounter--;
+            for (AbstractNode id : node.childList) {
+                if (id instanceof IdNode)
+                    idCounter++;
+                else if (id instanceof ExpressionNode)
+                    exprFlag = true;
             }
+            code.emit("boolean ");
 
-            else if(id instanceof IdNode && exprFlag){
-                code.emit(((IdNode) id).Name + " = ");
-            }
-
-            else if(id instanceof IdNode){
-                code.emitNL(((IdNode) id).Name + ";");
-            }
-
-            else if(id instanceof ExpressionNode){
-                code.emitNL(exprGen.GenerateExprCode(code, (ExpressionNode) id) + ";");
+            for (AbstractNode id : node.childList) {
+                if (id instanceof IdNode && idCounter > 1) {
+                    code.emit(((IdNode) id).Name + ", ");
+                    idCounter--;
+                } else if (id instanceof IdNode && exprFlag) {
+                    code.emit(((IdNode) id).Name + " = ");
+                } else if (id instanceof IdNode) {
+                    code.emitNL(((IdNode) id).Name + ";");
+                } else if (id instanceof ExpressionNode) {
+                    code.emitNL(exprGen.GenerateExprCode(code, (ExpressionNode) id) + ";");
+                }
             }
         }
-
     }
 
     @Override
     public void visit(BoolArrayDeclarationNode node, Object... arg) throws Exception {
-        code.emit("boolean ");
+        if (!isStrategyVarDcl(node)){
+            code.emit("boolean ");
 
-        for(AbstractNode id : node.childList){
-            if(id instanceof IdNode){
-                code.emit(((IdNode) id).Name + "[(int)");
-            }
+            for(AbstractNode id : node.childList){
+                if(id instanceof IdNode){
+                    code.emit(((IdNode) id).Name + "[(int)");
+                }
 
-            else if(id instanceof ExpressionNode){
-                code.emitNL(exprGen.GenerateExprCode(code, (ExpressionNode) id) + "];");
+                else if(id instanceof ExpressionNode){
+                    code.emitNL(exprGen.GenerateExprCode(code, (ExpressionNode) id) + "];");
+                }
             }
         }
     }
@@ -388,49 +391,45 @@ public class CGFunctionVisitor extends ASTVisitor {
 
     @Override
     public void visit(NumberDeclarationNode node, Object... arg) throws Exception {
-        int idCounter = 0;
-        boolean exprFlag = false;
+        if (!isStrategyVarDcl(node)) {
+            int idCounter = 0;
+            boolean exprFlag = false;
 
-        for(AbstractNode id : node.childList){
-            if(id instanceof IdNode)
-                idCounter++;
-            else if(id instanceof ExpressionNode)
-                exprFlag = true;
-        }
-
-        code.emit("double ");
-
-        for(AbstractNode id : node.childList){
-            if(id instanceof IdNode && idCounter > 1){
-                code.emit(((IdNode) id).Name + ", ");
-                idCounter--;
+            for (AbstractNode id : node.childList) {
+                if (id instanceof IdNode)
+                    idCounter++;
+                else if (id instanceof ExpressionNode)
+                    exprFlag = true;
             }
 
-            else if(id instanceof IdNode && exprFlag){
-                code.emit(((IdNode) id).Name + " = ");
-            }
+            code.emit("double ");
 
-            else if(id instanceof IdNode){
-                code.emitNL(((IdNode) id).Name + ";");
-            }
-
-            else if(id instanceof ExpressionNode){
-                code.emitNL(exprGen.GenerateExprCode(code, (ExpressionNode) id) + ";");
+            for (AbstractNode id : node.childList) {
+                if (id instanceof IdNode && idCounter > 1) {
+                    code.emit(((IdNode) id).Name + ", ");
+                    idCounter--;
+                } else if (id instanceof IdNode && exprFlag) {
+                    code.emit(((IdNode) id).Name + " = ");
+                } else if (id instanceof IdNode) {
+                    code.emitNL(((IdNode) id).Name + ";");
+                } else if (id instanceof ExpressionNode) {
+                    code.emitNL(exprGen.GenerateExprCode(code, (ExpressionNode) id) + ";");
+                }
             }
         }
     }
 
     @Override
     public void visit(NumberArrayDeclarationNode node, Object... arg) throws Exception {
-        code.emit("double ");
+        if (!isStrategyVarDcl(node)) {
+            code.emit("double ");
 
-        for(AbstractNode id : node.childList){
-            if(id instanceof IdNode){
-                code.emit(((IdNode) id).Name + "[(int)");
-            }
-
-            else if(id instanceof ExpressionNode){
-                code.emitNL(exprGen.GenerateExprCode(code, (ExpressionNode) id) + "];");
+            for (AbstractNode id : node.childList) {
+                if (id instanceof IdNode) {
+                    code.emit(((IdNode) id).Name + "[(int)");
+                } else if (id instanceof ExpressionNode) {
+                    code.emitNL(exprGen.GenerateExprCode(code, (ExpressionNode) id) + "];");
+                }
             }
         }
     }
@@ -504,49 +503,45 @@ public class CGFunctionVisitor extends ASTVisitor {
 
     @Override
     public void visit(TextDeclarationNode node, Object... arg) throws Exception {
-        int idCounter = 0;
-        boolean exprFlag = false;
+        if (!isStrategyVarDcl(node)) {
+            int idCounter = 0;
+            boolean exprFlag = false;
 
-        for(AbstractNode id : node.childList){
-            if(id instanceof IdNode)
-                idCounter++;
-            else if(id instanceof ExpressionNode)
-                exprFlag = true;
-        }
-
-        code.emit("String ");
-
-        for(AbstractNode id : node.childList){
-            if(id instanceof IdNode && idCounter > 1){
-                code.emit(((IdNode) id).Name + ", ");
-                idCounter--;
+            for (AbstractNode id : node.childList) {
+                if (id instanceof IdNode)
+                    idCounter++;
+                else if (id instanceof ExpressionNode)
+                    exprFlag = true;
             }
 
-            else if(id instanceof IdNode && exprFlag){
-                code.emit(((IdNode) id).Name + " = ");
-            }
+            code.emit("String ");
 
-            else if(id instanceof IdNode){
-                code.emitNL(((IdNode) id).Name + ";");
-            }
-
-            else if(id instanceof ExpressionNode){
-                code.emitNL(exprGen.GenerateExprCode(code, (ExpressionNode) id) + ";");
+            for (AbstractNode id : node.childList) {
+                if (id instanceof IdNode && idCounter > 1) {
+                    code.emit(((IdNode) id).Name + ", ");
+                    idCounter--;
+                } else if (id instanceof IdNode && exprFlag) {
+                    code.emit(((IdNode) id).Name + " = ");
+                } else if (id instanceof IdNode) {
+                    code.emitNL(((IdNode) id).Name + ";");
+                } else if (id instanceof ExpressionNode) {
+                    code.emitNL(exprGen.GenerateExprCode(code, (ExpressionNode) id) + ";");
+                }
             }
         }
     }
 
     @Override
     public void visit(TextArrayDeclarationNode node, Object... arg) throws Exception {
-        code.emit("String ");
+        if (!isStrategyVarDcl(node)) {
+            code.emit("String ");
 
-        for(AbstractNode id : node.childList){
-            if(id instanceof IdNode){
-                code.emit(((IdNode) id).Name + "[(int)");
-            }
-
-            else if(id instanceof ExpressionNode){
-                code.emitNL(exprGen.GenerateExprCode(code, (ExpressionNode) id) + "];");
+            for (AbstractNode id : node.childList) {
+                if (id instanceof IdNode) {
+                    code.emit(((IdNode) id).Name + "[(int)");
+                } else if (id instanceof ExpressionNode) {
+                    code.emitNL(exprGen.GenerateExprCode(code, (ExpressionNode) id) + "];");
+                }
             }
         }
     }
