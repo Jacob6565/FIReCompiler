@@ -96,7 +96,7 @@ public class Main {
 //        underscoreVis.visit(ast);
 
         //Code generation
-        CGTopVisitor codeGenerator = new CGTopVisitor();
+        CGTopVisitor codeGenerator = new CGTopVisitor(symbolTable);
 
         try {
             codeGenerator.visit(ast);
