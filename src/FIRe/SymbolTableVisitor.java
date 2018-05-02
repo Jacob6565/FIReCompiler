@@ -1,6 +1,5 @@
 package FIRe;
 
-import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
 
@@ -24,7 +23,7 @@ public class SymbolTableVisitor extends ASTVisitor {
     public void visit(AbstractNode node, Object... arg) {
         for (AbstractNode Node : node.childList) {
             if (Node != null)
-                VisitNode(Node);
+                visitNode(Node);
         }
     }
 
@@ -32,9 +31,9 @@ public class SymbolTableVisitor extends ASTVisitor {
     public void visit(AdditionNode node, Object... arg) throws TypeException {
         //When visiting Addition nodes, we will visit each child (if they're not null)
         if (node.LeftChild != null)
-            VisitNode(node.LeftChild);
+            visitNode(node.LeftChild);
         if (node.RightChild != null)
-            VisitNode(node.RightChild);
+            visitNode(node.RightChild);
 
         //We will set the type as the type of one of the children.
         node.type = node.LeftChild.type;
@@ -61,16 +60,16 @@ public class SymbolTableVisitor extends ASTVisitor {
     public void visit(ActualParameterNode node, Object... arg) {
         for (AbstractNode Node : node.childList) {
             if (Node != null)
-                VisitNode(Node);
+                visitNode(Node);
         }
     }
 
     @Override
     public void visit(AndNode node, Object... arg) throws TypeException {
         if (node.LeftChild != null)
-            VisitNode(node.LeftChild);
+            visitNode(node.LeftChild);
         if (node.RightChild != null)
-            VisitNode(node.RightChild);
+            visitNode(node.RightChild);
 
         //Both children should be bools
         if (node.LeftChild.type != "bool")
@@ -97,7 +96,7 @@ public class SymbolTableVisitor extends ASTVisitor {
     public void visit(ArrayAccessNode node, Object... arg) throws TypeException, SymbolNotFoundException {
         for (AbstractNode Node : node.childList) {
             if (Node != null)
-                VisitNode(Node);
+                visitNode(Node);
         }
 
         //Checking if arrayindex is an integer and not a bool or string.
@@ -143,8 +142,8 @@ public class SymbolTableVisitor extends ASTVisitor {
     public void visit(AssignNode node, Object... arg) throws TypeException {
         //We visit the Id and Expression, if they are not null
         if (node != null && node.Id != null && node.Expression != null) {
-            VisitNode(node.Id);
-            VisitNode(node.Expression);
+            visitNode(node.Id);
+            visitNode(node.Expression);
         }
         //If it is an array, we cut away the "array" part
         if (node.Id.type != null && node.Id.type.contains("array") && node.Id.ArrayIndex != null)
@@ -176,7 +175,7 @@ public class SymbolTableVisitor extends ASTVisitor {
         //Then we visit each child
         for (AbstractNode Node : node.childList) {
             if (Node != null)
-                VisitNode(Node);
+                visitNode(Node);
         }
 
         //When there are no more children, we close the scope
@@ -187,7 +186,7 @@ public class SymbolTableVisitor extends ASTVisitor {
     public void visit(BodyColorNode node, Object... arg) throws TypeException {
         for (AbstractNode Node : node.childList) {
             if (Node != null)
-                VisitNode(Node);
+                visitNode(Node);
         }
         //If the body color is not a valid color, we throw an exception
         if (!RHT.ValidColors.contains(node.Color.Color))
@@ -200,7 +199,7 @@ public class SymbolTableVisitor extends ASTVisitor {
         ST.Insert(node);
         for (AbstractNode Node : node.childList) {
             if (Node != null)
-                VisitNode(Node);
+                visitNode(Node);
         }
         //We set the type as bool
         node.Id.type = "bool";
@@ -213,7 +212,7 @@ public class SymbolTableVisitor extends ASTVisitor {
         ST.Insert(node);
         for (AbstractNode Node : node.childList) {
             if (Node != null)
-                VisitNode(Node);
+                visitNode(Node);
         }
 
         //If the size variable is not a number, throw an exception.
@@ -232,7 +231,7 @@ public class SymbolTableVisitor extends ASTVisitor {
     public void visit(ColorValNode node, Object... arg) {
         for (AbstractNode Node : node.childList) {
             if (Node != null)
-                VisitNode(Node);
+                visitNode(Node);
         }
     }
 
@@ -240,7 +239,7 @@ public class SymbolTableVisitor extends ASTVisitor {
     public void visit(ControlStructureNode node, Object... arg) {
         for (AbstractNode Node : node.childList) {
             if (Node != null)
-                VisitNode(Node);
+                visitNode(Node);
         }
     }
 
@@ -248,16 +247,16 @@ public class SymbolTableVisitor extends ASTVisitor {
     public void visit(DeclarationNode node, Object... arg) {
         for (AbstractNode Node : node.childList) {
             if (Node != null)
-                VisitNode(Node);
+                visitNode(Node);
         }
     }
 
     @Override
     public void visit(DivisionNode node, Object... arg) throws TypeException {
         if (node.LeftChild != null)
-            VisitNode(node.LeftChild);
+            visitNode(node.LeftChild);
         if (node.RightChild != null)
-            VisitNode(node.RightChild);
+            visitNode(node.RightChild);
 
         //Both types should be number
         if (node.LeftChild.type != "number")
@@ -277,7 +276,7 @@ public class SymbolTableVisitor extends ASTVisitor {
                 //deal with formal parameters
                 if (Node instanceof FormalParameterNode && ((FormalParameterNode) Node).parameterMap.size() > 0)
                     throw new InvalidNumberOfArgumentsException(0, ((FormalParameterNode)Node).parameterMap.size(),node.LineNumber);
-                VisitNode(Node);
+                visitNode(Node);
             }
 
 
@@ -288,9 +287,9 @@ public class SymbolTableVisitor extends ASTVisitor {
     @Override
     public void visit(EqualsNode node, Object... arg) throws TypeException {
         if (node.LeftChild != null)
-            VisitNode(node.LeftChild);
+            visitNode(node.LeftChild);
         if (node.RightChild != null)
-            VisitNode(node.RightChild);
+            visitNode(node.RightChild);
 
         //Both children should be of equal type
         if (node.LeftChild.type != node.RightChild.type)
@@ -304,7 +303,7 @@ public class SymbolTableVisitor extends ASTVisitor {
     public void visit(ExpressionNode node, Object... arg) {
         for (AbstractNode Node : node.childList) {
             if (Node != null)
-                VisitNode(Node);
+                visitNode(Node);
         }
     }
 
@@ -312,7 +311,7 @@ public class SymbolTableVisitor extends ASTVisitor {
     public void visit(FormalParameterNode node, Object... arg) throws Exception {
         for (AbstractNode Node : node.childList) {
             if (Node != null)
-                VisitNode(Node);
+                visitNode(Node);
         }
         if (node.Parent instanceof StrategyDeclarationNode)
 
@@ -349,7 +348,7 @@ public class SymbolTableVisitor extends ASTVisitor {
         for (AbstractNode Node : node.childList) {
             //We visit each child note EXCEPT for the declarationNode!
             if (Node != null && !(Node instanceof NumberDeclarationNode))
-                VisitNode(Node);
+                visitNode(Node);
         }
 
         //If the From expression exists, it should be a number
@@ -365,7 +364,7 @@ public class SymbolTableVisitor extends ASTVisitor {
     public void visit(FuncCallNode node, Object... arg) throws SymbolNotFoundException, TypeException, InvalidNumberOfArgumentsException {
         for (AbstractNode Node : node.childList) {
             if (Node != null) {
-                VisitNode(Node);
+                visitNode(Node);
             }
         }
         node.type = node.Id.type;
@@ -395,16 +394,16 @@ public class SymbolTableVisitor extends ASTVisitor {
         //The FESVisitor deals with FunctionDeclarationNodes.
         for (AbstractNode Node : node.childList) {
             if (Node != null)
-                VisitNode(Node);
+                visitNode(Node);
         }
     }
 
     @Override
     public void visit(GEQNode node, Object... arg) throws TypeException {
         if (node.LeftChild != null)
-            VisitNode(node.LeftChild);
+            visitNode(node.LeftChild);
         if (node.RightChild != null)
-            VisitNode(node.RightChild);
+            visitNode(node.RightChild);
 
         //Both children should be numbers
         if (node.LeftChild.type != "number")
@@ -419,9 +418,9 @@ public class SymbolTableVisitor extends ASTVisitor {
     @Override
     public void visit(GreaterThanNode node, Object... arg) throws TypeException {
         if (node.LeftChild != null)
-            VisitNode(node.LeftChild);
+            visitNode(node.LeftChild);
         if (node.RightChild != null)
-            VisitNode(node.RightChild);
+            visitNode(node.RightChild);
 
         //Both should be numbers
         if (node.LeftChild.type != "number")
@@ -437,7 +436,7 @@ public class SymbolTableVisitor extends ASTVisitor {
     public void visit(GunColorNode node, Object... arg) throws TypeException {
         for (AbstractNode Node : node.childList) {
             if (Node != null)
-                VisitNode(Node);
+                visitNode(Node);
         }
 
         //The gun color should be a valid color, otherwise throw an exception
@@ -580,7 +579,7 @@ public class SymbolTableVisitor extends ASTVisitor {
     public void visit(IfControlStructureNode node, Object... arg) throws TypeException {
         for (AbstractNode Node: node.childList) {
             if (Node != null)
-            VisitNode(Node);
+            visitNode(Node);
         }
 
         //The if contains expressions and blocks for each if/else if/else in the chain
@@ -594,9 +593,9 @@ public class SymbolTableVisitor extends ASTVisitor {
     @Override
     public void visit(InfixExpressionNode node, Object... arg) throws TypeException{
         if (node.LeftChild != null)
-        VisitNode(node.LeftChild);
+        visitNode(node.LeftChild);
         if (node.RightChild != null)
-        VisitNode(node.RightChild);
+        visitNode(node.RightChild);
 
         //This is a generic class, and this is likely not called.
         if(node.LeftChild.type != node.RightChild.type)
@@ -608,9 +607,9 @@ public class SymbolTableVisitor extends ASTVisitor {
     @Override
     public void visit(LEQNode node, Object... arg) throws TypeException {
         if (node.LeftChild != null)
-        VisitNode(node.LeftChild);
+        visitNode(node.LeftChild);
         if (node.RightChild != null)
-        VisitNode(node.RightChild);
+        visitNode(node.RightChild);
 
         //Both should be a number.
         if(node.LeftChild.type != "number")
@@ -625,9 +624,9 @@ public class SymbolTableVisitor extends ASTVisitor {
     @Override
     public void visit(LessThanNode node, Object... arg) throws TypeException {
         if (node.LeftChild != null)
-        VisitNode(node.LeftChild);
+        visitNode(node.LeftChild);
         if (node.RightChild != null)
-        VisitNode(node.RightChild);
+        visitNode(node.RightChild);
 
         //Both should be a number
         if(node.LeftChild.type != "number")
@@ -642,9 +641,9 @@ public class SymbolTableVisitor extends ASTVisitor {
     @Override
     public void visit(ModuloNode node, Object... arg) throws Exception {
         if (node.LeftChild != null)
-        VisitNode(node.LeftChild);
+        visitNode(node.LeftChild);
         if (node.RightChild != null)
-        VisitNode(node.RightChild);
+        visitNode(node.RightChild);
 
         //Both should be a number
         if(node.LeftChild.type != "number")
@@ -659,9 +658,9 @@ public class SymbolTableVisitor extends ASTVisitor {
     @Override
     public void visit(MultiplicationNode node, Object... arg) throws TypeException {
         if (node.LeftChild != null)
-        VisitNode(node.LeftChild);
+        visitNode(node.LeftChild);
         if (node.RightChild != null)
-        VisitNode(node.RightChild);
+        visitNode(node.RightChild);
 
         //Both input has to be numbers
         if(node.LeftChild.type != "number")
@@ -681,9 +680,9 @@ public class SymbolTableVisitor extends ASTVisitor {
     @Override
     public void visit(NotEqualsNode node, Object... arg) throws TypeException {
         if (node.LeftChild != null)
-        VisitNode(node.LeftChild);
+        visitNode(node.LeftChild);
         if (node.RightChild != null)
-        VisitNode(node.RightChild);
+        visitNode(node.RightChild);
 
         //The children must be of the same type
         if(node.LeftChild.type != node.RightChild.type)
@@ -714,7 +713,7 @@ public class SymbolTableVisitor extends ASTVisitor {
         node.Id.type = "number";
         for (AbstractNode Node: node.childList) {
             if (Node != null)
-            VisitNode(Node);
+            visitNode(Node);
         }
 
         //If the number is instantiated and the right hand side is not a number, throw an exception
@@ -730,7 +729,7 @@ public class SymbolTableVisitor extends ASTVisitor {
         ST.Insert(node);
         for (AbstractNode Node: node.childList) {
             if (Node != null)
-                VisitNode(Node);
+                visitNode(Node);
         }
 
         //And set the type
@@ -746,9 +745,9 @@ public class SymbolTableVisitor extends ASTVisitor {
     @Override
     public void visit(OrNode node, Object... arg) throws TypeException{
         if (node.LeftChild != null)
-        VisitNode(node.LeftChild);
+        visitNode(node.LeftChild);
         if (node.RightChild != null)
-        VisitNode(node.RightChild);
+        visitNode(node.RightChild);
 
         //Both children should be boolean
         if (node.LeftChild.type != "bool")
@@ -763,9 +762,9 @@ public class SymbolTableVisitor extends ASTVisitor {
     @Override
     public void visit(PowerNode node, Object... arg) throws TypeException {
         if (node.LeftChild != null)
-            VisitNode(node.LeftChild);
+            visitNode(node.LeftChild);
         if (node.RightChild != null)
-        VisitNode(node.RightChild);
+        visitNode(node.RightChild);
 
         //Both children should be number
         if(node.LeftChild.type != "number")
@@ -782,7 +781,7 @@ public class SymbolTableVisitor extends ASTVisitor {
         //We don't care about the prognode. It just visits the children
         for (AbstractNode Node: node.childList) {
             if (Node != null)
-            VisitNode(Node);
+            visitNode(Node);
         }
     }
 
@@ -790,7 +789,7 @@ public class SymbolTableVisitor extends ASTVisitor {
     public void visit(RadarColorNode node, Object... arg) throws TypeException {
         for (AbstractNode Node: node.childList) {
             if (Node != null)
-            VisitNode(Node);
+            visitNode(Node);
         }
 
         //The radarcolor must be a valid color
@@ -813,7 +812,7 @@ public class SymbolTableVisitor extends ASTVisitor {
         for (AbstractNode Node: node.childList) {
             if (Node != null)
             {
-                VisitNode(Node);
+                visitNode(Node);
                 //We always know that the returnode got 1 child and its an expressionnode;
                 //Casting it to expressionNode in order to access the field "type".
                 ExpressionNode temp = (ExpressionNode) Node;
@@ -846,7 +845,7 @@ public class SymbolTableVisitor extends ASTVisitor {
     public void visit(RobotPropertiesNode node,  Object...arg){
         for (AbstractNode Node: node.childList) {
             if (Node != null)
-                VisitNode(Node);
+                visitNode(Node);
         }
     }
 
@@ -854,7 +853,7 @@ public class SymbolTableVisitor extends ASTVisitor {
     public void visit(RoutineNode node, Object... arg) throws TypeException {
         for (AbstractNode Node: node.childList) {
             if (Node != null)
-            VisitNode(Node);
+            visitNode(Node);
         }
 
         //If there is an expression node in the routine, it must be a number, otherwise throw an exception
@@ -867,7 +866,7 @@ public class SymbolTableVisitor extends ASTVisitor {
     public void visit(StatementNode node, Object... arg) {
         for (AbstractNode Node: node.childList) {
             if (Node != null)
-            VisitNode(Node);
+            visitNode(Node);
         }
     }
 
@@ -877,7 +876,7 @@ public class SymbolTableVisitor extends ASTVisitor {
         for (AbstractNode Node: node.childList) {
             if (Node != null) {
 
-                VisitNode(Node);
+                visitNode(Node);
             }
         }
         ST.CloseScope();
@@ -886,9 +885,9 @@ public class SymbolTableVisitor extends ASTVisitor {
     @Override
     public void visit(SubtractionNode node, Object... arg) throws TypeException {
         if (node.LeftChild != null)
-        VisitNode(node.LeftChild);
+        visitNode(node.LeftChild);
         if (node.RightChild != null)
-        VisitNode(node.RightChild);
+        visitNode(node.RightChild);
 
         //Both sides must be numbers
         if(node.LeftChild.type != "number")
@@ -906,7 +905,7 @@ public class SymbolTableVisitor extends ASTVisitor {
         ST.Insert(node);
         for (AbstractNode Node: node.childList) {
             if (Node != null)
-            VisitNode(Node);
+            visitNode(Node);
         }
         //The type is text
         node.Id.type = "text";
@@ -918,7 +917,7 @@ public class SymbolTableVisitor extends ASTVisitor {
         ST.Insert(node);
         for (AbstractNode Node: node.childList) {
             if (Node != null)
-                VisitNode(Node);
+                visitNode(Node);
         }
 
         //We set the type as text array, fittingly
@@ -950,7 +949,7 @@ public class SymbolTableVisitor extends ASTVisitor {
     public void visit(WhenNode node, Object... arg) {
         for (AbstractNode Node: node.childList) {
             if (Node != null && !(Node instanceof IdNode))
-            VisitNode(Node);
+            visitNode(Node);
         }
     }
 
@@ -958,7 +957,7 @@ public class SymbolTableVisitor extends ASTVisitor {
     public void visit(WhileNode node, Object... arg) throws TypeException {
         for (AbstractNode Node: node.childList) {
             if (Node != null)
-            VisitNode(Node);
+            visitNode(Node);
         }
 
         //the expression should be a bool
@@ -970,7 +969,7 @@ public class SymbolTableVisitor extends ASTVisitor {
     public void visit(RobotNameNode node, Object... arg) {
         for (AbstractNode Node: node.childList) {
             if (Node != null)
-                VisitNode(Node);
+                visitNode(Node);
         }
     }
 
@@ -978,7 +977,7 @@ public class SymbolTableVisitor extends ASTVisitor {
     public void visit(RobotTypeNode node, Object... arg) throws TypeException {
         for (AbstractNode Node: node.childList) {
             if (Node != null)
-                VisitNode(Node);
+                visitNode(Node);
         }
         //The robottype should be a valid robottype, as stated by tbe RHT.
         if (!RHT.RobotTypes.contains(node.RobotType.Name))

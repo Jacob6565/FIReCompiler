@@ -1,8 +1,4 @@
 package FIRe;
-
-
-
-
 import javax.sound.sampled.Line;
 import java.beans.Expression;
 import java.lang.reflect.Type;

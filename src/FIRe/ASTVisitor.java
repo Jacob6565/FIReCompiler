@@ -2,13 +2,11 @@ package FIRe;
 
 import FIRe.Exceptions.*;
 
-import java.lang.reflect.Type;
-
 //Så skal man lave en klasse som nedarver denne klasse og som implementerer
 //en traverse metode for dem alle fx depth-first, som er standarden.
 public abstract class ASTVisitor
 {
-    public void VisitNode(AbstractNode node) {
+    public void visitNode(AbstractNode node) {
         try {
             if (node instanceof ProgNode) //comment so I can commit
                 visit((ProgNode) node);

@@ -1,4 +1,5 @@
 Methods: getMyName();
-Formelle parametre: ThisIsAFormalParameter;
-public variabler: thisIsAPublicVariable;
+Formelle parametre: thisIsAFormalParameter;
+public variabler: ThisIsAPublicVariable;
 private variabler: _thisIsAPrivateVariable;
+

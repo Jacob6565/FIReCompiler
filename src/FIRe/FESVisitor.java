@@ -1,8 +1,5 @@
 package FIRe;
 
-import java.util.ArrayList;
-import java.util.List;
-
 //Visitor used to check the declerations of functions, events and strategies
 public class FESVisitor extends ASTVisitor{
     FESVisitor(SymbolTable symbolTable){
@@ -221,11 +218,11 @@ public class FESVisitor extends ASTVisitor{
         }
         for (AbstractNode Node : node.childList) {
             if(Node != null && Node instanceof FunctionDeclarationNode) // this should be enough since Funcdclsnode will be a direct child of ProgNode
-                VisitNode(Node);
+                visitNode(Node);
             else if(Node != null && Node instanceof EventDeclarationNode)
-                VisitNode(Node);
+                visitNode(Node);
             else if(Node != null && Node instanceof StrategyDeclarationNode)
-                VisitNode(Node);
+                visitNode(Node);
         }
     }
 
