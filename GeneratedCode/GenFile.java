@@ -1,7 +1,7 @@
 import java.awt.*;
 import java.lang.*;
 import robocode.*;
-public class TheDestroyer extends advancedRobot{
+public class _TheDestroyer extends AdvancedRobot{
 	private String currentStrategy = "Default";
 	public void run (){ 
 		SetColors(yellow, red, white);
@@ -19,9 +19,9 @@ public class TheDestroyer extends advancedRobot{
 						_turnRadarRight(360.0);
 						for(int _i = (int)0.0;_i < (int)2.0; _i++){
 							_ahead(20.0);
-					}
+						}
 						for(; (int)_x > (int)-9128.9182; _x--){
-					}
+						}
 					}
 					break;
 				case "_Offensive"
@@ -35,7 +35,7 @@ public class TheDestroyer extends advancedRobot{
 	public boolean _turnLeftAndRotate (String _currentRival){ 
 	boolean _asd = false;
 	boolean _was = true;
-	boolean _wefas[(int)5.0];
+	boolean _weasdasdasds[(int)5.0];
 	double _uno = 1.0;
 	double _x = 3.6;
 	double _RobinHood, _LilleJohn;
@@ -48,7 +48,13 @@ public class TheDestroyer extends advancedRobot{
 		if(_x == 5.2){
 			_x = 3.0;
 		}
-	else if(_x == 0.0	){
+		else if(_x == 0.0){
+			_x = 3.0;
+		}
+	}
+	for(; (int)_x < (int)100.0; _x++){
+		while(true){
+			_x = 3.0;
 		}
 	}
 	if(_a[(int)3.0] ){
@@ -76,7 +82,7 @@ public class TheDestroyer extends advancedRobot{
 			case _ScannedRobotEvent:
 				switch (currentStrategy) { 
 					case _Default:
-							String _currentRival = _e.getName();
+							String _currentRival = e.getName();
 							_turnLeftAndRotate(_currentRival);
 							_Offensive();
 						break;
