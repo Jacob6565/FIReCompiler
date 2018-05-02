@@ -442,8 +442,7 @@ public class CGFunctionVisitor extends ASTVisitor {
 
     @Override
     public void visit(ReturnNode node, Object... arg) {
-        for(AbstractNode child : node.childList)
-            VisitNode(child);
+        exprGen.GenerateExprCode(code, (ExpressionNode) node.childList.get(0));
     }
 
     @Override
