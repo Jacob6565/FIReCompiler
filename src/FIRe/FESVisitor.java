@@ -1,5 +1,7 @@
 package FIRe;
 
+import javax.xml.soap.Text;
+
 //Visitor used to check the declerations of functions, events and strategies
 public class FESVisitor extends ASTVisitor{
     FESVisitor(SymbolTable symbolTable){
@@ -7,6 +9,8 @@ public class FESVisitor extends ASTVisitor{
     }
 
     private SymbolTable symbolTable;
+
+
 
     @Override
     public void visit(AbstractNode node, Object... arg) {
@@ -50,12 +54,12 @@ public class FESVisitor extends ASTVisitor{
 
     @Override
     public void visit(BooleanDeclarationNode node, Object... arg) throws Exception {
-
+        symbolTable.Insert(node);
     }
 
     @Override
     public void visit(BoolArrayDeclarationNode node, Object... arg) throws Exception {
-
+        symbolTable.Insert(node);
     }
 
     @Override
@@ -185,12 +189,13 @@ public class FESVisitor extends ASTVisitor{
 
     @Override
     public void visit(NumberDeclarationNode node, Object... arg) throws Exception {
+        symbolTable.Insert(node);
 
     }
 
     @Override
     public void visit(NumberArrayDeclarationNode node, Object... arg) throws Exception {
-
+        symbolTable.Insert(node);
     }
 
     @Override
@@ -217,11 +222,24 @@ public class FESVisitor extends ASTVisitor{
             System.out.println(Ex.getMessage() + "Error in importing Robocode functions");
         }
         for (AbstractNode Node : node.childList) {
-            if(Node != null && Node instanceof FunctionDeclarationNode) // this should be enough since Funcdclsnode will be a direct child of ProgNode
+            //Adding all the global declarations by visiting the individual nodes.
+            if(Node != null && Node instanceof FunctionDeclarationNode)
                 visitNode(Node);
             else if(Node != null && Node instanceof EventDeclarationNode)
                 visitNode(Node);
             else if(Node != null && Node instanceof StrategyDeclarationNode)
+                visitNode(Node);
+            else if(Node != null && Node instanceof NumberArrayDeclarationNode)
+                visitNode(Node);
+            else if(Node != null && Node instanceof TextArrayDeclarationNode)
+                visitNode(Node);
+            else if(Node != null && Node instanceof BoolArrayDeclarationNode)
+                visitNode(Node);
+            else if(Node != null && Node instanceof NumberDeclarationNode)
+                visitNode(Node);
+            else if(Node != null && Node instanceof TextDeclarationNode)
+                visitNode(Node);
+            else if(Node != null && Node instanceof BooleanDeclarationNode)
                 visitNode(Node);
         }
     }
@@ -264,12 +282,12 @@ public class FESVisitor extends ASTVisitor{
 
     @Override
     public void visit(TextDeclarationNode node, Object... arg) throws Exception {
-
+        symbolTable.Insert(node);
     }
 
     @Override
     public void visit(TextArrayDeclarationNode node, Object... arg) throws Exception {
-
+        symbolTable.Insert(node);
     }
 
     @Override

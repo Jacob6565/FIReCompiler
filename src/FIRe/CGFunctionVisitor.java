@@ -243,7 +243,6 @@ public class CGFunctionVisitor extends ASTVisitor {
         if (symbolData != null && symbolData.nodeRef instanceof StrategyDeclarationNode){
             code.emit("changeStrategy = \"" + node.Id.Name + "\"\n" + "return");
         }
-
         else
             exprGen.GenerateExprCode(code, node);
         code.emitNL(";");
