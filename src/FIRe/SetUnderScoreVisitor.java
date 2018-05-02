@@ -142,10 +142,10 @@ public class SetUnderScoreVisitor extends ASTVisitor {
     public void visit(FuncCallNode node, Object... arg) throws Exception {
 
         if(!CheckIfRoboCodeMethod(node.Id.Name)) {
-            VisitNode(node.Id);
+            visitNode(node.Id);
         }
         if (node.Aparam != null)
-            VisitNode(node.Aparam);
+            visitNode(node.Aparam);
 
     }
 
@@ -175,6 +175,13 @@ public class SetUnderScoreVisitor extends ASTVisitor {
 
     @Override
     public void visit(IdNode node, Object... arg) throws Exception {
+        AbstractNode ancestor = node;
+
+        while(ancestor.Parent != null) {
+            if (ancestor.Parent instanceof StrategyDeclarationNode)
+                node.Name = node.Name + ((StrategyDeclarationNode) ancestor.Parent).Id.Name;
+            ancestor = ancestor.Parent;
+        }
         node.Name = "_" + node.Name;
     }
 
