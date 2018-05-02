@@ -46,12 +46,18 @@ public class CGFunctionVisitor extends ASTVisitor {
 
     @Override
     public void visit(ArrayAccessNode node, Object... arg) throws TypeException {
-
+        int i;
+        while(true){}
     }
 
     @Override
     public void visit(AssignNode node, Object... arg) throws Exception {
-        code.emit(node.Id.Name + " = ");
+        code.emit(node.Id.Name);
+        if(node.Id.ArrayIndex != null) {
+            code.emit("[(int)");
+            code.emit(exprGen.GenerateExprCode(code, node.Id.ArrayIndex) + "]");
+        }
+        code.emit(" = ");
         code.emitNL(exprGen.GenerateExprCode(code, node.Expression) + ";");
     }
 

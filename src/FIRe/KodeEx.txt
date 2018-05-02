@@ -8,7 +8,8 @@ RobotProperties
 }
 
 //This is a single line comment
-
+bool bolara[5];
+bolara[1] = true;
 number firepower, shield;
 text nameOfRival = "SittingDuck";
 bool asd = false;
@@ -16,11 +17,12 @@ bool was = true;
 
 bool turnLeftAndRotate(text currentRival)
 {
-   fire();
-   bool was = true;
-   bool weasdasdasds[5];
+   bool bolar[5];
+   cannotbemistaken[1] = true;
    number uno = 1;
    number x = 3.6;
+   number asdasdas;
+   number flingflungdingdung;
    number RobinHood, LilleJohn;
    nameOfRival = currentRival;
    bool shotAtRival = false;
