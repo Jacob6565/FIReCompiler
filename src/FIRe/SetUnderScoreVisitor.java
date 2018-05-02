@@ -173,13 +173,15 @@ public class SetUnderScoreVisitor extends ASTVisitor {
 
     }
 
+    //Prefixes IDs with _ if it doesnt have it and appends the strategy name to differentiate variables of same
+    // name in different strategies (Needed because of how we generate code)
     @Override
     public void visit(IdNode node, Object... arg) throws Exception {
         AbstractNode ancestor = node;
         if(!node.Name.contains(".")) {
             while (ancestor.Parent != null) {
-                if (ancestor.Parent instanceof StrategyDeclarationNode && !(node.Parent.Parent instanceof ProgNode))
-                    node.Name = node.Name + ((StrategyDeclarationNode) ancestor.Parent).Id.Name;
+                if (ancestor.Parent instanceof StrategyDeclarationNode && !(node.Parent.Parent instanceof ProgNode) && !(node.Parent instanceof WhenNode))
+                        node.Name = node.Name + ((StrategyDeclarationNode) ancestor.Parent).Id.Name;
                 ancestor = ancestor.Parent;
             }
         }
