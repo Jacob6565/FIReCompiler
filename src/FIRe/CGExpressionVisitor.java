@@ -57,8 +57,10 @@ public class CGExpressionVisitor{
         for(AbstractNode par : node.Aparam.childList)
             numOfParams++;
 
-
-        code.emit(node.Id.Name + "(");
+        if(node.Id.Name.equals("print"))
+            code.emit("System.out.print(");
+        else
+            code.emit(node.Id.Name + "(");
         for(AbstractNode par : node.Aparam.childList) {
             VisitNode(par);
             if(numOfParams != 1) {
