@@ -2,9 +2,12 @@ package FIRe;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 
 import FIRe.Exceptions.*;
+
+import javax.xml.soap.Text;
 
 
 @SuppressWarnings("ALL")
@@ -170,7 +173,46 @@ public class SymbolTableVisitor extends ASTVisitor {
         if (node.Parent instanceof ForNode && ((ForNode)node.Parent).Dcl != null){
             visit(((ForNode) node.Parent).Dcl);
         }
+        //We also need to insert the formal parameters in the symbol table,
+        //in order to make den accessible in the body.
+        if(node.Parent instanceof FunctionDeclarationNode)
+        {
+            //Finding the blocks parent.
+            FunctionDeclarationNode tempFunc = (FunctionDeclarationNode)node.Parent;
 
+            FormalParameterNode tempFormal = null;
+            //Finding the function's formalparameter.
+            //We know it only got 1 formalparameter, and that contains the rest.
+            for (AbstractNode child : tempFunc.childList)
+            {
+                if(child instanceof FormalParameterNode)
+                {
+                    tempFormal = (FormalParameterNode) child;
+                    break;
+                }
+            }
+
+            //Inserting all the formalparameters into the symbol table.
+            InsertFormalParameters(tempFormal);
+        }
+        //We also need to insert the formal parameters in the symbol table,
+        //in order to make den accessible in the body.
+        else if(node.Parent instanceof StrategyDeclarationNode)
+        {
+
+            StrategyDeclarationNode tempFunc = (StrategyDeclarationNode) node.Parent;
+            FormalParameterNode tempFormal = null;
+            for (AbstractNode child : tempFunc.childList)
+            {
+                if(child instanceof FormalParameterNode)
+                {
+                    tempFormal = (FormalParameterNode) child;
+                    break;
+                }
+            }
+
+            InsertFormalParameters(tempFormal);
+        }
 
         //Then we visit each child
         for (AbstractNode Node : node.childList) {
@@ -180,6 +222,33 @@ public class SymbolTableVisitor extends ASTVisitor {
 
         //When there are no more children, we close the scope
         ST.CloseScope();
+    }
+
+    private void InsertFormalParameters(FormalParameterNode node) throws Exception {
+        for (Map.Entry<IdNode, String> entry : node.parameterMap.entrySet()) {
+            switch (entry.getValue()) {
+                case "number":
+                    ST.Insert(new NumberDeclarationNode(entry.getKey(),entry.getKey().LineNumber));
+                    break;
+                case "bool":
+                    ST.Insert(new BooleanDeclarationNode(entry.getKey(),entry.getKey().LineNumber));
+                    break;
+                case "text":
+                    ST.Insert(new TextDeclarationNode(entry.getKey(),entry.getKey().LineNumber));
+                    break;
+                case "number array":
+                    ST.Insert(new NumberArrayDeclarationNode(entry.getKey(),entry.getKey().LineNumber));
+                    break;
+                case "bool array":
+                    ST.Insert(new BoolArrayDeclarationNode(entry.getKey(),entry.getKey().LineNumber));
+                    break;
+                case "text array":
+                    ST.Insert(new TextArrayDeclarationNode(entry.getKey(),entry.getKey().LineNumber));
+                    break;
+                default:
+                    throw new NotRecognizedTypeException(entry.getValue());
+            }
+        }
     }
 
     @Override
@@ -313,34 +382,9 @@ public class SymbolTableVisitor extends ASTVisitor {
             if (Node != null)
                 visitNode(Node);
         }
-        if (node.Parent instanceof StrategyDeclarationNode)
 
-            if ( node.Parent instanceof StrategyDeclarationNode && ((StrategyDeclarationNode) node.Parent).Id.Name.equals("Default") && node.parameterMap.size() > 0)
+        if ( node.Parent instanceof StrategyDeclarationNode && ((StrategyDeclarationNode) node.Parent).Id.Name.equals("Default") && node.parameterMap.size() > 0)
                 throw new InvalidNumberOfArgumentsException(0,node.parameterMap.size(),node.LineNumber);
-            for (Map.Entry<IdNode, String> entry : node.parameterMap.entrySet()) {
-                switch (entry.getValue()) {
-                    case "number":
-                        ST.Insert(new NumberDeclarationNode(entry.getKey(),entry.getKey().LineNumber));
-                        break;
-                    case "bool":
-                        ST.Insert(new BooleanDeclarationNode(entry.getKey(),entry.getKey().LineNumber));
-                        break;
-                    case "text":
-                        ST.Insert(new TextDeclarationNode(entry.getKey(),entry.getKey().LineNumber));
-                        break;
-                    case "number array":
-                        ST.Insert(new NumberArrayDeclarationNode(entry.getKey(),entry.getKey().LineNumber));
-                        break;
-                    case "bool array":
-                        ST.Insert(new BoolArrayDeclarationNode(entry.getKey(),entry.getKey().LineNumber));
-                        break;
-                    case "text array":
-                        ST.Insert(new TextArrayDeclarationNode(entry.getKey(),entry.getKey().LineNumber));
-                        break;
-                    default:
-                        throw new NotRecognizedTypeException(entry.getValue());
-                }
-            }
     }
 
     @Override
@@ -780,9 +824,43 @@ public class SymbolTableVisitor extends ASTVisitor {
     public void visit(ProgNode node, Object... arg) {
         //We don't care about the prognode. It just visits the children
         for (AbstractNode Node: node.childList) {
-            if (Node != null)
+            if (Node != null && !isGlobalVariableDeclaration(Node))
             visitNode(Node);
         }
+    }
+
+    private boolean isGlobalVariableDeclaration(AbstractNode Node)
+    {
+        boolean AGlobalVariableDeclaration = false;
+
+        if(Node instanceof NumberDeclarationNode)
+        {
+            AGlobalVariableDeclaration = true;
+        }
+        else if(Node instanceof BooleanDeclarationNode)
+        {
+            AGlobalVariableDeclaration = true;
+        }
+        else if(Node instanceof TextDeclarationNode)
+        {
+            AGlobalVariableDeclaration = true;
+        }
+        else if(Node instanceof NumberArrayDeclarationNode)
+        {
+            AGlobalVariableDeclaration = true;
+        }
+        else if(Node instanceof TextArrayDeclarationNode)
+        {
+            AGlobalVariableDeclaration = true;
+        }
+        else if(Node instanceof BoolArrayDeclarationNode)
+        {
+            AGlobalVariableDeclaration = true;
+        }
+
+
+        return AGlobalVariableDeclaration;
+
     }
 
     @Override

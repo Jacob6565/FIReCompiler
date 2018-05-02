@@ -1,0 +1,64 @@
+RobotProperties
+{
+      RobotName:TheDestroyer;
+      RobotType:AdvancedRobot;
+      BodyColor:yellow;
+      GunColor:red;
+      RadarColor:white;
+}
+
+strategy Default()
+{
+    number x = 3;
+    number y = x * 3;
+
+    routine(y)
+    {
+        bool flag = true;
+        if(flag)
+        {
+            x = 4;
+        }
+    }
+    when (ScannedRobotEvent e)
+    {
+        number z = x * y;
+        Offensive();
+    }
+
+    when (ScannedRobotEvent f)
+    {
+        number t = x*p;
+        t = Power(t);
+        Offensive();
+    }
+}
+
+number p = 3;
+
+number Power(number x)
+{
+    return x*x;
+}
+
+strategy Offensive()
+{
+    routine(6)
+    {
+        bool flag = true;
+        bool fake = false;
+        number x = p;
+    }
+    when (MyEvent e)
+    {
+        p = 4;
+    }
+}
+
+event MyEvent()
+{
+
+    number x = 4;
+    number t = x;
+    return p < 2;
+}
