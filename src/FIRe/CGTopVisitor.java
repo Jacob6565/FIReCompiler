@@ -305,7 +305,7 @@ public class CGTopVisitor extends ASTVisitor{
     @Override
     public void visit(ProgNode node, Object... arg) throws Exception {
         for (AbstractNode child : node.childList) {
-            VisitNode(child);
+            visitNode(child);
         }
     }
 
@@ -326,7 +326,7 @@ public class CGTopVisitor extends ASTVisitor{
                 radarColor = temp.Color.Color;
             }
             else
-                VisitNode(child);
+                visitNode(child);
         }
         progCode.runMethod.emit(setColorBuilder(bodyColor, gunColor, radarColor), blockIndent);
     }
@@ -368,8 +368,8 @@ public class CGTopVisitor extends ASTVisitor{
 
         //Visit the routine and whens of the strategy in this class so their codeHandlers can be prepared
         for (AbstractNode child : node.childList) {
-
-             VisitNode(child);
+            if ((child instanceof RoutineNode) || (child instanceof WhenNode))
+                 visitNode(child);
         }
     }
 
