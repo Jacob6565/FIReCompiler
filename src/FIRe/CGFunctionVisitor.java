@@ -6,18 +6,17 @@ import FIRe.Exceptions.TypeException;
 public class CGFunctionVisitor extends ASTVisitor {
     CodeHolder code;
     FunctionDeclarationNode func;
-    CGExpressionVisitor exprGen;
+    private CGExpressionVisitor exprGen;
 
     CGFunctionVisitor(){
         exprGen = new CGExpressionVisitor();
         code = new MethodCodeHolder("bodyCode", "void");
     }
 
-    String GenerateFuncCode(FunctionDeclarationNode funcNode){
+    String GenerateBodyCode(AbstractNode node){
         code = new MethodCodeHolder("bodyCode", "void");
-        func = funcNode;
-        VisitNode(func);
-        return "";
+        VisitNode(node);
+        return code.sb.toString();
     }
 
     @Override
