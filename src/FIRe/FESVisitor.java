@@ -357,54 +357,5 @@ public class FESVisitor extends ASTVisitor{
         symbolTable.Insert(new EventDeclarationNode("WinEvent",0,new Tuple<>("getPriority","number")));
     }
 
-    private void RemoveRoboCodeMethods() throws Exception {
-        symbolTable.Remove("ahead");
-        symbolTable.Remove("back");
-        symbolTable.Remove("doNothing");
-        symbolTable.Remove("fire");
-        symbolTable.Remove("getBattleFieldHeight");
-        symbolTable.Remove("getBattleFieldWidth");
-        symbolTable.Remove("getEnergy");
-        symbolTable.Remove("getGunHeading");
-        symbolTable.Remove("getGunHeat");
-        symbolTable.Remove("getHeading");
-        symbolTable.Remove("getHeight");
-        symbolTable.Remove("getName");
-        symbolTable.Remove("getName");
-        symbolTable.Remove("getNumRounds");
-        symbolTable.Remove("getNumSentries");
-        symbolTable.Remove("getOthers");
-        symbolTable.Remove("getRadarHeading");
-        symbolTable.Remove("getRoundNum");
-        symbolTable.Remove("getSentryBorderSize");
-        symbolTable.Remove("getTime");
-        symbolTable.Remove("getVelocity");
-        symbolTable.Remove("getWidth");
-        symbolTable.Remove("getX");
-        symbolTable.Remove("getY");
-        symbolTable.Remove("print");
-        symbolTable.Remove("resume");
-        symbolTable.Remove("scan");
-        symbolTable.Remove("setAdjustGunForRobotTurn");
-        symbolTable.Remove("setAdjustRadarForGunTurn");
-        symbolTable.Remove("setAdjustRadarForRobotTurn");
-        symbolTable.Remove("stop");
-        symbolTable.Remove("turnGunLeft");
-        symbolTable.Remove("turnGunRight");
-        symbolTable.Remove("turnLeft");
-        symbolTable.Remove("turnRadarLeft");
-        symbolTable.Remove("turnRight");
-        symbolTable.Remove("BattleEndedEvent");
-        symbolTable.Remove("BulletHitBulletEvent");
-        symbolTable.Remove("BulletMissedEvent");
-        symbolTable.Remove("DeathEvent");
-        symbolTable.Remove("HitByBulletEvent");
-        symbolTable.Remove("HitWallEvent");
-        symbolTable.Remove("MessageEvent");
-        symbolTable.Remove("RobotDeathEvent");
-        symbolTable.Remove("RoundEndedEvent");
-        symbolTable.Remove("ScannedRobotEvent");
-        symbolTable.Remove("SkippedTurnEvent");
-        symbolTable.Remove("WinEvent");
-    }
+
 }
