@@ -13,7 +13,7 @@ public class CGFunctionVisitor extends ASTVisitor {
         code = new MethodCodeHolder("bodyCode", "void");
     }
 
-    String GenerateFuncCode(AbstractNode node){
+    String GenerateBodyCode(AbstractNode node){
         code = new MethodCodeHolder("bodyCode", "void");
         VisitNode(node);
         return code.sb.toString();
