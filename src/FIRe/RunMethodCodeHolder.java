@@ -9,8 +9,9 @@ public class RunMethodCodeHolder extends MethodCodeHolder {
         generatedSwitch.append(indent("switch(currentStrategy){\n", 2));
     }
 
+    //THIS MIGHT BE DONE WITH THE USE OF SWITCH AND CASE CLASSES /KRISTOFFER
     public void addToRunMethod(String strategyName, String body) {
-        generatedSwitch.append(indent("case " + "\"" + strategyName + "\"", 3));
+        generatedSwitch.append(indent("case " + "\"" + strategyName + "\":", 3));
         generatedSwitch.append(indent(body + "break;", 4));
     }
 

@@ -11,8 +11,8 @@ public class EventHandlerCodeHolder extends MethodCodeHolder {
 
     //Noget af det her kode gentager sig i RunMethodCodeHolder /KRISTOFFER
     public void addCase(String strategyName, String body){
-        generatedSwitch.append(indent("case " + "\"" + strategyName + "\"", 2));
-        generatedSwitch.append(indent(body + "break;", 3));
+        generatedSwitch.append(indent("case " + "\"" + strategyName + "\":", 2));
+        generatedSwitch.append(indent(body + "\tbreak;", 3));
     }
 
     @Override
