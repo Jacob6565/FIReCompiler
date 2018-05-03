@@ -15,8 +15,6 @@ public class MethodCodeHolder extends CodeHolder {
     public String parameters = "";
 
     public String getCode() {
-        if (type.equals("void"))
-            sb.append(indent("return;",1));
         return "public " + type + " " + name + " (" + parameters + "){ \n" + sb.toString() + "\n}\n";
     }
 }

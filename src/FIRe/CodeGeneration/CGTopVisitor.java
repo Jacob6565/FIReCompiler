@@ -72,7 +72,7 @@ public class CGTopVisitor extends ASTVisitor {
 
     @Override
     public void visit(AssignNode node, Object... arg) throws Exception {
-        progCode.setup.emit(bodyVisitor.GenerateBodyCode(node),blockIndent);
+        progCode.runMethod.emit(bodyVisitor.GenerateBodyCode(node),blockIndent);
     }
 
     @Override

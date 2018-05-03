@@ -26,7 +26,6 @@ public class RunMethodCodeHolder extends MethodCodeHolder {
         sb.append(generatedSwitch.toString());
         sb.append(indent("}\n", 2));
         sb.append(indent("}\n", 1));
-        sb.append(indent("return;",1));
         sb.append("}\n");
         return "public " + type + " " + name + " (" + parameters + "){ \n" + sb.toString();
     }

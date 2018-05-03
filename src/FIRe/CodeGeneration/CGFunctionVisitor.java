@@ -248,9 +248,9 @@ public class CGFunctionVisitor extends ASTVisitor {
         //This case indicates that we are dealing with a strategy call
         if (symbolData != null && symbolData.nodeRef instanceof StrategyDeclarationNode){
             if (node.Parent.Parent instanceof RoutineNode)
-                code.emit("changeStrategy = \"" + node.Id.Name + "\"\n" + "break");
+                code.emit("currentStrategy = \"" + node.Id.Name + "\";\n" + "break");
             else
-                code.emit("changeStrategy = \"" + node.Id.Name + "\"\n" + "return");
+                code.emit("currentStrategy = \"" + node.Id.Name + "\";\n" + "return");
         }
         //This indicates that we are dealing with a regular function call
         else
