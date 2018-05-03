@@ -186,7 +186,7 @@ public class SetUnderScoreVisitor extends ASTVisitor {
         String firstStr;
         String secondString;
         if (!node.Name.contains(".")) {
-            while (ancestor.Parent != null) {
+            while (ancestor.Parent != null && !(ancestor.Parent instanceof AssignNode)) {
                 if (ancestor.Parent instanceof StrategyDeclarationNode && !(node.Parent.Parent instanceof ProgNode) && !(node.Parent instanceof WhenNode) && !(node.Parent instanceof FuncCallNode)) {
                     node.Name = node.Name + ((StrategyDeclarationNode) ancestor.Parent).Id.Name;
                 }
