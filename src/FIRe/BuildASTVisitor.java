@@ -81,6 +81,8 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         node.Id = (IdNode) visitId(ctx.id());
         if(ctx.fParamList() != null)//fparamlist er optional.
             node.childList.add(visitFParamList(ctx.fParamList()));
+        else
+            node.childList.add(new FormalParameterNode());
         node.childList.add(visitBlock(ctx.block()));
         node.childList.add(node.Id);
 
@@ -180,7 +182,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
                         numberDeclarationNode.childList.add(visitExpr(ctx.expr()));
                     else
                         numberDeclarationNode.childList.add(new NumberNode(0));
-                    
+
                     return numberDeclarationNode;
                 } else if (ctx.Type().toString().equals("text")) {
 
