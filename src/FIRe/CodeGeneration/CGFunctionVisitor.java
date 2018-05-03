@@ -29,8 +29,10 @@ public class CGFunctionVisitor extends ASTVisitor {
     }
 
     private boolean isStrategyVarDcl(AbstractNode node){
-        if (node != null && node.Parent.Parent instanceof StrategyDeclarationNode)
-            return true;
+
+        if(node != null && node.Parent != null)
+            if(node.Parent.Parent instanceof StrategyDeclarationNode)
+                return true;
         return false;
     }
 
