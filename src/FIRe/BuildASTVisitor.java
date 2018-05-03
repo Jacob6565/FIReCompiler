@@ -81,6 +81,8 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         node.Id = (IdNode) visitId(ctx.id());
         if(ctx.fParamList() != null)//fparamlist er optional.
             node.childList.add(visitFParamList(ctx.fParamList()));
+        else
+            node.childList.add(new FormalParameterNode());
         node.childList.add(visitBlock(ctx.block()));
         node.childList.add(node.Id);
 
@@ -182,7 +184,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
                         numberDeclarationNode.childList.add(new NumberNode(0));
                         System.out.println("WARNING: Unassigned number variable has been indirectly assigned to 0 at line " + numberDeclarationNode.LineNumber);
                     }
-                    
+
                     return numberDeclarationNode;
                 } else if (ctx.Type().toString().equals("text")) {
 

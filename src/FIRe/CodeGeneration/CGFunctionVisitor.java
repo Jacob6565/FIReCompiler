@@ -58,8 +58,7 @@ public class CGFunctionVisitor extends ASTVisitor {
 
     @Override
     public void visit(ArrayAccessNode node, Object... arg) throws TypeException {
-        int i;
-        while(true){}
+
     }
 
     @Override
@@ -246,10 +245,14 @@ public class CGFunctionVisitor extends ASTVisitor {
 
         //Here we use the substring of name that begins on index 1, to avoid the underscore of the name when searching
         SymbolData symbolData = symbolTable.Search(name.substring(1));
+        //This case indicates that we are dealing with a strategy call
         if (symbolData != null && symbolData.nodeRef instanceof StrategyDeclarationNode){
-            code.emit("changeStrategy = \"" + node.Id.Name + "\"\n" + "return");
+            if (node.Parent.Parent instanceof RoutineNode)
+                code.emit("changeStrategy = \"" + node.Id.Name + "\"\n" + "break");
+            else
+                code.emit("changeStrategy = \"" + node.Id.Name + "\"\n" + "return");
         }
-
+        //This indicates that we are dealing with a regular function call
         else
             exprGen.GenerateExprCode(code, node);
         code.emitNL(";");
