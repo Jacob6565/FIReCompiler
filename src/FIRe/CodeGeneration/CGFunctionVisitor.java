@@ -124,11 +124,11 @@ public class CGFunctionVisitor extends ASTVisitor {
     @Override
     public void visit(BoolArrayDeclarationNode node, Object... arg) throws Exception {
         if (!isStrategyVarDcl(node)){
-            code.emit("boolean ");
+            code.emit("boolean[] ");
 
             for(AbstractNode id : node.childList){
                 if(id instanceof IdNode){
-                    code.emit(((IdNode) id).Name + "[(int)");
+                    code.emit(((IdNode) id).Name + " = new boolean[(int)");
                 }
 
                 else if(id instanceof ExpressionNode){
@@ -431,11 +431,11 @@ public class CGFunctionVisitor extends ASTVisitor {
     @Override
     public void visit(NumberArrayDeclarationNode node, Object... arg) throws Exception {
         if (!isStrategyVarDcl(node)) {
-            code.emit("double ");
+            code.emit("double[] ");
 
             for (AbstractNode id : node.childList) {
                 if (id instanceof IdNode) {
-                    code.emit(((IdNode) id).Name + "[(int)");
+                    code.emit(((IdNode) id).Name + "= new double[(int)");
                 } else if (id instanceof ExpressionNode) {
                     code.emitNL(exprGen.GenerateExprCode(code, (ExpressionNode) id) + "];");
                 }
@@ -543,11 +543,11 @@ public class CGFunctionVisitor extends ASTVisitor {
     @Override
     public void visit(TextArrayDeclarationNode node, Object... arg) throws Exception {
         if (!isStrategyVarDcl(node)) {
-            code.emit("String ");
+            code.emit("String[] ");
 
             for (AbstractNode id : node.childList) {
                 if (id instanceof IdNode) {
-                    code.emit(((IdNode) id).Name + "[(int)");
+                    code.emit(((IdNode) id).Name + " = new[(int)");
                 } else if (id instanceof ExpressionNode) {
                     code.emitNL(exprGen.GenerateExprCode(code, (ExpressionNode) id) + "];");
                 }
