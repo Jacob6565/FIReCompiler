@@ -1,6 +1,7 @@
 package FIRe;
 
 import FIRe.Exceptions.*;
+import FIRe.Nodes.*;
 
 //Så skal man lave en klasse som nedarver denne klasse og som implementerer
 //en traverse metode for dem alle fx depth-first, som er standarden.
@@ -152,7 +153,7 @@ public abstract class ASTVisitor
     public abstract void visit(DivisionNode node, Object... arg) throws Exception;
     public abstract void visit(EventDeclarationNode node, Object... arg) throws Exception;
     public abstract void visit(EqualsNode node, Object... arg) throws Exception;
-    public abstract void visit(ExpressionNode node, Object... arg) throws Exception;
+    public abstract void visit(ExpressionNode node, Object... arg);
     public abstract void visit(FormalParameterNode node, Object... arg) throws Exception;
     public abstract void visit(ForNode node, Object... arg) throws TypeException,ReturnException;
     public abstract void visit(FuncCallNode node, Object... arg) throws Exception;

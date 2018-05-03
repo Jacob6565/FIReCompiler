@@ -1,4 +1,4 @@
-package FIRe;
+package FIRe.CodeGeneration;
 
 public class RunMethodCodeHolder extends MethodCodeHolder {
     StringBuilder generatedSwitch = new StringBuilder();

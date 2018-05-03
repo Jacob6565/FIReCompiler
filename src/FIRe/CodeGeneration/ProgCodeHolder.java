@@ -1,4 +1,4 @@
-package FIRe;
+package FIRe.CodeGeneration;
 
 import java.util.ArrayList;
 

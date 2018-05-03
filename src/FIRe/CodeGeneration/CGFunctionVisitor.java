@@ -1,7 +1,11 @@
-package FIRe;
+package FIRe.CodeGeneration;
 
+import FIRe.ASTVisitor;
+import FIRe.ContextualAnalysis.SymbolData;
+import FIRe.ContextualAnalysis.SymbolTable;
 import FIRe.Exceptions.ReturnException;
 import FIRe.Exceptions.TypeException;
+import FIRe.Nodes.*;
 
 public class CGFunctionVisitor extends ASTVisitor {
     CGFunctionVisitor(SymbolTable symbolTable){
@@ -26,7 +30,7 @@ public class CGFunctionVisitor extends ASTVisitor {
 
     private boolean isStrategyVarDcl(AbstractNode node){
         if (node != null && node.Parent.Parent instanceof StrategyDeclarationNode)
-                return true;
+            return true;
         return false;
     }
 
@@ -243,6 +247,7 @@ public class CGFunctionVisitor extends ASTVisitor {
         if (symbolData != null && symbolData.nodeRef instanceof StrategyDeclarationNode){
             code.emit("changeStrategy = \"" + node.Id.Name + "\"\n" + "return");
         }
+
         else
             exprGen.GenerateExprCode(code, node);
         code.emitNL(";");
@@ -603,7 +608,7 @@ public class CGFunctionVisitor extends ASTVisitor {
         int indentions = 0;
 
         while (node.Parent != null && !(node.Parent.Parent instanceof FunctionDeclarationNode) && !(node.Parent.Parent
-                                                                                instanceof StrategyDeclarationNode)) {
+                instanceof StrategyDeclarationNode)) {
             node = node.Parent; //we only increase the value, if we are at a blocknode.
             if (node instanceof BlockNode) {
                 indentions++; // we know we need to indent if we are at a blocknode

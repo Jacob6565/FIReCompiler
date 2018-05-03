@@ -1,9 +1,14 @@
 package FIRe;
 
+import FIRe.CodeGeneration.CGTopVisitor;
+import FIRe.CodeGeneration.SetUnderScoreVisitor;
+import FIRe.ContextualAnalysis.ParentASTVisitor;
 import FIRe.Exceptions.*;
 import FIRe.Parser.CFGLexer;
 import FIRe.Parser.CFGParser;
 import org.antlr.v4.runtime.*;
+import FIRe.ContextualAnalysis.*;
+import FIRe.Nodes.*;
 
 import java.io.*;
 import java.util.Scanner;
@@ -13,7 +18,7 @@ public class Main {
     public static void main(String[] args) throws Exception {
 
         //Reads from the example program. (Debug code)
-        Scanner in = new Scanner(new FileReader("src\\FIRe\\KodeEx3.txt"));
+        Scanner in = new Scanner(new FileReader("src\\FIRe\\Kodeeksempler\\KodeEx.txt"));
 
         //We use this delimiter, to chop the code into bits. We split by the backslash character \n
         in.useDelimiter("\n");

@@ -1,6 +1,9 @@
-package FIRe;
+package FIRe.ContextualAnalysis;
 
-public class ParentASTVisitor extends ASTVisitor{
+import FIRe.ASTVisitor;
+import FIRe.Nodes.*;
+
+public class ParentASTVisitor extends ASTVisitor {
 
     @Override
     public void visit(AbstractNode node, Object... arg) {

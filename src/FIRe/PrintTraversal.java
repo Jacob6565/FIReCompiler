@@ -8,10 +8,13 @@ package FIRe;
 
 import java.util.Map;
 
+import FIRe.Nodes.*;
+
 public class PrintTraversal extends ASTVisitor{
 
     @Override
-    public void visit(AbstractNode node, Object... arg) {
+    public void visit(
+            AbstractNode node, Object... arg) {
 
     }
 

@@ -1,4 +1,4 @@
-package FIRe;
+package FIRe.CodeGeneration;
 
 public class SetupCodeHolder extends CodeHolder {
     SetupCodeHolder(){

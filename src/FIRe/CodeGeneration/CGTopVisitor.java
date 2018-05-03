@@ -1,9 +1,10 @@
-package FIRe;
+package FIRe.CodeGeneration;
 
-import java.awt.*;
-
+import FIRe.ASTVisitor;
+import FIRe.ContextualAnalysis.SymbolTable;
 import FIRe.Exceptions.ReturnException;
 import FIRe.Exceptions.TypeException;
+import FIRe.Nodes.*;
 
 import java.io.*;
 
@@ -12,8 +13,8 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
 
-public class CGTopVisitor extends ASTVisitor{
-    CGTopVisitor(SymbolTable symbolTable){
+public class CGTopVisitor extends ASTVisitor {
+    public CGTopVisitor(SymbolTable symbolTable){
         bodyVisitor = new CGFunctionVisitor(symbolTable);
     }
     ProgCodeHolder progCode = new ProgCodeHolder();
