@@ -180,14 +180,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
                         numberDeclarationNode.childList.add(visitExpr(ctx.expr()));
                     else
                         numberDeclarationNode.childList.add(new NumberNode(0));
-
-                    //Because we want to quickly access the IdNode we assign the field.
-                    for (AbstractNode AN : numberDeclarationNode.childList) {
-                        if (AN instanceof IdNode)
-                            numberDeclarationNode.Id = (IdNode) AN;
-                    }
-
-                    numberDeclarationNode.Id = (IdNode) numberDeclarationNode.childList.get(0);
+                    
                     return numberDeclarationNode;
                 } else if (ctx.Type().toString().equals("text")) {
 
