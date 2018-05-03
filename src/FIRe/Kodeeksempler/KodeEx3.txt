@@ -1,0 +1,42 @@
+RobotProperties
+{
+      RobotName:TheDestroyer;
+      RobotType:AdvancedRobot;
+      BodyColor:yellow;
+      GunColor:red;
+      RadarColor:white;
+}
+
+number firepowers[10];
+
+strategy Default(){
+    bool b = true;
+    number pi = 3.14159;
+
+    changeStrategy(SecondStrategy);
+}
+
+number Grisen (text i)
+{
+    return 2;
+}
+
+strategy SecondStrategy(text name, number limit){
+    bool value = false;
+
+    for (number i = 0 upto limit)
+    {
+        if (limit < 10 and firepowers[i] > 10){
+            value = true;
+        }
+    }
+
+    if(value){
+        changeStrategy(Default);
+    }
+
+
+    routine(){
+        fire(1);
+    }
+}
