@@ -1,5 +1,7 @@
 package FIRe.Exceptions;
 
+import FIRe.Main;
+
 public class TypeException extends Exception{
     String message = "";
     public TypeException(String expectedType, String foundType, int lineNumber){
@@ -7,6 +9,7 @@ public class TypeException extends Exception{
             message = "ERROR: Expected type " + expectedType + ", but found type " + foundType + " in line "+ lineNumber + ".";
         else
             message = "ERROR: Expected type " + (expectedType == null ? foundType : expectedType) + ", but found an undeclared variable in line " + lineNumber + ".";
+        Main.CodeGenerationFlag = true;
     }
 
     @Override
@@ -17,5 +20,6 @@ public class TypeException extends Exception{
 
     public TypeException(String s) {
         super("ERROR: " + s);
+        Main.CodeGenerationFlag = true;
     }
 }

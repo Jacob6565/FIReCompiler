@@ -3,7 +3,7 @@ RobotType:AdvancedRobot;
 RobotName:OptimusCrime;
 }
 
-strategy DefaultStrategy(){
+strategy Default(){
 
     number num = 5.0;
 
@@ -12,26 +12,26 @@ strategy DefaultStrategy(){
 	if(num < 10){
 	    if(num > -30){
         number partyhard = 7.0;
-        return partyhard + 1 + 1 + 1 + 1 + 1 + 1;
         }
-        return num;
-        return "jeg";
+
+
     }
     while(2==2)
     {
-        return num;
+
     }
     routine(6)
     {
-      return num;
+        //jeg har skrevet noget der ikke giver mening
+        num = 2 + 3;
     }
     routine(7)
     {
-        return num;
+
     }
     when (MyEvent e)
     {
-        return num;
+
     }
 
 }
