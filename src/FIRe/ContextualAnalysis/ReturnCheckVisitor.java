@@ -163,6 +163,9 @@ public class ReturnCheckVisitor extends ASTVisitor {
                 } else
                     throw new ReturnException("You are missing a return in the function", ancestor.LineNumber);
             }
+            if(node.childList.isEmpty()){//if the block does not contain anything;
+                throw new ReturnException("You are missing a return in the function", ancestor.LineNumber);
+            }
         }
     }
 
