@@ -493,6 +493,9 @@ public class SymbolTableVisitor extends ASTVisitor {
     @Override
     public void visit(IdNode node, Object... arg) throws SymbolNotFoundException, TypeException, CustomEventFieldAccessException {
         //Here we go
+        if (node.ArrayIndex != null)
+            visit(node.ArrayIndex);
+
 
         //If it is in the symbol table
         if (ST.Contains(node.Name))
