@@ -366,7 +366,7 @@ public class SetUnderScoreVisitor extends ASTVisitor {
 
     @Override
     public void visit(RobotNameNode node, Object... arg) {
-        visitNode(node.RobotName);
+        node.RobotName.Name = node.RobotName.Name + "_";
     }
 
     @Override
