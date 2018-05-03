@@ -1,8 +1,10 @@
 package FIRe.Exceptions;
 
+import FIRe.Main;
+
 public class ReturnException extends Exception{
-    String errStr;
     public ReturnException(String errStr, int lineNum){
         super("ERROR: " + errStr + " in line " + lineNum + ".");
+        Main.CodeGenerationFlag = true;
     }
 }

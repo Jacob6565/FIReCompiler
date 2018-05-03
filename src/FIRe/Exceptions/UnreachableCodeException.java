@@ -1,5 +1,7 @@
 package FIRe.Exceptions;
 
+import FIRe.Main;
+
 import java.util.List;
 
 public class UnreachableCodeException extends Exception{
@@ -11,6 +13,7 @@ public class UnreachableCodeException extends Exception{
         {
             lines += i.toString() + " ";
         }
+        Main.CodeGenerationFlag = true;
     }
 
     @Override
