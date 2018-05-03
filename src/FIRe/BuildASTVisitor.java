@@ -178,8 +178,10 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
 
                     if (ctx.expr() != null)
                         numberDeclarationNode.childList.add(visitExpr(ctx.expr()));
-                    else
+                    else {
                         numberDeclarationNode.childList.add(new NumberNode(0));
+                        System.out.println("WARNING: Unassigned number variable has been indirectly assigned to 0 at line " + numberDeclarationNode.LineNumber);
+                    }
                     
                     return numberDeclarationNode;
                 } else if (ctx.Type().toString().equals("text")) {
@@ -191,8 +193,10 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
 
                     if (ctx.expr() != null)
                         textDeclarationNode.childList.add(visitExpr(ctx.expr()));
-                    else
+                    else {
                         textDeclarationNode.childList.add(new TextNode(""));
+                        System.out.println("WARNING: Unassigned text variable has been indirectly assigned to \"\" at line " + textDeclarationNode.LineNumber);
+                    }
 
                     return textDeclarationNode;
                 } else if (ctx.Type().toString().equals("bool")) {
@@ -204,8 +208,10 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
 
                     if (ctx.expr() != null)
                         booleanDeclarationNode.childList.add(visitExpr(ctx.expr()));
-                    else
+                    else {
                         booleanDeclarationNode.childList.add(new BoolNode(false));
+                        System.out.println("WARNING: Unassigned boolean variable has been indirectly assigned to false at line " + booleanDeclarationNode.LineNumber);
+                    }
 
                     return booleanDeclarationNode;
                 } else
