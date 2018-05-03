@@ -15,15 +15,15 @@ import java.io.*;
 import java.util.Scanner;
 
 public class Main {
-    public static boolean CodeGenerationFlag = false;
-    public static boolean ContextualAnalysisFlag = false;
+    public static boolean CodeGenerationFlag = false; //Set to true, if/when there is an error that prevents code generation
+    public static boolean ContextualAnalysisFlag = false; //Set to true, if/when there is an error that prevents the contextual analysis
 
     public static void main(String[] args) throws Exception {
 
         //Reads from the example program. (Debug code)
         Scanner in = new Scanner(new FileReader("src\\FIRe\\Kodeeksempler\\KodeEx2.txt"));
 
-        //We use this delimiter, to chop the code into bits. We split by the backslash character \n
+        //We use this delimiter, to chop the code into bits. We split by the backslash character "\n"
         in.useDelimiter("\n");
 
         //Creates a StringBuilder from the given code file.
@@ -33,7 +33,6 @@ public class Main {
         }
 
         CFGParser.ProgContext cst = null;
-
 
         //We append $ because this is the terminal symbol of the program.
         sb.append("$");
@@ -60,11 +59,11 @@ public class Main {
         }
         catch (ParseCancellationException ex){
             System.out.println(ex.getMessage());
-            ContextualAnalysisFlag = true;
-            CodeGenerationFlag = true;
+            ContextualAnalysisFlag = true; //If there is a mistake in the syntax, disable the Contextual Analysis
         }
 
-        if (!ContextualAnalysisFlag) {//Builds an AST from the CST
+        if (!ContextualAnalysisFlag) {//If the syntax is ok.
+            //Builds an AST from the CST
             RobotHeaderTable RHT = new RobotHeaderTable();
             ProgNode ast = (ProgNode) new BuildASTVisitor().visitProg(cst);
             ParentASTVisitor PASTV = new ParentASTVisitor();
@@ -111,7 +110,7 @@ public class Main {
             ReturnCheckVisitor returnCheckVisitor = new ReturnCheckVisitor(symbolTable);
             returnCheckVisitor.visit(ast);
 
-            if (!CodeGenerationFlag) {
+            if (!CodeGenerationFlag) { //If no breaking mistakes were found, generate the code.
                 SetUnderScoreVisitor underscoreVis = new SetUnderScoreVisitor(symbolTable);
 
                 underscoreVis.visit(ast);
@@ -128,7 +127,7 @@ public class Main {
                 codeGenerator.emitOutputFile();
             }
         }
-        else {
+        else { //If the syntax is wrong, print that the code generation was not performed
             System.out.println("Compilation failed. No code was generated.");
         }
     }
