@@ -89,15 +89,11 @@ public class CGTopVisitor extends ASTVisitor {
 
     @Override
     public void visit(BooleanDeclarationNode node, Object... arg) throws Exception {
-        //This is not the best way of saying that a declarationNode from strategy can be generated globally /Kristoffer
-        node.Parent = null;
         progCode.setup.emit(bodyVisitor.GenerateBodyCode(node), blockIndent);
     }
 
     @Override
     public void visit(BoolArrayDeclarationNode node, Object... arg) throws Exception {
-        //This is not the best way of saying that a declarationNode from strategy can be generated globally /Kristoffer
-        node.Parent = null;
         progCode.setup.emit(bodyVisitor.GenerateBodyCode(node), blockIndent);
     }
 
@@ -291,15 +287,11 @@ public class CGTopVisitor extends ASTVisitor {
 
     @Override
     public void visit(NumberDeclarationNode node, Object... arg) throws Exception {
-        //This is not the best way of saying that a declarationNode from strategy can be generated globally /Kristoffer
-        node.Parent = null;
         progCode.setup.emit(bodyVisitor.GenerateBodyCode(node), blockIndent);
     }
 
     @Override
     public void visit(NumberArrayDeclarationNode node, Object... arg) throws Exception {
-        //This is not the best way of saying that a declarationNode from strategy can be generated globally /Kristoffer
-        node.Parent = null;
         progCode.setup.emit(bodyVisitor.GenerateBodyCode(node), blockIndent);
     }
 
@@ -400,15 +392,11 @@ public class CGTopVisitor extends ASTVisitor {
 
     @Override
     public void visit(TextDeclarationNode node, Object... arg) throws Exception {
-        //This is not the best way of saying that a declarationNode from strategy can be generated globally /Kristoffer
-        node.Parent = null;
         progCode.setup.emit(bodyVisitor.GenerateBodyCode(node), blockIndent);
     }
 
     @Override
     public void visit(TextArrayDeclarationNode node, Object... arg) throws Exception {
-        //This is not the best way of saying that a declarationNode from strategy can be generated globally /Kristoffer
-        node.Parent = null;
         progCode.setup.emit(bodyVisitor.GenerateBodyCode(node), blockIndent);
     }
 
