@@ -183,19 +183,45 @@ public class SetUnderScoreVisitor extends ASTVisitor {
     @Override
     public void visit(IdNode node, Object... arg) throws Exception {
         AbstractNode ancestor = node;
-        String firstStr;
-        String secondString;
+        String tempName = new String();
+        StrategyDeclarationNode tempStrat = new StrategyDeclarationNode();
+        boolean tempFlag = false;
+
+        if (node.Name.charAt(0) != '_')
+            node.Name = "_" + node.Name;
+
         if (!node.Name.contains(".")) {
-            while (ancestor.Parent != null && !(ancestor.Parent instanceof AssignNode)) {
+            while (ancestor.Parent != null) {
                 if (ancestor.Parent instanceof StrategyDeclarationNode && !(node.Parent.Parent instanceof ProgNode) && !(node.Parent instanceof WhenNode) && !(node.Parent instanceof FuncCallNode)) {
-                    node.Name = node.Name + ((StrategyDeclarationNode) ancestor.Parent).Id.Name;
+                    if(node.Parent instanceof AssignNode) {
+                        tempName = node.Name + ((StrategyDeclarationNode) ancestor.Parent).Id.Name;
+                        tempStrat = (StrategyDeclarationNode) ancestor.Parent;
+                        tempFlag = true;
+                    }
+                    else
+                        node.Name = node.Name + ((StrategyDeclarationNode) ancestor.Parent).Id.Name;
                 }
                 ancestor = ancestor.Parent;
             }
         }
 
-        if (node.Name.charAt(0) != '_')
-            node.Name = "_" + node.Name;
+
+        if(tempFlag){
+        for(AbstractNode child : tempStrat.childList){
+            if(child instanceof DeclarationNode){
+                for(AbstractNode childOfChild : child.childList)
+                if(childOfChild instanceof IdNode) {
+                    if(((IdNode) childOfChild).Name.equals(tempName))
+                        node.Name = tempName;
+                }
+            }
+
+        }
+        }
+
+
+
+
     }
 
     @Override
