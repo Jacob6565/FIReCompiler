@@ -11,7 +11,7 @@ public class EventCodeHolder extends CodeHolder{
     @Override
     public String getCode() {
         return "addCustomEvent(\n" +
-                "\tnew condition(\"" + eventName + "\") {\n" +
+                "\tnew Condition(\"" + eventName + "\") {\n" +
                 "\t\tpublic boolean test() {\n" +
                 "\t\t\t"+sb.toString() + "\n" +
                 "\t\t}; \n" +

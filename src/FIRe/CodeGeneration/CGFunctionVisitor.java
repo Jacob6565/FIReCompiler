@@ -252,10 +252,7 @@ public class CGFunctionVisitor extends ASTVisitor {
         SymbolData symbolData = symbolTable.Search(name.substring(1));
         //This case indicates that we are dealing with a strategy call
         if (symbolData != null && symbolData.nodeRef instanceof StrategyDeclarationNode){
-            if (node.Parent.Parent instanceof RoutineNode)
-                code.emit("currentStrategy_ = " + node.Id.Name);
-            else
-                code.emit("currentStrategy_ = " + node.Id.Name);
+            code.emit("currentStrategy_ = Strategy_." + node.Id.Name);
             stopBodyGen = true;
         }
         //This indicates that we are dealing with a regular function call
