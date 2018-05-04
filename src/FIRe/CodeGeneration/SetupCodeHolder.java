@@ -6,7 +6,7 @@ public class SetupCodeHolder extends CodeHolder {
     }
     String name = "UnnamedRobot";
     String robotType = "AdvancedRobot";
-    private String _package = "package roboCodeRobot;\n";
+    private String _package = "package FIReRobots;\n";
     private String imports = "import java.awt.*;\nimport java.lang.*;\nimport robocode.*;\n";
     public String _enums = "";
 
