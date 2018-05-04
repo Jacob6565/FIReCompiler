@@ -28,7 +28,7 @@ public class CGFunctionVisitor extends ASTVisitor {
         return code.sb.toString();
     }
 
-    private boolean isStrategyVarDcl(AbstractNode node){
+    private boolean partOfStratBody(AbstractNode node){
 
         if(node != null && node.Parent != null)
             if(node.Parent.Parent instanceof StrategyDeclarationNode)
@@ -72,17 +72,23 @@ public class CGFunctionVisitor extends ASTVisitor {
         code.emitNL(exprGen.GenerateExprCode(code, node.Expression) + ";");
     }
 
+    boolean stopBodyGen = false;
+
     @Override
     public void visit(BlockNode node,Object... arg) throws Exception {
         int numberOfIdents = 0;
 
         for(AbstractNode child : node.childList) {
-            numberOfIdents = CalculateTabs(child);
-            for(int i = 0; i < numberOfIdents; i++){
-                code.emit("\t");
+            if(!stopBodyGen)
+            {
+                numberOfIdents = CalculateTabs(child);
+                for(int i = 0; i < numberOfIdents; i++){
+                    code.emit("\t");
+                }
+                visitNode(child);
             }
-            visitNode(child);
         }
+        stopBodyGen = false;
     }
 
 
@@ -93,7 +99,7 @@ public class CGFunctionVisitor extends ASTVisitor {
 
     @Override
     public void visit(BooleanDeclarationNode node, Object... arg) throws Exception {
-        if (!isStrategyVarDcl(node)) {
+        if (!partOfStratBody(node)) {
             int idCounter = 0;
             boolean exprFlag = false;
 
@@ -123,7 +129,7 @@ public class CGFunctionVisitor extends ASTVisitor {
 
     @Override
     public void visit(BoolArrayDeclarationNode node, Object... arg) throws Exception {
-        if (!isStrategyVarDcl(node)){
+        if (!partOfStratBody(node)){
             code.emit("boolean[] ");
 
             for(AbstractNode id : node.childList){
@@ -247,9 +253,10 @@ public class CGFunctionVisitor extends ASTVisitor {
         //This case indicates that we are dealing with a strategy call
         if (symbolData != null && symbolData.nodeRef instanceof StrategyDeclarationNode){
             if (node.Parent.Parent instanceof RoutineNode)
-                code.emit("currentStrategy_ = \"" + node.Id.Name + "\";\n" + "break");
+                code.emit("currentStrategy_ = " + node.Id.Name);
             else
-                code.emit("currentStrategy_ = \"" + node.Id.Name + "\";\n" + "return");
+                code.emit("currentStrategy_ = " + node.Id.Name);
+            stopBodyGen = true;
         }
         //This indicates that we are dealing with a regular function call
         else
@@ -399,7 +406,7 @@ public class CGFunctionVisitor extends ASTVisitor {
 
     @Override
     public void visit(NumberDeclarationNode node, Object... arg) throws Exception {
-        if (!isStrategyVarDcl(node)) {
+        if (!partOfStratBody(node)) {
             int idCounter = 0;
             boolean exprFlag = false;
 
@@ -429,7 +436,7 @@ public class CGFunctionVisitor extends ASTVisitor {
 
     @Override
     public void visit(NumberArrayDeclarationNode node, Object... arg) throws Exception {
-        if (!isStrategyVarDcl(node)) {
+        if (!partOfStratBody(node)) {
             code.emit("double[] ");
 
             for (AbstractNode id : node.childList) {
@@ -510,7 +517,7 @@ public class CGFunctionVisitor extends ASTVisitor {
 
     @Override
     public void visit(TextDeclarationNode node, Object... arg) throws Exception {
-        if (!isStrategyVarDcl(node)) {
+        if (!partOfStratBody(node)) {
             int idCounter = 0;
             boolean exprFlag = false;
 
@@ -540,7 +547,7 @@ public class CGFunctionVisitor extends ASTVisitor {
 
     @Override
     public void visit(TextArrayDeclarationNode node, Object... arg) throws Exception {
-        if (!isStrategyVarDcl(node)) {
+        if (!partOfStratBody(node)) {
             code.emit("String[] ");
 
             for (AbstractNode id : node.childList) {

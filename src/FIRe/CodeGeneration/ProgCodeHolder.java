@@ -7,6 +7,8 @@ public class ProgCodeHolder extends CodeHolder{
     RunMethodCodeHolder runMethod = new RunMethodCodeHolder("run", "void");
     ArrayList<MethodCodeHolder> methods = new ArrayList<MethodCodeHolder>();
     private ArrayList<EventHandlerCodeHolder> eventHandlers = new ArrayList<EventHandlerCodeHolder>();
+    Enum strategyEnum = new Enum(strategyEnumName);
+    Enum conditionEnum = new Enum(conditionEnumName);
 
     int blockIndent = 1;
 
@@ -40,10 +42,24 @@ public class ProgCodeHolder extends CodeHolder{
         return null;
     }
 
+    public void addEnumStrategyValue(String strategyValue){
+        addEnumValue(strategyEnum, strategyValue);
+    }
+
+    public void addEnumConditionValue(String conditionValue){
+        addEnumValue(conditionEnum, conditionValue);
+    }
+
+    //WORKING / KRISTOFFER
+    private void addEnumValue(Enum _enum, String enumValue){
+        _enum.addValue(enumValue);
+    }
+
     //Merges all the inputted CodeHolders correctly and returns them as one single String
     private String mergeCodeHolders(){
         StringBuilder mergedCode = new StringBuilder();
 
+        setup._enums = strategyEnum.getCode() + "\n" + conditionEnum.getCode() + "\n";
         setup.emit(runMethod.getCode(), blockIndent);
         for (MethodCodeHolder method: methods) {
             setup.emit(method.getCode(), blockIndent);

@@ -6,13 +6,15 @@ public class SetupCodeHolder extends CodeHolder {
     }
     String name = "UnnamedRobot";
     String robotType = "AdvancedRobot";
-    private String _package = "package roboCodeRobot;\n";
+    private String _package = "package FIReRobots;\n";
     private String imports = "import java.awt.*;\nimport java.lang.*;\nimport robocode.*;\n";
+    public String _enums = "";
 
 
     @Override
     public String getCode() {
-        return _package + imports + "public class " + name + " extends " + robotType + "{\n" +
-                indent("String currentStrategy_ = \"_Default\";\n", 1) + sb.toString() + "\n}";
+        return _package + imports + _enums + "public class " + name + " extends " + robotType + "{\n" +
+                indent( strategyEnumName + " " + currentStrategyName + " = \"_Default\";\n", 1) + sb.toString()
+                                                                                                            + "\n}";
     }
 }

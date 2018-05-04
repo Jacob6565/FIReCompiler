@@ -6,12 +6,12 @@ public class RunMethodCodeHolder extends MethodCodeHolder {
     RunMethodCodeHolder(String name, String type) {
         super(name, type);
         generatedSwitch.append(indent("while(true){", 1));
-        generatedSwitch.append(indent("switch(currentStrategy_.hashCode()){\n", 2));
+        generatedSwitch.append(indent("switch(currentStrategy_){\n", 2));
     }
 
     //THIS MIGHT BE DONE WITH THE USE OF SWITCH AND CASE CLASSES /KRISTOFFER
     public void addToRunMethod(String strategyName, String body) {
-        generatedSwitch.append(indent("case " + "\"" + strategyName + "\".hashCode():", 3));
+        generatedSwitch.append(indent("case " + strategyName + ":", 3));
         generatedSwitch.append(indent(body + "break;", 4));
     }
 

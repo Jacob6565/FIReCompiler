@@ -7,7 +7,8 @@ public class CustomEventHandlerCodeHolder extends EventHandlerCodeHolder{
     CustomEventHandlerCodeHolder(String name, String type, String parameters) {
         super(name, type, parameters);
         String[] splittedParameters = parameters.split(" ");
-        sb.append(indent("String " + valueName + " = " + splittedParameters[1] + ".getCondition().getName();\n",1));
+        sb.append(indent(conditionEnumName + " " + valueName + " = " + conditionEnumName + ".valueOf(" +
+                                                    splittedParameters[1] + ".getCondition().getName());\n",1));
     }
 
     String valueName = "condition";

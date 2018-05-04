@@ -45,6 +45,7 @@ public class CGTopVisitor extends ASTVisitor {
     }
 
 
+
     @Override
     public void visit(AbstractNode node, Object... arg) {
 
@@ -378,6 +379,8 @@ public class CGTopVisitor extends ASTVisitor {
     @Override
     public void visit(StrategyDeclarationNode node, Object... arg) throws Exception {
 
+        progCode.addEnumStrategyValue(node.Id.Name);
+
         //Visit the routine and whens of the strategy in this class so their codeHandlers can be prepared
         //Additionally we also visit the variable declarations of the strategy as they must be generated globally
         for (AbstractNode child : node.childList) {
@@ -438,6 +441,9 @@ public class CGTopVisitor extends ASTVisitor {
             //Generates an entirely eventHandler "shell" if it does not already exist
             CustomEventHandlerCodeHolder customEventHandler = progCode.addCustomEventHandler ("onCustomEvent",
                     "CustomEvent _e");
+
+            progCode.addEnumConditionValue(eventType);
+
             // Adds the strategy specific eventhandler as a case in the switch of the generated eventhandler
             customEventHandler.addCase(eventType, strategyName, bodyVisitor.GenerateBodyCode(node));
         }
