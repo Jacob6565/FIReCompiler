@@ -475,11 +475,10 @@ public class CGFunctionVisitor extends ASTVisitor {
 
     @Override
     public void visit(RoutineNode node, Object... arg) throws TypeException {
-        code.emit("while(");
-        if(node.repeatCondition != null)
-            code.emit(exprGen.GenerateExprCode(code, node.repeatCondition) + ")");
-        else
-            code.emit("true)");
+        if(node.repeatCondition != null) {
+            code.emit("for(int i = (int)");
+            code.emit(exprGen.GenerateExprCode(code, node.repeatCondition) + "; i > 0; i--)");
+        }
 
         code.emitNL("{");
 
