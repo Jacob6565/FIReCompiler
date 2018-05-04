@@ -4,7 +4,7 @@ public class EventHandlerCodeHolder extends MethodCodeHolder {
     StringBuilder generatedSwitch = new StringBuilder();
     EventHandlerCodeHolder(String name, String type, String parameters) {
         super(name, type, parameters);
-        generatedSwitch.append(indent("switch(currentStrategy){\n", 1));
+        generatedSwitch.append(indent("switch(currentStrategy_){\n", 1));
     }
 
     //Noget af det her kode gentager sig i RunMethodCodeHolder /KRISTOFFER

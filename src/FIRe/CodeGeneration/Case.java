@@ -16,7 +16,7 @@ public class Case extends Indenter{
     public String getCode() {
         if (bodySwitch != null)
             body = bodySwitch.getCode();
-        return "case \"" + caseName + "\":\n" +
+        return "case \"" + caseName + "\".hashCode():\n" +
                 indent(body + "break;",1);
     }
 }
