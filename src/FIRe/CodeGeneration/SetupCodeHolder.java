@@ -14,7 +14,7 @@ public class SetupCodeHolder extends CodeHolder {
     @Override
     public String getCode() {
         return _package + imports + _enums + "public class " + name + " extends " + robotType + "{\n" +
-                indent( strategyEnumName + currentStrategyName + " = \"_Default\";\n", 1) + sb.toString()
+                indent( strategyEnumName + " " + currentStrategyName + " = \"_Default\";\n", 1) + sb.toString()
                                                                                                             + "\n}";
     }
 }
