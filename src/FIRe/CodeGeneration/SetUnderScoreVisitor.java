@@ -10,16 +10,6 @@ import FIRe.Nodes.*;
 import java.util.Map;
 
 public class SetUnderScoreVisitor extends ASTVisitor {
-    private SymbolTable _symbolTable;
-
-    public SetUnderScoreVisitor(SymbolTable table) throws Exception {
-        _symbolTable = table;
-        try {
-            //RemoveRoboCodeMethods();
-        } catch (Exception e) {
-            System.out.println(e.getMessage() + "Error in removing Robocode functions");
-        }
-    }
 
     @Override
     public void visit(AbstractNode node, Object... arg) {
@@ -146,9 +136,9 @@ public class SetUnderScoreVisitor extends ASTVisitor {
     @Override
     public void visit(FuncCallNode node, Object... arg) throws Exception {
 
-        if (!CheckIfRoboCodeMethod(node.Id.Name)) {
-            visitNode(node.Id);
-        }
+
+        visitNode(node.Id);
+
         if (node.Aparam != null)
             visitNode(node.Aparam);
 
@@ -178,8 +168,8 @@ public class SetUnderScoreVisitor extends ASTVisitor {
 
     }
 
-    //Prefixes IDs with _ if it doesnt have it and appends the strategy name to differentiate variables of same
-    // name in different strategies (Needed because of how we generate code)
+    //Prefixes IDs with _ if it doesnt have it and appends the strategy name to differentiate variables of the same
+    // name in different strategies (Needed because we make these variables global when we generate code)
     @Override
     public void visit(IdNode node, Object... arg) throws Exception {
         AbstractNode ancestor = node;
@@ -187,12 +177,20 @@ public class SetUnderScoreVisitor extends ASTVisitor {
         StrategyDeclarationNode tempStrat = new StrategyDeclarationNode();
         boolean tempFlag = false;
 
+        if(CheckIfRoboCodeMethod(node.Name))
+            return;
+
+        //Prefixes the IDs name with _ if it doesn't already have it
         if (node.Name.charAt(0) != '_')
             node.Name = "_" + node.Name;
 
+        //These nested ifs and whens are part of dertermining if the ID needs a strategy name appended.
+        //It checks if the IdNode is part of a strategy subtree and is not part of a when or function call subtree at
+        //the same time.
         if (!node.Name.contains(".")) {
             while (ancestor.Parent != null) {
                 if (ancestor.Parent instanceof StrategyDeclarationNode && !(node.Parent.Parent instanceof ProgNode) && !(node.Parent instanceof WhenNode) && !(node.Parent instanceof FuncCallNode)) {
+                    //if the IdNode is part of an assignment we need to do further checks down below.
                     if(node.Parent instanceof AssignNode) {
                         tempName = node.Name + ((StrategyDeclarationNode) ancestor.Parent).Id.Name;
                         tempStrat = (StrategyDeclarationNode) ancestor.Parent;
@@ -205,7 +203,8 @@ public class SetUnderScoreVisitor extends ASTVisitor {
             }
         }
 
-
+        //The last part of determining whether the ID needs the strategy name appended. This checks if an assignment in
+        //a strategy is to a variable that was also declared in that strategy.
         if(tempFlag){
         for(AbstractNode child : tempStrat.childList){
             if(child instanceof DeclarationNode){
