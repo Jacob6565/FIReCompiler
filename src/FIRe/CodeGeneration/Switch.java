@@ -44,7 +44,7 @@ public class Switch extends Indenter {
     }
 
     public String getCode() {
-        return "switch (" + valueName + ".hashCode()) { \n" +
+        return "switch (" + valueName + ") { \n" +
                 indent(collectCases(switchCases),1) + "\n}";
     }
 }

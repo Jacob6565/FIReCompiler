@@ -2,7 +2,7 @@ package FIRe.CodeGeneration;
 
 import FIRe.Exceptions.CodeGenException;
 
-abstract class CodeHolder extends Indenter{
+abstract class CodeHolder extends CG{
     protected StringBuilder sb;
 
 

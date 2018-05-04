@@ -21,7 +21,7 @@ public class Main {
     public static void main(String[] args) throws Exception {
 
         //Reads from the example program. (Debug code)
-        Scanner in = new Scanner(new FileReader("src\\FIRe\\Kodeeksempler\\KodeEx2.txt"));
+        Scanner in = new Scanner(new FileReader("src\\FIRe\\Kodeeksempler\\KodeEx.txt"));
 
         //We use this delimiter, to chop the code into bits. We split by the backslash character "\n"
         in.useDelimiter("\n");
@@ -111,7 +111,7 @@ public class Main {
             returnCheckVisitor.visit(ast);
 
             if (!CodeGenerationFlag) { //If no breaking mistakes were found, generate the code.
-                SetUnderScoreVisitor underscoreVis = new SetUnderScoreVisitor(symbolTable);
+                SetUnderScoreVisitor underscoreVis = new SetUnderScoreVisitor();
 
                 underscoreVis.visit(ast);
 
