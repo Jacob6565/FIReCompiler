@@ -21,6 +21,7 @@ public class CGFunctionVisitor extends ASTVisitor {
     FunctionDeclarationNode func;
     private CGExpressionVisitor exprGen;
     private SymbolTable symbolTable;
+    static int forLoopCounter = 0;
 
     String GenerateBodyCode(AbstractNode node){
         code = new MethodCodeHolder("bodyCode", "void");
@@ -194,6 +195,20 @@ public class CGFunctionVisitor extends ASTVisitor {
     @Override
     public void visit(ForNode node, Object... arg) throws TypeException, ReturnException {
         boolean dclUsed = false;
+        String fromVarName = "from_" + forLoopCounter;
+        String toVarName = "to_" + forLoopCounter;
+        forLoopCounter++;
+
+        if(node.From != null) {
+            code.emit("int " + fromVarName + " = (int)");
+            code.emitNL(exprGen.GenerateExprCode(code, node.From) + ";");
+        }
+
+        if(node.To != null){
+            code.emit("int " + toVarName + " = (int)");
+            code.emitNL(exprGen.GenerateExprCode(code, node.To) + ";");
+        }
+
         code.emit("for(");
         if (node.Dcl != null && node.Dcl.childList.get(1) instanceof ExpressionNode){
             code.emit("int " + node.Dcl.Id.Name + " = (int)");
@@ -209,24 +224,24 @@ public class CGFunctionVisitor extends ASTVisitor {
         }
 
         if(node.Incremental && dclUsed) {
-            code.emit(node.Dcl.Id.Name + " < (int)");
-            code.emit(exprGen.GenerateExprCode(code, node.To) + "; " + node.Dcl.Id.Name + "++");
+            code.emit(node.Dcl.Id.Name + " < ");
+            code.emit(toVarName + "; " + node.Dcl.Id.Name + "++");
         }
         else if(node.Incremental && !dclUsed) {
-            code.emit(" (int)");
-            code.emit(exprGen.GenerateExprCode(code, node.From) + " < (int)");
-            code.emit(exprGen.GenerateExprCode(code, node.To) + "; ");
-            code.emit(exprGen.GenerateExprCode(code, node.From) + "++");
+            code.emit(" ");
+            code.emit(fromVarName + " < ");
+            code.emit(toVarName + "; ");
+            code.emit(fromVarName + "++");
         }
         else if(!node.Incremental && dclUsed) {
-            code.emit(node.Dcl.Id.Name + " > (int)");
-            code.emit(exprGen.GenerateExprCode(code, node.To) + "; " + node.Dcl.Id.Name + "--");
+            code.emit(node.Dcl.Id.Name + " > ");
+            code.emit(toVarName + "; " + node.Dcl.Id.Name + "--");
         }
         else if(!node.Incremental && !dclUsed) {
-            code.emit(" (int)");
-            code.emit(exprGen.GenerateExprCode(code, node.From) + " > (int)");
-            code.emit(exprGen.GenerateExprCode(code, node.To) + "; ");
-            code.emit(exprGen.GenerateExprCode(code, node.From) + "--");
+            code.emit(" ");
+            code.emit(fromVarName + " > ");
+            code.emit(toVarName + "; ");
+            code.emit(fromVarName + "--");
         }
 
         code.emitNL("){");
