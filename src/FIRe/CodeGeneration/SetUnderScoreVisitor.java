@@ -191,7 +191,7 @@ public class SetUnderScoreVisitor extends ASTVisitor {
             while (ancestor.Parent != null) {
                 if (ancestor.Parent instanceof StrategyDeclarationNode && !(node.Parent.Parent instanceof ProgNode) && !(node.Parent instanceof WhenNode) && !(node.Parent instanceof FuncCallNode)) {
                     //if the IdNode is part of an assignment we need to do further checks down below.
-                    if(node.Parent instanceof AssignNode) {
+                    if(node.Parent instanceof AssignNode || node.Parent instanceof ActualParameterNode || node.Parent instanceof ExpressionNode) {
                         tempName = node.Name + ((StrategyDeclarationNode) ancestor.Parent).Id.Name;
                         tempStrat = (StrategyDeclarationNode) ancestor.Parent;
                         tempFlag = true;
@@ -214,13 +214,36 @@ public class SetUnderScoreVisitor extends ASTVisitor {
                         node.Name = tempName;
                 }
             }
-
+            else if(child instanceof AssignNode){
+                if(((AssignNode) child).Expression instanceof IdNode) {
+                    IdNode id = (IdNode)((AssignNode) child).Expression;
+                    if (id.Name.equals(tempName))
+                        node.Name = tempName;
+                }
+                else if(((AssignNode) child).Expression instanceof InfixExpressionNode){
+                    CheckInfixIdUnderscore(tempName, (InfixExpressionNode) ((AssignNode) child).Expression);
+                }
+            }
         }
         }
+    }
 
+    void CheckInfixIdUnderscore(String tempName, InfixExpressionNode node){
 
-
-
+        if(node.LeftChild instanceof IdNode){
+            if(((IdNode) node.LeftChild).Name.equals(tempName))
+                ((IdNode) node.LeftChild).Name = tempName;
+        }
+        else if(node.LeftChild instanceof InfixExpressionNode){
+            CheckInfixIdUnderscore(tempName,(InfixExpressionNode) node.LeftChild);
+        }
+        if(node.RightChild instanceof IdNode){
+            if(((IdNode) node.RightChild).Name.equals(tempName))
+                ((IdNode) node.RightChild).Name = tempName;
+        }
+        else if(node.RightChild instanceof InfixExpressionNode){
+            CheckInfixIdUnderscore(tempName,(InfixExpressionNode) node.RightChild);
+        }
     }
 
     @Override
