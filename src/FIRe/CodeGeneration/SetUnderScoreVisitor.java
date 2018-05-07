@@ -174,6 +174,7 @@ public class SetUnderScoreVisitor extends ASTVisitor {
     public void visit(IdNode node, Object... arg) throws Exception {
         AbstractNode ancestor = node;
         String tempName = new String();
+        String[] dotParts;
         StrategyDeclarationNode tempStrat = new StrategyDeclarationNode();
         boolean tempFlag = false;
 
@@ -187,7 +188,19 @@ public class SetUnderScoreVisitor extends ASTVisitor {
         //These nested ifs and whens are part of dertermining if the ID needs a strategy name appended.
         //It checks if the IdNode is part of a strategy subtree and is not part of a when or function call subtree at
         //the same time.
-        if (!node.Name.contains(".")) {
+        if (node.Name.contains(".")){
+            tempName = node.Name;
+            node.Name = "";
+            dotParts = tempName.split("\\.");
+            dotParts[0] = "e_";
+            for(int i = 0; i < dotParts.length; i++){
+                if(i < dotParts.length - 1)
+                    node.Name += dotParts[i] + ".";
+                else
+                    node.Name += dotParts[i];
+            }
+        }
+        else {
             while (ancestor.Parent != null) {
                 if (ancestor.Parent instanceof StrategyDeclarationNode && !(node.Parent.Parent instanceof ProgNode) && !(node.Parent instanceof WhenNode) && !(node.Parent instanceof FuncCallNode)) {
                     //if the IdNode is part of an assignment we need to do further checks down below.
