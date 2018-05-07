@@ -1,0 +1,36 @@
+RobotProperties{
+    RobotName:ThirdImpulse;
+    RobotType:Robot;
+    GunColor:black;
+    RadarColor:red;
+    BodyColor:red;
+}
+
+strategy Default(){
+    Seek();
+}
+
+strategy Seek(){
+    routine(){
+        turnGunRight(360);
+    }
+
+    when (ScannedRobotEvent e){
+       Destroy();
+    }
+}
+
+strategy Destroy(){
+    routine(){
+        ahead(100);
+        fire(1);
+    }
+
+    when(HitWallEvent e){
+        Seek();
+    }
+
+    when(HitRobotEvent e){
+        Seek();
+    }
+}

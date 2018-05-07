@@ -7,12 +7,12 @@ import FIRe.Exceptions.ReturnException;
 import FIRe.Exceptions.TypeException;
 import FIRe.Nodes.*;
 
-public class CGFunctionVisitor extends ASTVisitor {
-    CGFunctionVisitor(SymbolTable symbolTable){
+public class CGBodyVisitor extends ASTVisitor {
+    CGBodyVisitor(SymbolTable symbolTable){
         this();
         this.symbolTable = symbolTable;
     }
-    CGFunctionVisitor(){
+    CGBodyVisitor(){
         exprGen = new CGExpressionVisitor();
         code = new MethodCodeHolder("bodyCode", "void");
     }
