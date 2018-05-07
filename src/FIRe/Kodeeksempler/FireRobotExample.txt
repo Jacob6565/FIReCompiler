@@ -1,0 +1,81 @@
+RobotProperties
+{
+      RobotName:Fire;
+      RobotType:AdvancedRobot;
+      BodyColor:orange;
+      GunColor:orange;
+      RadarColor:red;
+}
+number dist = 50;
+
+strategy Default()
+{
+    routine()
+    {
+        turnGunRight(5);
+    }
+
+    when (ScannedRobotEvent a)
+    {
+        if (a.getDistance() < 50 and getEnergy() > 50)
+        {
+            fire(3);
+        }
+        else
+        {
+            fire(1);
+        }
+        scan();
+    }
+    when(HitByBulletEvent b)
+    {
+        allign90Degrees(90 - (getHeading() - b.getHeading()));
+
+        ahead(dist);
+        dist = dist * -1;
+        scan();
+		if (getEnergy() < 20)
+		{
+		    Run();
+		}
+
+    }
+//VIRKER IKKE
+//    when(HitRobotEvent c)
+//    {
+//        allign90Degrees(90 - (getHeading() - c.getHeading()));
+//
+//        ahead(dist);
+//        dist = dist * -1;
+//        scan();
+//        if (getEnergy() < 20){
+//            Run();
+//        }
+//    }
+}
+
+strategy Run()
+{
+    routine()
+    {
+        ahead(dist);
+    }
+    //Den formelle parameter her stemmer ikke overens med den anden when HitBybBulletEvent og det giver problemer
+    when(HitByBulletEvent d)
+    {
+        allign90Degrees(90 - (getHeading() - d.getHeading()));
+        ahead(dist);
+        dist = dist * -1;
+    }
+    when (ScannedRobotEvent e)
+    {
+        turnRight(49);
+    }
+}
+
+void allign90Degrees(number bearing){
+    if(bearing != 90 or bearing != -90)
+    {
+        turnRight(bearing - 90);
+    }
+}
