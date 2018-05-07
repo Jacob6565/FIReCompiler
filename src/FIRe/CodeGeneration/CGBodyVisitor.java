@@ -7,6 +7,7 @@ import FIRe.Exceptions.ReturnException;
 import FIRe.Exceptions.TypeException;
 import FIRe.Nodes.*;
 
+//Emits code for the body of the program.
 public class CGBodyVisitor extends ASTVisitor {
     CGBodyVisitor(SymbolTable symbolTable){
         this();
@@ -21,14 +22,18 @@ public class CGBodyVisitor extends ASTVisitor {
     FunctionDeclarationNode func;
     private CGExpressionVisitor exprGen;
     private SymbolTable symbolTable;
+
+    //Used to create local variables for for loops
     static int forLoopCounter = 0;
 
+    //Called by CGTopVisitor to generate the actual code
     String GenerateBodyCode(AbstractNode node){
         code = new MethodCodeHolder("bodyCode", "void");
         visitNode(node);
         return code.sb.toString();
     }
 
+    //Used to see if a given node is part of a strategy sub tree
     private boolean partOfStratBody(AbstractNode node){
 
         if(node != null && node.Parent != null)
@@ -98,6 +103,8 @@ public class CGBodyVisitor extends ASTVisitor {
 
     }
 
+
+    //Creates the java code for bool dcls. These are handled the same way for numbers and texts.
     @Override
     public void visit(BooleanDeclarationNode node, Object... arg) throws Exception {
         if (!partOfStratBody(node)) {
@@ -113,6 +120,7 @@ public class CGBodyVisitor extends ASTVisitor {
             }
             code.emit("boolean ");
 
+            //For loop that checks how the declaration should be emitted (E.g. with commas and multiple variables etc.)
             for (AbstractNode id : node.childList) {
                 if (id instanceof IdNode && idCounter > 1) {
                     code.emit(((IdNode) id).Name + ", ");
@@ -128,6 +136,7 @@ public class CGBodyVisitor extends ASTVisitor {
         }
     }
 
+    //Creates the java code for bool array dcls. These are handled the same way for numbers and texts.
     @Override
     public void visit(BoolArrayDeclarationNode node, Object... arg) throws Exception {
         if (!partOfStratBody(node)){
@@ -194,11 +203,16 @@ public class CGBodyVisitor extends ASTVisitor {
 
     @Override
     public void visit(ForNode node, Object... arg) throws TypeException, ReturnException {
+        //Flag to see if the for-loop counter was declared inside the for-loop
         boolean dclUsed = false;
+
+        //These are used to create local variables for the for-loop (To be in line with how for-loops are handled
+        //in the semantics)
         String fromVarName = "from_" + forLoopCounter;
         String toVarName = "to_" + forLoopCounter;
         forLoopCounter++;
 
+        //Sets up the local variables
         if(node.From != null) {
             code.emit("int " + fromVarName + " = (int)");
             code.emitNL(exprGen.GenerateExprCode(code, node.From) + ";");
@@ -210,45 +224,45 @@ public class CGBodyVisitor extends ASTVisitor {
         }
 
         code.emit("for(");
+
+        //Emits code if the for-loop counter has been declared in the loop and has been initialized
         if (node.Dcl != null && node.Dcl.childList.get(1) instanceof ExpressionNode){
             code.emit("int " + node.Dcl.Id.Name + " = (int)");
             code.emit(exprGen.GenerateExprCode(code, (ExpressionNode) node.Dcl.childList.get(1)) + ";");
             dclUsed = true;
         }
+        //Emits code if the for-loop counter has been declared in the loop and has not been initialized
         else if(node.Dcl != null){
             code.emit("int " + node.Dcl.Id.Name + " = " + "0;");
             dclUsed = true;
         }
+        //Emits code if the for-loop counter has not been declared in the loop.
         else if(node.From != null){
             code.emit(";");
         }
 
+        //Generates the rest of the for loop condition based on whether its incremental and whether from or dcl was
+        //used.
         if(node.Incremental && dclUsed) {
-            code.emit(node.Dcl.Id.Name + " < ");
-            code.emit(toVarName + "; " + node.Dcl.Id.Name + "++");
+            code.emit(node.Dcl.Id.Name + " < " + toVarName + "; " + node.Dcl.Id.Name + "++");
         }
         else if(node.Incremental && !dclUsed) {
-            code.emit(" ");
-            code.emit(fromVarName + " < ");
-            code.emit(toVarName + "; ");
-            code.emit(fromVarName + "++");
+            code.emit(" " + fromVarName + " < " + toVarName + "; " + fromVarName + "++");
         }
         else if(!node.Incremental && dclUsed) {
-            code.emit(node.Dcl.Id.Name + " > ");
-            code.emit(toVarName + "; " + node.Dcl.Id.Name + "--");
+            code.emit(node.Dcl.Id.Name + " > " + toVarName + "; " + node.Dcl.Id.Name + "--");
         }
         else if(!node.Incremental && !dclUsed) {
-            code.emit(" ");
-            code.emit(fromVarName + " > ");
-            code.emit(toVarName + "; ");
-            code.emit(fromVarName + "--");
+            code.emit(" " + fromVarName + " > " + toVarName + "; " + fromVarName + "--");
         }
 
         code.emitNL("){");
 
+        //Generates code for the for loop body
         for(AbstractNode child : node.childList){
             if(child instanceof BlockNode) {
                 visitNode(child);
+                //Indents the code correctly in the output java file
                 for(int i = 0; i < CalculateTabs(child); i++){
                     code.emit("\t");
                 }
@@ -310,11 +324,13 @@ public class CGBodyVisitor extends ASTVisitor {
     public void visit(IfControlStructureNode node, Object... arg) throws Exception {
         code.emit("if(");
 
+        //Variables used to count the number of ifs and blocks aggregated to the if node.
         int icount = 0;
         int bcount = 0;
 
         int size = node.childList.size();
 
+        //Checks how many ifs and blocks there are
         for (AbstractNode Node : node.childList) {
             if (Node instanceof ExpressionNode) {
                 icount++;
@@ -325,6 +341,8 @@ public class CGBodyVisitor extends ASTVisitor {
 
         if (bcount == icount) { // this is determines if the if-else chain ends with an else if
             boolean firstTime = true;
+            //For-loop that generates the if-else code based on whether it encounters an if node or a block node. Also
+            // does this based on whether it is the first time or not (to see if we need to output if or if else)
             for (AbstractNode Node : node.childList) {
                 if (Node instanceof ExpressionNode && firstTime) {
                     visit((ExpressionNode) Node);
@@ -350,6 +368,8 @@ public class CGBodyVisitor extends ASTVisitor {
             int blocks = 0;
             int ifs = 0;
             boolean firstTime = true;
+            //For-loop that generates the if-else code based on whether it encounters an if node or a block node. Also
+            // does this based on whether it is the first time or not (to see if we need to output if or if else)
             for (AbstractNode Node : node.childList) {
                 if (Node instanceof ExpressionNode && firstTime) {
                     visit((ExpressionNode) Node);
@@ -584,13 +604,11 @@ public class CGBodyVisitor extends ASTVisitor {
 
     @Override
     public void visit(WhenNode node, Object... arg) {
-        //code.emitNL("{");
         for(AbstractNode child : node.childList){
             if(child instanceof BlockNode) {
                 visitNode(child);
             }
         }
-        //code.emitNL("}");
     }
 
     @Override
@@ -602,6 +620,7 @@ public class CGBodyVisitor extends ASTVisitor {
             if(child instanceof BlockNode) {
 
                 visitNode(child);
+                //Indents correctly in the output java file
                 for(int i = 0; i < CalculateTabs(child); i++){
                     code.emit("\t");
                 }
