@@ -52,5 +52,4 @@ public class RobotHeaderTable {
         RobotTypes.add("Robot");
         RobotTypes.add("JuniorRobot");
     }
-
 }
