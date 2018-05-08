@@ -50,7 +50,6 @@ public class ProgCodeHolder extends CodeHolder{
         addEnumValue(conditionEnum, conditionValue);
     }
 
-    //WORKING / KRISTOFFER
     private void addEnumValue(Enum _enum, String enumValue){
         _enum.addValue(enumValue);
     }
@@ -60,21 +59,21 @@ public class ProgCodeHolder extends CodeHolder{
         StringBuilder mergedCode = new StringBuilder();
 
         setup._enums = strategyEnum.getCode() + "\n" + conditionEnum.getCode() + "\n";
-        setup.emit(runMethod.getCode(), blockIndent);
+        setup.emit(runMethod.toString(), blockIndent);
         for (MethodCodeHolder method: methods) {
-            setup.emit(method.getCode(), blockIndent);
+            setup.emit(method.toString(), blockIndent);
         }
         for (EventHandlerCodeHolder eventHandler: eventHandlers) {
-            setup.emit(eventHandler.getCode(), blockIndent);
+            setup.emit(eventHandler.toString(), blockIndent);
         }
 
-        mergedCode.append(setup.getCode());
+        mergedCode.append(setup.toString());
 
         return mergedCode.toString();
     }
 
     @Override
-    public String getCode() {
+    public String toString() {
         return mergeCodeHolders();
     }
 }

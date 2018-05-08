@@ -21,7 +21,7 @@ public class Main {
     public static void main(String[] args) throws Exception {
 
         //Reads from the example program. (Debug code)
-        Scanner in = new Scanner(new FileReader("src\\FIRe\\Kodeeksempler\\FireRobotExample.txt"));
+        Scanner in = new Scanner(new FileReader("src\\FIRe\\Kodeeksempler\\MagnusExample.txt"));
 
         //We use this delimiter, to chop the code into bits. We split by the backslash character "\n"
         in.useDelimiter("\n");
@@ -95,7 +95,7 @@ public class Main {
             //We now know all the functions, strategies and events in the program.
             //Therefore checking if the "Default"-strategy exists.
             try {
-                symbolTable.Search("Default", 0);
+                symbolTable.Search("Default()", 0);
             } catch (SymbolNotFoundException e) {
                 //Could not find the strategy with name "Default";
                 try {

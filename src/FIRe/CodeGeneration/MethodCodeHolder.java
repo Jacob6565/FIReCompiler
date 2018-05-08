@@ -14,7 +14,8 @@ public class MethodCodeHolder extends CodeHolder {
     public String type;
     public String parameters = "";
 
-    public String getCode() {
+    @Override
+    public String toString() {
         return "public " + type + " " + name + " (" + parameters + "){ \n" + sb.toString() + "\n}\n";
     }
 }

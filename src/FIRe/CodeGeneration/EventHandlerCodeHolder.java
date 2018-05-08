@@ -1,22 +1,20 @@
 package FIRe.CodeGeneration;
 
 public class EventHandlerCodeHolder extends MethodCodeHolder {
-    StringBuilder generatedSwitch = new StringBuilder();
+    Switch generatedSwitch;
     EventHandlerCodeHolder(String name, String type, String parameters) {
         super(name, type, parameters);
-        generatedSwitch.append(indent("switch(currentStrategy_){\n", 1));
+        generatedSwitch = new Switch(currentStrategyVar, "return");
     }
 
     //Noget af det her kode gentager sig i RunMethodCodeHolder /KRISTOFFER
     public void addCase(String strategyName, String body){
-        generatedSwitch.append(indent("case " + strategyName + ":", 2));
-        generatedSwitch.append(indent(body + "return;", 3));
+        generatedSwitch.addStrategyCase(strategyName, body);
     }
 
     @Override
-    public String getCode() {
-        generatedSwitch.append(indent("}\n", 1));
+    public String toString() {
         sb.append(generatedSwitch.toString());
-        return super.getCode();
+        return super.toString();
     }
 }

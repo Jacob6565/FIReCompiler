@@ -4,30 +4,34 @@ import java.util.ArrayList;
 
 
 public class Switch extends Indenter {
+    Switch(String valueName, String caseEnder) {
+        this.valueName = valueName;
+        this.caseEnder = caseEnder;
+    }
     Switch(String valueName, Case switchCase){
-        this(valueName);
+        this.valueName = valueName;
         switchCases.add(switchCase);
     }
-    Switch(String valueName){
-        this.valueName = valueName;
-    }
+    //Case ender is break by default
+    String caseEnder = "break";
     String valueName = new String();
     ArrayList<Case> switchCases = new ArrayList<Case>();
 
     public void addConditionCase(String condition, String strategyName, String body){
-        if (getSwitchCases(condition) != null){
-            getSwitchCases(condition).bodySwitch.addStrategyCase(strategyName, body);
+        if (getSwitchCase(condition) != null){
+            getSwitchCase(condition).bodySwitch.addStrategyCase(strategyName, body);
         }
         else{
-            switchCases.add(new Case(condition, new Switch("currentStrategy_", new Case(strategyName, body))));
+            switchCases.add(new Case(condition, new Switch("currentStrategy_", new Case(strategyName, body,
+                                                                                caseEnder)),caseEnder));
         }
     }
 
-    private void addStrategyCase(String switchCase, String body){
-        switchCases.add(new Case(switchCase, body));
+    public void addStrategyCase(String switchCase, String body){
+        switchCases.add(new Case(switchCase, body, caseEnder));
     }
 
-    private Case getSwitchCases(String caseName){
+    private Case getSwitchCase(String caseName){
         for (Case _case: switchCases) {
             if (_case.caseName.equals(caseName))
                 return _case;
@@ -38,12 +42,13 @@ public class Switch extends Indenter {
     private String collectCases(ArrayList<Case> cases){
         String result = "";
         for (Case _case: cases) {
-            result += _case.getCode();
+            result += _case.toString();
         }
         return result;
     }
 
-    public String getCode() {
+    @Override
+    public String toString() {
         return "switch (" + valueName + ") { \n" +
                 indent(collectCases(switchCases),1) + "\n}";
     }

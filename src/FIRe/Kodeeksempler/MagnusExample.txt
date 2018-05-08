@@ -7,7 +7,9 @@ RobotProperties{
 }
 
 strategy Default(){
-    Seek();
+    routine(){
+        Seek();
+    }
 }
 
 strategy Seek(){

@@ -9,7 +9,7 @@ public class EventCodeHolder extends CodeHolder{
     String eventName;
 
     @Override
-    public String getCode() {
+    public String toString() {
         return "addCustomEvent(\n" +
                 "\tnew Condition(\"" + eventName + "\") {\n" +
                 "\t\tpublic boolean test() {\n" +

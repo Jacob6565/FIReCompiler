@@ -25,7 +25,7 @@ public class CGTopVisitor extends ASTVisitor {
 
     //Prints the generated code from the CodeHolders into the output file
     public void generateOutputFile(){
-        String code = progCode.getCode();
+        String code = progCode.toString();
         //The fileName is the same as the class name/robot name
         printToFile("GeneratedCode\\" + progCode.setup.name + ".java", code);
     }
@@ -127,7 +127,7 @@ public class CGTopVisitor extends ASTVisitor {
         //Code generation for eventDcl body
         eventDcl.emit(bodyVisitor.GenerateBodyCode(node), blockIndent);
 
-        progCode.runMethod.addConditionDeclaration(eventDcl.getCode());
+        progCode.runMethod.addConditionDeclaration(eventDcl.toString());
     }
 
     @Override
@@ -424,7 +424,7 @@ public class CGTopVisitor extends ASTVisitor {
 
         //This case is for whens handling robocode events
         if(isThisOfficialEvent(eventType)){
-            //ScannedRobotEvent will become ScannedRobot, a when can only have one parameter /KRISTOFFER
+            //ScannedRobotEvent will become ScannedRobot, a when can only have one parameter
             String[] str = eventType.split("Event");
             String fparam = eventType + " " + paramId;
 
@@ -434,7 +434,7 @@ public class CGTopVisitor extends ASTVisitor {
             // Adds the strategy specific eventhandler as a case in the switch of the generated eventhandler
             eventHandler.addCase(strategyName, bodyVisitor.GenerateBodyCode(node));
         }
-        //This case is for whens handling custom events /KRISTOFFER
+        //This case is for whens handling custom events
         else {
             //Generates an entirely eventHandler "shell" if it does not already  // e is hardcoded
             CustomEventHandlerCodeHolder customEventHandler = progCode.addCustomEventHandler ("onCustomEvent",

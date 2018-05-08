@@ -12,14 +12,17 @@ public class CustomEventHandlerCodeHolder extends EventHandlerCodeHolder{
     }
 
     String valueName = "condition";
-    Switch bodySwitch = new Switch(valueName);
+    Switch bodySwitch = new Switch(valueName, "return");
 
     public void addCase(String condition, String strategyName, String body){
         bodySwitch.addConditionCase(condition, strategyName, body);
     }
 
-    public String getCode() {
-        sb.append(indent(bodySwitch.getCode(),1));
+
+
+    @Override
+    public String toString() {
+        sb.append(indent(bodySwitch.toString(),1));
         return "public " + type + " " + name + " (" + parameters + "){ \n" + sb.toString() + "\n}\n";
     }
 }

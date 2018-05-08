@@ -273,6 +273,16 @@ public class CGBodyVisitor extends ASTVisitor {
         code.emitNL("}");
     }
 
+    private boolean ancestorOfRoutine(AbstractNode node){
+        if(node != null && node.Parent != null){
+            if(node.Parent instanceof RoutineNode)
+                return true;
+            else
+                return ancestorOfRoutine(node.Parent);
+        }
+        return false;
+    }
+
     @Override
     public void visit(FuncCallNode node, Object... arg) throws Exception {
         String name = node.Id.Name;
@@ -281,7 +291,18 @@ public class CGBodyVisitor extends ASTVisitor {
         SymbolData symbolData = symbolTable.Search(name.substring(1));
         //This case indicates that we are dealing with a strategy call
         if (symbolData != null && symbolData.nodeRef instanceof StrategyDeclarationNode){
-            code.emit("currentStrategy_ = Strategy_." + node.Id.Name);
+            AbstractNode ancestor = node.Parent.Parent;
+            code.emit("currentStrategy_ = Strategy_." + node.Id.Name + ";\n");
+            //If the strat call is in a block inside of a block, we need to make sure that it breaks the case, or return
+            //from the event handler, immediately after the strat call. If we did this to every strat call, we would produce
+            //java code with an unreachable code
+            if (ancestor instanceof ControlStructureNode && !(ancestor instanceof RoutineNode)){
+                if (ancestorOfRoutine(node))
+                    code.emit("break");
+                else
+                    code.emit("return");
+            }
+
             stopBodyGen = true;
         }
         //This indicates that we are dealing with a regular function call
@@ -519,15 +540,11 @@ public class CGBodyVisitor extends ASTVisitor {
             code.emit(exprGen.GenerateExprCode(code, node.repeatCondition) + "; i > 0; i--)");
         }
 
-        code.emitNL("{");
-
         for(AbstractNode child : node.childList){
             if(child instanceof BlockNode) {
                 visitNode(child);
             }
         }
-
-        code.emitNL("}");
 
     }
 
@@ -654,6 +671,8 @@ public class CGBodyVisitor extends ASTVisitor {
             if (node instanceof BlockNode) {
                 indentions++; // we know we need to indent if we are at a blocknode
             }
+            if (node.Parent instanceof RoutineNode || node.Parent instanceof  WhenNode)
+                indentions--;
         }
         return indentions; //returns the number of indentions
     }
