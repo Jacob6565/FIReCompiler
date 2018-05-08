@@ -1,6 +1,5 @@
 package FIRe.ContextualAnalysis;
 
-import java.beans.Expression;
 import java.util.List;
 import java.util.Map;
 
@@ -265,7 +264,8 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
     @Override
     public void visit(BooleanDeclarationNode node, Object... arg) throws Exception {
         //Insert the new node in the symbol table
-        ST.Insert(node);
+        if (!(node.Parent instanceof ProgNode))
+            ST.Insert(node);
         for (AbstractNode Node : node.childList) {
             if (Node != null)
                 visitNode(Node);
@@ -278,7 +278,8 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
     public void visit(BoolArrayDeclarationNode node, Object... arg) throws Exception {
         //We set the type as bool array and insert it in the symbol table
         node.Id.type = "bool array";
-        ST.Insert(node);
+        if (!(node.Parent instanceof ProgNode))
+            ST.Insert(node);
         for (AbstractNode Node : node.childList) {
             if (Node != null)
                 visitNode(Node);
@@ -538,9 +539,12 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
             throw new SymbolNotFoundException(node.Name, node.LineNumber);
         } else { //Otherwise, it should be in the formal parameters or it is a robotproperty
 
+
             //We use this trick to find the "ultimate" parent of the Idnode
             AbstractNode predecessor = node;
             while (!(predecessor instanceof FunctionDeclarationNode || predecessor instanceof StrategyDeclarationNode || predecessor instanceof EventDeclarationNode || predecessor instanceof RobotPropertiesNode)) {
+                if (predecessor.Parent == null)
+                    return;
                 predecessor = predecessor.Parent;
             }
 
@@ -763,17 +767,16 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
     @Override
     public void visit(NumberDeclarationNode node, Object... arg) throws TypeException, Exception {
 
-
-
-            //We insert the number
+        //We insert the number
+        if (!(node.Parent instanceof ProgNode))
             ST.Insert(node);
 
-            //We set the type
-            node.Id.type = "number";
-            for (AbstractNode Node : node.childList) {
-                if (Node != null)
-                    visitNode(Node);
-            }
+        //We set the type
+        node.Id.type = "number";
+        for (AbstractNode Node: node.childList) {
+            if (Node != null)
+                visitNode(Node);
+        }
 
             //If the number is instantiated and the right hand side is not a number, throw an exception
             if (node.childList.size() > 1 && ((ExpressionNode) node.childList.get(1)).type != node.Id.type) {
@@ -787,7 +790,9 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
     public void visit(NumberArrayDeclarationNode node, Object... arg) throws Exception {
 
         //We insert the new array
-        ST.Insert(node);
+        if (!(node.Parent instanceof ProgNode))
+            ST.Insert(node);
+
         for (AbstractNode Node: node.childList) {
             if (Node != null)
                 visitNode(Node);
@@ -844,40 +849,6 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
             if (Node != null)
                 visitNode(Node);
         }
-    }
-
-    private boolean isGlobalVariableDeclaration(AbstractNode Node)
-    {
-        boolean AGlobalVariableDeclaration = false;
-
-        if(Node instanceof NumberDeclarationNode)
-        {
-            AGlobalVariableDeclaration = true;
-        }
-        else if(Node instanceof BooleanDeclarationNode)
-        {
-            AGlobalVariableDeclaration = true;
-        }
-        else if(Node instanceof TextDeclarationNode)
-        {
-            AGlobalVariableDeclaration = true;
-        }
-        else if(Node instanceof NumberArrayDeclarationNode)
-        {
-            AGlobalVariableDeclaration = true;
-        }
-        else if(Node instanceof TextArrayDeclarationNode)
-        {
-            AGlobalVariableDeclaration = true;
-        }
-        else if(Node instanceof BoolArrayDeclarationNode)
-        {
-            AGlobalVariableDeclaration = true;
-        }
-
-
-        return AGlobalVariableDeclaration;
-
     }
 
     @Override
@@ -998,7 +969,9 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
     @Override
     public void visit(TextDeclarationNode node, Object... arg) throws Exception {
         //The declarationnode is put into the symbol table
-        ST.Insert(node);
+        if (!(node.Parent instanceof ProgNode))
+            ST.Insert(node);
+
         for (AbstractNode Node: node.childList) {
             if (Node != null)
                 visitNode(Node);
@@ -1010,7 +983,8 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
     @Override
     public void visit(TextArrayDeclarationNode node, Object... arg) throws Exception {
         // We insert it in the symbol table.
-        ST.Insert(node);
+        if (!(node.Parent instanceof ProgNode))
+            ST.Insert(node);
         for (AbstractNode Node: node.childList) {
             if (Node != null)
                 visitNode(Node);
