@@ -501,10 +501,9 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
 
     @Override
     public void visit(IdNode node, Object... arg) throws SymbolNotFoundException, TypeException, CustomEventFieldAccessException {
-        //Here we go
+        //If the node has an array index, we visit it
         if (node.ArrayIndex != null)
             visit(node.ArrayIndex);
-
 
         //If it is in the symbol table
         if (ST.Contains(node.Name))
@@ -779,8 +778,10 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
         }
 
             //If the number is instantiated and the right hand side is not a number, throw an exception
-            if (node.childList.size() > 1 && ((ExpressionNode) node.childList.get(1)).type != node.Id.type)
-                throw new TypeException(node.Id.type, ((ExpressionNode) node.childList.get(1)).type, node.LineNumber);
+            if (node.childList.size() > 1 && ((ExpressionNode) node.childList.get(1)).type != node.Id.type) {
+                ExpressionNode rightHandSide = (ExpressionNode) node.childList.get(1);
+                throw new TypeException(node.Id.type, rightHandSide.type, node.LineNumber);
+            }
 
     }
 
