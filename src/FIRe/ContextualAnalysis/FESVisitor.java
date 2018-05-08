@@ -282,6 +282,7 @@ public class FESVisitor extends ASTVisitor {
     @Override
     public void visit(StrategyDeclarationNode node, Object... arg) throws Exception {
         ArrayList<String> handledEvents = new ArrayList<>();
+        node.Id.Name += "()";
         for (AbstractNode Node: node.childList){
             if (Node instanceof WhenNode){
                 if(handledEvents.contains(((IdNode)Node.childList.get(0)).Name)){
