@@ -663,17 +663,17 @@ public class CGBodyVisitor extends ASTVisitor {
     }
     //method for calculating number of needed indentions
     public int CalculateTabs(AbstractNode node){
-        int indentions = 0;
+        int indentations = 0;
 
         while (node.Parent != null && !(node.Parent.Parent instanceof FunctionDeclarationNode) && !(node.Parent.Parent
                 instanceof StrategyDeclarationNode)) {
             node = node.Parent; //we only increase the value, if we are at a blocknode.
             if (node instanceof BlockNode) {
-                indentions++; // we know we need to indent if we are at a blocknode
+                indentations++; // we know we need to indent if we are at a blocknode
             }
             if (node.Parent instanceof RoutineNode || node.Parent instanceof  WhenNode)
-                indentions--;
+                indentations--;
         }
-        return indentions; //returns the number of indentions
+        return indentations; //returns the number of indentions
     }
 }

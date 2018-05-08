@@ -58,7 +58,7 @@ public class ProgCodeHolder extends CodeHolder{
     private String mergeCodeHolders(){
         StringBuilder mergedCode = new StringBuilder();
 
-        setup._enums = strategyEnum.getCode() + "\n" + conditionEnum.getCode() + "\n";
+        setup._enums = strategyEnum.toString() + "\n" + conditionEnum.toString() + "\n";
         setup.emit(runMethod.toString(), blockIndent);
         for (MethodCodeHolder method: methods) {
             setup.emit(method.toString(), blockIndent);

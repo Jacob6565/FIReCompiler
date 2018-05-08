@@ -16,7 +16,8 @@ public class Enum extends Indenter{
         else
             sb.append(", " + val);
     }
-    public String getCode(){
+    @Override
+    public String toString(){
         return "public enum " + name + "{\n" +
                 "\t" + sb.toString() + "\n}";
     }

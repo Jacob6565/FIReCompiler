@@ -2,7 +2,7 @@ package FIRe.CodeGeneration;
 
 public class RunMethodCodeHolder extends MethodCodeHolder {
     Switch generatedSwitch;
-    StringBuilder conditionDeclarations = new StringBuilder();
+    StringBuilder customEvents = new StringBuilder();
     RunMethodCodeHolder(String name, String type) {
         super(name, type);
         generatedSwitch  = new Switch(currentStrategyVar, "break");
@@ -12,18 +12,19 @@ public class RunMethodCodeHolder extends MethodCodeHolder {
         generatedSwitch.addStrategyCase(strategyName, body);
     }
 
-    public void addConditionDeclaration(String code){
-        conditionDeclarations.append(code);
+
+    public void addCustomEvent(String code){
+        customEvents.append(code);
     }
 
 
     @Override
     public String toString() {
-        sb.append(indent(conditionDeclarations.toString(), 1));
-        sb.append(indent("while(true){", 1));
-        sb.append(indent(generatedSwitch.toString(),2));
-        sb.append(indent("}\n", 1));
-        sb.append("}\n");
+        emit(customEvents.toString(), 1);
+        emit("while(true){", 1);
+        emit(generatedSwitch.toString(), 2);
+        emit("}\n", 1);
+        emit("}\n");
         return "public " + type + " " + name + " (" + parameters + "){ \n" + sb.toString();
     }
 }
