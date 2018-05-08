@@ -390,6 +390,4 @@ public class FESVisitor extends ASTVisitor {
         symbolTable.Insert(new EventDeclarationNode("SkippedTurnEvent",0, new Tuple<>("getPriority","number"), new Tuple<>("getSkippedTurn","number")));
         symbolTable.Insert(new EventDeclarationNode("WinEvent",0,new Tuple<>("getPriority","number")));
     }
-
-
 }
