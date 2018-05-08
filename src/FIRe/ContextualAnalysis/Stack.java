@@ -24,9 +24,8 @@ public class Stack<T> {
     }
 
     public T Pop(){
-        T element = Peek();
-        list.remove(Peek());
-        return element;
+        list.remove((list.size() -1));
+        return Peek();
     }
     public int Size(){
         return list.size();

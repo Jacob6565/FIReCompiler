@@ -168,7 +168,7 @@ public class SymbolTableVisitor extends ASTVisitor {
         //If this is a whenblock, we insert the event variable
         if (node.Parent instanceof WhenNode) {
             WhenNode Whennode = (WhenNode) node.Parent;
-            ST.Insert(new EventTypeDeclarationNode((IdNode) Whennode.childList.get(1), ((IdNode)Whennode.childList.get(0)).Name,node.LineNumber));
+            ST.Insert(new EventTypeDeclarationNode((IdNode) Whennode.childList.get(1), ((IdNode)Whennode.childList.get(0)).Name, node.LineNumber));
         }
 
         //If this is a for node, we insert the declared variable if there is one
@@ -755,19 +755,21 @@ public class SymbolTableVisitor extends ASTVisitor {
     @Override
     public void visit(NumberDeclarationNode node, Object... arg) throws TypeException, Exception {
 
-        //We insert the number
-        ST.Insert(node);
 
-        //We set the type
-        node.Id.type = "number";
-        for (AbstractNode Node: node.childList) {
-            if (Node != null)
-                visitNode(Node);
-        }
+        
+            //We insert the number
+            ST.Insert(node);
 
-        //If the number is instantiated and the right hand side is not a number, throw an exception
-        if (node.childList.size() > 1 && ((ExpressionNode)node.childList.get(1)).type != node.Id.type)
-            throw new TypeException(node.Id.type,((ExpressionNode) node.childList.get(1)).type,node.LineNumber);
+            //We set the type
+            node.Id.type = "number";
+            for (AbstractNode Node : node.childList) {
+                if (Node != null)
+                    visitNode(Node);
+            }
+
+            //If the number is instantiated and the right hand side is not a number, throw an exception
+            if (node.childList.size() > 1 && ((ExpressionNode) node.childList.get(1)).type != node.Id.type)
+                throw new TypeException(node.Id.type, ((ExpressionNode) node.childList.get(1)).type, node.LineNumber);
 
     }
 
@@ -829,7 +831,7 @@ public class SymbolTableVisitor extends ASTVisitor {
     public void visit(ProgNode node, Object... arg) {
         //We don't care about the prognode. It just visits the children
         for (AbstractNode Node: node.childList) {
-            if (Node != null && !isGlobalVariableDeclaration(Node))
+            if (Node != null)
                 visitNode(Node);
         }
     }
