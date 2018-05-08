@@ -1,5 +1,6 @@
 package FIRe.ContextualAnalysis;
 
+import java.beans.Expression;
 import java.util.List;
 import java.util.Map;
 
@@ -763,7 +764,7 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
     public void visit(NumberDeclarationNode node, Object... arg) throws TypeException, Exception {
 
 
-        
+
             //We insert the number
             ST.Insert(node);
 
@@ -775,8 +776,10 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
             }
 
             //If the number is instantiated and the right hand side is not a number, throw an exception
-            if (node.childList.size() > 1 && ((ExpressionNode) node.childList.get(1)).type != node.Id.type)
-                throw new TypeException(node.Id.type, ((ExpressionNode) node.childList.get(1)).type, node.LineNumber);
+            if (node.childList.size() > 1 && ((ExpressionNode) node.childList.get(1)).type != node.Id.type) {
+                ExpressionNode rightHandSide = (ExpressionNode) node.childList.get(1);
+                throw new TypeException(node.Id.type, rightHandSide.type, node.LineNumber);
+            }
 
     }
 
