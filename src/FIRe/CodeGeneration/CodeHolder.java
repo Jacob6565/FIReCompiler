@@ -10,8 +10,6 @@ abstract class CodeHolder extends CG{
         sb = new StringBuilder();
     }
 
-    public abstract String getCode();
-
     // Emitter and indenter
     boolean emit(String code, int tabIndent) {
         String indentedCode = indent(code, tabIndent);

@@ -1,22 +1,27 @@
 package FIRe.CodeGeneration;
 
 public class Case extends Indenter{
-    Case(String caseName, Switch bodySwitch){
+    Case(String caseName, String body, String caseEnder){
+        this.caseName = caseName;
+        this.body = body;
+        this.caseEnder = caseEnder;
+    }
+    Case(String caseName, Switch bodySwitch, String caseEnder){
         this.bodySwitch = bodySwitch;
         this.caseName = caseName;
+        this.caseEnder = caseEnder;
     }
-    Case(String caseName, String body){
-        this.body = body;
-        this.caseName = caseName;
-    }
+    //caseEnder is by default break
+    private String caseEnder;
     public String caseName = new String();
     public String body = new String();
     public Switch bodySwitch = null;
 
-    public String getCode() {
+    @Override
+    public String toString() {
         if (bodySwitch != null)
-            body = bodySwitch.getCode();
+            body = bodySwitch.toString();
         return "case " + caseName + ":\n" +
-                indent(body + "\nreturn;",1);
+                indent(body + "\n" + caseEnder + ";",1);
     }
 }
