@@ -88,7 +88,7 @@ public class Main {
 
 
             //Filling the symboltable
-            SymbolTableVisitor STV = new SymbolTableVisitor(symbolTable, RHT);
+            ScopeTypeCheckVisitor STV = new ScopeTypeCheckVisitor(symbolTable, RHT);
             STV.visit(ast);
 
 
@@ -124,7 +124,7 @@ public class Main {
                     System.out.println(e.getMessage());
                 }
 
-                codeGenerator.emitOutputFile();
+                codeGenerator.generateOutputFile();
             }
         }
         else { //If the syntax is wrong, print that the code generation was not performed

@@ -2,19 +2,16 @@ package FIRe.ContextualAnalysis;
 
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 
 import FIRe.Nodes.*;
 import FIRe.ASTVisitor;
 import FIRe.Exceptions.*;
 import FIRe.Tuple;
 
-import javax.xml.soap.Text;
-
 
 @SuppressWarnings("ALL")
-public class SymbolTableVisitor extends ASTVisitor {
-    public SymbolTableVisitor(SymbolTable symbolTable, RobotHeaderTable robotHeaderTable) {
+public class ScopeTypeCheckVisitor extends ASTVisitor {
+    public ScopeTypeCheckVisitor(SymbolTable symbolTable, RobotHeaderTable robotHeaderTable) {
         ST = symbolTable;
         RHT = robotHeaderTable;
     }
@@ -407,7 +404,17 @@ public class SymbolTableVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(FuncCallNode node, Object... arg) throws SymbolNotFoundException, TypeException, InvalidNumberOfArgumentsException {
+    public void visit(FuncCallNode node, Object... arg) throws Exception {
+
+        //Strategy calls within function declarations are not allowed
+        AbstractNode predecessor = node;
+        while(!(predecessor.Parent instanceof ProgNode)){
+            if (predecessor instanceof FunctionDeclarationNode && ST.Search(node.Id.Name,node.LineNumber).type.equals("strategy")){
+                throw new StrategyCallException(node.LineNumber);
+            }
+            predecessor = predecessor.Parent;
+        }
+
         for (AbstractNode Node : node.childList) {
             if (Node != null) {
                 visitNode(Node);
@@ -957,6 +964,7 @@ public class SymbolTableVisitor extends ASTVisitor {
 
     @Override
     public void visit(StrategyDeclarationNode node, Object... arg) throws Exception {
+
         ST.OpenScope();
         for (AbstractNode Node: node.childList) {
             if (Node != null) {

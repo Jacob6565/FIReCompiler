@@ -3,8 +3,13 @@ package FIRe.ContextualAnalysis;
 import FIRe.ASTVisitor;
 
 import javax.xml.soap.Text;
+
+import FIRe.Exceptions.MultipleEventHandlerException;
 import FIRe.Nodes.*;
 import FIRe.Tuple;
+
+import java.util.ArrayList;
+import java.util.List;
 
 //Visitor used to check the declerations of functions, events and strategies
 public class FESVisitor extends ASTVisitor {
@@ -276,6 +281,16 @@ public class FESVisitor extends ASTVisitor {
 
     @Override
     public void visit(StrategyDeclarationNode node, Object... arg) throws Exception {
+        ArrayList<String> handledEvents = new ArrayList<>();
+        for (AbstractNode Node: node.childList){
+            if (Node instanceof WhenNode){
+                if(handledEvents.contains(((IdNode)Node.childList.get(0)).Name)){
+                    throw new MultipleEventHandlerException(((IdNode)node.childList.get(0)).Name,Node.LineNumber);
+                }
+                else
+                    handledEvents.add(((IdNode)Node.childList.get(0)).Name);
+            }
+        }
         symbolTable.Insert(node);
     }
 

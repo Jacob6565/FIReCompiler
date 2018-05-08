@@ -40,18 +40,17 @@ strategy Default()
 		}
 
     }
-//VIRKER IKKE
-//    when(HitRobotEvent c)
-//    {
-//        allign90Degrees(90 - (getHeading() - c.getHeading()));
-//
-//        ahead(dist);
-//        dist = dist * -1;
-//        scan();
-//        if (getEnergy() < 20){
-//            Run();
-//        }
-//    }
+    when(HitRobotEvent c)
+    {
+        allign90Degrees(90 - (getHeading() - c.getBearing()));
+
+        ahead(dist);
+        dist = dist * -1;
+        scan();
+        if (getEnergy() < 20){
+            Run();
+        }
+    }
 }
 
 strategy Run()
@@ -67,7 +66,7 @@ strategy Run()
         ahead(dist);
         dist = dist * -1;
     }
-    when (ScannedRobotEvent e)
+    when (ScannedRobotEvent f)
     {
         turnRight(49);
     }

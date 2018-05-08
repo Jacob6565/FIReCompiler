@@ -15,18 +15,18 @@ import java.util.Set;
 
 public class CGTopVisitor extends ASTVisitor {
     public CGTopVisitor(SymbolTable symbolTable){
-        bodyVisitor = new CGFunctionVisitor(symbolTable);
+        bodyVisitor = new CGBodyVisitor(symbolTable);
     }
     ProgCodeHolder progCode = new ProgCodeHolder();
 
     int blockIndent = 1;
 
-    CGFunctionVisitor bodyVisitor;
+    CGBodyVisitor bodyVisitor;
 
     //Prints the generated code from the CodeHolders into the output file
-    public void emitOutputFile(){
+    public void generateOutputFile(){
         String code = progCode.getCode();
-        //This fileName should be the same as the class name/robot name
+        //The fileName is the same as the class name/robot name
         printToFile("GeneratedCode\\" + progCode.setup.name + ".java", code);
     }
 
@@ -43,8 +43,6 @@ public class CGTopVisitor extends ASTVisitor {
             e.printStackTrace();
         }
     }
-
-
 
     @Override
     public void visit(AbstractNode node, Object... arg) {
@@ -126,9 +124,8 @@ public class CGTopVisitor extends ASTVisitor {
     public void visit(EventDeclarationNode node, Object... arg) throws Exception {
         EventCodeHolder eventDcl = new EventCodeHolder(node.Id.Name);
 
-        String test = bodyVisitor.GenerateBodyCode(node);
         //Code generation for eventDcl body
-        eventDcl.emit(test, blockIndent);
+        eventDcl.emit(bodyVisitor.GenerateBodyCode(node), blockIndent);
 
         progCode.runMethod.addConditionDeclaration(eventDcl.getCode());
     }
@@ -422,13 +419,14 @@ public class CGTopVisitor extends ASTVisitor {
         StrategyDeclarationNode parentStrategy = (StrategyDeclarationNode) node.Parent;
         String strategyName = parentStrategy.Id.Name;
 
+        //The parameter name should always be the same in the generated code,
+        String paramId = "e_";
+
         //This case is for whens handling robocode events
         if(isThisOfficialEvent(eventType)){
-            IdNode paramId = (IdNode)node.childList.get(1);
-
             //ScannedRobotEvent will become ScannedRobot, a when can only have one parameter /KRISTOFFER
             String[] str = eventType.split("Event");
-            String fparam = eventType + " " + paramId.Name;
+            String fparam = eventType + " " + paramId;
 
             //Generates an entirely eventHandler "shell" if it does not already exist
             EventHandlerCodeHolder eventHandler = progCode.addEventHandler("on" + str[0], fparam);
@@ -438,9 +436,9 @@ public class CGTopVisitor extends ASTVisitor {
         }
         //This case is for whens handling custom events /KRISTOFFER
         else {
-            //Generates an entirely eventHandler "shell" if it does not already exist
+            //Generates an entirely eventHandler "shell" if it does not already  // e is hardcoded
             CustomEventHandlerCodeHolder customEventHandler = progCode.addCustomEventHandler ("onCustomEvent",
-                    "CustomEvent _e");
+                    "CustomEvent " + paramId);
 
             progCode.addEnumConditionValue(eventType);
 

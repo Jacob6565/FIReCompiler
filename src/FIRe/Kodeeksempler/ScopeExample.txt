@@ -1,0 +1,42 @@
+RobotProperties{
+      RobotName:ScopeExample;
+      RobotType:AdvancedRobot;
+      BodyColor:yellow;
+      GunColor:red;
+      RadarColor:white;
+}
+
+number one = 1;
+number four = three + two - 1;
+
+strategy Default(){
+    number two = one + 1;
+    Hallo();
+    if(two != 1)
+    {
+        print("hallo");
+    }
+    routine()
+    {
+        number three = two + one;
+        if (three + two == two)
+        {
+            tester();
+            number i;
+            for(i upto 5){
+                number five = 5;
+            }
+        }
+    }
+    when(ScannedRobotEvent e){
+        number six = one + two;
+    }
+}
+
+strategy Hallo(){
+    number seven = one;
+}
+
+void tester(){
+    one = 1;
+}
