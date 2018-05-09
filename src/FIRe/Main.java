@@ -56,8 +56,7 @@ public class Main {
             //Performs lexical analysis and builds a CST.
             cst = parser.prog();
             //cst.children.add(parser.dcl());
-        }
-        catch (ParseCancellationException ex){
+        } catch (ParseCancellationException ex) {
             System.out.println(ex.getMessage());
             ContextualAnalysisFlag = true; //If there is a mistake in the syntax, disable the Contextual Analysis
         }
@@ -125,10 +124,12 @@ public class Main {
                 }
 
                 codeGenerator.generateOutputFile();
+            } else { //If the semantics are wrong, print that code generation was not performed
+                System.out.println("Contextual errors detected. No code was generated.");
             }
         }
-        else { //If the syntax is wrong, print that code generation was not performed
-            System.out.println("Compilation failed. No code was generated.");
+        else {
+            System.out.println("Syntactic errors detected. No code was generated.");
         }
     }
 }
