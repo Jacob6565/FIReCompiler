@@ -140,7 +140,7 @@ public abstract class ASTVisitor
     public abstract void visit(AdditionNode node, Object... arg) throws Exception;
     public abstract void visit(ActualParameterNode node, Object... arg);
     public abstract void visit(AndNode node, Object... arg) throws Exception;
-    public abstract void visit(ArrayAccessNode node, Object... arg) throws TypeException, SymbolNotFoundException;
+    public abstract void visit(ArrayAccessNode node, Object... arg) throws Exception;
     public abstract void visit(AssignNode node, Object... arg) throws Exception;
     public abstract void visit(BlockNode node, Object... arg) throws Exception;
     public abstract void visit(BodyColorNode node, Object... arg) throws TypeException;
