@@ -15,6 +15,7 @@ public class TypeException extends Exception{
     @Override
     public String getMessage()
     {
+        Main.CodeGenerationFlag = true;
         return message;
     }
 

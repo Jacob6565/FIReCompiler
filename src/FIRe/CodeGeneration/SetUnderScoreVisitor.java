@@ -204,7 +204,7 @@ public class SetUnderScoreVisitor extends ASTVisitor {
             while (ancestor.Parent != null) {
                 if (ancestor.Parent instanceof StrategyDeclarationNode && !(node.Parent.Parent instanceof ProgNode) && !(node.Parent instanceof WhenNode) && !(node.Parent instanceof FuncCallNode)) {
                     //if the IdNode is part of an assignment we need to do further checks down below.
-                    if(node.Parent instanceof AssignNode || node.Parent instanceof ActualParameterNode || node.Parent instanceof ExpressionNode) {
+                    if(node.Parent instanceof AssignNode || node.Parent instanceof ActualParameterNode || node.Parent instanceof ExpressionNode || node.Parent instanceof RoutineNode) {
                         tempName = node.Name + ((StrategyDeclarationNode) ancestor.Parent).Id.Name;
                         tempStrat = (StrategyDeclarationNode) ancestor.Parent;
                         tempFlag = true;
