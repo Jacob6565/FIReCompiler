@@ -1,0 +1,35 @@
+RobotProperties{
+    RobotName:OptimusCrime;
+    RobotType:AdvancedRobot;
+    BodyColor:green;
+    GunColor:red;
+    RadarColor:blue;
+}
+
+strategy Default(){
+
+    routine(){
+        turnRadarRight(10);
+        ahead(25);
+
+    }
+
+    when(ScannedRobotEvent e){
+        fire(1);
+    }
+}
+
+number TheNumberMethod(){
+
+    if(5 < 6){
+    return 5;
+    }
+    else{
+        return 9;
+    }
+}
+
+event LowHealth(){
+
+    return getEnergy() < 80;
+}
