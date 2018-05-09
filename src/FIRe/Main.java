@@ -21,7 +21,7 @@ public class Main {
     public static void main(String[] args) throws Exception {
 
         //Reads from the example program. (Debug code)
-        Scanner in = new Scanner(new FileReader("src\\FIRe\\Kodeeksempler\\MagnusExample.txt"));
+        Scanner in = new Scanner(new FileReader("src\\FIRe\\Kodeeksempler\\KodeEx3.txt"));
 
         //We use this delimiter, to chop the code into bits. We split by the backslash character "\n"
         in.useDelimiter("\n");
@@ -127,7 +127,7 @@ public class Main {
                 codeGenerator.generateOutputFile();
             }
         }
-        else { //If the syntax is wrong, print that the code generation was not performed
+        else { //If the syntax is wrong, print that code generation was not performed
             System.out.println("Compilation failed. No code was generated.");
         }
     }

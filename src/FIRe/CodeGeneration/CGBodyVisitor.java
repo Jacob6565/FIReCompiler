@@ -68,11 +68,12 @@ public class CGBodyVisitor extends ASTVisitor {
 
     }
 
+    //Method also handles array assignment
     @Override
     public void visit(AssignNode node, Object... arg) throws Exception {
         code.emit(node.Id.Name);
         if(node.Id.ArrayIndex != null) {
-            code.emit("[(int)");
+            code.emit("[(int)"); //Conversion necessary for the index of the array
             code.emit(exprGen.GenerateExprCode(code, node.Id.ArrayIndex) + "]");
         }
         code.emit(" = ");
@@ -371,7 +372,7 @@ public class CGBodyVisitor extends ASTVisitor {
         if (bcount == icount) { // this is determines if the if-else chain ends with an else if
             boolean firstTime = true;
             //For-loop that generates the if-else code based on whether it encounters an if node or a block node. Also
-            // does this based on whether it is the first time or not (to see if we need to output if or if else)
+            // does this based on whether it is the first time or not (to see if we need to output if or else if)
             for (AbstractNode Node : node.childList) {
                 if (Node instanceof ExpressionNode && firstTime) {
                     visit((ExpressionNode) Node);
@@ -465,12 +466,14 @@ public class CGBodyVisitor extends ASTVisitor {
 
     }
 
+    //Handles single and multiple declerations of numbernodes
     @Override
     public void visit(NumberDeclarationNode node, Object... arg) throws Exception {
         if (!partOfStratBody(node)) {
             int idCounter = 0;
             boolean exprFlag = false;
 
+            //For-loop for handling the decleration(s)
             for (AbstractNode id : node.childList) {
                 if (id instanceof IdNode)
                     idCounter++;
@@ -479,7 +482,7 @@ public class CGBodyVisitor extends ASTVisitor {
             }
 
             code.emit("double ");
-
+            //For-loop for emitting the correct code
             for (AbstractNode id : node.childList) {
                 if (id instanceof IdNode && idCounter > 1) {
                     code.emit(((IdNode) id).Name + ", ");
@@ -578,6 +581,7 @@ public class CGBodyVisitor extends ASTVisitor {
             int idCounter = 0;
             boolean exprFlag = false;
 
+            //For-loop for handling declerations
             for (AbstractNode id : node.childList) {
                 if (id instanceof IdNode)
                     idCounter++;
@@ -587,6 +591,7 @@ public class CGBodyVisitor extends ASTVisitor {
 
             code.emit("String ");
 
+            //For-loop for emitting the correct syntax
             for (AbstractNode id : node.childList) {
                 if (id instanceof IdNode && idCounter > 1) {
                     code.emit(((IdNode) id).Name + ", ");

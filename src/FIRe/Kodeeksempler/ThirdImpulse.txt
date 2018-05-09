@@ -1,0 +1,40 @@
+RobotProperties{
+    RobotName:UrsaMinor;
+    RobotType:AdvancedRobot;
+    GunColor:black;
+    RadarColor:red;
+    BodyColor:red;
+}
+
+number direction = 1;
+
+strategy Default()
+{
+    routine(a){
+        ahead(direction * 50);
+        turnGunRight(5);
+    }
+
+    when(ScannedRobotEvent e){
+        if (getEnergy() > 50 and e.getDistance() < 200){
+            fire(3);
+        }
+        else if (getEnergy() > 50 or e.getDistance() < 200){
+            fire(2);
+        }
+        else
+        {
+            fire(1);
+        }
+    }
+
+    when (HitRobotEvent e){
+        direction = direction * -1;
+    }
+
+    when (HitWallEvent e){
+        direction = direction * -1;
+    }
+}
+
+number a = 4;

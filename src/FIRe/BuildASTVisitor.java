@@ -608,7 +608,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         node.LineNumber = ctx.start.getLine();
 
         if(ctx.expr().size() > 1) {
-            node.Id.ArrayIndex = (NumberNode)visitExpr(ctx.expr(0));
+            node.Id.ArrayIndex = (ExpressionNode) visitExpr(ctx.expr(0));
             node.Expression = (ExpressionNode)visitExpr(ctx.expr(1));
         }
         else {
