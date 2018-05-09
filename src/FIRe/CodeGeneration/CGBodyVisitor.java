@@ -301,15 +301,15 @@ public class CGBodyVisitor extends ASTVisitor {
         //This case indicates that we are dealing with a strategy call
         if (ofTypeStrategy){
             AbstractNode ancestor = node.Parent.Parent;
-            code.emit("currentStrategy_ = Strategy_." + node.Id.Name + ";\n");
+            code.emit("currentStrategy_ = Strategy_." + node.Id.Name);
             //If the strat call is in a block inside of a block, we need to make sure that it breaks the case, or return
             //from the event handler, immediately after the strat call. If we did this to every strat call, we would produce
             //java code with an unreachable code
             if (ancestor instanceof ControlStructureNode && !(ancestor instanceof RoutineNode)){
                 if (ancestorOfRoutine(node))
-                    code.emit("break");
+                    code.emit(";\nbreak");
                 else
-                    code.emit("return");
+                    code.emit(";\nreturn");
             }
 
             stopBodyGen = true;
