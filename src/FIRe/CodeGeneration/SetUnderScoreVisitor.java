@@ -347,11 +347,12 @@ public class SetUnderScoreVisitor extends ASTVisitor {
     public void visit(NotEqualsNode node, Object... arg) throws Exception {
         visitNode(node.LeftChild);
         visitNode(node.RightChild);
+
     }
 
     @Override
     public void visit(NotNode node, Object... arg) throws TypeException {
-
+        visitNode(node.Expression);
     }
 
     @Override
