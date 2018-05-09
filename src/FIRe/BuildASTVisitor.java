@@ -183,7 +183,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
                         numberDeclarationNode.childList.add(visitExpr(ctx.expr()));
                     else {
                         numberDeclarationNode.childList.add(new NumberNode(0));
-                        System.out.println("WARNING: Unassigned number variable has been indirectly assigned to 0 at line " + numberDeclarationNode.LineNumber);
+                        System.out.println("WARNING: \"" + numberDeclarationNode.Id.Name + "\" has been implicitly assigned to 0 at line " + numberDeclarationNode.LineNumber + ".");
                     }
 
                     return numberDeclarationNode;
@@ -198,7 +198,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
                         textDeclarationNode.childList.add(visitExpr(ctx.expr()));
                     else {
                         textDeclarationNode.childList.add(new TextNode(""));
-                        System.out.println("WARNING: Unassigned text variable has been indirectly assigned to \"\" at line " + textDeclarationNode.LineNumber);
+                        System.out.println("WARNING: \"" + textDeclarationNode.Id.Name + "\" has been indirectly assigned to \"\" at line " + textDeclarationNode.LineNumber);
                     }
 
                     return textDeclarationNode;
@@ -213,7 +213,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
                         booleanDeclarationNode.childList.add(visitExpr(ctx.expr()));
                     else {
                         booleanDeclarationNode.childList.add(new BoolNode(false));
-                        System.out.println("WARNING: Unassigned boolean variable has been indirectly assigned to false at line " + booleanDeclarationNode.LineNumber);
+                        System.out.println("WARNING: \"" + booleanDeclarationNode.Id.Name + "\" has been indirectly assigned to false at line " + booleanDeclarationNode.LineNumber);
                     }
 
                     return booleanDeclarationNode;

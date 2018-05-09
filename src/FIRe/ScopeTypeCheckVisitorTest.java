@@ -19,7 +19,7 @@ import java.util.Scanner;
 import static org.junit.Assert.*;
 
 
-public class BuildASTVisitorTest{
+public class ScopeTypeCheckVisitorTest{
 
 
     BuildASTVisitor BASTV = new BuildASTVisitor();
@@ -27,19 +27,19 @@ public class BuildASTVisitorTest{
     @Test
     public void visitProgTest() {
         AbstractNode node = BASTV.visitProg(cst);
-        if(node.childList.size() == 4) {
-            if(node.childList.get(0) instanceof RobotPropertiesNode && node.childList.get(1) instanceof StrategyDeclarationNode &&
-                    node.childList.get(2) instanceof FunctionDeclarationNode && node.childList.get(3) instanceof EventDeclarationNode){
-                assert (true);
+        if (node.childList.size() == 4) {
+            if (node.childList.get(0) instanceof RobotPropertiesNode && node.childList.get(1) instanceof StrategyDeclarationNode &&
+                    node.childList.get(2) instanceof FunctionDeclarationNode && node.childList.get(3) instanceof EventDeclarationNode) {
+                assert true;
             }
             else
-                assertEquals(1, 2);
+                assert false;
         }
         else
-            assertEquals(1, 2);
+            assert false;
     }
 
-    @org.junit.Test
+    @Test
     public void visitProgBody() {
         AbstractNode node = BASTV.visitProg(cst);
         for (AbstractNode Node: node.childList ) {
@@ -48,8 +48,9 @@ public class BuildASTVisitorTest{
 
     }
 
-    @org.junit.Test
+    @Test
     public void visitStrategyDcl() {
+
     }
 
     @org.junit.Test
