@@ -7,36 +7,81 @@ RobotProperties
       RadarColor:white;
 }
 
-number firepowers[10];
+number index = 0;
+bool flag = false;
+number values[10];
 
 strategy Default(){
-    bool b = true;
-    number pi = 3.14159;
+    routine(){
+        turnGunRight(60);
+    }
 
-    changeStrategy(SecondStrategy);
-}
+    when(ScannedRobotEvent e){
+        values[index] = e.getDistance();
+        index = index + 1;
+        if (index == 10){
+            flag = true;
+        }
+        index = index % 10;
 
-number Grisen (text i)
-{
-    return 2;
-}
+        number factor = 0;
 
-strategy SecondStrategy(text name, number limit){
-    bool value = false;
+        if (flag){
+            factor = average(10);
+        }
+        else{
+            factor = average(index);
+        }
 
-    for (number i = 0 upto limit)
-    {
-        if (limit < 10 and firepowers[i] > 10){
-            value = true;
+        if (e.getDistance() > factor and getEnergy() >= 50){
+            fire(3);
+        }
+        else if (e.getDistance() > factor or getEnergy() >= 50){
+            fire(2);
+        }
+        else{
+            fire(1);
         }
     }
 
-    if(value){
-        changeStrategy(Default);
+    when (CriticalHealth e){
+        Evasive();
+    }
+}
+
+event CriticalHealth(){
+    return getEnergy() < 25;
+}
+
+number average(number limit){
+    number sum = 0;
+    for(number i = 0 upto max(10, limit)){
+        sum = sum + values[i];
     }
 
+    return sum /   max(10,limit);
+}
+
+number max(number one, number two){
+    if (one > two){
+        return one;
+    }
+    else{
+        return two;
+    }
+}
+
+strategy Evasive(){
 
     routine(){
+        turnRight(90);
+        ahead(100);
+    }
+
+    when(ScannedRobotEvent e){
         fire(1);
+        if (e.getEnergy() < getEnergy()){
+            Default();
+        }
     }
 }
