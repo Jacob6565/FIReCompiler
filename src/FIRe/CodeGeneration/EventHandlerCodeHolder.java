@@ -14,7 +14,7 @@ public class EventHandlerCodeHolder extends MethodCodeHolder {
 
     @Override
     public String toString() {
-        sb.append(generatedSwitch.toString());
+        emit(generatedSwitch.toString());
         return super.toString();
     }
 }

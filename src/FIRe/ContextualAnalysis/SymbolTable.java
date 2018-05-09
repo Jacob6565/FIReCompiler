@@ -47,7 +47,7 @@ public class SymbolTable  {
                     returnType = "void";
 
                 for (Tuple<String, String> param: fparams) {
-                    //Here we can use peek, because we know a function declaration will only appear at the global scope
+                    //Here we can use peek, because we know a function declaration will only appear at the global scope.
                     if(stack.Peek().containsKey(param.x))
                         throw new NameAlreadyUsedInGlobalScopeException("Variable name in function parameter already used in global scope", param.x);
                 }
@@ -56,7 +56,7 @@ public class SymbolTable  {
             }
             else if(input instanceof EventDeclarationNode){
                 IdNode idNode = input.Id;
-
+                //Saving the name of the event, and a SymbolData instance containing the EventDclNode and its fields.
                 stack.Peek().put(idNode.Name, new SymbolData(input, (ArrayList<Tuple<String, String>>) ((EventDeclarationNode)input).Fields));
 
             }
@@ -94,6 +94,7 @@ public class SymbolTable  {
         return params;
     }
 
+    //Use to check if the given node is a FormalParameterNode
     private boolean tryParseFormalParameterNode(AbstractNode node) {
         try {
             FormalParameterNode fmlNode = (FormalParameterNode) node;
@@ -114,16 +115,6 @@ public class SymbolTable  {
         stack.Pop();
     }
 
-    //Searches through the hashtables (scopes) on the custom stack to see if the used variable is declared.
-    /*public String Search(AbstractNode key) throws Exception{
-        for (int i = 0; i < stack.Size(); i++ ){
-            if(stack.Get(i).contains(key)){
-                return stack.Get(i).get(key.hashCode());
-            }
-        }
-        throw new Exception("Variable is not declared");
-    }*/
-
 
     //Returns the SymbolData if the name exists in the symbolTable
     public SymbolData Search(String name, int lineNumber) throws SymbolNotFoundException{
@@ -136,15 +127,16 @@ public class SymbolTable  {
     }
 
     //Returns the SymbolData if the name exists in the symbolTable or null if it doesn't.
-    public SymbolData Search(String name){
+    public SymbolData Search(String name) throws IDNotFoundException {
         for (int i = 0; i < stack.Size(); i++){
             if(stack.Get(i).containsKey(name)){
                 return stack.Get(i).get(name);
             }
         }
-        return null;
+        throw new IDNotFoundException(name);
     }
 
+    //Checks if the current key already exists in the
     public boolean Contains(String key) {
         for (int i = stack.Size() - 1; i >= 0; i--) {
             if(stack.Get(i).keySet().contains(key)){
@@ -153,7 +145,7 @@ public class SymbolTable  {
         }
         return false;
     }
-
+    //If the key exist it is then removed
     public void Remove(String key) {
         if (stack.Peek().containsKey(key))
             stack.Peek().remove(key);

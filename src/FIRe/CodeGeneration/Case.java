@@ -15,6 +15,8 @@ public class Case extends Indenter{
     private String caseEnder;
     public String caseName = new String();
     public String body = new String();
+
+    //A case can contain a switch, this is used when generating a custom eventhandler
     public Switch bodySwitch = null;
 
     @Override

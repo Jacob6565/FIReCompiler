@@ -1,6 +1,11 @@
+/*
+The CodeHolder classes works as an element of the objective code. They contain methods to properly add code, and to
+format the code correctly. The codeholders contains (holds) the code of the element temporarily while the codeholders
+are getting filled during the codegeneration. When all code has been processed and translated the codeholders will be
+assembled to print out one single string.
+ */
 package FIRe.CodeGeneration;
 
-import FIRe.Exceptions.CodeGenException;
 
 abstract class CodeHolder extends CG{
     protected StringBuilder sb;
@@ -12,14 +17,12 @@ abstract class CodeHolder extends CG{
 
     // Emitter and indenter
     boolean emit(String code, int tabIndent) {
-        String indentedCode = indent(code, tabIndent);
-        return emit(indentedCode);
+        return emit(indent(code,tabIndent));
     }
 
     // Emitter and indenter
     boolean emitNL(String code, int tabIndent) {
-        String indentedCode = indent(code, tabIndent);
-        return emit(indentedCode + "\n");
+        return emit(indent(code,tabIndent) + "\n");
     }
 
     boolean emitNL(String code){

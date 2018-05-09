@@ -1,3 +1,12 @@
+/*
+CGTopVisitor's responsibilty is to iterate through the AST and generate a corresponding java file. This is done with the
+use of CGBodyVisitor and CodeHolders. CGBodyVisitor generates the instruction of the bodies, and global variable
+declarations and assignments. CodeHolders contain the code of elements of the program, such as the run method, this
+makes the code generation more dynamic and easier to format. As an example CGTopVisitor will create a CodeHolder for a
+function dcl and call CGTopVisitor to generate the code for the body of the function. The CodeHolder's will know how code
+to each specific element should be added, formatted and at last merged to one singe string.
+ */
+
 package FIRe.CodeGeneration;
 
 import FIRe.ASTVisitor;
@@ -127,7 +136,7 @@ public class CGTopVisitor extends ASTVisitor {
         //Code generation for eventDcl body
         eventDcl.emit(bodyVisitor.GenerateBodyCode(node), blockIndent);
 
-        progCode.runMethod.addConditionDeclaration(eventDcl.toString());
+        progCode.runMethod.addCustomEvent(eventDcl.toString());
     }
 
     @Override

@@ -3,10 +3,15 @@ package FIRe.ContextualAnalysis;
 import FIRe.ASTVisitor;
 import FIRe.Nodes.*;
 
+//The purpose of this visitor is to set the parent for alle node in the AST.
+//This is done by calling the accept method of the root in main
+//Thereby starting the calls through the AST and each parent sends
+//and instance of itself to its children.
 public class ParentASTVisitor extends ASTVisitor {
 
     @Override
     public void visit(AbstractNode node, Object... arg) {
+        //If there were sent a instance of a of parent node, assign it as this nodes parent.
         if (arg.length > 0)
             node.Parent = arg[0] != null ? (AbstractNode) arg[0] : null;
     }
@@ -223,7 +228,8 @@ public class ParentASTVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(RobotPropertiesNode node, Object... arg) {visit ((AbstractNode) node, arg);}
+    public void visit(RobotPropertiesNode node, Object... arg) {
+        visit ((AbstractNode) node, arg);}
 
     @Override
     public void visit(RoutineNode node, Object... arg) {
@@ -276,8 +282,10 @@ public class ParentASTVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(RobotNameNode node, Object... arg) { visit((AbstractNode)node,arg); }
+    public void visit(RobotNameNode node, Object... arg) {
+        visit((AbstractNode)node,arg); }
 
     @Override
-    public void visit(RobotTypeNode node, Object... arg) {visit ((AbstractNode)node, arg);}
+    public void visit(RobotTypeNode node, Object... arg) {
+        visit ((AbstractNode)node, arg);}
 }

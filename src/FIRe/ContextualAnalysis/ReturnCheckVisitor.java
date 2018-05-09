@@ -9,11 +9,14 @@ import java.util.List;
 //Visitor for checking if all branchings can return
 public class ReturnCheckVisitor extends ASTVisitor {
 
+    //Variables containing an error message.
     String errorMessageForStrategy = "Can not return in strategy";
     String getErrorMessageForEvent = "Missing return in event";
 
+
     public ReturnCheckVisitor(SymbolTable symbolTable){
 
+        //Getting an instance of the symboltable, which has already been modified.
         table = symbolTable;
     }
 
@@ -57,7 +60,7 @@ public class ReturnCheckVisitor extends ASTVisitor {
         AbstractNode ancestor = node;
         SymbolData data = null;
 
-        //Finding what node the block belongs to.
+        //Finding what node the block belongs to, either: function, strategy or event.
         while (!(ancestor.Parent instanceof ProgNode)) {
             ancestor = ancestor.Parent;
         }
@@ -77,7 +80,8 @@ public class ReturnCheckVisitor extends ASTVisitor {
                 ChecksFunctionWithVoidReturnType(node, ancestor);
 
             }
-        } else if (ancestor instanceof StrategyDeclarationNode) {
+        }
+        else if (ancestor instanceof StrategyDeclarationNode) {
             //So we know that the current block (node) is inside a strategy. Note that a strategy can not have blocks as a direct child
             ChecksStrategy(node);
 
@@ -121,6 +125,7 @@ public class ReturnCheckVisitor extends ASTVisitor {
                 throw new ReturnException(errorMessageForStrategy, Node.LineNumber);
             }
             //Checking if the nested blocks inside this block contains returns.
+            //e.g return inside an if-statement.
             else if(Node instanceof ControlStructureNode){
                 visitNode(Node);
             }
@@ -133,7 +138,8 @@ public class ReturnCheckVisitor extends ASTVisitor {
                 throw new VoidReturnException(ancestor.LineNumber, Node.LineNumber); // we don't allow returns in a void
             }
         }
-        //loop investigating a controlstructues where a return can be 'hidden'
+        //loop investigating a controlstructues where a return can be 'hidden'.
+        //Blocks can be nested due to nested constrolstructures.
         for(AbstractNode Node : node.childList){
             if(Node instanceof ControlStructureNode){
                 visitNode(Node);
@@ -145,8 +151,11 @@ public class ReturnCheckVisitor extends ASTVisitor {
         boolean hasreturn = false;
         for (AbstractNode Node : node.childList) {
             if (Node instanceof ReturnNode && !hasreturn) {
-                hasreturn = true; // The block itself contains a return, thus all branches deeper in the scope can inevitably return
+                hasreturn = true;
+                // The block itself contains a return, thus all branches deeper in the scope can inevitably return
+                //And are therefore added to unreachable lines.
             }
+            //If return has been found, all following lines are unreachable.
             else if(hasreturn){
                 unreachableLines.add(Node.LineNumber);
             }
@@ -156,14 +165,16 @@ public class ReturnCheckVisitor extends ASTVisitor {
             throw new UnreachableCodeException(unreachableLines);
         }
 
-        if (!hasreturn) { // if however the block does not have a return, it may be hidden under a controlstructue node
+        // if however the block does not have a return, it may be hidden under a controlstructue node
+        if (!hasreturn) {
             for (AbstractNode Node : node.childList) {
                 if (Node instanceof ControlStructureNode) {
                     visitNode(Node);
                 } else
                     throw new ReturnException("You are missing a return in the function", ancestor.LineNumber);
             }
-            if(node.childList.isEmpty()){//if the block does not contain anything;
+            //if the block does not contain anything;
+            if(node.childList.isEmpty()){
                 throw new ReturnException("You are missing a return in the function", ancestor.LineNumber);
             }
         }
@@ -198,6 +209,7 @@ public class ReturnCheckVisitor extends ASTVisitor {
     @Override
     public void visit(ControlStructureNode node, Object... arg) {
 
+        //visiting its children since it can contain blocks and other constrol structures.
         for (AbstractNode Node: node.childList) {
             if (Node instanceof BlockNode) {
                 visitNode(Node);
@@ -217,6 +229,8 @@ public class ReturnCheckVisitor extends ASTVisitor {
 
     @Override
     public void visit(EventDeclarationNode node, Object... arg) throws Exception {
+
+        //visiting its children since it can contain blocks and other constrol structures.
         for(AbstractNode child : node.childList){
             if(child instanceof BlockNode) {
                 visitNode(child);
@@ -241,6 +255,7 @@ public class ReturnCheckVisitor extends ASTVisitor {
 
     @Override
     public void visit(ForNode node, Object... arg) {
+        //visiting its children since it can contain blocks and other constrol structures.
         for(AbstractNode child : node.childList){
             if(child instanceof BlockNode){
                 visitNode(child);
@@ -287,7 +302,7 @@ public class ReturnCheckVisitor extends ASTVisitor {
     @Override
     public void visit(IfControlStructureNode node, Object... arg){
 
-        //Checking each block of a controlstructure.
+        //visiting its children since it can contain blocks and other constrol structures.
         for (AbstractNode Node: node.childList) {
             if (Node instanceof BlockNode) {
                 visitNode(Node);
@@ -375,6 +390,7 @@ public class ReturnCheckVisitor extends ASTVisitor {
 
     @Override
     public void visit(ReturnNode node, Object... arg) {
+
         for (AbstractNode Node: node.childList) {
             visitNode(Node);
         }
@@ -388,6 +404,7 @@ public class ReturnCheckVisitor extends ASTVisitor {
 
     @Override
     public void visit(RoutineNode node, Object... arg) {
+        //visiting its children since it can contain blocks and other constrol structures.
         for(AbstractNode child : node.childList){
             if(child instanceof BlockNode){
                 visitNode(child);
@@ -442,6 +459,7 @@ public class ReturnCheckVisitor extends ASTVisitor {
 
     @Override
     public void visit(WhenNode node, Object... arg) {
+        //visiting its children since it can contain blocks and other constrol structures.
         for(AbstractNode child : node.childList){
             if(child instanceof BlockNode){
                 visitNode(child);
@@ -451,6 +469,7 @@ public class ReturnCheckVisitor extends ASTVisitor {
 
     @Override
     public void visit(WhileNode node, Object... arg) {
+        //visiting its children since it can contain blocks and other constrol structures.
         for(AbstractNode child : node.childList){
             if(child instanceof BlockNode){
                 visitNode(child);
