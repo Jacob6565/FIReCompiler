@@ -253,6 +253,10 @@ public class SetUnderScoreVisitor extends ASTVisitor {
             }
         }
         }
+
+        if(node.ArrayIndex != null){
+            visitNode(node.ArrayIndex);
+        }
     }
 
     private void CheckBlockIdUnderScore(String tempName, BlockNode node){
