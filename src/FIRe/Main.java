@@ -95,7 +95,7 @@ public class Main {
             //We now know all the functions, strategies and events in the program.
             //Therefore checking if the "Default"-strategy exists.
             try {
-                symbolTable.Search("Default()", 0);
+                symbolTable.Search("Default", 0);
             } catch (SymbolNotFoundException e) {
                 //Could not find the strategy with name "Default";
                 try {

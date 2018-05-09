@@ -628,9 +628,6 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         func.LineNumber = ctx.start.getLine();
         func.Id = (IdNode)func.childList.get(0);
         func.Aparam = (ActualParameterNode) func.childList.get(1);
-        if (func.Aparam.childList.size() == 0){
-            func.Id.Name += "()";
-        }
         return func;
     }
 

@@ -423,6 +423,7 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
             }
         }
         node.type = node.Id.type;
+
         //If this is not an eventfield, deal with the formal parameters
         //Event methods do not have parameters
         if(!node.Id.Name.contains(".")) {
@@ -441,6 +442,8 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
                     throw new TypeException(formalParameters.parameters.get(i).y, ((ExpressionNode) actualParams.get(i)).type, node.LineNumber);
             }
 
+            if(!(formalParameters.nodeRef instanceof FunctionDeclarationNode || formalParameters.nodeRef instanceof StrategyDeclarationNode))
+                throw new SymbolNotFoundException(node.Id.Name,node.LineNumber);
         }
     }
 
@@ -513,9 +516,9 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
             //Otherwise, if it uses dot-notation
         else if (node.Name.contains(".")) {
 
-            //We split the name of the Idnode into two pieces (variablename and field). "\\." means "."
-            String variableName = node.Name.split("\\.")[0];
-            String field = node.Name.split("\\.")[1];
+            //We split the name of the Idnode into two pieces (variablename and field). "[.]" means "." but as a regular expression
+            String variableName = node.Name.split("[.]")[0];
+            String field = node.Name.split("[.]")[1];
 
             //We find the eventType by searching the Symbol table
             String EventType = ST.Search(variableName, node.LineNumber).type;
@@ -615,7 +618,7 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
 
 
         }
-        //If the idnode got an array index then it is an arrayaccess.
+        //If the idnode has an array index then it is an arrayaccess.
         else if(node.ArrayIndex != null)
         {
             //Checks if the array index is a numbernode
