@@ -4,6 +4,7 @@ import FIRe.ASTVisitor;
 import FIRe.ContextualAnalysis.SymbolData;
 import FIRe.ContextualAnalysis.SymbolTable;
 import FIRe.Exceptions.ReturnException;
+import FIRe.Exceptions.SymbolNotFoundException;
 import FIRe.Exceptions.TypeException;
 import FIRe.Nodes.*;
 
@@ -286,11 +287,18 @@ public class CGBodyVisitor extends ASTVisitor {
     @Override
     public void visit(FuncCallNode node, Object... arg) throws Exception {
         String name = node.Id.Name;
+        boolean ofTypeStrategy = false;
+        try{
+            //Here we use the substring of name that begins on index 1, to avoid the underscore of the name when searching
+            SymbolData symbolData = symbolTable.Search(name.substring(1));
+            if (symbolData.nodeRef instanceof StrategyDeclarationNode)
+                ofTypeStrategy = true;
+        }
+        catch (SymbolNotFoundException e){
+        }
 
-        //Here we use the substring of name that begins on index 1, to avoid the underscore of the name when searching
-        SymbolData symbolData = symbolTable.Search(name.substring(1));
         //This case indicates that we are dealing with a strategy call
-        if (symbolData != null && symbolData.nodeRef instanceof StrategyDeclarationNode){
+        if (ofTypeStrategy){
             AbstractNode ancestor = node.Parent.Parent;
             code.emit("currentStrategy_ = Strategy_." + node.Id.Name + ";\n");
             //If the strat call is in a block inside of a block, we need to make sure that it breaks the case, or return

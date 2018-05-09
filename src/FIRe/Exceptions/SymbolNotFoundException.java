@@ -8,4 +8,8 @@ public class SymbolNotFoundException extends Exception {
         super("ERROR: Symbol \"" + symbol + "\" in line " + lineNumber + " was not found.");
         Main.CodeGenerationFlag = true;
     }
+    public SymbolNotFoundException(String symbol){
+        super("ERROR: Symbol \"" + symbol + " was not found.");
+        Main.CodeGenerationFlag = true;
+    }
 }

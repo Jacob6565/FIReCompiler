@@ -127,13 +127,13 @@ public class SymbolTable  {
     }
 
     //Returns the SymbolData if the name exists in the symbolTable or null if it doesn't.
-    public SymbolData Search(String name) throws IDNotFoundException {
+    public SymbolData Search(String name) throws SymbolNotFoundException {
         for (int i = 0; i < stack.Size(); i++){
             if(stack.Get(i).containsKey(name)){
                 return stack.Get(i).get(name);
             }
         }
-        throw new IDNotFoundException(name);
+        throw new SymbolNotFoundException(name);
     }
 
     //Checks if the current key already exists in the
