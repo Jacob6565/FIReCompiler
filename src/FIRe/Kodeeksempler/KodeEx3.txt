@@ -59,7 +59,7 @@ number average(number limit){
         sum = sum + values[i];
     }
 
-    return sum /   max(10,limit);
+    return sum / max(10,limit);
 }
 
 number max(number one, number two){

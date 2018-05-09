@@ -8,6 +8,8 @@ import FIRe.ASTVisitor;
 import FIRe.Exceptions.*;
 import FIRe.Tuple;
 
+import javax.xml.soap.Text;
+
 
 @SuppressWarnings("ALL")
 public class ScopeTypeCheckVisitor extends ASTVisitor {
@@ -95,20 +97,20 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(ArrayAccessNode node, Object... arg) throws TypeException, SymbolNotFoundException {
+    public void visit(ArrayAccessNode node, Object... arg) throws Exception {
         for (AbstractNode Node : node.childList) {
             if (Node != null)
                 visitNode(Node);
         }
 
         //Checking if arrayindex is an integer and not a bool or string.
-        if(node.index instanceof NumberNode)
-        {
-            NumberNode temp = (NumberNode)node.index;
-            if(temp.value % 1 != 0)
-            {
-                throw new TypeException("Array index must be integer, found: " + temp.value + ". Line: " + node.LineNumber);
-            }
+
+
+        if(node.index instanceof ExpressionNode) {
+            ExpressionNode tempExpressionNode = (ExpressionNode) node.index;
+            //Checking if the index value is of a correct type
+            CheckingArrayIndex(tempExpressionNode);
+
         }
         else
         {
@@ -329,9 +331,9 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
             visitNode(node.RightChild);
 
         //Both types should be number
-        if (node.LeftChild.type != "number")
+        if (node.type != null && node.LeftChild.type.equals("number"))
             throw new TypeException("number", node.LeftChild.type, node.LineNumber);
-        if (node.RightChild.type != "number")
+        if (node.type != null && node.RightChild.type.equals("number"))
             throw new TypeException("number", node.RightChild.type, node.LineNumber);
 
         //The result is also a number
@@ -397,11 +399,11 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
         }
 
         //If the From expression exists, it should be a number
-        if (node.From != null && node.From.type != "number")
+        if (node.From != null && !node.From.type.equals("number"))
             throw new TypeException("number", node.From.type, node.LineNumber);
 
         //The To expression always exists and shoud also be a number
-        if (node.To.type != "number")
+        if (node.To.type != null && !node.To.type.equals("number"))
             throw new TypeException("number", node.To.type, node.LineNumber);
     }
 
@@ -423,6 +425,7 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
             }
         }
         node.type = node.Id.type;
+
         //If this is not an eventfield, deal with the formal parameters
         //Event methods do not have parameters
         if(!node.Id.Name.contains(".")) {
@@ -441,6 +444,8 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
                     throw new TypeException(formalParameters.parameters.get(i).y, ((ExpressionNode) actualParams.get(i)).type, node.LineNumber);
             }
 
+            if(!(formalParameters.nodeRef instanceof FunctionDeclarationNode || formalParameters.nodeRef instanceof StrategyDeclarationNode))
+                throw new SymbolNotFoundException(node.Id.Name,node.LineNumber);
         }
     }
 
@@ -500,7 +505,7 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(IdNode node, Object... arg) throws SymbolNotFoundException, TypeException, CustomEventFieldAccessException {
+    public void visit(IdNode node, Object... arg) throws Exception {
         //If the node has an array index, we visit it
         if (node.ArrayIndex != null)
             visit(node.ArrayIndex);
@@ -513,9 +518,9 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
             //Otherwise, if it uses dot-notation
         else if (node.Name.contains(".")) {
 
-            //We split the name of the Idnode into two pieces (variablename and field). "\\." means "."
-            String variableName = node.Name.split("\\.")[0];
-            String field = node.Name.split("\\.")[1];
+            //We split the name of the Idnode into two pieces (variablename and field). "[.]" means "." but as a regular expression
+            String variableName = node.Name.split("[.]")[0];
+            String field = node.Name.split("[.]")[1];
 
             //We find the eventType by searching the Symbol table
             String EventType = ST.Search(variableName, node.LineNumber).type;
@@ -615,24 +620,88 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
 
 
         }
-        //If the idnode got an array index then it is an arrayaccess.
+        //If the idnode has an array index then it is an arrayaccess.
         else if(node.ArrayIndex != null)
         {
             //Checks if the array index is a numbernode
-            if(node.ArrayIndex instanceof NumberNode) {
-                NumberNode tempNumberNode = (NumberNode) node.ArrayIndex;
-                //Checks if it is an integervalue.
-                if (tempNumberNode.value % 1 != 0) {
-                    throw new TypeException("Array index must be integer, found: " + tempNumberNode.value + ". Line: " + node.LineNumber);
-                }
+            if(node.ArrayIndex instanceof ExpressionNode) {
+                ExpressionNode tempExpressionNode = (ExpressionNode) node.ArrayIndex;
+                //Checking if the index value is of a correct type
+                CheckingArrayIndex(tempExpressionNode);
+
             }
-            //If array index is not a number.
             else
             {
                 throw new TypeException("number", node.ArrayIndex.type, node.LineNumber);
             }
+
         }
 
+    }
+
+    private void CheckingArrayIndex(ExpressionNode tempExpressionNode) throws Exception {
+
+        //A numbernode as index is valid
+        if(tempExpressionNode instanceof NumberNode)
+        {
+            NumberNode tempNumberNode = (NumberNode) tempExpressionNode;
+            //Then checking if it is an integervalue.
+            if(tempNumberNode.value % 1 != 0)
+            {
+                throw new TypeException("Array index must be an integer, found: " + tempNumberNode.value +". Line: "+ tempNumberNode.LineNumber);
+            }
+
+        }
+        //An IdNode as index is valud
+        else if(tempExpressionNode instanceof IdNode)
+        {
+            IdNode tempIdNode = (IdNode) tempExpressionNode;
+            //Visiting it, so its type will get set
+            visit(tempIdNode);
+            //Then checking if the idnode represents a variable of type number
+            if(!tempIdNode.type.equals("number"))
+            {
+                throw new TypeException("number", tempIdNode.type, tempIdNode.LineNumber);
+            }
+        }
+        //An infixExpressionNode is a valid
+        else if(tempExpressionNode instanceof InfixExpressionNode)
+        {
+            InfixExpressionNode tempInfixExpressionNode = (InfixExpressionNode) tempExpressionNode;
+            //visiting it so the type of the expression gets set.
+            visit(tempInfixExpressionNode);
+            //Then checking if it is a number.
+            if(!tempInfixExpressionNode.type.equals("number"))
+            {
+                throw new TypeException("number", tempInfixExpressionNode.type, tempInfixExpressionNode.LineNumber);
+            }
+        }
+        //Not a valid index
+        else if(tempExpressionNode instanceof BoolNode)
+        {
+            BoolNode tempBoolNode = (BoolNode) tempExpressionNode;
+            throw new TypeException("number", "bool", tempBoolNode.LineNumber);
+        }
+        //Not a valid index
+        else if(tempExpressionNode instanceof TextNode)
+        {
+            TextNode tempTextNode = (TextNode) tempExpressionNode;
+            throw new TypeException("number", "text", tempTextNode.LineNumber);
+        }
+        else if(tempExpressionNode instanceof FuncCallNode)
+        {
+            FuncCallNode tempFuncCallNode = (FuncCallNode) tempExpressionNode;
+            SymbolData data = ST.Search(tempFuncCallNode.Id.Name);
+            if(!data.type.equals("number"))
+            {
+                throw new TypeException("number", data.type, tempFuncCallNode.LineNumber);
+            }
+        }
+        //If none of the above it is invalid.
+        else
+        {
+            throw new TypeException("number", tempExpressionNode.type, tempExpressionNode.LineNumber);
+        }
     }
 
     @Override
