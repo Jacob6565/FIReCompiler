@@ -340,6 +340,7 @@ public class FESVisitor extends ASTVisitor {
     }
 
     private void ImportRoboCodeMethods() throws Exception {
+        // basic robot movement and interaction
         symbolTable.Insert(new FunctionDeclarationNode("ahead","void", new Tuple<>("distance", "number")));
         symbolTable.Insert(new FunctionDeclarationNode("back", "void", new Tuple<>("distance", "number")));
         symbolTable.Insert(new FunctionDeclarationNode("doNothing", "void"));
@@ -370,12 +371,14 @@ public class FESVisitor extends ASTVisitor {
         symbolTable.Insert(new FunctionDeclarationNode("setAdjustRadarForGunTurn","void", new Tuple<>("independent","bool")));
         symbolTable.Insert(new FunctionDeclarationNode("setAdjustRadarForRobotTurn","void", new Tuple<>("independent", "bool")));
         symbolTable.Insert(new FunctionDeclarationNode("stop","void"));
+        // robot movement
         symbolTable.Insert(new FunctionDeclarationNode("turnGunLeft","void", new Tuple<>("degrees", "number")));
         symbolTable.Insert(new FunctionDeclarationNode("turnGunRight", "void", new Tuple<>("degrees", "number")));
         symbolTable.Insert(new FunctionDeclarationNode("turnLeft","void", new Tuple<>("degrees", "number")));
+        symbolTable.Insert(new FunctionDeclarationNode("turnRight", "void", new Tuple<>("degrees", "number")));
         symbolTable.Insert(new FunctionDeclarationNode("turnRadarLeft","void", new Tuple<>("degrees", "number")));
         symbolTable.Insert(new FunctionDeclarationNode("turnRadarRight","void", new Tuple<>("degrees", "number")));
-        symbolTable.Insert(new FunctionDeclarationNode("turnRight", "void", new Tuple<>("degrees", "number")));
+        // Robocode events for when structure
         symbolTable.Insert(new EventDeclarationNode("BattleEndedEvent",0,new Tuple<>("getPriority", "number"), new Tuple<>("isAborted","bool")));
         symbolTable.Insert(new EventDeclarationNode("BulletHitBulletEvent",0));
         symbolTable.Insert(new EventDeclarationNode("BulletHitEvent",0, new Tuple<>("getEnergy","number"),new Tuple<>("getName","text")));
@@ -390,5 +393,24 @@ public class FESVisitor extends ASTVisitor {
         symbolTable.Insert(new EventDeclarationNode("ScannedRobotEvent",0, new Tuple<>("getBearing", "number"), new Tuple<>("getBearingRadians","number"), new Tuple<>("getDistance","number"),new Tuple<>("getEnergy","number"),new Tuple<>("getHeading","number"),new Tuple<>("getHeadingRadians","number"),new Tuple<>("getName","text"),new Tuple<>("getVelocity","number"), new Tuple<>("isSentryRobot", "bool")));
         symbolTable.Insert(new EventDeclarationNode("SkippedTurnEvent",0, new Tuple<>("getPriority","number"), new Tuple<>("getSkippedTurn","number")));
         symbolTable.Insert(new EventDeclarationNode("WinEvent",0,new Tuple<>("getPriority","number")));
+        //Advanced robot functionality using execute and set movement
+        symbolTable.Insert(new FunctionDeclarationNode("setAhead","void",new Tuple<>("Distance","number")));
+        symbolTable.Insert(new FunctionDeclarationNode("setBack","void",new Tuple<>("Distance","number")));
+        symbolTable.Insert(new FunctionDeclarationNode("setTurnGunLeft","void", new Tuple<>("degrees", "number")));
+        symbolTable.Insert(new FunctionDeclarationNode("setTurnGunRight", "void", new Tuple<>("degrees", "number")));
+        symbolTable.Insert(new FunctionDeclarationNode("setTurnLeft","void", new Tuple<>("degrees", "number")));
+        symbolTable.Insert(new FunctionDeclarationNode("setTurnRight", "void", new Tuple<>("degrees", "number")));
+        symbolTable.Insert(new FunctionDeclarationNode("setTurnRadarLeft","void", new Tuple<>("degrees", "number")));
+        symbolTable.Insert(new FunctionDeclarationNode("setTurnRadarRight","void", new Tuple<>("degrees", "number")));
+        symbolTable.Insert(new FunctionDeclarationNode("setFire","void", new Tuple<>("power", "number")));
+        // radian variant
+        symbolTable.Insert(new FunctionDeclarationNode("setTurnRadarLeftRadians","void", new Tuple<>("degrees", "number")));
+        symbolTable.Insert(new FunctionDeclarationNode("setTurnRadarRightRadians","void", new Tuple<>("degrees", "number")));
+        symbolTable.Insert(new FunctionDeclarationNode("setTurnGunLeftRadians","void", new Tuple<>("degrees", "number")));
+        symbolTable.Insert(new FunctionDeclarationNode("setTurnGunRightRadians", "void", new Tuple<>("degrees", "number")));
+        symbolTable.Insert(new FunctionDeclarationNode("setTurnLeftRadians","void", new Tuple<>("degrees", "number")));
+        symbolTable.Insert(new FunctionDeclarationNode("setTurnRightRadians", "void", new Tuple<>("degrees", "number")));
+        // execute advanced movement
+        symbolTable.Insert(new FunctionDeclarationNode("execute","void"));
     }
 }
