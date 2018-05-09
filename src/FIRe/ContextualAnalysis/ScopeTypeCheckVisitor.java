@@ -54,10 +54,10 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
             else if (node.LeftChild.type.equals("text") && node.RightChild.equals("number"))
                 throw new TypeException("text", "number", node.LineNumber);
 
-            else if ((node.LeftChild.type.equals("number") || node.LeftChild.type.equals("text") && !node.RightChild.type.equals(node.LeftChild.type)))
+            else if ((node.LeftChild.type.equals("number") || node.LeftChild.type.equals("text")) && !node.RightChild.type.equals(node.LeftChild.type))
                 throw new TypeException(node.LeftChild.type, node.RightChild.type, node.LineNumber);
 
-            else if ((node.RightChild.type.equals("number") || node.RightChild.type.equals("text") && !node.LeftChild.type.equals(node.RightChild.type)))
+            else if ((node.RightChild.type.equals("number") || node.RightChild.type.equals("text")) && !node.LeftChild.type.equals(node.RightChild.type))
                 throw new TypeException(node.RightChild.type, node.LeftChild.type, node.LineNumber);
         }
     }
@@ -849,7 +849,7 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
         }
 
             //If the number is instantiated and the right hand side is not a number, throw an exception
-            if (node.childList.size() > 1 && ((ExpressionNode) node.childList.get(1)).type != node.Id.type) {
+            if (node.childList.size() > 1 && ((ExpressionNode) node.childList.get(1)).type != null && !((ExpressionNode) node.childList.get(1)).type.equals(node.Id.type)) {
                 ExpressionNode rightHandSide = (ExpressionNode) node.childList.get(1);
                 throw new TypeException(node.Id.type, rightHandSide.type, node.LineNumber);
             }
