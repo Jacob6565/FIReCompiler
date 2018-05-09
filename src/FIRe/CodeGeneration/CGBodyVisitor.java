@@ -73,8 +73,8 @@ public class CGBodyVisitor extends ASTVisitor {
     public void visit(AssignNode node, Object... arg) throws Exception {
         code.emit(node.Id.Name);
         if(node.Id.ArrayIndex != null) {
-            code.emit("[(int)"); //Conversion necessary for the index of the array
-            code.emit(exprGen.GenerateExprCode(code, node.Id.ArrayIndex) + "]");
+            code.emit("[(int)("); //Conversion necessary for the index of the array
+            code.emit(exprGen.GenerateExprCode(code, node.Id.ArrayIndex) + ")]");
         }
         code.emit(" = ");
         code.emitNL(exprGen.GenerateExprCode(code, node.Expression) + ";");

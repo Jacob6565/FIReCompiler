@@ -44,20 +44,22 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
 
         //Addition should only work if the children are of the same type and neither of them are bool
 
-        if (node.LeftChild.type == "bool" && node.RightChild.type == "bool")
-            throw new TypeException("number or text", "bool", node.LineNumber);
+        if (node.LeftChild.type != null && node.RightChild.type != null) {
+            if (node.LeftChild.type.equals("bool") && node.RightChild.type.equals("bool"))
+                throw new TypeException("number or text", "bool", node.LineNumber);
 
-        else if (node.LeftChild.type == "number" && node.RightChild.type == "text")
-            throw new TypeException("number", "text", node.LineNumber);
+            else if (node.LeftChild.type.equals("number") && node.RightChild.equals("text"))
+                throw new TypeException("number", "text", node.LineNumber);
 
-        else if (node.LeftChild.type == "text" && node.RightChild.type == "number")
-            throw new TypeException("text", "number", node.LineNumber);
+            else if (node.LeftChild.type.equals("text") && node.RightChild.equals("number"))
+                throw new TypeException("text", "number", node.LineNumber);
 
-        else if ((node.LeftChild.type == "number" || node.LeftChild.type == "text") && node.RightChild.type != node.LeftChild.type)
-            throw new TypeException(node.LeftChild.type, node.RightChild.type, node.LineNumber);
+            else if ((node.LeftChild.type.equals("number") || node.LeftChild.type.equals("text") && !node.RightChild.type.equals(node.LeftChild.type)))
+                throw new TypeException(node.LeftChild.type, node.RightChild.type, node.LineNumber);
 
-        else if ((node.RightChild.type == "number" || node.RightChild.type == "text") && node.LeftChild.type != node.RightChild.type)
-            throw new TypeException(node.RightChild.type, node.LeftChild.type, node.LineNumber);
+            else if ((node.RightChild.type.equals("number") || node.RightChild.type.equals("text") && !node.LeftChild.type.equals(node.RightChild.type)))
+                throw new TypeException(node.RightChild.type, node.LeftChild.type, node.LineNumber);
+        }
     }
 
     @Override
@@ -103,9 +105,7 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
                 visitNode(Node);
         }
 
-        //Checking if arrayindex is an integer and not a bool or string.
-
-
+        //Checking if arrayindex is valid, it can only be valid as an expression
         if(node.index instanceof ExpressionNode) {
             ExpressionNode tempExpressionNode = (ExpressionNode) node.index;
             //Checking if the index value is of a correct type
@@ -775,11 +775,12 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
             visitNode(node.RightChild);
 
         //Both should be a number
-        if(node.LeftChild.type != "number")
-            throw new TypeException("number",node.LeftChild.type,node.LineNumber);
-        if(node.RightChild.type != "number")
-            throw new TypeException("number",node.RightChild.type,node.LineNumber);
-
+        if(node.LeftChild.type != null && node.RightChild.type != null) {
+            if (!node.LeftChild.type.equals("number"))
+                throw new TypeException("number", node.LeftChild.type, node.LineNumber);
+            if (!node.RightChild.type.equals("number"))
+                throw new TypeException("number", node.RightChild.type, node.LineNumber);
+        }
         //the result is also a number
         node.type = "number";
     }
@@ -792,11 +793,12 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
             visitNode(node.RightChild);
 
         //Both input has to be numbers
-        if(node.LeftChild.type != "number")
-            throw new TypeException("number",node.LeftChild.type,node.LineNumber);
-        if(node.RightChild.type != "number")
-            throw new TypeException("number",node.RightChild.type,node.LineNumber);
-
+        if(node.LeftChild.type != null && node.RightChild.type != null) {
+            if (!node.LeftChild.type.equals("number"))
+                throw new TypeException("number", node.LeftChild.type, node.LineNumber);
+            if (!node.RightChild.type.equals("number"))
+                throw new TypeException("number", node.RightChild.type, node.LineNumber);
+        }
         //The result of a multiplication can only be a number
         node.type = "number";
     }
@@ -814,7 +816,7 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
             visitNode(node.RightChild);
 
         //The children must be of the same type
-        if(node.LeftChild.type != node.RightChild.type)
+        if(!node.LeftChild.type.equals(node.RightChild.type))
             throw new TypeException(node.LeftChild.type,node.RightChild.type,node.LineNumber);
 
         //The result is always a bool though.
