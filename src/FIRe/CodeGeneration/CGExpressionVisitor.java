@@ -27,9 +27,9 @@ public class CGExpressionVisitor{
     }
 
     public void visit(ArrayAccessNode node, Object... arg) throws TypeException {
-        code.emit(node.Id.Name + "[(int)");
+        code.emit(node.Id.Name + "[(int)(");
         VisitNode(node.index);
-        code.emit("] ");
+        code.emit(")] ");
     }
 
     public void visit(BoolNode node, Object... arg) {

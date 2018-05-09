@@ -56,7 +56,7 @@ event CriticalHealth(){
 number average(number limit){
     number sum = 0;
     for(number i = 0 upto max(10, limit)){
-        sum = sum + values[i];
+        sum = sum + values[i + 2];
     }
 
     return sum / max(10,limit);
