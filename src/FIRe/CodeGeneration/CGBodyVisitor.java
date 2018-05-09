@@ -547,8 +547,8 @@ public class CGBodyVisitor extends ASTVisitor {
     @Override
     public void visit(RoutineNode node, Object... arg) throws TypeException {
         if(node.repeatCondition != null) {
-            code.emit("for(int i = (int)");
-            code.emit(exprGen.GenerateExprCode(code, node.repeatCondition) + "; i > 0; i--)");
+            code.emit("for(int i = (int)(");
+            code.emit(exprGen.GenerateExprCode(code, node.repeatCondition) + "); i > 0; i--)");
         }
 
         for(AbstractNode child : node.childList){

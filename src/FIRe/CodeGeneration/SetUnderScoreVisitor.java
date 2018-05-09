@@ -581,6 +581,38 @@ public class SetUnderScoreVisitor extends ASTVisitor {
                 return true;
             case "WinEvent":
                 return true;
+            case "setAhead":
+                return true;
+            case "setBack":
+                return true;
+            case "setTurnGunLeft":
+                return true;
+            case "setTurnGunRight":
+                return true;
+            case "setTurnLeft":
+                return true;
+            case "setTurnRight":
+                return true;
+            case "setTurnRadarLeft":
+                return true;
+            case "setTurnRadarRight":
+                return true;
+            case "setFire":
+                return true;
+            case "setTurnRadarLeftRadians":
+                return true;
+            case "setTurnRadarRightRadians":
+                return true;
+            case "setTurnGunLeftRadians":
+                return true;
+            case "setTurnGunRightRadians":
+                return true;
+            case "setTurnLeftRadians":
+                return true;
+            case "setTurnRightRadians":
+                return true;
+            case "execute":
+                return true;
             default:
                 return false;
         }

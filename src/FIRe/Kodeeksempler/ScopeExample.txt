@@ -7,17 +7,18 @@ RobotProperties{
 }
 
 number one = 1;
-number four = three + two - 1;
+number f()
+{
+    return 1;
+}
 
 strategy Default(){
-    number two = one + 1;
-    Hallo();
-    if(two != 1)
-    {
-        print("hallo");
-    }
+    number two = f() + 1;
+
+
     routine()
     {
+        f();
         number three = two + one;
         if (three + two == two)
         {
