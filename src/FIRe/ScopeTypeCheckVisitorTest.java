@@ -20,112 +20,11 @@ import static org.junit.Assert.*;
 
 
 public class ScopeTypeCheckVisitorTest{
-
-
+    
     BuildASTVisitor BASTV = new BuildASTVisitor();
     CFGParser.ProgContext cst = ContextPrep();
-    @Test
-    public void visitProgTest() {
-        AbstractNode node = BASTV.visitProg(cst);
-        if (node.childList.size() == 4) {
-            if (node.childList.get(0) instanceof RobotPropertiesNode && node.childList.get(1) instanceof StrategyDeclarationNode &&
-                    node.childList.get(2) instanceof FunctionDeclarationNode && node.childList.get(3) instanceof EventDeclarationNode) {
-                assert true;
-            }
-            else
-                assert false;
-        }
-        else
-            assert false;
-    }
 
-    @Test
-    public void visitProgBody() {
-        AbstractNode node = BASTV.visitProg(cst);
-        for (AbstractNode Node: node.childList ) {
-        
-        }
-
-    }
-
-    @Test
-    public void visitStrategyDcl() {
-
-    }
-
-    @org.junit.Test
-    public void visitStrategyBlock() {
-    }
-
-    @org.junit.Test
-    public void visitFuncDcl() {
-    }
-
-    @org.junit.Test
-    public void visitBlock() {
-    }
-
-    @org.junit.Test
-    public void visitBlockBody() {
-    }
-
-    @org.junit.Test
-    public void visitFParamList() {
-    }
-
-    @org.junit.Test
-    public void visitRobotDcl() {
-    }
-
-    @org.junit.Test
-    public void visitDcl() {
-    }
-
-    @org.junit.Test
-    public void visitStmt() {
-    }
-
-    @org.junit.Test
-    public void visitRoutine() {
-    }
-
-    @org.junit.Test
-    public void visitWhen() {
-    }
-
-    @org.junit.Test
-    public void visitExpr() {
-    }
-
-    @org.junit.Test
-    public void visitAssignStmt() {
-    }
-
-    @org.junit.Test
-    public void visitFuncCall() {
-    }
-
-    @org.junit.Test
-    public void visitEventDcl() {
-    }
-
-    @org.junit.Test
-    public void visitAParamList() {
-    }
-
-    @org.junit.Test
-    public void visitCtrlStruct() {
-    }
-
-    @org.junit.Test
-    public void visitAif() {
-    }
-
-    @org.junit.Test
-    public void visitId() {
-    }
-
-    public CFGParser.ProgContext ContextPrep(){
+    public CFGParser.ProgContext ContextPrep() {
 
         //Reads from the example program. (Debug code)
         Scanner in = null;
@@ -165,7 +64,7 @@ public class ScopeTypeCheckVisitorTest{
         cst = parser.prog();
         //cst.children.add(parser.dcl());
 
-      return cst;
+        return cst;
     }
 }
 
