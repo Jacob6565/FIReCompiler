@@ -47,8 +47,14 @@ public class CGExpressionVisitor{
 
     public void visit(EqualsNode node, Object... arg) throws Exception {
         VisitNode(node.LeftChild);
-        code.emit(" == ");
+
+        if(node.LeftChild.type.equals("Text") && node.RightChild.type.equals("Text"))
+            code.emit(".equals(");
+        else
+            code.emit(" == ");
         VisitNode(node.RightChild);
+        if(node.LeftChild.type.equals("Text") && node.RightChild.type.equals("Text"))
+            code.emit(") ");
     }
 
     public void visit(FuncCallNode node, Object... arg) throws Exception {
