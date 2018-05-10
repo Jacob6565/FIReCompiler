@@ -10,6 +10,7 @@ import FIRe.Nodes.*;
 import FIRe.Parser.CFGBaseVisitor;
 import FIRe.Parser.CFGLexer;
 import FIRe.Parser.CFGParser;
+import jdk.nashorn.internal.ir.Block;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.misc.ParseCancellationException;
@@ -192,7 +193,7 @@ public class ScopeTypeCheckVisitorTest{
         WhileNode whileNode = new WhileNode();
         TextNode textNode = new TextNode();
         textNode.Content = "RandomString";
-        whileNode.childList.add(whileNode);
+        whileNode.childList.add(textNode);
         whileNode.Expression = textNode;
         whileNode.childList.add(new BlockNode());
 
@@ -243,6 +244,9 @@ public class ScopeTypeCheckVisitorTest{
         numberDeclarationNode.childList.add(numberNode);
         forNode.Dcl = numberDeclarationNode;
         forNode.To = numberNode;
+        forNode.childList.add(numberDeclarationNode);
+        forNode.childList.add(numberNode);
+
         try
         {
             STCV.visit(forNode);
@@ -254,21 +258,37 @@ public class ScopeTypeCheckVisitorTest{
         }
 
     }
+
     @Test
     public void TestForWithTextDeclaration()
     {
         ForNode forNode = new ForNode();
+
         TextDeclarationNode textDeclarationNode = new TextDeclarationNode();
+
         IdNode idNode = new IdNode();
         idNode.type = "text";
         idNode.Name = "n";
+
         textDeclarationNode.Id = idNode;
         textDeclarationNode.childList.add(idNode);
+
+        TextNode textNode = new TextNode();
+        textNode.Content = "String";
+
         NumberNode numberNode = new NumberNode();
         numberNode.value = 2;
-        textDeclarationNode.childList.add(numberNode);
-        //forNode.Dcl = textDeclarationNode;
+
+        textDeclarationNode.childList.add(textNode);
+
+        forNode.Dcl = textDeclarationNode;
         forNode.To = numberNode;
+
+        forNode.childList.add(textDeclarationNode);
+        forNode.childList.add(numberNode);
+        BlockNode blockNode = new BlockNode();
+        blockNode.Parent = forNode;
+        forNode.childList.add(blockNode);
         try
         {
             STCV.visit(forNode);
@@ -290,10 +310,11 @@ public class ScopeTypeCheckVisitorTest{
         idNode.Name = "n";
         booleanDeclarationNode.Id = idNode;
         booleanDeclarationNode.childList.add(idNode);
+        BoolNode boolNode = new BoolNode(true);
+        booleanDeclarationNode.childList.add(boolNode);
         NumberNode numberNode = new NumberNode();
         numberNode.value = 2;
-        booleanDeclarationNode.childList.add(numberNode);
-       // forNode.Dcl = booleanDeclarationNode;
+        forNode.Dcl = booleanDeclarationNode;
         forNode.To = numberNode;
         try
         {
@@ -305,7 +326,6 @@ public class ScopeTypeCheckVisitorTest{
             assert true;
         }
     }
-
     @Test
     public void TestForWithBool()
     {
@@ -350,6 +370,8 @@ public class ScopeTypeCheckVisitorTest{
             assert false;
         }
     }
+
+
 
 
     @Test
@@ -2241,13 +2263,14 @@ public class ScopeTypeCheckVisitorTest{
 
         //https://stackoverflow.com/questions/18110180/processing-a-string-with-antlr4
         //Setup to perform lexical analysis on the input string.
+        AntlrException antlrException = new AntlrException();
         CFGLexer lexer = new CFGLexer(CharStreams.fromString(outString));
         lexer.removeErrorListeners();
-        lexer.addErrorListener(AntlrException.INSTANCE);
+        lexer.addErrorListener(antlrException);
         CommonTokenStream tokenStream = new CommonTokenStream(lexer);
         CFGParser parser = new CFGParser(tokenStream);
         parser.removeErrorListeners();
-        parser.addErrorListener(AntlrException.INSTANCE);
+        parser.addErrorListener(antlrException);
         //Performs lexical analysis and builds a CST.
         cst = parser.prog();
         //cst.children.add(parser.dcl());

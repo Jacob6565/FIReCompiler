@@ -174,8 +174,11 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
         if (node.Parent instanceof ForNode && ((ForNode)node.Parent).Dcl != null){
             if (((ForNode)node.Parent).Dcl instanceof NumberDeclarationNode)
                 visit((NumberDeclarationNode)(((ForNode) node.Parent).Dcl));
-            else
-                throw new TypeException("number", ((ForNode)node.Parent).Dcl.Id.type,node.LineNumber);
+            else if(((ForNode)node.Parent).Dcl instanceof TextDeclarationNode)
+                throw new TypeException("number", "text", ((ForNode)node.Parent).LineNumber);
+            else if(((ForNode)node.Parent).Dcl instanceof BooleanDeclarationNode)
+                throw new TypeException("number", "bool", ((ForNode)node.Parent).LineNumber);
+
         }
         //We also need to insert the formal parameters in the symbol table,
         //in order to make den accessible in the body.

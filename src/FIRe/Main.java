@@ -44,14 +44,15 @@ public class Main {
         try {
             //https://stackoverflow.com/questions/18110180/processing-a-string-with-antlr4
             //Setup to perform lexical analysis on the input string.
+            AntlrException antlrException = new AntlrException();
             CFGLexer lexer = new CFGLexer(CharStreams.fromString(outString));
             lexer.removeErrorListeners();
-            lexer.addErrorListener(AntlrException.INSTANCE);
+            lexer.addErrorListener(antlrException);
 
             CommonTokenStream tokenStream = new CommonTokenStream(lexer);
             CFGParser parser = new CFGParser(tokenStream);
             parser.removeErrorListeners();
-            parser.addErrorListener(AntlrException.INSTANCE);
+            parser.addErrorListener(antlrException);
 
             //Performs lexical analysis and builds a CST.
             cst = parser.prog();
