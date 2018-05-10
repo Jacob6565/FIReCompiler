@@ -46,9 +46,18 @@ public class CGExpressionVisitor{
     }
 
     public void visit(EqualsNode node, Object... arg) throws Exception {
-        VisitNode(node.LeftChild);
-        code.emit(" == ");
-        VisitNode(node.RightChild);
+        if(node.LeftChild.type.equals("text") && node.RightChild.type.equals("text")){
+            VisitNode(node.LeftChild);
+            code.emit(".equals(");
+            VisitNode(node.RightChild);
+            code.emit(")");
+        }
+        else{
+            VisitNode(node.LeftChild);
+            code.emit(" == ");
+            VisitNode(node.RightChild);
+
+        }
     }
 
     public void visit(FuncCallNode node, Object... arg) throws Exception {
@@ -123,9 +132,19 @@ public class CGExpressionVisitor{
     }
 
     public void visit(NotEqualsNode node, Object... arg) throws Exception {
-        VisitNode(node.LeftChild);
-        code.emit(" != ");
-        VisitNode(node.RightChild);
+        if(node.LeftChild.type.equals("text") && node.RightChild.type.equals("text")){
+            code.emit("!(");
+            VisitNode(node.LeftChild);
+            code.emit(".equals(");
+            VisitNode(node.RightChild);
+            code.emit("))");
+        }
+        else{
+            VisitNode(node.LeftChild);
+            code.emit(" != ");
+            VisitNode(node.RightChild);
+
+        }
     }
 
     public void visit(NotNode node, Object... arg) {

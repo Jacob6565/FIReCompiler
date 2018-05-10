@@ -187,7 +187,7 @@ public abstract class ASTVisitor
     public abstract void visit(TextArrayDeclarationNode node, Object... arg) throws Exception;
     public abstract void visit(TextNode node, Object... arg);
     public abstract void visit(ValNode node, Object... arg);
-    public abstract void visit(WhenNode node, Object... arg);
+    public abstract void visit(WhenNode node, Object... arg) throws SymbolNotFoundException;
     public abstract void visit(WhileNode node, Object... arg) throws TypeException;
     public abstract void visit(RobotNameNode node, Object... arg);
     public abstract void visit(RobotTypeNode node, Object... arg) throws TypeException;
