@@ -1,0 +1,39 @@
+RobotProperties{
+RobotName: BumbleTheif;
+RobotGunColor: Yellow;
+RobotRadarColor: Blue;
+}
+
+strategy Default(){
+
+    number runs = AmountOfRuns();
+
+    routine(runs){
+        turnRadarRight(20);
+        setFire(2);
+    }
+
+    when (OnScannedRobotEvent e){
+        execute();
+    }
+
+}
+
+number AmountOfRuns(){
+
+    text some = RecieveSomeText();
+    if(some == "SomeText"){
+        return 5;
+    }
+    else if(some != "SomeText"){
+        return 8;
+    }
+
+    return 0;
+
+}
+
+text RecieveSomeText(){
+
+    return "SomeText";
+}

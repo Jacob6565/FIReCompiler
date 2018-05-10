@@ -1,0 +1,107 @@
+RobotProperties
+{
+      RobotName:AlmostTheDestroyer;
+      RobotType:AdvancedRobot;
+      BodyColor:yellow;
+      GunColor:red;
+      RadarColor:white;
+}
+
+number power(number x)
+{
+    return x*x;
+}
+number firePower;
+text currentRival = "SittingDuck";
+bool shootingAtRival = false;
+text ScannedRobots[10];
+number index = 0;
+strategy Default()
+{
+    number y = 3;
+    firePower = 1;
+
+    routine()
+    {
+        routine(y)
+        {
+            setTurnGunRight(360);
+            setTurnGunLeft(360);
+            Execute();
+        }
+    }
+    when (ScannedRobotEvent e)
+    {
+        if (e.getName() == currentRival)
+        {
+            fire(3);
+            SaveScannedRobotsNames(e.getName());
+            Offensive();
+            shootingAtRival = true;
+        }
+        else
+        {
+            fire(1);
+            SaveScannedRobotsNames(e.getName());
+            shootingAtRival = false;
+        }
+    }
+    when (LowHealth e)
+    {
+        print("Wow, I am going to die!");
+    }
+}
+
+void SaveScannedRobotsNames(text robotName)
+{
+    if(index >= 9)
+    {
+        index = 0;
+    }
+    ScannedRobots[index] = robotName;
+    index = index + 1;
+}
+
+strategy Offensive()
+{
+    number y = 4;
+    routine()
+    {
+        if(shootingAtRival)
+        {
+            print("I am gonna get you!");
+        }
+
+        setTurnGunRight(360);
+        setTurnGunLeft(360);
+        Execute();
+    }
+
+    when (ScannedRobotEvent e)
+    {
+        if (e.getName() == currentRival)
+        {
+            fire(3);
+            SaveScannedRobotsNames(e.getName());
+            shootingAtRival = true;
+        }
+        else
+        {
+            fire(1);
+            SaveScannedRobotsNames(e.getName());
+            Default();
+            shootingAtRival = false;
+        }
+    }
+    when (LowHealth e)
+    {
+        print("Wow, I am going to die!");
+    }
+}
+
+event LowHealth()
+{
+    number myLifePoints = getEnergy();
+    number criticalLifePoints = 20;
+    return myLifePoints <= criticalLifePoints;
+}

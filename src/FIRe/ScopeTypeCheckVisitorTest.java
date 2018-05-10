@@ -17,6 +17,7 @@ import org.testng.Assert;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.lang.reflect.Type;
 import java.util.Base64;
 import java.util.Scanner;
 
@@ -51,15 +52,55 @@ public class ScopeTypeCheckVisitorTest{
     public void testAddition(){
         AdditionNode node = new AdditionNode();
         node.LeftChild = new NumberNode(0);
-        node.RightChild = new TextNode("h");
+        node.RightChild = new NumberNode(2);
         try {
             STCV.visit(node);
+            assertEquals("number", node.type);
         }
         catch (TypeException x){
-
+            assert false;
         }
-        finally {
-            assertEquals("number", node.type);
+    }
+
+    @Test
+    public void TestAddition2(){
+        AdditionNode node = new AdditionNode();
+        node.LeftChild = new TextNode();
+        node.RightChild = new TextNode();
+        try{
+            STCV.visit(node);
+            assertEquals("text",node.type);
+        }
+        catch (TypeException x){
+            assert false;
+        }
+    }
+
+    @Test
+    public void TestAddition3(){
+        AdditionNode node = new AdditionNode();
+        node.RightChild = new BoolNode(true);
+        node.LeftChild = new NumberNode(2);
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+
+    @Test
+    public void TestAddition4(){
+        AdditionNode node = new AdditionNode();
+        node.LeftChild = new BoolNode(true);
+        node.RightChild = new BoolNode(true);
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
         }
     }
 
