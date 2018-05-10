@@ -7,7 +7,6 @@ import FIRe.Nodes.*;
 import FIRe.ASTVisitor;
 import FIRe.Exceptions.*;
 import FIRe.Tuple;
-import com.sun.xml.internal.bind.v2.model.core.ID;
 
 import javax.xml.soap.Text;
 
@@ -769,7 +768,7 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(ModuloNode node, Object... arg) throws Exception {
+    public void visit(ModuloNode node, Object... arg) throws TypeException {
         if (node.LeftChild != null)
             visitNode(node.LeftChild);
         if (node.RightChild != null)
@@ -826,6 +825,9 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
 
     @Override
     public void visit(NotNode node, Object... arg) throws TypeException {
+        for (AbstractNode Node: node.childList) {
+            visitNode(Node);
+        }
 
         //If the expression is not a bool, throw an expression
         if(node.Expression.type != null && !node.Expression.type.equals("bool"))

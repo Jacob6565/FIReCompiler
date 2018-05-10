@@ -15,6 +15,7 @@ import org.antlr.v4.runtime.misc.ParseCancellationException;
 import org.junit.Test;
 import org.testng.Assert;
 
+import javax.xml.soap.Text;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.lang.reflect.Type;
@@ -612,82 +613,1185 @@ public class ScopeTypeCheckVisitorTest{
         }
     }
     @Test
-    public void visitStrategyDcl() {
-
+    public void TestGEQ5(){
+        GEQNode node = new GEQNode();
+        node.RightChild = new NumberNode();
+        node.LeftChild = new NumberNode();
+        try{
+            STCV.visit(node);
+            assert true;
+        }
+        catch (TypeException x){
+            assert false;
+        }
+    }
+    @Test
+    public void TestGEQ6(){
+        GEQNode node = new GEQNode();
+        node.RightChild = new TextNode();
+        node.LeftChild = new NumberNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
     }
 
-    @org.junit.Test
-    public void visitStrategyBlock() {
+    @Test
+    public void TestGEQ7(){
+        GEQNode node = new GEQNode();
+        node.RightChild = new BoolNode();
+        node.LeftChild = new TextNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
     }
 
-    @org.junit.Test
-    public void visitFuncDcl() {
+    @Test
+    public void TestGEQ8(){
+        GEQNode node = new GEQNode();
+        node.RightChild = new NumberNode();
+        node.LeftChild = new TextNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
     }
 
-    @org.junit.Test
-    public void visitBlock() {
+    @Test
+    public void TestGEQ9(){
+        GEQNode node = new GEQNode();
+        node.RightChild = new TextNode();
+        node.LeftChild = new TextNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
     }
 
-    @org.junit.Test
-    public void visitBlockBody() {
+
+    @Test
+    public void TestGreater1(){
+        GreaterThanNode node = new GreaterThanNode();
+        node.RightChild = new BoolNode();
+        node.LeftChild = new BoolNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+    @Test
+    public void TestGreater2(){
+        GreaterThanNode node = new GreaterThanNode();
+        node.RightChild = new NumberNode();
+        node.LeftChild = new BoolNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+    @Test
+    public void TestGreater3(){
+        GreaterThanNode node = new GreaterThanNode();
+        node.RightChild = new TextNode();
+        node.LeftChild = new BoolNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+    @Test
+    public void TestGreater4(){
+        GreaterThanNode node = new GreaterThanNode();
+        node.RightChild = new BoolNode();
+        node.LeftChild = new NumberNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+    @Test
+    public void TestGreater5(){
+        GreaterThanNode node = new GreaterThanNode();
+        node.RightChild = new NumberNode();
+        node.LeftChild = new NumberNode();
+        try{
+            STCV.visit(node);
+            assert true;
+        }
+        catch (TypeException x){
+            assert false;
+        }
+    }
+    @Test
+    public void TestGreater6(){
+        GreaterThanNode node = new GreaterThanNode();
+        node.RightChild = new TextNode();
+        node.LeftChild = new NumberNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+    @Test
+    public void TestGreater7(){
+        GreaterThanNode node = new GreaterThanNode();
+        node.RightChild = new BoolNode();
+        node.LeftChild = new TextNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+    @Test
+    public void TestGreater8(){
+        GreaterThanNode node = new GreaterThanNode();
+        node.RightChild = new NumberNode();
+        node.LeftChild = new TextNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+    @Test
+    public void TestGreater9(){
+        GreaterThanNode node = new GreaterThanNode();
+        node.RightChild = new TextNode();
+        node.LeftChild = new TextNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+    @Test
+    public void TestLEQ1(){
+        LEQNode node = new LEQNode();
+        node.RightChild = new BoolNode();
+        node.LeftChild = new BoolNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
     }
 
-    @org.junit.Test
-    public void visitFParamList() {
+    @Test
+    public void TestLEQ2(){
+        LEQNode node = new LEQNode();
+        node.RightChild = new NumberNode();
+        node.LeftChild = new BoolNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+    @Test
+    public void TestLEQ3(){
+        LEQNode node = new LEQNode();
+        node.RightChild = new TextNode();
+        node.LeftChild = new BoolNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+    @Test
+    public void TestLEQ4(){
+        LEQNode node = new LEQNode();
+        node.RightChild = new BoolNode();
+        node.LeftChild = new NumberNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+    @Test
+    public void TestLEQ5(){
+        LEQNode node = new LEQNode();
+        node.RightChild = new NumberNode();
+        node.LeftChild = new NumberNode();
+        try{
+            STCV.visit(node);
+            assert true;
+        }
+        catch (TypeException x){
+            assert false;
+        }
+    }
+    @Test
+    public void TestLEQ6(){
+        LEQNode node = new LEQNode();
+        node.RightChild = new TextNode();
+        node.LeftChild = new NumberNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+    @Test
+    public void TestLEQ7(){
+        LEQNode node = new LEQNode();
+        node.RightChild = new BoolNode();
+        node.LeftChild = new TextNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+    @Test
+    public void TestLEQ8(){
+        LEQNode node = new LEQNode();
+        node.RightChild = new NumberNode();
+        node.LeftChild = new TextNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+    @Test
+    public void TestLEQ9(){
+        LEQNode node = new LEQNode();
+        node.RightChild = new TextNode();
+        node.LeftChild = new TextNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+    @Test
+    public void TestLess1(){
+        LessThanNode node = new LessThanNode();
+        node.RightChild = new BoolNode();
+        node.LeftChild = new BoolNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+    @Test
+    public void TestLess2(){
+        LessThanNode node = new LessThanNode();
+        node.RightChild = new NumberNode();
+        node.LeftChild = new BoolNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+    @Test
+    public void TestLess3(){
+        LessThanNode node = new LessThanNode();
+        node.RightChild = new TextNode();
+        node.LeftChild = new BoolNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+    @Test
+    public void TestLess4(){
+        LessThanNode node = new LessThanNode();
+        node.RightChild = new BoolNode();
+        node.LeftChild = new NumberNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+    @Test
+    public void TestLess5(){
+        LessThanNode node = new LessThanNode();
+        node.RightChild = new NumberNode();
+        node.LeftChild = new NumberNode();
+        try{
+            STCV.visit(node);
+            assert true;
+        }
+        catch (TypeException x){
+            assert false;
+        }
+    }
+    @Test
+    public void TestLess6(){
+        LessThanNode node = new LessThanNode();
+        node.RightChild = new TextNode();
+        node.LeftChild = new NumberNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+    @Test
+    public void TestLess7(){
+        LessThanNode node = new LessThanNode();
+        node.RightChild = new BoolNode();
+        node.LeftChild = new TextNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+    @Test
+    public void TestLess8(){
+        LessThanNode node = new LessThanNode();
+        node.RightChild = new NumberNode();
+        node.LeftChild = new TextNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+    @Test
+    public void TestLess9(){
+        LessThanNode node = new LessThanNode();
+        node.RightChild = new TextNode();
+        node.LeftChild = new TextNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+    @Test
+    public void TestModulo1(){
+        ModuloNode node = new ModuloNode();
+        node.RightChild = new BoolNode();
+        node.LeftChild = new BoolNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+    @Test
+    public void TestModulo2(){
+        ModuloNode node = new ModuloNode();
+        node.RightChild = new NumberNode();
+        node.LeftChild = new BoolNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+    @Test
+    public void TestModulo3(){
+        ModuloNode node = new ModuloNode();
+        node.RightChild = new TextNode();
+        node.LeftChild = new BoolNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+    @Test
+    public void TestModulo4(){
+        ModuloNode node = new ModuloNode();
+        node.RightChild = new BoolNode();
+        node.LeftChild = new NumberNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+    @Test
+    public void TestModulo5(){
+        ModuloNode node = new ModuloNode();
+        node.RightChild = new NumberNode();
+        node.LeftChild = new NumberNode();
+        try{
+            STCV.visit(node);
+            assert true;
+        }
+        catch (TypeException x){
+            assert false;
+        }
+    }
+    @Test
+    public void TestModulo6(){
+        ModuloNode node = new ModuloNode();
+        node.RightChild = new TextNode();
+        node.LeftChild = new NumberNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+    @Test
+    public void TestModulo7(){
+        ModuloNode node = new ModuloNode();
+        node.RightChild = new BoolNode();
+        node.LeftChild = new TextNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+    @Test
+    public void TestModulo8(){
+        ModuloNode node = new ModuloNode();
+        node.RightChild = new NumberNode();
+        node.LeftChild = new TextNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+    @Test
+    public void TestModulo9(){
+        ModuloNode node = new ModuloNode();
+        node.RightChild = new TextNode();
+        node.LeftChild = new TextNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+    @Test
+    public void TestMultiplication1(){
+        MultiplicationNode node = new MultiplicationNode();
+        node.RightChild = new BoolNode();
+        node.LeftChild = new BoolNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+    @Test
+    public void TestMultiplication2(){
+        MultiplicationNode node = new MultiplicationNode();
+        node.RightChild = new NumberNode();
+        node.LeftChild = new BoolNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+    @Test
+    public void TestMultiplication3(){
+        MultiplicationNode node = new MultiplicationNode();
+        node.RightChild = new TextNode();
+        node.LeftChild = new BoolNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+    @Test
+    public void TestMultiplication4(){
+        MultiplicationNode node = new MultiplicationNode();
+        node.RightChild = new BoolNode();
+        node.LeftChild = new NumberNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+    @Test
+    public void TestMultiplication5(){
+        MultiplicationNode node = new MultiplicationNode();
+        node.RightChild = new NumberNode();
+        node.LeftChild = new NumberNode();
+        try{
+            STCV.visit(node);
+            assert true;
+        }
+        catch (TypeException x){
+            assert false;
+        }
+    }
+    @Test
+    public void TestMultiplication6(){
+        MultiplicationNode node = new MultiplicationNode();
+        node.RightChild = new TextNode();
+        node.LeftChild = new NumberNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+    @Test
+    public void TestMultiplication7(){
+        MultiplicationNode node = new MultiplicationNode();
+        node.RightChild = new BoolNode();
+        node.LeftChild = new TextNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+    @Test
+    public void TestMultiplication8(){
+        MultiplicationNode node = new MultiplicationNode();
+        node.RightChild = new NumberNode();
+        node.LeftChild = new TextNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+    @Test
+    public void TestMultiplication9(){
+        MultiplicationNode node = new MultiplicationNode();
+        node.RightChild = new TextNode();
+        node.LeftChild = new TextNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+    @Test
+    public void TestNot1(){
+        NotNode node = new NotNode();
+        node.Expression = new BoolNode();
+        try{
+            STCV.visit(node);
+            assert true;
+        }
+        catch (TypeException x){
+            assert false;
+        }
     }
 
-    @org.junit.Test
-    public void visitRobotDcl() {
+    @Test
+    public void TestNot2(){
+        NotNode node = new NotNode();
+        node.Expression = new NumberNode();
+        node.childList.add(node.Expression);
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
     }
 
-    @org.junit.Test
-    public void visitDcl() {
+    @Test
+    public void TestNot3(){
+        NotNode node = new NotNode();
+        node.Expression = new TextNode();
+        node.childList.add(node.Expression);
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
     }
 
-    @org.junit.Test
-    public void visitStmt() {
+    @Test
+    public void TestNotEquals1(){
+        NotEqualsNode node = new NotEqualsNode();
+        node.RightChild = new BoolNode();
+        node.LeftChild = new BoolNode();
+        try{
+            STCV.visit(node);
+            assert true;
+        }
+        catch (TypeException x){
+            assert false;
+        }
+    }
+    @Test
+    public void TestNotEquals2(){
+        NotEqualsNode node = new NotEqualsNode();
+        node.RightChild = new NumberNode();
+        node.LeftChild = new BoolNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+    @Test
+    public void TestNotEquals3(){
+        NotEqualsNode node = new NotEqualsNode();
+        node.RightChild = new TextNode();
+        node.LeftChild = new BoolNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+    @Test
+    public void TestNotEquals4(){
+        NotEqualsNode node = new NotEqualsNode();
+        node.RightChild = new BoolNode();
+        node.LeftChild = new NumberNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+    @Test
+    public void TestNotEquals5(){
+        NotEqualsNode node = new NotEqualsNode();
+        node.RightChild = new NumberNode();
+        node.LeftChild = new NumberNode();
+        try{
+            STCV.visit(node);
+            assert true;
+        }
+        catch (TypeException x){
+            assert false;
+        }
+    }
+    @Test
+    public void TestNotEquals6(){
+        NotEqualsNode node = new NotEqualsNode();
+        node.RightChild = new TextNode();
+        node.LeftChild = new NumberNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+    @Test
+    public void TestNotEquals7(){
+        NotEqualsNode node = new NotEqualsNode();
+        node.RightChild = new BoolNode();
+        node.LeftChild = new TextNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+    @Test
+    public void TestNotEquals8(){
+        NotEqualsNode node = new NotEqualsNode();
+        node.RightChild = new NumberNode();
+        node.LeftChild = new TextNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+    @Test
+    public void TestNotEquals9(){
+        NotEqualsNode node = new NotEqualsNode();
+        node.RightChild = new TextNode();
+        node.LeftChild = new TextNode();
+        try{
+            STCV.visit(node);
+            assert true;
+        }
+        catch (TypeException x){
+            assert false;
+        }
+    }
+    @Test
+    public void TestNumber(){
+        NumberNode node = new NumberNode();
+        STCV.visit(node);
+        assertEquals("number",node.type);
+    }
+    @Test
+    public void TestOr1(){
+        OrNode node = new OrNode();
+        node.RightChild = new BoolNode();
+        node.LeftChild = new BoolNode();
+        try{
+            STCV.visit(node);
+            assert true;
+        }
+        catch (TypeException x){
+            assert false;
+        }
+    }
+    @Test
+    public void TestOr2(){
+        OrNode node = new OrNode();
+        node.RightChild = new NumberNode();
+        node.LeftChild = new BoolNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+    @Test
+    public void TestOr3(){
+        OrNode node = new OrNode();
+        node.RightChild = new TextNode();
+        node.LeftChild = new BoolNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+    @Test
+    public void TestOr4(){
+        OrNode node = new OrNode();
+        node.RightChild = new BoolNode();
+        node.LeftChild = new NumberNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+    @Test
+    public void TestOr5(){
+        OrNode node = new OrNode();
+        node.RightChild = new NumberNode();
+        node.LeftChild = new NumberNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+    @Test
+    public void TestOr6(){
+        OrNode node = new OrNode();
+        node.RightChild = new TextNode();
+        node.LeftChild = new NumberNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+    @Test
+    public void TestOr7(){
+        OrNode node = new OrNode();
+        node.RightChild = new BoolNode();
+        node.LeftChild = new TextNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+    @Test
+    public void TestOr8(){
+        OrNode node = new OrNode();
+        node.RightChild = new NumberNode();
+        node.LeftChild = new TextNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+    @Test
+    public void TestOr9(){
+        OrNode node = new OrNode();
+        node.RightChild = new TextNode();
+        node.LeftChild = new TextNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+    @Test
+    public void TestPower1(){
+        PowerNode node = new PowerNode();
+        node.RightChild = new BoolNode();
+        node.LeftChild = new BoolNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+    @Test
+    public void TestPower2(){
+        PowerNode node = new PowerNode();
+        node.RightChild = new NumberNode();
+        node.LeftChild = new BoolNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+    @Test
+    public void TestPower3(){
+        PowerNode node = new PowerNode();
+        node.RightChild = new TextNode();
+        node.LeftChild = new BoolNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+    @Test
+    public void TestPower4(){
+        PowerNode node = new PowerNode();
+        node.RightChild = new BoolNode();
+        node.LeftChild = new NumberNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+    @Test
+    public void TestPower5(){
+        PowerNode node = new PowerNode();
+        node.RightChild = new NumberNode();
+        node.LeftChild = new NumberNode();
+        try{
+            STCV.visit(node);
+            assert true;
+        }
+        catch (TypeException x){
+            assert false;
+        }
+    }
+    @Test
+    public void TestPower6(){
+        PowerNode node = new PowerNode();
+        node.RightChild = new TextNode();
+        node.LeftChild = new NumberNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+    @Test
+    public void TestPower7(){
+        PowerNode node = new PowerNode();
+        node.RightChild = new BoolNode();
+        node.LeftChild = new TextNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+    @Test
+    public void TestPower8(){
+        PowerNode node = new PowerNode();
+        node.RightChild = new NumberNode();
+        node.LeftChild = new TextNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+    @Test
+    public void TestPower9(){
+        PowerNode node = new PowerNode();
+        node.RightChild = new TextNode();
+        node.LeftChild = new TextNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
     }
 
-    @org.junit.Test
-    public void visitRoutine() {
+    @Test
+    public void TestSubtraction1(){
+        SubtractionNode node = new SubtractionNode();
+        node.RightChild = new BoolNode();
+        node.LeftChild = new BoolNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+    @Test
+    public void TestSubtraction2(){
+        SubtractionNode node = new SubtractionNode();
+        node.RightChild = new NumberNode();
+        node.LeftChild = new BoolNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+    @Test
+    public void TestSubtraction3(){
+        SubtractionNode node = new SubtractionNode();
+        node.RightChild = new BoolNode();
+        node.LeftChild = new TextNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+    @Test
+    public void TestSubtraction4(){
+        SubtractionNode node = new SubtractionNode();
+        node.RightChild = new BoolNode();
+        node.LeftChild = new NumberNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+    @Test
+    public void TestSubtraction5(){
+        SubtractionNode node = new SubtractionNode();
+        node.RightChild = new NumberNode();
+        node.LeftChild = new NumberNode();
+        try{
+            STCV.visit(node);
+            assert true;
+        }
+        catch (TypeException x){
+            assert false;
+        }
+    }
+    @Test
+    public void TestSubtraction6(){
+        SubtractionNode node = new SubtractionNode();
+        node.RightChild = new TextNode();
+        node.LeftChild = new NumberNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+    @Test
+    public void TestSubtraction7(){
+        SubtractionNode node = new SubtractionNode();
+        node.RightChild = new BoolNode();
+        node.LeftChild = new TextNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+    @Test
+    public void TestSubtraction8(){
+        SubtractionNode node = new SubtractionNode();
+        node.RightChild = new NumberNode();
+        node.LeftChild = new TextNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+    @Test
+    public void TestSubtraction9(){
+        SubtractionNode node = new SubtractionNode();
+        node.RightChild = new TextNode();
+        node.LeftChild = new TextNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
     }
 
-    @org.junit.Test
-    public void visitWhen() {
+    @Test
+    public void TestText(){
+        TextNode node = new TextNode();
+        STCV.visit(node);
+        assertEquals("text",node.type);
     }
-
-    @org.junit.Test
-    public void visitExpr() {
-    }
-
-    @org.junit.Test
-    public void visitAssignStmt() {
-    }
-
-    @org.junit.Test
-    public void visitFuncCall() {
-    }
-
-    @org.junit.Test
-    public void visitEventDcl() {
-    }
-
-    @org.junit.Test
-    public void visitAParamList() {
-    }
-
-    @org.junit.Test
-    public void visitCtrlStruct() {
-    }
-
-    @org.junit.Test
-    public void visitAif() {
-    }
-
-    @org.junit.Test
-    public void visitId() {
-    }
-
+    
     public CFGParser.ProgContext ContextPrep(){
 
         //Reads from the example program. (Debug code)
