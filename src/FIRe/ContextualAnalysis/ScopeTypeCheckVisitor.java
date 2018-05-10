@@ -7,6 +7,7 @@ import FIRe.Nodes.*;
 import FIRe.ASTVisitor;
 import FIRe.Exceptions.*;
 import FIRe.Tuple;
+import com.sun.xml.internal.bind.v2.model.core.ID;
 
 import javax.xml.soap.Text;
 
@@ -331,9 +332,9 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
             visitNode(node.RightChild);
 
         //Both types should be number
-        if (node.type != null && node.LeftChild.type.equals("number"))
+        if (node.LeftChild.type != null && !node.LeftChild.type.equals("number"))
             throw new TypeException("number", node.LeftChild.type, node.LineNumber);
-        if (node.type != null && node.RightChild.type.equals("number"))
+        if (node.RightChild.type != null && !node.RightChild.type.equals("number"))
             throw new TypeException("number", node.RightChild.type, node.LineNumber);
 
         //The result is also a number
@@ -1086,11 +1087,13 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(WhenNode node, Object... arg) {
+    public void visit(WhenNode node, Object... arg) throws SymbolNotFoundException {
         for (AbstractNode Node: node.childList) {
             if (Node != null && !(Node instanceof IdNode))
                 visitNode(Node);
         }
+        if (!ST.Contains(((IdNode)node.childList.get(0)).Name))
+            throw new SymbolNotFoundException(((IdNode)node.childList.get(0)).Name,node.LineNumber);
     }
 
     @Override

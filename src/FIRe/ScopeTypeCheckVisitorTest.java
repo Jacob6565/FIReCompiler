@@ -48,6 +48,7 @@ public class ScopeTypeCheckVisitorTest{
             assert false;
     }
 
+
     @Test
     public void testAddition(){
         AdditionNode node = new AdditionNode();
@@ -104,6 +105,512 @@ public class ScopeTypeCheckVisitorTest{
         }
     }
 
+    @Test
+    public void TestAddition5(){
+        AdditionNode node = new AdditionNode();
+        node.RightChild = new NumberNode();
+        node.LeftChild = new BoolNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+
+    @Test
+    public void TestAddition6(){
+        AdditionNode node = new AdditionNode();
+        node.RightChild = new TextNode();
+        node.LeftChild = new BoolNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+
+    @Test
+    public void TestAddition7(){
+        AdditionNode node = new AdditionNode();
+        node.RightChild = new TextNode();
+        node.LeftChild = new NumberNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+
+    @Test
+    public void TestAddition8(){
+        AdditionNode node = new AdditionNode();
+        node.RightChild = new BoolNode();
+        node.LeftChild = new TextNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+
+    @Test
+    public void TestAddition9(){
+        AdditionNode node = new AdditionNode();
+        node.RightChild = new NumberNode();
+        node.LeftChild = new TextNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+
+    @Test
+    public void TestAnd1(){
+        AndNode node = new AndNode();
+        node.RightChild = new BoolNode();
+        node.LeftChild = new BoolNode();
+        try{
+            STCV.visit(node);
+            assert true;
+        }
+        catch (TypeException x){
+            assert false;
+        }
+    }
+
+    @Test
+    public void TestAnd2(){
+        AndNode node = new AndNode();
+        node.RightChild = new NumberNode();
+        node.LeftChild = new BoolNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+
+    @Test
+    public void TestAnd3(){
+        AndNode node = new AndNode();
+        node.RightChild = new TextNode();
+        node.LeftChild = new BoolNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+
+    @Test
+    public void TestAnd4(){
+        AndNode node = new AndNode();
+        node.RightChild = new BoolNode();
+        node.LeftChild = new NumberNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+
+    @Test
+    public void TestAnd5(){
+        AndNode node = new AndNode();
+        node.RightChild = new NumberNode();
+        node.LeftChild = new NumberNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+
+    @Test
+    public void TestAnd6(){
+        AndNode node = new AndNode();
+        node.RightChild = new TextNode();
+        node.LeftChild = new NumberNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+
+    @Test
+    public void TestAnd7(){
+        AndNode node = new AndNode();
+        node.RightChild = new BoolNode();
+        node.LeftChild = new TextNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+    @Test
+    public void TestAnd8(){
+        AndNode node = new AndNode();
+        node.RightChild = new NumberNode();
+        node.LeftChild = new TextNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+    @Test
+    public void TestAnd9(){
+        AndNode node = new AndNode();
+        node.RightChild = new TextNode();
+        node.LeftChild = new TextNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+
+    @Test
+    public void TestBool(){
+        BoolNode node = new BoolNode();
+        STCV.visit(node);
+        assertEquals("bool",node.type);
+    }
+
+    @Test
+    public void TestDivision1(){
+        DivisionNode node = new DivisionNode();
+        node.RightChild = new BoolNode();
+        node.LeftChild = new BoolNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+
+    @Test
+    public void TestDivision2(){
+        DivisionNode node = new DivisionNode();
+        node.RightChild = new NumberNode();
+        node.LeftChild = new BoolNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+    @Test
+    public void TestDivision3(){
+        DivisionNode node = new DivisionNode();
+        node.RightChild = new TextNode();
+        node.LeftChild = new BoolNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+    @Test
+    public void TestDivision4(){
+        DivisionNode node = new DivisionNode();
+        node.RightChild = new BoolNode();
+        node.LeftChild = new NumberNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+
+    @Test
+    public void TestDivision5(){
+        DivisionNode node = new DivisionNode();
+        node.RightChild = new NumberNode();
+        node.LeftChild = new NumberNode();
+        try{
+            STCV.visit(node);
+            assert true;
+        }
+        catch (TypeException x){
+            assert false;
+        }
+    }
+    @Test
+    public void TestDivision6(){
+        DivisionNode node = new DivisionNode();
+        node.RightChild = new TextNode();
+        node.LeftChild = new NumberNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+
+    @Test
+    public void TestDivision7(){
+        DivisionNode node = new DivisionNode();
+        node.RightChild = new BoolNode();
+        node.LeftChild = new TextNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+
+    @Test
+    public void TestDivision8(){
+        DivisionNode node = new DivisionNode();
+        node.RightChild = new NumberNode();
+        node.LeftChild = new BoolNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+
+    @Test
+    public void TestDivision9(){
+        DivisionNode node = new DivisionNode();
+        node.RightChild = new TextNode();
+        node.LeftChild = new TextNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+
+    @Test
+    public void TestEquals1(){
+        EqualsNode node = new EqualsNode();
+        node.RightChild = new BoolNode();
+        node.LeftChild = new BoolNode();
+        try{
+            STCV.visit(node);
+            assert true;
+        }
+        catch (TypeException x){
+            assert false;
+        }
+    }
+
+
+    @Test
+    public void TestEquals2(){
+        EqualsNode node = new EqualsNode();
+        node.RightChild = new NumberNode();
+        node.LeftChild = new BoolNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+
+
+    @Test
+    public void TestEquals3(){
+        EqualsNode node = new EqualsNode();
+        node.RightChild = new TextNode();
+        node.LeftChild = new BoolNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+
+    @Test
+    public void TestEquals4(){
+        EqualsNode node = new EqualsNode();
+        node.RightChild = new BoolNode();
+        node.LeftChild = new NumberNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+
+    @Test
+    public void TestEquals5(){
+        EqualsNode node = new EqualsNode();
+        node.RightChild = new NumberNode();
+        node.LeftChild = new NumberNode();
+        try{
+            STCV.visit(node);
+            assert true;
+        }
+        catch (TypeException x){
+            assert false;
+        }
+    }
+
+    @Test
+    public void TestEquals6(){
+        EqualsNode node = new EqualsNode();
+        node.RightChild = new NumberNode();
+        node.LeftChild = new TextNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+
+    @Test
+    public void TestEquals7(){
+        EqualsNode node = new EqualsNode();
+        node.RightChild = new BoolNode();
+        node.LeftChild = new TextNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+    @Test
+    public void TestEquals8(){
+        EqualsNode node = new EqualsNode();
+        node.RightChild = new NumberNode();
+        node.LeftChild = new TextNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+    @Test
+    public void TestEquals9(){
+        EqualsNode node = new EqualsNode();
+        node.RightChild = new TextNode();
+        node.LeftChild = new TextNode();
+        try{
+            STCV.visit(node);
+            assert true;
+        }
+        catch (TypeException x){
+            assert false;
+        }
+    }
+
+    @Test
+    public void TestGEQ1(){
+        GEQNode node = new GEQNode();
+        node.RightChild = new BoolNode();
+        node.LeftChild = new BoolNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+
+    @Test
+    public void TestGEQ2(){
+        GEQNode node = new GEQNode();
+        node.RightChild = new NumberNode();
+        node.LeftChild = new BoolNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+
+    @Test
+    public void TestGEQ3(){
+        GEQNode node = new GEQNode();
+        node.RightChild = new TextNode();
+        node.LeftChild = new BoolNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
+
+
+    @Test
+    public void TestGEQ4(){
+        GEQNode node = new GEQNode();
+        node.RightChild = new BoolNode();
+        node.LeftChild = new BoolNode();
+        try{
+            STCV.visit(node);
+            assert false;
+        }
+        catch (TypeException x){
+            assert true;
+        }
+    }
     @Test
     public void visitStrategyDcl() {
 
