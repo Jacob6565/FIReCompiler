@@ -555,9 +555,9 @@ public class CGBodyVisitor extends ASTVisitor {
             if(child instanceof BlockNode) {
                 visitNode(child);
             }
-        /*    for(int i = 0; i < CalculateTabs(child); i++){
+            for(int i = 0; i < CalculateTabs(child); i++){
                 code.emit("\t");
-            }*/
+            }
         }
 
         code.emitNL("}");
