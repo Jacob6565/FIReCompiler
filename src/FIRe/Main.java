@@ -27,6 +27,7 @@ public class Main {
         //Reads from the example program. (Debug code)
         Tuple<String, String> pathAndFileName = ReadUserInput();
         Scanner in = new Scanner(new FileReader(pathAndFileName.x+pathAndFileName.y));
+        //Scanner in = new Scanner(new FileReader("src\\FIRe\\Kodeeksempler\\KodeEx3.txt"));
         //We use this delimiter, to chop the code into bits. We split by the backslash character "\n"
         in.useDelimiter("\n");
 
