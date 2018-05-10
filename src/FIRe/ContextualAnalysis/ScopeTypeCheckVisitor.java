@@ -172,7 +172,10 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
 
         //If this is a for node, we insert the declared variable if there is one
         if (node.Parent instanceof ForNode && ((ForNode)node.Parent).Dcl != null){
-            visit(((ForNode) node.Parent).Dcl);
+            if (((ForNode)node.Parent).Dcl instanceof NumberDeclarationNode)
+                visit((NumberDeclarationNode)(((ForNode) node.Parent).Dcl));
+            else
+                throw new TypeException("number", ((ForNode)node.Parent).Dcl.Id.type,node.LineNumber);
         }
         //We also need to insert the formal parameters in the symbol table,
         //in order to make den accessible in the body.
@@ -394,7 +397,7 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
     public void visit(ForNode node, Object... arg) throws TypeException {
         for (AbstractNode Node : node.childList) {
             //We visit each child note EXCEPT for the declarationNode!
-            if (Node != null && !(Node instanceof NumberDeclarationNode))
+            if (Node != null && !(Node instanceof DeclarationNode))
                 visitNode(Node);
         }
 

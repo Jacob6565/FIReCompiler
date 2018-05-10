@@ -10,16 +10,12 @@ import FIRe.Nodes.*;
 import FIRe.Parser.CFGBaseVisitor;
 import FIRe.Parser.CFGLexer;
 import FIRe.Parser.CFGParser;
-import com.sun.org.apache.xpath.internal.operations.Bool;
-import jdk.nashorn.internal.ir.IfNode;
 import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.misc.ParseCancellationException;
 import org.junit.Test;
 import org.testng.Assert;
-import sun.security.krb5.SCDynamicStoreConfig;
 
-import javax.xml.soap.Text;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.lang.reflect.Type;
@@ -2215,7 +2211,7 @@ public class ScopeTypeCheckVisitorTest{
         STCV.visit(node);
         assertEquals("text",node.type);
     }
-    
+
     public CFGParser.ProgContext ContextPrep(){
 
         //Reads from the example program. (Debug code)
@@ -2259,4 +2255,3 @@ public class ScopeTypeCheckVisitorTest{
       return cst;
     }
 }
-
