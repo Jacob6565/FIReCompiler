@@ -1,0 +1,22 @@
+RobotProperties{
+RobotName: Walle;
+RobotType: AdvancedRobot;
+GunColor: blue;
+RadarColor: red;
+BodyColor: white;
+}
+
+strategy Default(){
+
+    routine(){
+
+    }
+
+    when(LowHealth e) {
+            turnRadarRight(360);
+    }
+}
+
+event LowHealth(){
+    return getEnergy() <= 50;
+}

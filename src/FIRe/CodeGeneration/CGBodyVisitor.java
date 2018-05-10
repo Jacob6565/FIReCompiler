@@ -8,6 +8,8 @@ import FIRe.Exceptions.SymbolNotFoundException;
 import FIRe.Exceptions.TypeException;
 import FIRe.Nodes.*;
 
+import java.util.ArrayList;
+
 //Emits code for the body of the program.
 public class CGBodyVisitor extends ASTVisitor {
     CGBodyVisitor(SymbolTable symbolTable){
@@ -41,6 +43,31 @@ public class CGBodyVisitor extends ASTVisitor {
             if(node.Parent.Parent instanceof StrategyDeclarationNode)
                 return true;
         return false;
+    }
+
+    private void generateDeclaration(String type, DeclarationNode node, boolean exprFlag, int idCounter) {
+        code.emit(type);
+
+        //If the exprflag is true we are dealing with a simple declaration with an assignment
+        if (exprFlag){
+            code.emit(node.Id.Name + " = ");
+            code.emitNL(exprGen.GenerateExprCode(code, node.expressionNode) + ";");
+            return;
+        }
+        else
+            generateSequentialIds(node.childList, idCounter);
+    }
+
+    private void generateSequentialIds(ArrayList<AbstractNode> childList, int idCounter) {
+        //For-loop for emitting the correct code
+        for (AbstractNode id : childList) {
+            if (id instanceof IdNode && idCounter > 1) {
+                code.emit(((IdNode) id).Name + ", ");
+                idCounter--;
+            } else if (id instanceof IdNode) {
+                code.emitNL(((IdNode) id).Name + ";");
+            }
+        }
     }
 
     @Override
@@ -110,27 +137,17 @@ public class CGBodyVisitor extends ASTVisitor {
             boolean exprFlag = false;
 
 
-            for (AbstractNode id : node.childList) {
-                if (id instanceof IdNode)
-                    idCounter++;
-                else if (id instanceof ExpressionNode)
-                    exprFlag = true;
+            //For-loop for handling the decleration(s)
+            if (node.expressionNode != null){
+                exprFlag = true;
             }
-            code.emit("boolean ");
-
-            //For loop that checks how the declaration should be emitted (E.g. with commas and multiple variables etc.)
-            for (AbstractNode id : node.childList) {
-                if (id instanceof IdNode && idCounter > 1) {
-                    code.emit(((IdNode) id).Name + ", ");
-                    idCounter--;
-                } else if (id instanceof IdNode && exprFlag) {
-                    code.emit(((IdNode) id).Name + " = ");
-                } else if (id instanceof IdNode) {
-                    code.emitNL(((IdNode) id).Name + ";");
-                } else if (id instanceof ExpressionNode) {
-                    code.emitNL(exprGen.GenerateExprCode(code, (ExpressionNode) id) + ";");
+            else
+                for (AbstractNode id : node.childList) {
+                    if (id instanceof IdNode)
+                        idCounter++;
                 }
-            }
+
+            generateDeclaration("boolean", node, exprFlag, idCounter);
         }
     }
 
@@ -464,27 +481,15 @@ public class CGBodyVisitor extends ASTVisitor {
             boolean exprFlag = false;
 
             //For-loop for handling the decleration(s)
+            if (node.expressionNode != null){
+                exprFlag = true;
+            }
             for (AbstractNode id : node.childList) {
                 if (id instanceof IdNode)
                     idCounter++;
-                else if (id instanceof ExpressionNode)
-                    exprFlag = true;
             }
 
-            code.emit("double ");
-            //For-loop for emitting the correct code
-            for (AbstractNode id : node.childList) {
-                if (id instanceof IdNode && idCounter > 1) {
-                    code.emit(((IdNode) id).Name + ", ");
-                    idCounter--;
-                } else if (id instanceof IdNode && exprFlag) {
-                    code.emit(((IdNode) id).Name + " = ");
-                } else if (id instanceof IdNode) {
-                    code.emitNL(((IdNode) id).Name + ";");
-                } else if (id instanceof ExpressionNode) {
-                    code.emitNL(exprGen.GenerateExprCode(code, (ExpressionNode) id) + ";");
-                }
-            }
+            generateDeclaration("double", node, exprFlag, idCounter);
         }
     }
 
@@ -547,9 +552,6 @@ public class CGBodyVisitor extends ASTVisitor {
             }
             indent(child);
         }
-
-        code.emitNL("}");
-
     }
 
     @Override
@@ -574,29 +576,16 @@ public class CGBodyVisitor extends ASTVisitor {
             int idCounter = 0;
             boolean exprFlag = false;
 
-            //For-loop for handling declerations
+            //For-loop for handling the decleration(s)
+            if (node.expressionNode != null){
+                exprFlag = true;
+            }
             for (AbstractNode id : node.childList) {
                 if (id instanceof IdNode)
                     idCounter++;
-                else if (id instanceof ExpressionNode)
-                    exprFlag = true;
             }
 
-            code.emit("String ");
-
-            //For-loop for emitting the correct syntax
-            for (AbstractNode id : node.childList) {
-                if (id instanceof IdNode && idCounter > 1) {
-                    code.emit(((IdNode) id).Name + ", ");
-                    idCounter--;
-                } else if (id instanceof IdNode && exprFlag) {
-                    code.emit(((IdNode) id).Name + " = ");
-                } else if (id instanceof IdNode) {
-                    code.emitNL(((IdNode) id).Name + ";");
-                } else if (id instanceof ExpressionNode) {
-                    code.emitNL(exprGen.GenerateExprCode(code, (ExpressionNode) id) + ";");
-                }
-            }
+            generateDeclaration("String", node, exprFlag, idCounter);
         }
     }
 

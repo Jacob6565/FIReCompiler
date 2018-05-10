@@ -179,8 +179,11 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
                     numberDeclarationNode.Id = (IdNode) visitId(ctx.id(0));
                     numberDeclarationNode.childList.add(numberDeclarationNode.Id);
 
-                    if (ctx.expr() != null)
-                        numberDeclarationNode.childList.add(visitExpr(ctx.expr()));
+                    if (ctx.expr() != null){
+                        AbstractNode expr = visitExpr(ctx.expr());
+                        numberDeclarationNode.childList.add(expr);
+                        numberDeclarationNode.expressionNode = (ExpressionNode) expr;
+                    }
                     else {
                         numberDeclarationNode.childList.add(new NumberNode(0));
                         System.out.println("WARNING: \"" + numberDeclarationNode.Id.Name + "\" has been implicitly assigned to 0 at line " + numberDeclarationNode.LineNumber + ".");
@@ -194,8 +197,11 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
                     textDeclarationNode.Id = (IdNode) visitId(ctx.id(0));
                     textDeclarationNode.childList.add(textDeclarationNode.Id);
 
-                    if (ctx.expr() != null)
-                        textDeclarationNode.childList.add(visitExpr(ctx.expr()));
+                    if (ctx.expr() != null){
+                        AbstractNode expr = visitExpr(ctx.expr());
+                        textDeclarationNode.childList.add(expr);
+                        textDeclarationNode.expressionNode = (ExpressionNode) expr;
+                    }
                     else {
                         textDeclarationNode.childList.add(new TextNode(""));
                         System.out.println("WARNING: \"" + textDeclarationNode.Id.Name + "\" has been indirectly assigned to \"\" at line " + textDeclarationNode.LineNumber);
@@ -209,8 +215,11 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
                     booleanDeclarationNode.LineNumber = ctx.start.getLine();
                     booleanDeclarationNode.childList.add(booleanDeclarationNode.Id);
 
-                    if (ctx.expr() != null)
-                        booleanDeclarationNode.childList.add(visitExpr(ctx.expr()));
+                    if (ctx.expr() != null){
+                        AbstractNode expr = visitExpr(ctx.expr());
+                        booleanDeclarationNode.childList.add(expr);
+                        booleanDeclarationNode.expressionNode = (ExpressionNode) expr;
+                    }
                     else {
                         booleanDeclarationNode.childList.add(new BoolNode(false));
                         System.out.println("WARNING: \"" + booleanDeclarationNode.Id.Name + "\" has been indirectly assigned to false at line " + booleanDeclarationNode.LineNumber);

@@ -4,10 +4,11 @@ import FIRe.ASTVisitor;
 import FIRe.Tuple;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class FormalParameterNode extends AbstractNode{
-    public Map<IdNode, String> parameterMap = new HashMap<IdNode, String>();
+    public Map<IdNode, String> parameterMap = new LinkedHashMap<>();
     public FormalParameterNode(){    }
     public FormalParameterNode(Tuple<String,String>[] parameters){
         for (Tuple <String,String> tuple: parameters) {
