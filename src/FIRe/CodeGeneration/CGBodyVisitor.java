@@ -46,7 +46,7 @@ public class CGBodyVisitor extends ASTVisitor {
     }
 
     private void generateDeclaration(String type, DeclarationNode node, boolean exprFlag, int idCounter) {
-        code.emit(type);
+        code.emit(type + " ");
 
         //If the exprflag is true we are dealing with a simple declaration with an assignment
         if (exprFlag){
