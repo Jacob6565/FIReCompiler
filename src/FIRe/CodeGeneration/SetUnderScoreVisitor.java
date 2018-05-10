@@ -225,6 +225,8 @@ public class SetUnderScoreVisitor extends ASTVisitor {
                 if(childOfChild instanceof IdNode) {
                     if(((IdNode) childOfChild).Name.equals(tempName))
                         node.Name = tempName;
+                    else if(childOfChild == node)
+                        node.Name = tempName;
                 }
             }
             else if(child instanceof AssignNode){
@@ -238,13 +240,6 @@ public class SetUnderScoreVisitor extends ASTVisitor {
                 }
             }
             else if(child instanceof WhenNode){
-                for(AbstractNode childOfChild : child.childList){
-                    if(childOfChild instanceof BlockNode){
-                        CheckBlockIdUnderScore(tempName, (BlockNode)childOfChild);
-                    }
-                }
-            }
-            else if(child instanceof RoutineNode){
                 for(AbstractNode childOfChild : child.childList){
                     if(childOfChild instanceof BlockNode){
                         CheckBlockIdUnderScore(tempName, (BlockNode)childOfChild);
@@ -407,7 +402,7 @@ public class SetUnderScoreVisitor extends ASTVisitor {
     @Override
     public void visit(RoutineNode node, Object... arg) throws TypeException {
         if (node.repeatCondition != null)
-            visit(node.repeatCondition);
+            visitNode(node.repeatCondition);
 
         for (AbstractNode child : node.childList)
             visitNode(child);
