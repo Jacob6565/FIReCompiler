@@ -607,7 +607,7 @@ public class CGBodyVisitor extends ASTVisitor {
 
             for (AbstractNode id : node.childList) {
                 if (id instanceof IdNode) {
-                    code.emit(((IdNode) id).Name + " = new[(int)");
+                    code.emit(((IdNode) id).Name + " = new String[(int)");
                 } else if (id instanceof ExpressionNode) {
                     code.emitNL(exprGen.GenerateExprCode(code, (ExpressionNode) id) + "];");
                 }
