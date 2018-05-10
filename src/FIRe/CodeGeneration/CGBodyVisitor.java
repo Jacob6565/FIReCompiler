@@ -88,7 +88,7 @@ public class CGBodyVisitor extends ASTVisitor {
         for(AbstractNode child : node.childList) {
             if(!stopBodyGen)
             {
-                CalculateTabs(child);
+                indent(child);
                 visitNode(child);
             }
         }
@@ -261,7 +261,7 @@ public class CGBodyVisitor extends ASTVisitor {
             if(child instanceof BlockNode) {
                 visitNode(child);
                 //Indents the code correctly in the output java file
-                CalculateTabs(child);
+                indent(child);
             } else if (child instanceof ExpressionNode){
                 visit(child);
             }
@@ -375,10 +375,10 @@ public class CGBodyVisitor extends ASTVisitor {
                 } else if (Node instanceof BlockNode) {
                     code.emitNL("{");
                     visit((BlockNode) Node);
-                    CalculateTabs(Node);
+                    indent(Node);
                     code.emitNL("}");
                 } else if (Node instanceof ExpressionNode && !firstTime) {
-                    CalculateTabs(Node);
+                    indent(Node);
                     code.emit("else if(");
                     visit((ExpressionNode) Node);
                     code.emit(")");
@@ -545,7 +545,7 @@ public class CGBodyVisitor extends ASTVisitor {
             if(child instanceof BlockNode) {
                 visitNode(child);
             }
-            CalculateTabs(child);
+            indent(child);
         }
 
         code.emitNL("}");
@@ -644,7 +644,7 @@ public class CGBodyVisitor extends ASTVisitor {
 
                 visitNode(child);
                 //Indents correctly in the output java file
-                CalculateTabs(child);
+                indent(child);
 
             }
         }
@@ -667,7 +667,7 @@ public class CGBodyVisitor extends ASTVisitor {
 
     }
     //method for calculating number of needed indentions
-    public void CalculateTabs(AbstractNode node){
+    public void indent(AbstractNode node){
         int indentations = 0;
 
         while (node.Parent != null && !(node.Parent.Parent instanceof FunctionDeclarationNode) && !(node.Parent.Parent
