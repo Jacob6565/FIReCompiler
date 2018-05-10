@@ -84,15 +84,11 @@ public class CGBodyVisitor extends ASTVisitor {
 
     @Override
     public void visit(BlockNode node,Object... arg) throws Exception {
-        int numberOfIdents = 0;
 
         for(AbstractNode child : node.childList) {
             if(!stopBodyGen)
             {
-                numberOfIdents = CalculateTabs(child);
-                for(int i = 0; i < numberOfIdents; i++){
-                    code.emit("\t");
-                }
+                CalculateTabs(child);
                 visitNode(child);
             }
         }
@@ -265,9 +261,7 @@ public class CGBodyVisitor extends ASTVisitor {
             if(child instanceof BlockNode) {
                 visitNode(child);
                 //Indents the code correctly in the output java file
-                for(int i = 0; i < CalculateTabs(child); i++){
-                    code.emit("\t");
-                }
+                CalculateTabs(child);
             } else if (child instanceof ExpressionNode){
                 visit(child);
             }
@@ -381,14 +375,10 @@ public class CGBodyVisitor extends ASTVisitor {
                 } else if (Node instanceof BlockNode) {
                     code.emitNL("{");
                     visit((BlockNode) Node);
-                    for(int i = 0; i < CalculateTabs(Node); i++){
-                        code.emit("\t");
-                    }
+                    CalculateTabs(Node);
                     code.emitNL("}");
                 } else if (Node instanceof ExpressionNode && !firstTime) {
-                    for(int i = 0; i < CalculateTabs(Node); i++){
-                        code.emit("\t");
-                    }
+                    CalculateTabs(Node);
                     code.emit("else if(");
                     visit((ExpressionNode) Node);
                     code.emit(")");
@@ -555,9 +545,7 @@ public class CGBodyVisitor extends ASTVisitor {
             if(child instanceof BlockNode) {
                 visitNode(child);
             }
-            for(int i = 0; i < CalculateTabs(child); i++){
-                code.emit("\t");
-            }
+            CalculateTabs(child);
         }
 
         code.emitNL("}");
@@ -656,9 +644,8 @@ public class CGBodyVisitor extends ASTVisitor {
 
                 visitNode(child);
                 //Indents correctly in the output java file
-                for(int i = 0; i < CalculateTabs(child); i++){
-                    code.emit("\t");
-                }
+                CalculateTabs(child);
+
             }
         }
 
@@ -680,7 +667,7 @@ public class CGBodyVisitor extends ASTVisitor {
 
     }
     //method for calculating number of needed indentions
-    public int CalculateTabs(AbstractNode node){
+    public void CalculateTabs(AbstractNode node){
         int indentations = 0;
 
         while (node.Parent != null && !(node.Parent.Parent instanceof FunctionDeclarationNode) && !(node.Parent.Parent
@@ -692,6 +679,9 @@ public class CGBodyVisitor extends ASTVisitor {
             if (node.Parent instanceof RoutineNode || node.Parent instanceof  WhenNode)
                 indentations--;
         }
-        return indentations; //returns the number of indentions
+
+        for(int i = 0; i < indentations; i++){
+            code.emit("\t");
+        }
     }
 }
