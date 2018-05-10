@@ -1,6 +1,10 @@
 package FIRe;
 
+import FIRe.ContextualAnalysis.RobotHeaderTable;
+import FIRe.ContextualAnalysis.ScopeTypeCheckVisitor;
+import FIRe.ContextualAnalysis.SymbolTable;
 import FIRe.Exceptions.AntlrException;
+import FIRe.Exceptions.TypeException;
 import FIRe.Nodes.*;
 import FIRe.Parser.CFGBaseVisitor;
 import FIRe.Parser.CFGLexer;
@@ -24,6 +28,10 @@ public class ScopeTypeCheckVisitorTest{
 
     BuildASTVisitor BASTV = new BuildASTVisitor();
     CFGParser.ProgContext cst = ContextPrep();
+    SymbolTable ST = new SymbolTable();
+    RobotHeaderTable RHT = new RobotHeaderTable();
+    ScopeTypeCheckVisitor STCV = new ScopeTypeCheckVisitor(ST, RHT);
+
     @Test
     public void visitProgTest() {
         AbstractNode node = BASTV.visitProg(cst);
@@ -40,12 +48,19 @@ public class ScopeTypeCheckVisitorTest{
     }
 
     @Test
-    public void visitProgBody() {
-        AbstractNode node = BASTV.visitProg(cst);
-        for (AbstractNode Node: node.childList ) {
-        
+    public void testAddition(){
+        AdditionNode node = new AdditionNode();
+        node.LeftChild = new NumberNode(0);
+        node.RightChild = new TextNode("h");
+        try {
+            STCV.visit(node);
         }
+        catch (TypeException x){
 
+        }
+        finally {
+            assertEquals("number", node.type);
+        }
     }
 
     @Test
