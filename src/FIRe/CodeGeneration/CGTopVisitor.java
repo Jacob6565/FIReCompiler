@@ -30,10 +30,10 @@ public class CGTopVisitor extends ASTVisitor {
     CGBodyVisitor bodyVisitor;
 
     //Prints the generated code from the CodeHolders into the output file
-    public void generateOutputFile(){
+    public void generateOutputFile(String path){
         String code = progCode.toString();
         //The fileName is the same as the class name/robot name
-        printToFile("GeneratedCode\\" + progCode.setup.name + ".java", code);
+        printToFile(path + progCode.setup.name + ".java", code);
     }
 
     //Creates the output file and writes the code in it

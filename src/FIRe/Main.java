@@ -13,7 +13,11 @@ import org.antlr.v4.runtime.misc.ParseCancellationException;
 
 import java.io.*;
 import java.util.Scanner;
-
+//********************************************************************************
+// HOW TO RUN THE PROGRAM WITH INTELLIJ:
+//Navigate to: FIReCompiler\out\artifacts\FIReCompiler_jar in the commando prompt
+//Then write java -jar FIReCompiler.jar
+//********************************************************************************
 public class Main {
     public static boolean CodeGenerationFlag = false; //Set to true, if/when there is an error that prevents code generation
     public static boolean ContextualAnalysisFlag = false; //Set to true, if/when there is an error that prevents the contextual analysis
@@ -21,8 +25,8 @@ public class Main {
     public static void main(String[] args) throws Exception {
 
         //Reads from the example program. (Debug code)
-        Scanner in = new Scanner(new FileReader("src\\FIRe\\Kodeeksempler\\KodeEx3.txt"));
-
+        Tuple<String, String> pathAndFileName = ReadUserInput();
+        Scanner in = new Scanner(new FileReader(pathAndFileName.x+pathAndFileName.y));
         //We use this delimiter, to chop the code into bits. We split by the backslash character "\n"
         in.useDelimiter("\n");
 
@@ -124,7 +128,7 @@ public class Main {
                     System.out.println(e.getMessage());
                 }
 
-                codeGenerator.generateOutputFile();
+                codeGenerator.generateOutputFile(pathAndFileName.x);
             } else { //If the semantics are wrong, print that code generation was not performed
                 System.out.println("Contextual errors detected. No code was generated.");
             }
@@ -132,5 +136,22 @@ public class Main {
         else {
             System.out.println("Syntactic errors detected. No code was generated.");
         }
+    }
+
+    static Tuple<String, String> ReadUserInput()
+    {
+        Scanner userInput = new Scanner(System.in);
+        String path;
+        String fileName;
+        System.out.println("> Write the name of the file including file extension fx Robot.txt:");
+        System.out.print("> ");
+        fileName =  userInput.nextLine();
+        System.out.println("\n> Write the full path for your FIRe program excluding the file name fx C:\\Desktop\\: ");
+        System.out.print("> ");
+        path = userInput.nextLine();
+        System.out.println("\nThe compiled file will be made in the same path.");
+        Tuple<String, String> pathAndFileName = new Tuple<String, String>(path, fileName);
+
+        return pathAndFileName;
     }
 }
