@@ -21,7 +21,7 @@ public class Main {
     public static void main(String[] args) throws Exception {
 
         //Reads from the example program. (Debug code)
-        Scanner in = new Scanner(new FileReader("src\\FIRe\\Kodeeksempler\\Test4.txt"));
+        Scanner in = new Scanner(new FileReader("src\\FIRe\\Kodeeksempler\\KodeEx3.txt"));
 
         //We use this delimiter, to chop the code into bits. We split by the backslash character "\n"
         in.useDelimiter("\n");
@@ -44,14 +44,15 @@ public class Main {
         try {
             //https://stackoverflow.com/questions/18110180/processing-a-string-with-antlr4
             //Setup to perform lexical analysis on the input string.
+            AntlrException antlrException = new AntlrException();
             CFGLexer lexer = new CFGLexer(CharStreams.fromString(outString));
             lexer.removeErrorListeners();
-            lexer.addErrorListener(AntlrException.INSTANCE);
+            lexer.addErrorListener(antlrException);
 
             CommonTokenStream tokenStream = new CommonTokenStream(lexer);
             CFGParser parser = new CFGParser(tokenStream);
             parser.removeErrorListeners();
-            parser.addErrorListener(AntlrException.INSTANCE);
+            parser.addErrorListener(antlrException);
 
             //Performs lexical analysis and builds a CST.
             cst = parser.prog();

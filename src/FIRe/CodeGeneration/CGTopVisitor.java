@@ -17,10 +17,7 @@ import FIRe.Nodes.*;
 
 import java.io.*;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
 
 public class CGTopVisitor extends ASTVisitor {
     public CGTopVisitor(SymbolTable symbolTable){
@@ -169,35 +166,24 @@ public class CGTopVisitor extends ASTVisitor {
 
         MethodCodeHolder method;
         String params = null;
-        ArrayList<String> ids = new ArrayList<String>();
-        ArrayList<String> types = new ArrayList<String>();
 
         //Creates the string for the parameters of a method
         for (AbstractNode child: node.childList) {
             if (child instanceof FormalParameterNode){
-                params = "";
+                params = new String();
                 FormalParameterNode fparam = (FormalParameterNode) child;
-                Set<IdNode> idNodeSet = fparam.parameterMap.keySet();
-                Collection<String> typeCollection = fparam.parameterMap.values();
 
-                for (Iterator<IdNode> it = idNodeSet.iterator(); it.hasNext();){
-                    ids.add(it.next().Name);
-                }
 
-                for (Iterator<String> it = typeCollection.iterator(); it.hasNext();){
-                    types.add(it.next());
-                }
-
-                //We can do this as we know that set size and collection size is equal
                 boolean firstParam = true;
-                for (int i = 0; i < ids.size(); i++){
+                for (Map.Entry<IdNode, String> entry: fparam.parameterMap.entrySet()){
                     if (firstParam){
-                        params += translateType(types.get(i)) + " " + ids.get(i);
+                        params += translateType(entry.getValue()) + " " + entry.getKey().Name;
                         firstParam = false;
                     }
                     else
-                        params += ", " + translateType(types.get(i)) + " " + ids.get(i);
+                        params += ", " + translateType( entry.getValue()) + " " + entry.getKey().Name;
                 }
+
             }
         }
 
