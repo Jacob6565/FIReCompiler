@@ -1,0 +1,554 @@
+RobotProperties{
+RobotName:MegaDumb;
+RobotType: AdvancedRobot;
+GunColor: pink;
+RadarColor: green;
+BodyColor:black;
+}
+
+strategy Default(){
+
+    routine(200){
+        setTurnGunRight(60);
+        execute();
+        strat42();
+    }
+
+    when(ScannedRobotEvent e){
+         strat42();
+    }
+
+}
+
+
+strategy strat1(){
+
+    routine(){
+        setFire(1);
+        execute();
+    }
+
+
+    when(ScannedRobotEvent e){
+        strat2();
+    }
+}
+
+strategy strat2(){
+
+    routine(){
+        setFire(1);
+        execute();
+    }
+
+
+    when(ScannedRobotEvent e){
+        strat3();
+    }
+}
+
+strategy strat3(){
+
+    routine(){
+        setFire(1);
+        execute();
+    }
+
+
+    when(ScannedRobotEvent e){
+        strat4();
+    }
+}
+
+strategy strat4(){
+
+    routine(){
+        setFire(1);
+        execute();
+    }
+
+
+    when(ScannedRobotEvent e){
+        strat5();
+    }
+}
+strategy strat5(){
+
+    routine(){
+        setFire(1);
+        execute();
+    }
+
+
+    when(ScannedRobotEvent e){
+        strat6();
+    }
+}
+
+strategy strat6(){
+
+    routine(){
+        setFire(1);
+        execute();
+    }
+
+
+    when(ScannedRobotEvent e){
+        strat7();
+    }
+}
+
+strategy strat7(){
+
+    routine(){
+        setFire(1);
+        execute();
+    }
+
+
+    when(ScannedRobotEvent e){
+        strat8();
+    }
+}
+
+strategy strat8(){
+
+    routine(){
+        setFire(1);
+        execute();
+    }
+
+
+    when(ScannedRobotEvent e){
+        strat9();
+    }
+}
+strategy strat9(){
+
+    routine(){
+        setFire(1);
+        execute();
+    }
+
+
+
+    when(ScannedRobotEvent e){
+        strat10();
+    }
+}
+
+strategy strat10(){
+
+    routine(){
+        setFire(1);
+        execute();
+    }
+
+
+    when(ScannedRobotEvent e){
+        strat11();
+    }
+}
+
+strategy strat11(){
+
+    routine(){
+        setFire(1);
+        execute();
+    }
+
+
+    when(ScannedRobotEvent e){
+        strat12();
+    }
+}
+
+strategy strat12(){
+
+
+    routine(){
+        setFire(1);
+        execute();
+    }
+
+    when(ScannedRobotEvent e){
+        strat13();
+    }
+}
+strategy strat13(){
+
+    routine(){
+        setFire(1);
+        execute();
+    }
+
+
+    when(ScannedRobotEvent e){
+        strat14();
+    }
+}
+
+strategy strat14(){
+
+    routine(){
+        setFire(1);
+        execute();
+    }
+
+
+    when(ScannedRobotEvent e){
+        strat15();
+    }
+}
+
+strategy strat15(){
+
+        routine(){
+            setFire(1);
+            execute();
+        }
+
+
+    when(ScannedRobotEvent e){
+        strat16();
+    }
+}
+
+strategy strat16(){
+
+    routine(){
+        setFire(1);
+        execute();
+    }
+
+
+    when(ScannedRobotEvent e){
+        strat17();
+    }
+}
+strategy strat17(){
+
+    routine(){
+        setFire(1);
+        execute();
+    }
+
+
+    when(ScannedRobotEvent e){
+        strat18();
+    }
+}
+
+strategy strat18(){
+
+
+    routine(){
+        setFire(1);
+        execute();
+    }
+
+    when(ScannedRobotEvent e){
+        strat19();
+    }
+}
+
+strategy strat19(){
+
+    routine(){
+        setFire(1);
+        execute();
+    }
+
+
+    when(ScannedRobotEvent e){
+        strat20();
+    }
+}
+
+strategy strat20(){
+
+    routine(){
+        setFire(1);
+        execute();
+    }
+
+
+    when(ScannedRobotEvent e){
+        strat21();
+    }
+}
+strategy strat21(){
+
+    routine(){
+        setFire(1);
+        execute();
+    }
+
+
+    when(ScannedRobotEvent e){
+        strat22();
+    }
+}
+
+strategy strat22(){
+
+    routine(){
+        setFire(1);
+        execute();
+    }
+
+
+    when(ScannedRobotEvent e){
+        strat23();
+    }
+}
+
+strategy strat23(){
+
+    routine(){
+        setFire(1);
+        execute();
+    }
+
+
+    when(ScannedRobotEvent e){
+        strat23();
+    }
+}
+
+strategy strat24(){
+
+    routine(){
+        setFire(1);
+        execute();
+    }
+
+
+    when(ScannedRobotEvent e){
+        strat25();
+    }
+}
+strategy strat25(){
+
+    routine(){
+        setFire(1);
+        execute();
+    }
+
+
+    when(ScannedRobotEvent e){
+        strat26();
+    }
+}
+
+strategy strat26(){
+
+    routine(){
+        setFire(1);
+        execute();
+    }
+
+    when(ScannedRobotEvent e){
+        strat27();
+    }
+}
+
+strategy strat27(){
+
+    routine(){
+        setFire(1);
+        execute();
+    }
+
+
+    when(ScannedRobotEvent e){
+        strat28();
+    }
+}
+
+strategy strat28(){
+
+    routine(){
+        setFire(1);
+        execute();
+    }
+
+
+    when(ScannedRobotEvent e){
+        strat29();
+    }
+}
+strategy strat29(){
+
+    routine(){
+        setFire(1);
+        execute();
+    }
+
+
+    when(ScannedRobotEvent e){
+        strat30();
+    }
+}
+
+strategy strat30(){
+
+    routine(){
+        setFire(1);
+        execute();
+    }
+
+
+    when(ScannedRobotEvent e){
+        strat31();
+    }
+}
+
+strategy strat31(){
+
+    routine(){
+        setFire(1);
+        execute();
+    }
+
+
+    when(ScannedRobotEvent e){
+        strat32();
+    }
+}
+
+strategy strat32(){
+
+    routine(){
+        setFire(1);
+        execute();
+    }
+
+    when(ScannedRobotEvent e){
+        strat33();
+    }
+}
+strategy strat33(){
+
+    routine(){
+        setFire(1);
+        execute();
+    }
+
+
+    when(ScannedRobotEvent e){
+        strat34();
+    }
+}
+
+strategy strat34(){
+
+    routine(){
+        setFire(1);
+        execute();
+    }
+
+
+    when(ScannedRobotEvent e){
+        strat35();
+    }
+}
+
+strategy strat35(){
+
+    routine(){
+        setFire(1);
+        execute();
+    }
+
+    when(ScannedRobotEvent e){
+        strat36();
+    }
+}
+
+strategy strat36(){
+
+    routine(){
+        setFire(1);
+        execute();
+    }
+
+
+    when(ScannedRobotEvent e){
+        strat37();
+    }
+}
+strategy strat37(){
+
+    routine(){
+        setFire(1);
+        execute();
+    }
+
+
+    when(ScannedRobotEvent e){
+        strat38();
+    }
+}
+
+strategy strat38(){
+
+    routine(){
+        setFire(1);
+        execute();
+    }
+
+
+    when(ScannedRobotEvent e){
+        strat39();
+    }
+}
+
+strategy strat39(){
+
+    routine(){
+        setFire(1);
+        execute();
+    }
+
+
+    when(ScannedRobotEvent e){
+        strat40();
+    }
+}
+
+strategy strat40(){
+
+    routine(){
+        setFire(1);
+        execute();
+    }
+
+    when(ScannedRobotEvent e){
+        strat41();
+    }
+}
+strategy strat41(){
+
+    routine(){
+        setFire(1);
+        execute();
+    }
+
+    when(ScannedRobotEvent e){
+        strat42();
+    }
+}
+
+strategy strat42(){
+
+    routine(){
+        setTurnGunLeft(60);
+        execute();
+    }
+
+
+    when(ScannedRobotEvent e){
+
+    }
+}

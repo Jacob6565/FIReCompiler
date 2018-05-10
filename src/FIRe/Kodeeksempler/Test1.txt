@@ -1,7 +1,9 @@
 RobotProperties{
-RobotName: BumbleTheif;
-RobotGunColor: Yellow;
-RobotRadarColor: Blue;
+RobotName: BumbleBee;
+RobotType: AdvancedRobot;
+GunColor: yellow;
+RadarColor: blue;
+BodyColor:yellow;
 }
 
 strategy Default(){
@@ -9,11 +11,14 @@ strategy Default(){
     number runs = AmountOfRuns();
 
     routine(runs){
-        turnRadarRight(20);
-        setFire(2);
+        setTurnGunRight(50);
+        execute();
+
     }
 
-    when (OnScannedRobotEvent e){
+    when (ScannedRobotEvent e){
+        setTurnGunLeft(50);
+        setFire(2);
         execute();
     }
 
