@@ -27,7 +27,7 @@ strategy Default()
         {
             setTurnGunRight(360);
             setTurnGunLeft(360);
-            Execute();
+            execute();
         }
     }
     when (ScannedRobotEvent e)
@@ -74,7 +74,7 @@ strategy Offensive()
 
         setTurnGunRight(360);
         setTurnGunLeft(360);
-        Execute();
+        execute();
     }
 
     when (ScannedRobotEvent e)
