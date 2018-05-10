@@ -1101,7 +1101,7 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
         }
 
         //the expression should be a bool
-        if(node.Expression.type != "bool")
+        if(node.Expression.type != null && !node.Expression.type.equals("bool"))
             throw new TypeException("bool",node.Expression.type,node.LineNumber);
     }
 
