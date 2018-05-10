@@ -7,7 +7,6 @@ import FIRe.Nodes.*;
 import FIRe.ASTVisitor;
 import FIRe.Exceptions.*;
 import FIRe.Tuple;
-import com.sun.xml.internal.bind.v2.model.core.ID;
 
 import javax.xml.soap.Text;
 
@@ -173,7 +172,13 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
 
         //If this is a for node, we insert the declared variable if there is one
         if (node.Parent instanceof ForNode && ((ForNode)node.Parent).Dcl != null){
-            visit(((ForNode) node.Parent).Dcl);
+            if (((ForNode)node.Parent).Dcl instanceof NumberDeclarationNode)
+                visit((NumberDeclarationNode)(((ForNode) node.Parent).Dcl));
+            else if(((ForNode)node.Parent).Dcl instanceof TextDeclarationNode)
+                throw new TypeException("number", "text", ((ForNode)node.Parent).LineNumber);
+            else if(((ForNode)node.Parent).Dcl instanceof BooleanDeclarationNode)
+                throw new TypeException("number", "bool", ((ForNode)node.Parent).LineNumber);
+
         }
         //We also need to insert the formal parameters in the symbol table,
         //in order to make den accessible in the body.
@@ -395,7 +400,7 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
     public void visit(ForNode node, Object... arg) throws TypeException {
         for (AbstractNode Node : node.childList) {
             //We visit each child note EXCEPT for the declarationNode!
-            if (Node != null && !(Node instanceof NumberDeclarationNode))
+            if (Node != null && !(Node instanceof DeclarationNode))
                 visitNode(Node);
         }
 
@@ -769,7 +774,7 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(ModuloNode node, Object... arg) throws Exception {
+    public void visit(ModuloNode node, Object... arg) throws TypeException {
         if (node.LeftChild != null)
             visitNode(node.LeftChild);
         if (node.RightChild != null)
@@ -826,6 +831,9 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
 
     @Override
     public void visit(NotNode node, Object... arg) throws TypeException {
+        for (AbstractNode Node: node.childList) {
+            visitNode(Node);
+        }
 
         //If the expression is not a bool, throw an expression
         if(node.Expression.type != null && !node.Expression.type.equals("bool"))
@@ -1104,7 +1112,7 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
         }
 
         //the expression should be a bool
-        if(node.Expression.type != "bool")
+        if(node.Expression.type != null && !node.Expression.type.equals("bool"))
             throw new TypeException("bool",node.Expression.type,node.LineNumber);
     }
 

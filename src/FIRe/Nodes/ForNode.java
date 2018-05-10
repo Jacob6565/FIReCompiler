@@ -4,7 +4,7 @@ import FIRe.ASTVisitor;
 
 public class ForNode extends ControlStructureNode {
 
-    public NumberDeclarationNode Dcl;
+    public DeclarationNode Dcl;
     public ExpressionNode From;
     public ExpressionNode To;
 

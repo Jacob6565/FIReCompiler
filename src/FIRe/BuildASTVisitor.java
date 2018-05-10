@@ -684,7 +684,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
         else if (ctx.For() != null){
             ForNode FN = new ForNode();
             if (ctx.dcl() != null){//Detemine whether the first part of the for-loops is a declaration.
-                FN.Dcl = (NumberDeclarationNode) visitDcl(ctx.dcl());
+                FN.Dcl = (DeclarationNode) visitDcl(ctx.dcl());
                 FN.To = (ExpressionNode)(visitExpr(ctx.expr(0)));
                 FN.childList.add(FN.Dcl);
                 FN.childList.add(FN.To);
