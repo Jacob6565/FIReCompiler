@@ -14,7 +14,7 @@ import org.antlr.v4.runtime.misc.ParseCancellationException;
 import java.io.*;
 import java.util.Scanner;
 //********************************************************************************
-// HOW TO RUN THE PROGRAM WITH INTELLIJ:
+// HOW TO RUN THE PROGRAM WITHOUT INTELLIJ:
 //Navigate to: FIReCompiler\out\artifacts\FIReCompiler_jar in the commando prompt
 //Then write java -jar FIReCompiler.jar
 //********************************************************************************
