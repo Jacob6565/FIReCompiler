@@ -18,15 +18,7 @@ import java.util.Scanner;
 //Navigate to: FIReCompiler\out\artifacts\FIReCompiler_jar in the commando prompt
 //Then write java -jar FIReCompiler.jar
 //********************************************************************************
-
 public class Main {
-
-    public final static String BOOL = "bool";
-    public final static String NUMBER = "number";
-    public final static String TEXT = "text";
-    public final static String BOOLARRAY = "bool array";
-    public final static String NUMBERARRAY = "number array";
-    public final static String TEXTARRAY = "text array";
     public static boolean CodeGenerationFlag = false; //Set to true, if/when there is an error that prevents code generation
     public static boolean ContextualAnalysisFlag = false; //Set to true, if/when there is an error that prevents the contextual analysis
 
@@ -34,12 +26,10 @@ public class Main {
 
         //Reads from the example program. (Debug code)
         //Tuple<String, String> pathAndFileName = ReadUserInput();
-        //Scanner in = new Scanner(new FileReader(pathAndFileName.x+pathAndFileName.y));
-        Scanner in = new Scanner(new FileReader("src\\FIRe\\Kodeeksempler\\KodeEx3.txt"));
+       // Scanner in = new Scanner(new FileReader(pathAndFileName.x+pathAndFileName.y));
+        Scanner in = new Scanner(new FileReader("src\\FIRe\\Kodeeksempler\\Test2.txt"));
         //We use this delimiter, to chop the code into bits. We split by the backslash character "\n"
         in.useDelimiter("\n");
-
-        Errors errors = new Errors();
 
         //Creates a StringBuilder from the given code file.
         StringBuilder sb = new StringBuilder();
@@ -138,10 +128,8 @@ public class Main {
                 } catch (Exception e) {
                     System.out.println(e.getMessage());
                 }
-
-
-                codeGenerator.generateOutputFile("src\\FIRe\\Kodeeksempler\\");
-                //codeGenerator.generateOutputFile(pathAndFileName.x);
+                codeGenerator.generateOutputFile( "GeneratedCode\\");
+              //  codeGenerator.generateOutputFile(pathAndFileName.x);
             } else { //If the semantics are wrong, print that code generation was not performed
                 System.out.println("Contextual errors detected. No code was generated.");
             }
