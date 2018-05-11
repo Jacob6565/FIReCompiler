@@ -6,15 +6,15 @@ import java.util.List;
 
 public class Errors {
 
-    public List<String> ErrosAndWarnings = new ArrayList<String>();
+    public List<String> ErrorsAndWarnings = new ArrayList<String>();
 
 
     public void addError(String errorMessage){
-        ErrosAndWarnings.add(errorMessage);
+        ErrorsAndWarnings.add(errorMessage);
     }
 
     public void writeToConsole(){
-        for (String string:ErrosAndWarnings){
+        for (String string:ErrorsAndWarnings){
             System.out.println(string);
         }
     }
