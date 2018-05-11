@@ -203,14 +203,10 @@ public class SetUnderScoreVisitor extends ASTVisitor {
         else {
             while (ancestor.Parent != null) {
                 if (ancestor.Parent instanceof StrategyDeclarationNode && !(node.Parent.Parent instanceof ProgNode) && !(node.Parent instanceof WhenNode) && !(node.Parent instanceof FuncCallNode)) {
-                    //if the IdNode is part of an assignment we need to do further checks down below.
-                    if(node.Parent instanceof AssignNode || node.Parent instanceof ActualParameterNode || node.Parent instanceof ExpressionNode || node.Parent instanceof RoutineNode || node.Parent instanceof IfControlStructureNode || node.Parent instanceof DeclarationNode) {
                         tempName = node.Name + ((StrategyDeclarationNode) ancestor.Parent).Id.Name;
                         tempStrat = (StrategyDeclarationNode) ancestor.Parent;
                         tempFlag = true;
-                    }
-                    else
-                        node.Name = node.Name + ((StrategyDeclarationNode) ancestor.Parent).Id.Name;
+
                 }
                 ancestor = ancestor.Parent;
             }
@@ -229,70 +225,12 @@ public class SetUnderScoreVisitor extends ASTVisitor {
                         node.Name = tempName;
                 }
             }
-            else if(child instanceof AssignNode){
-                if(((AssignNode) child).Expression instanceof IdNode) {
-                    IdNode id = (IdNode)((AssignNode) child).Expression;
-                    if (id.Name.equals(tempName))
-                        node.Name = tempName;
-                }
-                else if(((AssignNode) child).Expression instanceof InfixExpressionNode){
-                    CheckInfixIdUnderscore(tempName, (InfixExpressionNode) ((AssignNode) child).Expression);
-                }
-            }
-            else if(child instanceof WhenNode){
-                for(AbstractNode childOfChild : child.childList){
-                    if(childOfChild instanceof BlockNode){
-                        CheckBlockIdUnderScore(tempName, (BlockNode)childOfChild);
-                    }
-                }
-            }
+
         }
         }
 
         if(node.ArrayIndex != null){
             visitNode(node.ArrayIndex);
-        }
-    }
-
-    private void CheckBlockIdUnderScore(String tempName, BlockNode node){
-        for(AbstractNode child : node.childList)
-            if(child instanceof IdNode) {
-                if (((IdNode) child).Name.equals(tempName)) {
-                    ((IdNode) child).Name = tempName;
-                }
-            }
-            else if (child instanceof BlockNode) {
-                CheckBlockIdUnderScore(tempName, (BlockNode) child);
-            }
-            else if(child instanceof IfControlStructureNode){
-                for(AbstractNode childOfChild : child.childList)
-                    if(childOfChild instanceof IdNode) {
-                        if (((IdNode) childOfChild).Name.equals(tempName))
-                            ((IdNode) childOfChild).Name = tempName;
-                    }
-                    else if(childOfChild instanceof InfixExpressionNode)
-                        CheckInfixIdUnderscore(tempName, (InfixExpressionNode) childOfChild);
-                    else if (childOfChild instanceof BlockNode)
-                        CheckBlockIdUnderScore(tempName, (BlockNode) childOfChild);
-
-            };
-    }
-
-    private void CheckInfixIdUnderscore(String tempName, InfixExpressionNode node){
-
-        if(node.LeftChild instanceof IdNode){
-            if(((IdNode) node.LeftChild).Name.equals(tempName))
-                ((IdNode) node.LeftChild).Name = tempName;
-        }
-        else if(node.LeftChild instanceof InfixExpressionNode){
-            CheckInfixIdUnderscore(tempName,(InfixExpressionNode) node.LeftChild);
-        }
-        if(node.RightChild instanceof IdNode){
-            if(((IdNode) node.RightChild).Name.equals(tempName))
-                ((IdNode) node.RightChild).Name = tempName;
-        }
-        else if(node.RightChild instanceof InfixExpressionNode){
-            CheckInfixIdUnderscore(tempName,(InfixExpressionNode) node.RightChild);
         }
     }
 
