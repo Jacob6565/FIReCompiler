@@ -3,6 +3,7 @@ package FIRe.ContextualAnalysis;
 import java.util.List;
 import java.util.Map;
 
+import FIRe.Main;
 import FIRe.Nodes.*;
 import FIRe.ASTVisitor;
 import FIRe.Exceptions.*;
@@ -43,22 +44,12 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
         node.type = node.LeftChild.type;
 
         //Addition should only work if the children are of the same type and neither of them are bool
-
-        if (node.LeftChild.type != null && node.RightChild.type != null) {
-            if (node.LeftChild.type.equals("bool") && node.RightChild.type.equals("bool"))
-                throw new TypeException("number or text", "bool", node.LineNumber);
-
-            else if (node.LeftChild.type.equals("number") && node.RightChild.equals("text"))
-                throw new TypeException("number", "text", node.LineNumber);
-
-            else if (node.LeftChild.type.equals("text") && node.RightChild.equals("number"))
-                throw new TypeException("text", "number", node.LineNumber);
-
-            else if ((node.LeftChild.type.equals("number") || node.LeftChild.type.equals("text")) && !node.RightChild.type.equals(node.LeftChild.type))
-                throw new TypeException(node.LeftChild.type, node.RightChild.type, node.LineNumber);
-
-            else if ((node.RightChild.type.equals("number") || node.RightChild.type.equals("text")) && !node.LeftChild.type.equals(node.RightChild.type))
-                throw new TypeException(node.RightChild.type, node.LeftChild.type, node.LineNumber);
+        if(! node.LeftChild.type.equals(node.RightChild.type)){
+            throw new TypeException(node.LeftChild.type, node.RightChild.type, node.LineNumber);
+        }else if(node.LeftChild.type.equals(Main.BOOL) || node.RightChild.type.equals(Main.BOOL)){
+            throw new TypeException("number or text", Main.BOOL, node.LineNumber);
+        }else{
+            node.type = node.LeftChild.type;
         }
     }
 
@@ -78,14 +69,14 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
             visitNode(node.RightChild);
 
         //Both children should be bools
-        if (node.LeftChild.type != "bool")
-            throw new TypeException("bool", node.LeftChild.type, node.LineNumber);
+        if (node.LeftChild.type != Main.BOOL)
+            throw new TypeException(Main.BOOL, node.LeftChild.type, node.LineNumber);
 
-        if (node.RightChild.type != "bool")
-            throw new TypeException("bool", node.RightChild.type, node.LineNumber);
+        if (node.RightChild.type != Main.BOOL)
+            throw new TypeException(Main.BOOL, node.RightChild.type, node.LineNumber);
 
         //The result is also a bool
-        node.type = "bool";
+        node.type = Main.BOOL;
     }
 
 
@@ -114,7 +105,7 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
         }
         else
         {
-            throw new TypeException("number", node.index.type, node.LineNumber);
+            throw new TypeException(Main.NUMBER, node.index.type, node.LineNumber);
         }
 
 
@@ -124,14 +115,14 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
 
             //We set the type as the the itself without the array. Could be done with a split
             switch (node.Id.type) {
-                case "bool array":
-                    node.type = "bool";
+                case Main.BOOLARRAY:
+                    node.type = Main.BOOL;
                     break;
-                case "number array":
-                    node.type = "number";
+                case Main.NUMBERARRAY:
+                    node.type = Main.NUMBER;
                     break;
-                case "text array":
-                    node.type = "text";
+                case Main.TEXTARRAY:
+                    node.type = Main.TEXT;
                     break;
                 default:
                     throw new TypeException("array", node.Id.type, node.LineNumber);
@@ -175,9 +166,9 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
             if (((ForNode)node.Parent).Dcl instanceof NumberDeclarationNode)
                 visit((NumberDeclarationNode)(((ForNode) node.Parent).Dcl));
             else if(((ForNode)node.Parent).Dcl instanceof TextDeclarationNode)
-                throw new TypeException("number", "text", ((ForNode)node.Parent).LineNumber);
+                throw new TypeException(Main.NUMBER, Main.TEXT, ((ForNode)node.Parent).LineNumber);
             else if(((ForNode)node.Parent).Dcl instanceof BooleanDeclarationNode)
-                throw new TypeException("number", "bool", ((ForNode)node.Parent).LineNumber);
+                throw new TypeException(Main.NUMBER, Main.BOOL, ((ForNode)node.Parent).LineNumber);
 
         }
         //We also need to insert the formal parameters in the symbol table,
@@ -234,22 +225,22 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
     private void InsertFormalParameters(FormalParameterNode node) throws Exception {
         for (Map.Entry<IdNode, String> entry : node.parameterMap.entrySet()) {
             switch (entry.getValue()) {
-                case "number":
+                case Main.NUMBER:
                     ST.Insert(new NumberDeclarationNode(entry.getKey(),entry.getKey().LineNumber));
                     break;
-                case "bool":
+                case Main.BOOL:
                     ST.Insert(new BooleanDeclarationNode(entry.getKey(),entry.getKey().LineNumber));
                     break;
-                case "text":
+                case Main.TEXT:
                     ST.Insert(new TextDeclarationNode(entry.getKey(),entry.getKey().LineNumber));
                     break;
-                case "number array":
+                case Main.NUMBERARRAY:
                     ST.Insert(new NumberArrayDeclarationNode(entry.getKey(),entry.getKey().LineNumber));
                     break;
-                case "bool array":
+                case Main.BOOLARRAY:
                     ST.Insert(new BoolArrayDeclarationNode(entry.getKey(),entry.getKey().LineNumber));
                     break;
-                case "text array":
+                case Main.TEXTARRAY:
                     ST.Insert(new TextArrayDeclarationNode(entry.getKey(),entry.getKey().LineNumber));
                     break;
                 default:
@@ -279,13 +270,13 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
                 visitNode(Node);
         }
         //We set the type as bool
-        node.Id.type = "bool";
+        node.Id.type = Main.BOOL;
     }
 
     @Override
     public void visit(BoolArrayDeclarationNode node, Object... arg) throws Exception {
         //We set the type as bool array and insert it in the symbol table
-        node.Id.type = "bool array";
+        node.Id.type = Main.BOOLARRAY;
         if (!(node.Parent instanceof ProgNode))
             ST.Insert(node);
         for (AbstractNode Node : node.childList) {
@@ -294,14 +285,14 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
         }
 
         //If the size variable is not a number, throw an exception.
-        if (node.Size.type != "number")
-            throw new TypeException("number", node.Size.type, node.LineNumber);
+        if (node.Size.type != Main.NUMBER)
+            throw new TypeException(Main.NUMBER, node.Size.type, node.LineNumber);
     }
 
     @Override
     public void visit(BoolNode node, Object... arg) {
         //Bool nodes are of type bool
-        node.type = "bool";
+        node.type = Main.BOOL;
     }
 
 
@@ -337,13 +328,13 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
             visitNode(node.RightChild);
 
         //Both types should be number
-        if (node.LeftChild.type != null && !node.LeftChild.type.equals("number"))
-            throw new TypeException("number", node.LeftChild.type, node.LineNumber);
-        if (node.RightChild.type != null && !node.RightChild.type.equals("number"))
-            throw new TypeException("number", node.RightChild.type, node.LineNumber);
+        if (node.LeftChild.type != null && !node.LeftChild.type.equals(Main.NUMBER))
+            throw new TypeException(Main.NUMBER, node.LeftChild.type, node.LineNumber);
+        if (node.RightChild.type != null && !node.RightChild.type.equals(Main.NUMBER))
+            throw new TypeException(Main.NUMBER, node.RightChild.type, node.LineNumber);
 
         //The result is also a number
-        node.type = "number";
+        node.type = Main.NUMBER;
     }
 
     @Override
@@ -374,7 +365,7 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
             throw new TypeException(node.LeftChild.type, node.RightChild.type, node.LineNumber);
 
         //The result is always a bool
-        node.type = "bool";
+        node.type = Main.BOOL;
     }
 
     @Override
@@ -405,12 +396,12 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
         }
 
         //If the From expression exists, it should be a number
-        if (node.From != null && !node.From.type.equals("number"))
-            throw new TypeException("number", node.From.type, node.LineNumber);
+        if (node.From != null && !node.From.type.equals(Main.NUMBER))
+            throw new TypeException(Main.NUMBER, node.From.type, node.LineNumber);
 
         //The To expression always exists and shoud also be a number
-        if (node.To.type != null && !node.To.type.equals("number"))
-            throw new TypeException("number", node.To.type, node.LineNumber);
+        if (node.To.type != null && !node.To.type.equals(Main.NUMBER))
+            throw new TypeException(Main.NUMBER, node.To.type, node.LineNumber);
     }
 
     @Override
@@ -472,13 +463,13 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
             visitNode(node.RightChild);
 
         //Both children should be numbers
-        if (node.LeftChild.type != "number")
-            throw new TypeException("number", node.LeftChild.type, node.LineNumber);
-        if (node.RightChild.type != "number")
-            throw new TypeException("number", node.RightChild.type, node.LineNumber);
+        if (node.LeftChild.type != Main.NUMBER)
+            throw new TypeException(Main.NUMBER, node.LeftChild.type, node.LineNumber);
+        if (node.RightChild.type != Main.NUMBER)
+            throw new TypeException(Main.NUMBER, node.RightChild.type, node.LineNumber);
 
         //The resulting type is bool
-        node.type = "bool";
+        node.type = Main.BOOL;
     }
 
     @Override
@@ -489,13 +480,13 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
             visitNode(node.RightChild);
 
         //Both should be numbers
-        if (node.LeftChild.type != "number")
-            throw new TypeException("number", node.LeftChild.type, node.LineNumber);
-        if (node.RightChild.type != "number")
-            throw new TypeException("number", node.RightChild.type, node.LineNumber);
+        if (node.LeftChild.type != Main.NUMBER)
+            throw new TypeException(Main.NUMBER, node.LeftChild.type, node.LineNumber);
+        if (node.RightChild.type != Main.NUMBER)
+            throw new TypeException(Main.NUMBER, node.RightChild.type, node.LineNumber);
 
         //Result should be bool
-        node.type = "bool";
+        node.type = Main.BOOL;
     }
 
     @Override
@@ -621,7 +612,7 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
             //If array index is not a number.
             else
             {
-                throw new TypeException("number", tempArrayNode.Size.type, node.LineNumber);
+                throw new TypeException(Main.NUMBER, tempArrayNode.Size.type, node.LineNumber);
             }
 
 
@@ -638,7 +629,7 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
             }
             else
             {
-                throw new TypeException("number", node.ArrayIndex.type, node.LineNumber);
+                throw new TypeException(Main.NUMBER, node.ArrayIndex.type, node.LineNumber);
             }
 
         }
@@ -665,9 +656,9 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
             //Visiting it, so its type will get set
             visit(tempIdNode);
             //Then checking if the idnode represents a variable of type number
-            if(!tempIdNode.type.equals("number"))
+            if(!tempIdNode.type.equals(Main.NUMBER))
             {
-                throw new TypeException("number", tempIdNode.type, tempIdNode.LineNumber);
+                throw new TypeException(Main.NUMBER, tempIdNode.type, tempIdNode.LineNumber);
             }
         }
         //An infixExpressionNode is a valid
@@ -677,36 +668,36 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
             //visiting it so the type of the expression gets set.
             visit(tempInfixExpressionNode);
             //Then checking if it is a number.
-            if(!tempInfixExpressionNode.type.equals("number"))
+            if(!tempInfixExpressionNode.type.equals(Main.NUMBER))
             {
-                throw new TypeException("number", tempInfixExpressionNode.type, tempInfixExpressionNode.LineNumber);
+                throw new TypeException(Main.NUMBER, tempInfixExpressionNode.type, tempInfixExpressionNode.LineNumber);
             }
         }
         //Not a valid index
         else if(tempExpressionNode instanceof BoolNode)
         {
             BoolNode tempBoolNode = (BoolNode) tempExpressionNode;
-            throw new TypeException("number", "bool", tempBoolNode.LineNumber);
+            throw new TypeException(Main.NUMBER, Main.BOOL, tempBoolNode.LineNumber);
         }
         //Not a valid index
         else if(tempExpressionNode instanceof TextNode)
         {
             TextNode tempTextNode = (TextNode) tempExpressionNode;
-            throw new TypeException("number", "text", tempTextNode.LineNumber);
+            throw new TypeException(Main.NUMBER, Main.TEXT, tempTextNode.LineNumber);
         }
         else if(tempExpressionNode instanceof FuncCallNode)
         {
             FuncCallNode tempFuncCallNode = (FuncCallNode) tempExpressionNode;
             SymbolData data = ST.Search(tempFuncCallNode.Id.Name);
-            if(!data.type.equals("number"))
+            if(!data.type.equals(Main.NUMBER))
             {
-                throw new TypeException("number", data.type, tempFuncCallNode.LineNumber);
+                throw new TypeException(Main.NUMBER, data.type, tempFuncCallNode.LineNumber);
             }
         }
         //If none of the above it is invalid.
         else
         {
-            throw new TypeException("number", tempExpressionNode.type, tempExpressionNode.LineNumber);
+            throw new TypeException(Main.NUMBER, tempExpressionNode.type, tempExpressionNode.LineNumber);
         }
     }
 
@@ -720,8 +711,8 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
         //The if contains expressions and blocks for each if/else if/else in the chain
         //each of the expressions must be a bool
         for (AbstractNode AN : node.childList)
-            if(AN instanceof ExpressionNode && ((ExpressionNode)AN).type != null && !((ExpressionNode) AN).type.equals("bool")) {
-                throw new TypeException("bool", ((ExpressionNode) AN).type, AN.LineNumber);
+            if(AN instanceof ExpressionNode && ((ExpressionNode)AN).type != null && !((ExpressionNode) AN).type.equals(Main.BOOL)) {
+                throw new TypeException(Main.BOOL, ((ExpressionNode) AN).type, AN.LineNumber);
             }
     }
 
@@ -747,13 +738,13 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
             visitNode(node.RightChild);
 
         //Both should be a number.
-        if(node.LeftChild.type != "number")
-            throw new TypeException("number",node.LeftChild.type,node.LineNumber);
-        if(node.RightChild.type != "number")
-            throw new TypeException("number",node.RightChild.type,node.LineNumber);
+        if(node.LeftChild.type != Main.NUMBER)
+            throw new TypeException(Main.NUMBER,node.LeftChild.type,node.LineNumber);
+        if(node.RightChild.type != Main.NUMBER)
+            throw new TypeException(Main.NUMBER,node.RightChild.type,node.LineNumber);
 
         //It results in a boolean value
-        node.type = "bool";
+        node.type = Main.BOOL;
     }
 
     @Override
@@ -764,13 +755,13 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
             visitNode(node.RightChild);
 
         //Both should be a number
-        if(node.LeftChild.type != "number")
-            throw new TypeException("number",node.LeftChild.type,node.LineNumber);
-        if(node.RightChild.type != "number")
-            throw new TypeException("number",node.RightChild.type,node.LineNumber);
+        if(node.LeftChild.type != Main.NUMBER)
+            throw new TypeException(Main.NUMBER,node.LeftChild.type,node.LineNumber);
+        if(node.RightChild.type != Main.NUMBER)
+            throw new TypeException(Main.NUMBER,node.RightChild.type,node.LineNumber);
 
         //result is a bool
-        node.type = "bool";
+        node.type = Main.BOOL;
     }
 
     @Override
@@ -782,13 +773,13 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
 
         //Both should be a number
         if(node.LeftChild.type != null && node.RightChild.type != null) {
-            if (!node.LeftChild.type.equals("number"))
-                throw new TypeException("number", node.LeftChild.type, node.LineNumber);
-            if (!node.RightChild.type.equals("number"))
-                throw new TypeException("number", node.RightChild.type, node.LineNumber);
+            if (!node.LeftChild.type.equals(Main.NUMBER))
+                throw new TypeException(Main.NUMBER, node.LeftChild.type, node.LineNumber);
+            if (!node.RightChild.type.equals(Main.NUMBER))
+                throw new TypeException(Main.NUMBER, node.RightChild.type, node.LineNumber);
         }
         //the result is also a number
-        node.type = "number";
+        node.type = Main.NUMBER;
     }
 
     @Override
@@ -800,13 +791,13 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
 
         //Both input has to be numbers
         if(node.LeftChild.type != null && node.RightChild.type != null) {
-            if (!node.LeftChild.type.equals("number"))
-                throw new TypeException("number", node.LeftChild.type, node.LineNumber);
-            if (!node.RightChild.type.equals("number"))
-                throw new TypeException("number", node.RightChild.type, node.LineNumber);
+            if (!node.LeftChild.type.equals(Main.NUMBER))
+                throw new TypeException(Main.NUMBER, node.LeftChild.type, node.LineNumber);
+            if (!node.RightChild.type.equals(Main.NUMBER))
+                throw new TypeException(Main.NUMBER, node.RightChild.type, node.LineNumber);
         }
         //The result of a multiplication can only be a number
-        node.type = "number";
+        node.type = Main.NUMBER;
     }
 
     @Override
@@ -826,7 +817,7 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
             throw new TypeException(node.LeftChild.type,node.RightChild.type,node.LineNumber);
 
         //The result is always a bool though.
-        node.type = "bool";
+        node.type = Main.BOOL;
     }
 
     @Override
@@ -836,11 +827,11 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
         }
 
         //If the expression is not a bool, throw an expression
-        if(node.Expression.type != null && !node.Expression.type.equals("bool"))
-            throw new TypeException("bool", node.Expression.type,node.LineNumber);
+        if(node.Expression.type != null && !node.Expression.type.equals(Main.BOOL))
+            throw new TypeException(Main.BOOL, node.Expression.type,node.LineNumber);
 
         //The result is a bool
-        node.type = "bool";
+        node.type = Main.BOOL;
     }
 
     @Override
@@ -851,7 +842,7 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
             ST.Insert(node);
 
         //We set the type
-        node.Id.type = "number";
+        node.Id.type = Main.NUMBER;
         for (AbstractNode Node: node.childList) {
             if (Node != null)
                 visitNode(Node);
@@ -878,13 +869,13 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
         }
 
         //And set the type
-        node.Id.type = "number array";
+        node.Id.type = Main.NUMBERARRAY;
     }
 
     @Override
     public void visit(NumberNode node, Object... arg) {
         //Number nodes are of type number
-        node.type = "number";
+        node.type = Main.NUMBER;
     }
 
     @Override
@@ -895,13 +886,13 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
             visitNode(node.RightChild);
 
         //Both children should be boolean
-        if (node.LeftChild.type != "bool")
-            throw new TypeException("bool", node.LeftChild.type,node.LineNumber);
-        if (node.RightChild.type != "bool")
-            throw new TypeException("bool",node.RightChild.type,node.LineNumber);
+        if (node.LeftChild.type != Main.BOOL)
+            throw new TypeException(Main.BOOL, node.LeftChild.type,node.LineNumber);
+        if (node.RightChild.type != Main.BOOL)
+            throw new TypeException(Main.BOOL,node.RightChild.type,node.LineNumber);
 
         //the result is also boolean
-        node.type = "bool";
+        node.type = Main.BOOL;
     }
 
     @Override
@@ -912,13 +903,13 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
             visitNode(node.RightChild);
 
         //Both children should be number
-        if(node.LeftChild.type != "number")
-            throw new TypeException("number",node.LeftChild.type,node.LineNumber);
-        if(node.RightChild.type != "number")
-            throw new TypeException("number",node.RightChild.type,node.LineNumber);
+        if(node.LeftChild.type != Main.NUMBER)
+            throw new TypeException(Main.NUMBER,node.LeftChild.type,node.LineNumber);
+        if(node.RightChild.type != Main.NUMBER)
+            throw new TypeException(Main.NUMBER,node.RightChild.type,node.LineNumber);
 
         //The result is also a number
-        node.type = "number";
+        node.type = Main.NUMBER;
     }
 
     @Override
@@ -979,9 +970,9 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
         else if(ancestor instanceof EventDeclarationNode) {
             EventDeclarationNode temp = (EventDeclarationNode) ancestor;
             //Events should always return a boolean.
-            if(returnType != null && !returnType.equals("bool"))
+            if(returnType != null && !returnType.equals(Main.BOOL))
             {
-                throw new TypeException("bool", returnType, node.LineNumber);
+                throw new TypeException(Main.BOOL, returnType, node.LineNumber);
             }
         }
     }
@@ -1002,8 +993,8 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
         }
 
         //If there is an expression node in the routine, it must be a number, otherwise throw an exception
-        if (node.repeatCondition != null && node.repeatCondition.type != null && !node.repeatCondition.type.equals("number")){
-            throw new TypeException("number", node.repeatCondition.type,node.LineNumber);
+        if (node.repeatCondition != null && node.repeatCondition.type != null && !node.repeatCondition.type.equals(Main.NUMBER)){
+            throw new TypeException(Main.NUMBER, node.repeatCondition.type,node.LineNumber);
         }
     }
 
@@ -1036,13 +1027,13 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
             visitNode(node.RightChild);
 
         //Both sides must be numbers
-        if(node.LeftChild.type != "number")
-            throw new TypeException("number",node.LeftChild.type,node.LineNumber);
-        if(node.RightChild.type != "number")
-            throw new TypeException("number",node.RightChild.type,node.LineNumber);
+        if(node.LeftChild.type != Main.NUMBER)
+            throw new TypeException(Main.NUMBER,node.LeftChild.type,node.LineNumber);
+        if(node.RightChild.type != Main.NUMBER)
+            throw new TypeException(Main.NUMBER,node.RightChild.type,node.LineNumber);
 
         //The result is a number
-        node.type = "number";
+        node.type = Main.NUMBER;
     }
 
     @Override
@@ -1056,7 +1047,7 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
                 visitNode(Node);
         }
         //The type is text
-        node.Id.type = "text";
+        node.Id.type = Main.TEXT;
     }
 
     @Override
@@ -1070,17 +1061,17 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
         }
 
         //We set the type as text array, fittingly
-        node.Id.type = "text array";
+        node.Id.type = Main.TEXTARRAY;
 
         //If the size expression does not result in a number, we throw an exception
-        if (node.Size.type != "number")
-            throw new TypeException("number",node.Size.type,node.LineNumber);
+        if (node.Size.type != Main.NUMBER)
+            throw new TypeException(Main.NUMBER,node.Size.type,node.LineNumber);
     }
 
     @Override
     public void visit(TextNode node, Object... arg) {
         //Textnodes are of type text
-        node.type = "text";
+        node.type = Main.TEXT;
     }
 
     @Override
@@ -1089,9 +1080,9 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
         //Bools are handled by boolvalnodes.
         //I don't think this method is called
         if(node instanceof TextNode)
-            node.type = "text";
+            node.type = Main.TEXT;
         else if(node instanceof  NumberNode)
-            node.type = "number";
+            node.type = Main.NUMBER;
     }
 
     @Override
@@ -1112,8 +1103,8 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
         }
 
         //the expression should be a bool
-        if(node.Expression.type != null && !node.Expression.type.equals("bool"))
-            throw new TypeException("bool",node.Expression.type,node.LineNumber);
+        if(node.Expression.type != null && !node.Expression.type.equals(Main.BOOL))
+            throw new TypeException(Main.BOOL,node.Expression.type,node.LineNumber);
     }
 
     @Override

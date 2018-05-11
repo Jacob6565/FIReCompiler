@@ -97,7 +97,6 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
 
         BlockNode blockNode = new BlockNode();
         blockNode.LineNumber = ctx.start.getLine();
-
         for(CFGParser.BlockBodyContext blockBodyCtx : ctx.blockBody())
             blockNode.childList.add(visitBlockBody(blockBodyCtx)); //Add all the blockbodies as children
 
@@ -172,7 +171,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
     public AbstractNode visitDcl(CFGParser.DclContext ctx) {
         if (ctx.id().size() == 1) { // If there is an expr we assume the first rule
             if (ctx.children.size() <= 2 || !ctx.children.get(2).getText().equals("[")) { //If it is not an array
-                if (ctx.Type().toString().equals("number")) {
+                if (ctx.Type().toString().equals(Main.NUMBER)) {
 
                     NumberDeclarationNode numberDeclarationNode = new NumberDeclarationNode();
                     numberDeclarationNode.LineNumber = ctx.start.getLine();
@@ -190,7 +189,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
                     }
 
                     return numberDeclarationNode;
-                } else if (ctx.Type().toString().equals("text")) {
+                } else if (ctx.Type().toString().equals(Main.TEXT)) {
 
                     TextDeclarationNode textDeclarationNode = new TextDeclarationNode();
                     textDeclarationNode.LineNumber = ctx.start.getLine();
@@ -208,7 +207,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
                     }
 
                     return textDeclarationNode;
-                } else if (ctx.Type().toString().equals("bool")) {
+                } else if (ctx.Type().toString().equals(Main.BOOL)) {
 
                     BooleanDeclarationNode booleanDeclarationNode = new BooleanDeclarationNode();
                     booleanDeclarationNode.Id =  (IdNode) visitId(ctx.id(0));
@@ -231,11 +230,11 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
             }
             else if (ctx.id().size() == 1){//If it is an array
                 ArrayDeclarationNode ADN;
-                if (ctx.Type().toString().equals("number")) {
+                if (ctx.Type().toString().equals(Main.NUMBER)) {
                     ADN = new NumberArrayDeclarationNode((IdNode) visitId(ctx.id(0)));
-                } else if (ctx.Type().toString().equals("bool"))
+                } else if (ctx.Type().toString().equals(Main.BOOL))
                     ADN = new BoolArrayDeclarationNode((IdNode) visitId(ctx.id(0)));
-                else if (ctx.Type().toString().equals("text"))
+                else if (ctx.Type().toString().equals(Main.TEXT))
                     ADN = new TextArrayDeclarationNode((IdNode) visitId(ctx.id(0)));
                 else {
                     System.out.println("Error in arraydeclaration"); //should throw an exception
@@ -262,14 +261,14 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
             }
         }
         else if(ctx.Comma() != null){ //Multiple Declarations
-            if (ctx.Type().toString().equals("number")) {
+            if (ctx.Type().toString().equals(Main.NUMBER)) {
                 NumberDeclarationNode numberDeclarationNode = new NumberDeclarationNode();
                 numberDeclarationNode.LineNumber = ctx.start.getLine();
                 for (CFGParser.IdContext idContext : ctx.id()) {
                     numberDeclarationNode.childList.add(visitId(idContext)); //we add the dcls as children
                 }
                 return numberDeclarationNode;
-            } else if (ctx.Type().toString().equals("text")) {
+            } else if (ctx.Type().toString().equals(Main.TEXT)) {
 
                 TextDeclarationNode textDeclarationNode = new TextDeclarationNode();
                 textDeclarationNode.LineNumber = ctx.start.getLine();
@@ -277,7 +276,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
                     textDeclarationNode.childList.add(visitId(idContext));//We add the dcls as children
                 }
                 return textDeclarationNode;
-            } else if (ctx.Type().toString().equals("bool")) {
+            } else if (ctx.Type().toString().equals(Main.BOOL)) {
 
                 BooleanDeclarationNode booleanDeclarationNode = new BooleanDeclarationNode();
                 booleanDeclarationNode.LineNumber = ctx.start.getLine();

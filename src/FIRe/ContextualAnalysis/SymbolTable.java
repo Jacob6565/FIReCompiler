@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Stack;
 
 import FIRe.Exceptions.*;
+import FIRe.Main;
 import FIRe.Nodes.*;
 import FIRe.Tuple;
 
@@ -22,17 +23,17 @@ public class SymbolTable  {
         if (!Contains(input.Id.Name)) {
 
             if (input instanceof NumberDeclarationNode)
-                stack.Peek().put((input).Id.Name, new SymbolData(input, "number"));
+                stack.Peek().put((input).Id.Name, new SymbolData(input, Main.NUMBER));
             else if (input instanceof BooleanDeclarationNode)
-                stack.Peek().put((input).Id.Name, new SymbolData(input, "bool"));
+                stack.Peek().put((input).Id.Name, new SymbolData(input, Main.BOOL));
             else if (input instanceof TextDeclarationNode)
-                stack.Peek().put((input).Id.Name, new SymbolData(input, "text"));
+                stack.Peek().put((input).Id.Name, new SymbolData(input, Main.TEXT));
             else if (input instanceof NumberArrayDeclarationNode)
-                stack.Peek().put((input).Id.Name, new SymbolData(input, "number array"));
+                stack.Peek().put((input).Id.Name, new SymbolData(input, Main.NUMBERARRAY));
             else if (input instanceof BoolArrayDeclarationNode)
-                stack.Peek().put((input).Id.Name, new SymbolData(input, "bool array"));
+                stack.Peek().put((input).Id.Name, new SymbolData(input, Main.BOOLARRAY));
             else if (input instanceof TextArrayDeclarationNode)
-                stack.Peek().put((input).Id.Name, new SymbolData(input, "text array"));
+                stack.Peek().put((input).Id.Name, new SymbolData(input, Main.TEXTARRAY));
             else if (input instanceof EventTypeDeclarationNode)
                 stack.Peek().put((input).Id.Name, new SymbolData(input, ((EventTypeDeclarationNode) input).Type));
             else if(input instanceof FunctionDeclarationNode){

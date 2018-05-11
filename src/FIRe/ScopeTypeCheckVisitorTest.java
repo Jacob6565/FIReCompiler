@@ -58,7 +58,7 @@ public class ScopeTypeCheckVisitorTest{
         node.RightChild = new NumberNode(2);
         try {
             STCV.visit(node);
-            assertEquals("number", node.type);
+            assertEquals(Main.NUMBER, node.type);
         }
         catch (TypeException x){
             assert false;
@@ -72,7 +72,7 @@ public class ScopeTypeCheckVisitorTest{
         node.RightChild = new TextNode();
         try{
             STCV.visit(node);
-            assertEquals("text",node.type);
+            assertEquals(Main.TEXT,node.type);
         }
         catch (TypeException x){
             assert false;
@@ -235,7 +235,7 @@ public class ScopeTypeCheckVisitorTest{
         ForNode forNode = new ForNode();
         NumberDeclarationNode numberDeclarationNode = new NumberDeclarationNode();
         IdNode idNode = new IdNode();
-        idNode.type = "number";
+        idNode.type = Main.NUMBER;
         idNode.Name = "n";
         numberDeclarationNode.Id = idNode;
         numberDeclarationNode.childList.add(idNode);
@@ -267,7 +267,7 @@ public class ScopeTypeCheckVisitorTest{
         TextDeclarationNode textDeclarationNode = new TextDeclarationNode();
 
         IdNode idNode = new IdNode();
-        idNode.type = "text";
+        idNode.type = Main.TEXT;
         idNode.Name = "n";
 
         textDeclarationNode.Id = idNode;
@@ -306,7 +306,7 @@ public class ScopeTypeCheckVisitorTest{
         ForNode forNode = new ForNode();
         BooleanDeclarationNode booleanDeclarationNode = new BooleanDeclarationNode();
         IdNode idNode = new IdNode();
-        idNode.type = "bool";
+        idNode.type = Main.BOOL;
         idNode.Name = "n";
         booleanDeclarationNode.Id = idNode;
         booleanDeclarationNode.childList.add(idNode);
@@ -477,7 +477,7 @@ public class ScopeTypeCheckVisitorTest{
     {
         NumberDeclarationNode numberDeclarationNode = new NumberDeclarationNode();
         IdNode idNode = new IdNode();
-        idNode.type = "number";
+        idNode.type = Main.NUMBER;
         idNode.Name = "n";
         numberDeclarationNode.Id = idNode;
         numberDeclarationNode.childList.add(idNode);
@@ -503,7 +503,7 @@ public class ScopeTypeCheckVisitorTest{
     {
         TextDeclarationNode textDeclarationNode = new TextDeclarationNode();
         IdNode idNode = new IdNode();
-        idNode.type = "text";
+        idNode.type = Main.TEXT;
         idNode.Name = "n";
         textDeclarationNode.Id = idNode;
         textDeclarationNode.childList.add(idNode);
@@ -528,7 +528,7 @@ public class ScopeTypeCheckVisitorTest{
     {
         BooleanDeclarationNode booleanDeclarationNode = new BooleanDeclarationNode();
         IdNode idNode = new IdNode();
-        idNode.type = "bool";
+        idNode.type = Main.BOOL;
         idNode.Name = "n";
         booleanDeclarationNode.Id = idNode;
         booleanDeclarationNode.childList.add(idNode);
@@ -746,7 +746,7 @@ public class ScopeTypeCheckVisitorTest{
     public void TestBool(){
         BoolNode node = new BoolNode();
         STCV.visit(node);
-        assertEquals("bool",node.type);
+        assertEquals(Main.BOOL,node.type);
     }
 
     @Test
@@ -1872,7 +1872,7 @@ public class ScopeTypeCheckVisitorTest{
     public void TestNumber(){
         NumberNode node = new NumberNode();
         STCV.visit(node);
-        assertEquals("number",node.type);
+        assertEquals(Main.NUMBER,node.type);
     }
     @Test
     public void TestOr1(){
@@ -2231,7 +2231,7 @@ public class ScopeTypeCheckVisitorTest{
     public void TestText(){
         TextNode node = new TextNode();
         STCV.visit(node);
-        assertEquals("text",node.type);
+        assertEquals(Main.TEXT,node.type);
     }
 
     public CFGParser.ProgContext ContextPrep(){
