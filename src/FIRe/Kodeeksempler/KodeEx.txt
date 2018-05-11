@@ -1,97 +1,30 @@
 RobotProperties
 {
-      RobotName:TheDestroyer;
+      RobotName:Optimus;
       RobotType:AdvancedRobot;
-      BodyColor:yellow;
+      BodyColor:red;
       GunColor:red;
-      RadarColor:white;
+      RadarColor:blue;
 }
 
 //This is a single line comment
 
-text nameOfRival = "SittingDuck";
-bool asd = false;
-bool was = true;
-
-bool turnLeftAndRotate(text currentRival)
-{
-   number RobinHood;
-   nameOfRival = currentRival;
-   bool shotAtRival = false;
-   bool a[5];
-   a[3] = true;
-   number x = 3;
-       if(x == 3.6){
-           x = 2;
-
-           if(x == 5.2){
-               x = 3;
-           }
-           else if( x == 0.0){
-                x=3;
-           }
-       }
-
-       for( x upto 100){
-            while(true){
-                x = 3;
-            }
-       }
-
-   if (a[3])
-   {
-          fire(2);
-          shotAtRival = true;
-
-   }
-
-   for(number b = 0 upto 2)
-   {
-      turnLeft(b);
-   }
-
-    return a[1];
-}
-
-void doSomething(){
-
-    number x = 4;
-
-    if (x == 2){
-    x = x + 4.2;
-
-    }
-}
-
 strategy Default()
 {
-    number firepowers[4];
-    firepowers[1] = 3 ^ 5 ^ (1 + 1);
-    firepowers[2] = 2;
-    firepowers[3] = 3;
-    number a = 3;
-    number b = 3;
-
-    a = a + b;
-    text string = "something";
-    bool val = true;
-
     routine()
     {
         turnRadarRight(360);
-        for(number i = 0 upto 2)
-        {
-            ahead(20);
-        }
-
-        for(number x = 4 downto -9128.9182){}
     }
 
    when (ScannedRobotEvent e)
    {
-       text currentRivale = e.getName();
-       turnLeftAndRotate(currentRivale);
-       Offensive();
+        fire(1);
+        Offensive();
+   }
+
+   when (ScannedRobotEvent e)
+   {
+        fire(2);
    }
 }
 
@@ -99,22 +32,25 @@ strategy Offensive()
 {
     routine()
    {
-       fire(1);
+       fire(3);
    }
-   when(LowHealth e)
+   when(ScannedRobotEvent e)
    {
+       ahead(10);
+   }
+   when(LowHealth e){
        Default();
    }
 }
 
-number Function()
-{
-    return 2;
-}
 
-event LowHealth()
-{
-   turnLeftAndRotate("30");
+event LowHealth(){
 
    return getEnergy() <= 50;
 }
+
+
+
+
+
+

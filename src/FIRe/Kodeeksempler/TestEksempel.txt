@@ -6,9 +6,12 @@ RobotProperties{
     RadarColor:blue;
 }
 
+
 strategy Default(){
 
-    routine(){
+    number x = TheNumberMethod();
+
+    routine(x){
         turnRadarRight(10);
         ahead(25);
 
@@ -21,8 +24,8 @@ strategy Default(){
 
 number TheNumberMethod(){
 
-    if(5 < 6){
-    return 5;
+    if("johnny" < 6){
+        return 5;
     }
     else{
         return 9;
@@ -32,4 +35,10 @@ number TheNumberMethod(){
 event LowHealth(){
 
     return getEnergy() < 80;
+}
+
+void TheOtherMethod(){
+
+    text nothing = "this method really doesn't do a lot";
+
 }

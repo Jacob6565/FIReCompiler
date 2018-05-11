@@ -39,6 +39,8 @@ public class Main {
         //We use this delimiter, to chop the code into bits. We split by the backslash character "\n"
         in.useDelimiter("\n");
 
+        Errors errors = new Errors();
+
         //Creates a StringBuilder from the given code file.
         StringBuilder sb = new StringBuilder();
         while (in.hasNext()) {

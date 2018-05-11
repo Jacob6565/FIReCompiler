@@ -9,11 +9,12 @@ BodyColor: white;
 strategy Default(){
 
     routine(){
-
+        doNothing();
     }
 
     when(LowHealth e) {
-            turnRadarRight(360);
+        setTurnRadarRight(360);
+        execute();
     }
 }
 
