@@ -185,7 +185,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
                     }
                     else {
                         numberDeclarationNode.childList.add(new NumberNode(0));
-                        System.out.println("WARNING: \"" + numberDeclarationNode.Id.Name + "\" has been implicitly assigned to 0 at line " + numberDeclarationNode.LineNumber + ".");
+                        Main.errors.addError("WARNING: \"" + numberDeclarationNode.Id.Name + "\" has been implicitly assigned to 0 at line " + numberDeclarationNode.LineNumber + ".");
                     }
 
                     return numberDeclarationNode;
@@ -203,7 +203,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
                     }
                     else {
                         textDeclarationNode.childList.add(new TextNode(""));
-                        System.out.println("WARNING: \"" + textDeclarationNode.Id.Name + "\" has been indirectly assigned to \"\" at line " + textDeclarationNode.LineNumber);
+                        Main.errors.addError("WARNING: \"" + textDeclarationNode.Id.Name + "\" has been indirectly assigned to \"\" at line " + textDeclarationNode.LineNumber);
                     }
 
                     return textDeclarationNode;
@@ -221,7 +221,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
                     }
                     else {
                         booleanDeclarationNode.childList.add(new BoolNode(false));
-                        System.out.println("WARNING: \"" + booleanDeclarationNode.Id.Name + "\" has been indirectly assigned to false at line " + booleanDeclarationNode.LineNumber);
+                        Main.errors.addError("WARNING: \"" + booleanDeclarationNode.Id.Name + "\" has been indirectly assigned to false at line " + booleanDeclarationNode.LineNumber);
                     }
 
                     return booleanDeclarationNode;
@@ -237,7 +237,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
                 else if (ctx.Type().toString().equals(Main.TEXT))
                     ADN = new TextArrayDeclarationNode((IdNode) visitId(ctx.id(0)));
                 else {
-                    System.out.println("Error in arraydeclaration"); //should throw an exception
+                    Main.errors.addError("Error in arraydeclaration"); //should throw an exception
                     ADN = null;
                 }
 

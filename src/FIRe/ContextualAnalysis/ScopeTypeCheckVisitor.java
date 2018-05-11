@@ -129,7 +129,7 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
             }
         }
         catch (SymbolNotFoundException ex) {
-            System.out.println(ex.getMessage());
+            Main.errors.addError(ex.getMessage());
         }
     }
 
@@ -137,8 +137,8 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
     public void visit(AssignNode node, Object... arg) throws TypeException {
         //We visit the Id and Expression, if they are not null
         if (node != null && node.Id != null && node.Expression != null) {
-            visitNode(node.Id);
             visitNode(node.Expression);
+            visitNode(node.Id);
         }
         //If it is an array, we cut away the "array" part
         if (node.Id.type != null && node.Id.type.contains("array") && node.Id.ArrayIndex != null)
@@ -389,15 +389,29 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
 
     @Override
     public void visit(ForNode node, Object... arg) throws TypeException {
+        if(node.Dcl != null){
+            if (node.Dcl instanceof NumberDeclarationNode)
+                node.Dcl.Id.type = "number";
+            else
+                node.Dcl.Id.type = null;
+        }
+
         for (AbstractNode Node : node.childList) {
             //We visit each child note EXCEPT for the declarationNode!
             if (Node != null && !(Node instanceof DeclarationNode))
                 visitNode(Node);
         }
 
+
+
         //If the From expression exists, it should be a number
         if (node.From != null && !node.From.type.equals(Main.NUMBER))
             throw new TypeException(Main.NUMBER, node.From.type, node.LineNumber);
+
+
+
+        if (node.Dcl != null && node.Dcl.Id.type != null && !node.Dcl.Id.type.equals("number"))
+            throw new TypeException("number",node.Dcl.Id.type,node.LineNumber);
 
         //The To expression always exists and shoud also be a number
         if (node.To.type != null && !node.To.type.equals(Main.NUMBER))
@@ -836,6 +850,7 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
 
     @Override
     public void visit(NumberDeclarationNode node, Object... arg) throws TypeException, Exception {
+        visitNode(node.childList.get(1));
 
         //We insert the number
         if (!(node.Parent instanceof ProgNode))

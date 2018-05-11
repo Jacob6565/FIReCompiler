@@ -1,6 +1,7 @@
 package FIRe.ContextualAnalysis;
 import FIRe.ASTVisitor;
 import FIRe.Exceptions.*;
+import FIRe.Main;
 import FIRe.Nodes.*;
 
 import java.util.ArrayList;
@@ -113,7 +114,7 @@ public class ReturnCheckVisitor extends ASTVisitor {
         //if no return was found.
         if(!hasReturn)
         {
-            throw new ReturnException(getErrorMessageForEvent, ancestor.LineNumber);
+            Main.errors.addError(new ReturnException(getErrorMessageForEvent, ancestor.LineNumber).getMessage());
         }
     }
 
@@ -122,7 +123,7 @@ public class ReturnCheckVisitor extends ASTVisitor {
             //Checking if this block got a return statement.
             if(Node instanceof ReturnNode)
             {
-                throw new ReturnException(errorMessageForStrategy, Node.LineNumber);
+                Main.errors.addError(new ReturnException(errorMessageForStrategy, Node.LineNumber).getMessage());
             }
             //Checking if the nested blocks inside this block contains returns.
             //e.g return inside an if-statement.
@@ -135,7 +136,7 @@ public class ReturnCheckVisitor extends ASTVisitor {
     private void ChecksFunctionWithVoidReturnType(BlockNode node, AbstractNode ancestor) throws VoidReturnException {
         for (AbstractNode Node : node.childList) {
             if (Node instanceof ReturnNode) {
-                throw new VoidReturnException(ancestor.LineNumber, Node.LineNumber); // we don't allow returns in a void
+                Main.errors.addError(new VoidReturnException(ancestor.LineNumber, Node.LineNumber).getMessage()); // we don't allow returns in a void
             }
         }
         //loop investigating a controlstructues where a return can be 'hidden'.
@@ -171,11 +172,11 @@ public class ReturnCheckVisitor extends ASTVisitor {
                 if (Node instanceof ControlStructureNode) {
                     visitNode(Node);
                 } else
-                    throw new ReturnException("You are missing a return in the function", ancestor.LineNumber);
+                    Main.errors.addError(new ReturnException("You are missing a return in the function", ancestor.LineNumber).getMessage());
             }
             //if the block does not contain anything;
             if(node.childList.isEmpty()){
-                throw new ReturnException("You are missing a return in the function", ancestor.LineNumber);
+                Main.errors.addError(new ReturnException("You are missing a return in the function", ancestor.LineNumber).getMessage());
             }
         }
     }
@@ -423,7 +424,7 @@ public class ReturnCheckVisitor extends ASTVisitor {
         for(AbstractNode child : node.childList) {
             //This checks is there is a return in the first scope of a strategy.
             if (child instanceof ReturnNode) {
-                throw new ReturnException(errorMessageForStrategy, child.LineNumber);
+                Main.errors.addError(new ReturnException(errorMessageForStrategy,child.LineNumber).getMessage());
             }
             //Checking if returns exist in all the nested scopes.
             else if (child instanceof ControlStructureNode || child instanceof WhenNode) {

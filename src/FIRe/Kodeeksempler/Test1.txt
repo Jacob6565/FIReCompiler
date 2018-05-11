@@ -21,7 +21,6 @@ strategy Default(){
         setFire(2);
         execute();
     }
-
 }
 
 number AmountOfRuns(){

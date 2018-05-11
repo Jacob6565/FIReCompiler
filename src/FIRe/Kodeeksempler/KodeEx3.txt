@@ -7,12 +7,19 @@ RobotProperties
       RadarColor:white;
 }
 
-number index = 0;
+number a,b;
 bool flag = false;
 number values[10];
+number index;
 
 strategy Default(){
+    number c, d;
+
     routine(){
+        for(number a = 5 upto 3){
+            fire(2);
+        }
+
         turnGunRight(60);
     }
 

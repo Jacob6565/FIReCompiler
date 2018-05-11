@@ -8,6 +8,5 @@ public class NameAlreadyUsedInGlobalScopeException extends Exception{
     }
     public NameAlreadyUsedInGlobalScopeException(String message, String param){
         super("ERROR: " + message + " Parameter already used: " + param);
-        Main.CodeGenerationFlag = true;
     }
 }

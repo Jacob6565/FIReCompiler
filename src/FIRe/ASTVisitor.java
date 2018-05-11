@@ -110,29 +110,10 @@ public abstract class ASTVisitor
             else if (node instanceof RobotPropertiesNode)
                 visit((RobotPropertiesNode) node);
             else
-                System.out.println("Error");
-        }
-        catch (UnreachableCodeException e)
-        {
-            System.out.println(e.getMessage());
-        }
-        catch(VoidReturnException e)
-        {
-            System.out.println(e.getMessage());
-        }
-        catch (SymbolNotFoundException e) {
-            System.out.println(e.getMessage());
-        }
-        catch (TypeException e)
-        {
-            System.out.println(e.getMessage());
-        }
-        catch(ReturnException e)
-        {
-            System.out.println(e.getMessage());
+                Main.errors.addError("Error");
         }
         catch (Exception e) {
-            System.out.println(e.getMessage());
+            Main.errors.addError(e.getMessage());
         }
     }
 

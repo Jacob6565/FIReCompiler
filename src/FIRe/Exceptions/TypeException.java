@@ -9,18 +9,16 @@ public class TypeException extends Exception{
             message = "ERROR: Expected type " + expectedType + ", but found type " + foundType + " in line "+ lineNumber + ".";
         else
             message = "ERROR: Expected type " + (expectedType == null ? foundType : expectedType) + ", but found an undeclared variable in line " + lineNumber + ".";
-        Main.CodeGenerationFlag = true;
+
     }
 
     @Override
     public String getMessage()
     {
-        Main.CodeGenerationFlag = true;
         return message;
     }
 
     public TypeException(String s) {
         super("ERROR: " + s);
-        Main.CodeGenerationFlag = true;
     }
 }

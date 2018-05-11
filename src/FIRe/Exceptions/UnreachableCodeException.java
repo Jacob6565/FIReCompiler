@@ -13,7 +13,6 @@ public class UnreachableCodeException extends Exception{
         {
             lines += i.toString() + " ";
         }
-        Main.CodeGenerationFlag = true;
     }
 
     @Override

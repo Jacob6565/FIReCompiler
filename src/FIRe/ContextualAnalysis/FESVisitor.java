@@ -4,6 +4,7 @@ import FIRe.ASTVisitor;
 
 import javax.xml.soap.Text;
 
+import FIRe.ErrorLog;
 import FIRe.Exceptions.MultipleEventHandlerException;
 import FIRe.Main;
 import FIRe.Nodes.*;
@@ -65,6 +66,9 @@ public class FESVisitor extends ASTVisitor {
     @Override
     public void visit(BooleanDeclarationNode node, Object... arg) throws Exception {
         symbolTable.Insert(node);
+        if(subTreeContainsId(node.childList.get(1),node.Id.Name)){
+            Main.errors.addError("Could not find symbol " + node.Id.Name + " on line " + node.LineNumber + ".");
+        }
     }
 
     @Override
@@ -200,7 +204,9 @@ public class FESVisitor extends ASTVisitor {
     @Override
     public void visit(NumberDeclarationNode node, Object... arg) throws Exception {
         symbolTable.Insert(node);
-
+        if(subTreeContainsId(node.childList.get(1),node.Id.Name)){
+            Main.errors.addError("Could not find symbol " + node.Id.Name + " on line " + node.LineNumber + ".");
+        }
     }
 
     @Override
@@ -304,6 +310,9 @@ public class FESVisitor extends ASTVisitor {
     @Override
     public void visit(TextDeclarationNode node, Object... arg) throws Exception {
         symbolTable.Insert(node);
+        if(subTreeContainsId(node.childList.get(1),node.Id.Name)){
+            Main.errors.addError("Could not find symbol " + node.Id.Name + " on line " + node.LineNumber + ".");
+        }
     }
 
     @Override
@@ -413,5 +422,17 @@ public class FESVisitor extends ASTVisitor {
         symbolTable.Insert(new FunctionDeclarationNode("setTurnRightRadians", "void", new Tuple<>("degrees", Main.NUMBER)));
         // execute advanced movement
         symbolTable.Insert(new FunctionDeclarationNode("execute","void"));
+    }
+
+    private boolean subTreeContainsId(AbstractNode root, String id) {
+        if (root instanceof IdNode && ((IdNode) root).Name.equals(id))
+            return true;
+        else {
+            for (int i = 0; i < root.childList.size(); ++i) {
+                if (subTreeContainsId(root.childList.get(i), id))
+                    return true;
+            }
+            return false;
+        }
     }
 }

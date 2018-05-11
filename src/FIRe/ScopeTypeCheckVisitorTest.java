@@ -258,9 +258,8 @@ public class ScopeTypeCheckVisitorTest{
 
     }
 
-    @Test
-    public void TestForWithTextDeclaration()
-    {
+    @Test(expected = TypeException.class)
+    public void TestForWithTextDeclaration() throws TypeException {
         ForNode forNode = new ForNode();
 
         TextDeclarationNode textDeclarationNode = new TextDeclarationNode();
@@ -288,15 +287,7 @@ public class ScopeTypeCheckVisitorTest{
         BlockNode blockNode = new BlockNode();
         blockNode.Parent = forNode;
         forNode.childList.add(blockNode);
-        try
-        {
-            STCV.visit(forNode);
-            assert false;
-        }
-        catch (TypeException e)
-        {
-            assert true;
-        }
+        STCV.visit(forNode);
     }
 
     @Test
@@ -315,6 +306,12 @@ public class ScopeTypeCheckVisitorTest{
         numberNode.value = 2;
         forNode.Dcl = booleanDeclarationNode;
         forNode.To = numberNode;
+        forNode.childList.add(forNode.Dcl);
+        forNode.childList.add(forNode.To);
+        BlockNode BN = new BlockNode();
+        BN.Parent = forNode;
+        forNode.childList.add(BN);
+
         try
         {
             STCV.visit(forNode);
