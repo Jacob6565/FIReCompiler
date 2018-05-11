@@ -19,8 +19,8 @@ import java.util.Scanner;
 //Then write java -jar FIReCompiler.jar
 //********************************************************************************
 public class Main {
-    public static ErrorLog errors = new ErrorLog();
 
+    public static ErrorLog errors = new ErrorLog();
     public final static String BOOL = "bool";
     public final static String NUMBER = "number";
     public final static String TEXT = "text";
@@ -30,10 +30,49 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
 
-        //Reads from the example program. (Debug code)
-        //Tuple<String, String> pathAndFileName = ReadUserInput();
-        //Scanner in = new Scanner(new FileReader(pathAndFileName.x+pathAndFileName.y));
-        Scanner in = new Scanner(new FileReader("src\\FIRe\\Kodeeksempler\\KodeEx3.txt"));
+        //Creating instance of the symboltable
+        SymbolTable ST = new SymbolTable();
+        RobotHeaderTable RHT = new RobotHeaderTable();
+        ProgNode AST = null;
+
+                //Reads from the example program. (Debug code)
+        //Tuple<String, String> pathAndFileName = readUserInput();
+        //Scanner in = new Scanner(new FileReader(pathAndFileName.x + pathAndFileName.y));
+        String sourceFile = readSouceFile();
+
+        if(errors.isEmpty()) {
+            AST = lexicalAnalysis(sourceFile);
+        }
+
+        if(errors.isEmpty())
+        {
+            contextualAnalysis(AST, ST, RHT);
+        }
+        else
+        {
+            errors.addError("Errors while reading the source file.");
+        }
+
+
+        if(errors.isEmpty())
+        {
+            codeGeneration(AST, ST);
+        }
+         else {
+            //If the semantics are wrong, print that code generation was not performed
+            errors.addError("Contextual errors detected. No code was generated.");
+        }
+
+        errors.writeToConsole();
+    }
+
+    private static String readSouceFile() {
+        Scanner in = null;
+        try {
+            in = new Scanner(new FileReader("src\\FIRe\\Kodeeksempler\\Jacob-Validt.txt"));
+        } catch (FileNotFoundException e) {
+            errors.addError("File could not be read.");
+        }
         //We use this delimiter, to chop the code into bits. We split by the backslash character "\n"
         in.useDelimiter("\n");
 
@@ -43,100 +82,91 @@ public class Main {
             sb.append(in.next() + "\n");
         }
 
-        CFGParser.ProgContext cst = null;
-
         //We append $ because this is the terminal symbol of the program.
         sb.append("$");
         in.close();
 
         //Converts the StringBuilder to a string.
         String outString = sb.toString();
-
-
-            //https://stackoverflow.com/questions/18110180/processing-a-string-with-antlr4
-            //Setup to perform lexical analysis on the input string.
-            AntlrException antlrException = new AntlrException();
-            CFGLexer lexer = new CFGLexer(CharStreams.fromString(outString));
-
-            CommonTokenStream tokenStream = new CommonTokenStream(lexer);
-            CFGParser parser = new CFGParser(tokenStream);
-
-            //Performs lexical analysis and builds a CST.
-            cst = parser.prog();
-            //cst.children.add(parser.dcl());
-
-
-        if (errors.isEmpty()) {//If the syntax is ok.
-            //Builds an AST from the CST
-            RobotHeaderTable RHT = new RobotHeaderTable();
-            ProgNode ast = (ProgNode) new BuildASTVisitor().visitProg(cst);
-            ParentASTVisitor PASTV = new ParentASTVisitor();
-            try {
-                ast.accept(PASTV, null);
-            } catch (Exception e) {
-                errors.addError("Exception type: " + e.getClass() + "Message: " + e.getMessage());
-            }
-
-            //Prints the AST to check whether it has all the correct info. (Debug code)
-            PrintTraversal print = new PrintTraversal();
-            //print.Print(ast, 0);
-
-
-            //Creating instance of the symboltable
-            SymbolTable symbolTable = new SymbolTable();
-
-
-            //Collecting typeinformation about: Functions, strategies and events.
-            FESVisitor fes = new FESVisitor(symbolTable);
-            fes.visit(ast);
-
-
-            //Filling the symboltable
-            ScopeTypeCheckVisitor STV = new ScopeTypeCheckVisitor(symbolTable, RHT);
-            STV.visit(ast);
-
-
-            //We now know all the functions, strategies and events in the program.
-            //Therefore checking if the "Default"-strategy exists.
-            try {
-                symbolTable.Search("Default", 0);
-            } catch (SymbolNotFoundException e) {
-                //Could not find the strategy with name "Default";
-                errors.addError("No strategy with name: \"Default\" was found");
-            }
-
-
-            //Checking correct use of returns.
-            ReturnCheckVisitor returnCheckVisitor = new ReturnCheckVisitor(symbolTable);
-            returnCheckVisitor.visit(ast);
-
-            if (errors.isEmpty()) { //If no breaking mistakes were found, generate the code.
-                SetUnderScoreVisitor underscoreVis = new SetUnderScoreVisitor();
-
-                underscoreVis.visit(ast);
-
-                //Code generation
-                CGTopVisitor codeGenerator = new CGTopVisitor(symbolTable);
-
-                try {
-                    codeGenerator.visit(ast);
-                } catch (Exception e) {
-                    errors.addError(e.getMessage());
-                }
-
-
-                codeGenerator.generateOutputFile("src\\FIRe\\Kodeeksempler\\");
-            } else { //If the semantics are wrong, print that code generation was not performed
-                errors.addError("Contextual errors detected. No code was generated.");
-            }
-        }
-        else {
-            errors.addError("Syntactic errors detected. No code was generated.");
-        }
-        errors.writeToConsole();
+        return outString;
     }
 
-    static Tuple<String, String> ReadUserInput()
+    private static ProgNode lexicalAnalysis(String outString) {
+
+        //Setup to perform lexical analysis on the input string.
+        CFGLexer lexer = new CFGLexer(CharStreams.fromString(outString));
+
+        CommonTokenStream tokenStream = new CommonTokenStream(lexer);
+        CFGParser parser = new CFGParser(tokenStream);
+
+        //Performs lexical analysis and builds a CST.
+        CFGParser.ProgContext CST = parser.prog();
+        //cst.children.add(parser.dcl());
+
+        //Builds an AST from the CST
+        ProgNode AST = (ProgNode) new BuildASTVisitor().visitProg(CST);
+        return  AST;
+    }
+
+
+    private static void contextualAnalysis(ProgNode AST, SymbolTable ST, RobotHeaderTable RHT) {
+
+        ParentASTVisitor PASTV = new ParentASTVisitor();
+        try {
+            AST.accept(PASTV, null);
+        } catch (Exception e) {
+            errors.addError("Exception type: " + e.getClass() + "Message: " + e.getMessage());
+        }
+
+        //Prints the AST to check whether it has all the correct info. (Debug code)
+        PrintTraversal print = new PrintTraversal();
+        //print.Print(ast, 0);
+
+        //Collecting typeinformation about: Functions, strategies and events.
+        FESVisitor fes = new FESVisitor(ST);
+        fes.visit(AST);
+
+
+        //Filling the symboltable
+        ScopeTypeCheckVisitor STV = new ScopeTypeCheckVisitor(ST, RHT);
+        STV.visit(AST);
+
+
+        //We now know all the functions, strategies and events in the program.
+        //Therefore checking if the "Default"-strategy exists.
+        try {
+            ST.Search("Default", 0);
+        } catch (SymbolNotFoundException e) {
+            //Could not find the strategy with name "Default";
+            errors.addError("No strategy with name: \"Default\" was found");
+        }
+
+
+        //Checking correct use of returns.
+        ReturnCheckVisitor returnCheckVisitor = new ReturnCheckVisitor(ST);
+        returnCheckVisitor.visit(AST);
+    }
+
+    private static void codeGeneration(ProgNode AST, SymbolTable ST)  {
+        SetUnderScoreVisitor underscoreVis = new SetUnderScoreVisitor();
+
+        //Code generation
+        CGTopVisitor codeGenerator = new CGTopVisitor(ST);
+
+        try {
+            underscoreVis.visit(AST);
+            codeGenerator.visit(AST);
+        } catch (Exception e) {
+            errors.addError(e.getMessage());
+        }
+
+        //codeGenerator.generateOutputFile(pathAndFileName.x);
+        codeGenerator.generateOutputFile("src\\FIRe\\Kodeeksempler\\");
+    }
+
+
+
+    private static Tuple<String, String> readUserInput()
     {
         Scanner userInput = new Scanner(System.in);
         String path;
