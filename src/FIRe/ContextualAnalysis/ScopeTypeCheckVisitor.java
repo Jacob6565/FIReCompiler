@@ -586,7 +586,7 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
                     }
                 }
                 //Otherwise, throw an exception
-                throw new SymbolNotFoundException(node.Name,node.LineNumber);
+                Main.errors.addError("ERROR: Could not find symbol " + node.Name + " in line " + node.LineNumber + ".");
             }
             //If it is an event declaration node
             if (predecessor instanceof EventDeclarationNode) {
