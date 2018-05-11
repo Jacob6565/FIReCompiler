@@ -1,80 +1,35 @@
-RobotProperties
-{
-      RobotName:Fire;
-      RobotType:AdvancedRobot;
-      BodyColor:orange;
-      GunColor:orange;
-      RadarColor:red;
+RobotProperties{
+    RobotName:OptimusCrime;
+    RobotType:AdvancedRobot;
+    BodyColor:green;
+    GunColor:red;
+    RadarColor:blue;
 }
-number dist = 50;
 
-strategy Default()
-{
-    routine()
-    {
-        turnGunRight(5);
-    }
+strategy Default(){
 
-    when (ScannedRobotEvent a)
-    {
-        if (a.getDistance() < 50 and getEnergy() > 50)
-        {
-            fire(3);
-        }
-        else
-        {
-            fire(1);
-        }
-        scan();
-    }
-    when(HitByBulletEvent b)
-    {
-        allign90Degrees(90 - (getHeading() - b.getHeading()));
-
-        ahead(dist);
-        dist = dist * -1;
-        scan();
-		if (getEnergy() < 20)
-		{
-		    Run();
-		}
+    routine(){
+        turnRadarRight(10);
+        ahead(25);
 
     }
-    when(HitRobotEvent c)
-    {
-        allign90Degrees(90 - (getHeading() - c.getBearing()));
 
-        ahead(dist);
-        dist = dist * -1;
-        scan();
-        if (getEnergy() < 20){
-            Run();
-        }
+    when(ScannedRobotEvent e){
+        fire(1);
     }
 }
 
-strategy Run()
-{
-    routine()
-    {
-        ahead(dist);
+number TheNumberMethod(){
+
+    if(5 < 6){
+    return 5;
     }
-    //Den formelle parameter her stemmer ikke overens med den anden when HitBybBulletEvent og det giver problemer
-    when(HitByBulletEvent d)
-    {
-        allign90Degrees(90 - (getHeading() - d.getHeading()));
-        ahead(dist);
-        dist = dist * -1;
-    }
-    when (ScannedRobotEvent f)
-    {
-        turnRight(49);
+    else{
+        return 9;
     }
 }
 
-void allign90Degrees(number bearing){
-    if(bearing != 90 or bearing != -90)
-    {
-        turnRight(bearing - 90);
-    }
+event LowHealth(){
+
+    return getEnergy() < 80;
 }

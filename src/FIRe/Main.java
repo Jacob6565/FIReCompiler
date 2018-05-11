@@ -25,11 +25,13 @@ public class Main {
     public static void main(String[] args) throws Exception {
 
         //Reads from the example program. (Debug code)
-        Tuple<String, String> pathAndFileName = ReadUserInput();
-        Scanner in = new Scanner(new FileReader(pathAndFileName.x+pathAndFileName.y));
-        //Scanner in = new Scanner(new FileReader("src\\FIRe\\Kodeeksempler\\KodeEx3.txt"));
+        //Tuple<String, String> pathAndFileName = ReadUserInput();
+        //Scanner in = new Scanner(new FileReader(pathAndFileName.x+pathAndFileName.y));
+        Scanner in = new Scanner(new FileReader("src\\FIRe\\Kodeeksempler\\KodeEx3.txt"));
         //We use this delimiter, to chop the code into bits. We split by the backslash character "\n"
         in.useDelimiter("\n");
+
+        Errors errors = new Errors();
 
         //Creates a StringBuilder from the given code file.
         StringBuilder sb = new StringBuilder();
@@ -129,7 +131,7 @@ public class Main {
                     System.out.println(e.getMessage());
                 }
 
-                codeGenerator.generateOutputFile(pathAndFileName.x);
+                //codeGenerator.generateOutputFile(pathAndFileName.x);
             } else { //If the semantics are wrong, print that code generation was not performed
                 System.out.println("Contextual errors detected. No code was generated.");
             }
