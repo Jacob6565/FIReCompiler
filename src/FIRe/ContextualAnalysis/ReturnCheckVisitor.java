@@ -1,6 +1,5 @@
 package FIRe.ContextualAnalysis;
 import FIRe.ASTVisitor;
-import FIRe.Exceptions.*;
 import FIRe.Main;
 import FIRe.Nodes.*;
 
@@ -29,7 +28,7 @@ public class ReturnCheckVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(AdditionNode node, Object... arg) throws Exception {
+    public void visit(AdditionNode node, Object... arg){
 
     }
 
@@ -39,7 +38,7 @@ public class ReturnCheckVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(AndNode node, Object... arg) throws Exception {
+    public void visit(AndNode node, Object... arg){
 
     }
 
@@ -49,13 +48,13 @@ public class ReturnCheckVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(AssignNode node, Object... arg) throws Exception {
+    public void visit(AssignNode node, Object... arg){
 
     }
 
     //A lot goes on in block node since a constructs has a blocknode
     @Override
-    public void visit(BlockNode node, Object... arg) throws VoidReturnException, TypeException, ReturnException, UnreachableCodeException, SymbolNotFoundException {
+    public void visit(BlockNode node, Object... arg) {
 
         //Ancestor is to check if the current block is from a functiondcl or others
         AbstractNode ancestor = node;
@@ -94,7 +93,7 @@ public class ReturnCheckVisitor extends ASTVisitor {
         }
     }
 
-    private void ChecksEvent(BlockNode node, AbstractNode ancestor) throws ReturnException {
+    private void ChecksEvent(BlockNode node, AbstractNode ancestor){
         boolean hasReturn = false;
         //Checking the current blocknode "node" which is inside an eventdeclaration.
         for(AbstractNode Node : node.childList)
@@ -114,16 +113,16 @@ public class ReturnCheckVisitor extends ASTVisitor {
         //if no return was found.
         if(!hasReturn)
         {
-            Main.errors.addError(new ReturnException(getErrorMessageForEvent, ancestor.LineNumber).getMessage());
+            addReturnError(getErrorMessageForEvent, ancestor.LineNumber);
         }
     }
 
-    private void ChecksStrategy(BlockNode node) throws ReturnException {
+    private void ChecksStrategy(BlockNode node){
         for (AbstractNode Node : node.childList){
             //Checking if this block got a return statement.
             if(Node instanceof ReturnNode)
             {
-                Main.errors.addError(new ReturnException(errorMessageForStrategy, Node.LineNumber).getMessage());
+                Main.errors.addReturnError(errorMessageForStrategy, Node.LineNumber);
             }
             //Checking if the nested blocks inside this block contains returns.
             //e.g return inside an if-statement.
@@ -133,10 +132,10 @@ public class ReturnCheckVisitor extends ASTVisitor {
         }
     }
 
-    private void ChecksFunctionWithVoidReturnType(BlockNode node, AbstractNode ancestor) throws VoidReturnException {
+    private void ChecksFunctionWithVoidReturnType(BlockNode node, AbstractNode ancestor){
         for (AbstractNode Node : node.childList) {
             if (Node instanceof ReturnNode) {
-                Main.errors.addError(new VoidReturnException(ancestor.LineNumber, Node.LineNumber).getMessage()); // we don't allow returns in a void
+                Main.errors.addVoidReturnError(ancestor.LineNumber, Node.LineNumber); // we don't allow returns in a void
             }
         }
         //loop investigating a controlstructues where a return can be 'hidden'.
@@ -148,7 +147,7 @@ public class ReturnCheckVisitor extends ASTVisitor {
         }
     }
 
-    private void ChecksFunctionWithNonVoidReturnType(BlockNode node, AbstractNode ancestor, List<Integer> unreachableLines) throws UnreachableCodeException, ReturnException {
+    private void ChecksFunctionWithNonVoidReturnType(BlockNode node, AbstractNode ancestor, List<Integer> unreachableLines){
         boolean hasreturn = false;
         for (AbstractNode Node : node.childList) {
             if (Node instanceof ReturnNode && !hasreturn) {
@@ -163,7 +162,7 @@ public class ReturnCheckVisitor extends ASTVisitor {
         }
 
         if(!unreachableLines.isEmpty()){
-            throw new UnreachableCodeException(unreachableLines);
+            addUnreachableCodeError(unreachableLines);
         }
 
         // if however the block does not have a return, it may be hidden under a controlstructue node
@@ -172,11 +171,11 @@ public class ReturnCheckVisitor extends ASTVisitor {
                 if (Node instanceof ControlStructureNode) {
                     visitNode(Node);
                 } else
-                    Main.errors.addError(new ReturnException("You are missing a return in the function", ancestor.LineNumber).getMessage());
+                    Main.errors.addReturnError("You are missing a return in the function", ancestor.LineNumber);
             }
             //if the block does not contain anything;
             if(node.childList.isEmpty()){
-                Main.errors.addError(new ReturnException("You are missing a return in the function", ancestor.LineNumber).getMessage());
+                Main.errors.addReturnError("You are missing a return in the function", ancestor.LineNumber);
             }
         }
     }
@@ -188,12 +187,12 @@ public class ReturnCheckVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(BooleanDeclarationNode node, Object... arg) throws Exception {
+    public void visit(BooleanDeclarationNode node, Object... arg){
 
     }
 
     @Override
-    public void visit(BoolArrayDeclarationNode node, Object... arg) throws Exception {
+    public void visit(BoolArrayDeclarationNode node, Object... arg){
 
     }
 
@@ -224,12 +223,12 @@ public class ReturnCheckVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(DivisionNode node, Object... arg) throws Exception {
+    public void visit(DivisionNode node, Object... arg){
 
     }
 
     @Override
-    public void visit(EventDeclarationNode node, Object... arg) throws Exception {
+    public void visit(EventDeclarationNode node, Object... arg){
 
         //visiting its children since it can contain blocks and other constrol structures.
         for(AbstractNode child : node.childList){
@@ -240,7 +239,7 @@ public class ReturnCheckVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(EqualsNode node, Object... arg) throws Exception {
+    public void visit(EqualsNode node, Object... arg){
 
     }
 
@@ -281,12 +280,12 @@ public class ReturnCheckVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(GEQNode node, Object... arg) throws Exception {
+    public void visit(GEQNode node, Object... arg){
 
     }
 
     @Override
-    public void visit(GreaterThanNode node, Object... arg) throws Exception {
+    public void visit(GreaterThanNode node, Object... arg){
 
     }
 
@@ -296,7 +295,7 @@ public class ReturnCheckVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(IdNode node, Object... arg) throws Exception {
+    public void visit(IdNode node, Object... arg){
 
     }
 
@@ -312,27 +311,27 @@ public class ReturnCheckVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(InfixExpressionNode node, Object... arg) throws Exception {
+    public void visit(InfixExpressionNode node, Object... arg){
 
     }
 
     @Override
-    public void visit(LEQNode node, Object... arg) throws Exception {
+    public void visit(LEQNode node, Object... arg){
 
     }
 
     @Override
-    public void visit(LessThanNode node, Object... arg) throws Exception {
+    public void visit(LessThanNode node, Object... arg){
 
     }
 
     @Override
-    public void visit(ModuloNode node, Object... arg) throws Exception {
+    public void visit(ModuloNode node, Object... arg){
 
     }
 
     @Override
-    public void visit(MultiplicationNode node, Object... arg) throws Exception {
+    public void visit(MultiplicationNode node, Object... arg){
 
     }
 
@@ -342,7 +341,7 @@ public class ReturnCheckVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(NotEqualsNode node, Object... arg) throws Exception {
+    public void visit(NotEqualsNode node, Object... arg){
 
     }
 
@@ -352,12 +351,12 @@ public class ReturnCheckVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(NumberDeclarationNode node, Object... arg) throws Exception {
+    public void visit(NumberDeclarationNode node, Object... arg){
 
     }
 
     @Override
-    public void visit(NumberArrayDeclarationNode node, Object... arg) throws Exception {
+    public void visit(NumberArrayDeclarationNode node, Object... arg){
 
     }
 
@@ -367,12 +366,12 @@ public class ReturnCheckVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(OrNode node, Object... arg) throws Exception {
+    public void visit(OrNode node, Object... arg){
 
     }
 
     @Override
-    public void visit(PowerNode node, Object... arg) throws Exception {
+    public void visit(PowerNode node, Object... arg){
 
     }
 
@@ -419,12 +418,12 @@ public class ReturnCheckVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(StrategyDeclarationNode node, Object... arg) throws ReturnException {
+    public void visit(StrategyDeclarationNode node, Object... arg){
 
         for(AbstractNode child : node.childList) {
             //This checks is there is a return in the first scope of a strategy.
             if (child instanceof ReturnNode) {
-                Main.errors.addError(new ReturnException(errorMessageForStrategy,child.LineNumber).getMessage());
+                Main.errors.addReturnError(errorMessageForStrategy,child.LineNumber);
             }
             //Checking if returns exist in all the nested scopes.
             else if (child instanceof ControlStructureNode || child instanceof WhenNode) {
@@ -434,17 +433,17 @@ public class ReturnCheckVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(SubtractionNode node, Object... arg) throws Exception {
+    public void visit(SubtractionNode node, Object... arg){
 
     }
 
     @Override
-    public void visit(TextDeclarationNode node, Object... arg) throws Exception {
+    public void visit(TextDeclarationNode node, Object... arg){
 
     }
 
     @Override
-    public void visit(TextArrayDeclarationNode node, Object... arg) throws Exception {
+    public void visit(TextArrayDeclarationNode node, Object... arg){
 
     }
 
@@ -486,5 +485,16 @@ public class ReturnCheckVisitor extends ASTVisitor {
     @Override
     public void visit(RobotTypeNode node, Object... arg) {
 
+    }
+    private void addReturnError(String errStr, int lineNum){
+           Main.errors.addError("ERROR: " + errStr + " in line " + lineNum + ".");
+    }
+    private void addUnreachableCodeError(List<Integer> values){
+        String lines = "";
+        for (Integer i : values)
+        {
+            lines += i.toString() + ", ";
+        }
+        Main.errors.addError("ERROR: Unreachable code at lines: " + lines);
     }
 }

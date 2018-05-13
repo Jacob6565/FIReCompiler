@@ -3,9 +3,6 @@ package FIRe.ContextualAnalysis;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Map;
-import java.util.Stack;
-
-import FIRe.Exceptions.*;
 import FIRe.Main;
 import FIRe.Nodes.*;
 import FIRe.Tuple;
@@ -19,7 +16,7 @@ public class SymbolTable  {
     }
 
     //Checks whether a variable is already declared in the current scope and inserts the current input if it isn't.
-    public void Insert(DeclarationNode input) throws NameAlreadyUsedInGlobalScopeException, Exception {
+    public void Insert(DeclarationNode input){
         if (!Contains(input.Id.Name)) {
 
             if (input instanceof NumberDeclarationNode)
@@ -50,7 +47,7 @@ public class SymbolTable  {
                 for (Tuple<String, String> param: fparams) {
                     //Here we can use peek, because we know a function declaration will only appear at the global scope.
                     if(stack.Peek().containsKey(param.x))
-                        throw new NameAlreadyUsedInGlobalScopeException("Variable name in function parameter already used in global scope", param.x);
+                        Main.errors.addNameAlreadyUsedInTheGlobalScopeError("Variable name in function parameter already used in global scope", param.x);
                 }
                 stack.Peek().put(idNode.Name, new SymbolData(input, returnType, fparams));
 
@@ -67,16 +64,13 @@ public class SymbolTable  {
                 for (Tuple<String, String> param: sparams) {
                     //Here we can use peek, because we know a strategy declaration will only appear at the global scope
                     if(stack.Peek().containsKey(param.x))
-                        throw new NameAlreadyUsedInGlobalScopeException("Variable name in function parameter already used in global scope", param.x);
+                        Main.errors.addNameAlreadyUsedInTheGlobalScopeError("Variable name in function parameter already used in global scope", param.x);
                 }
                 stack.Peek().put(idNode.Name, new SymbolData(input,sparams));
             }
-            else
-                throw new Exception("This shouldn't happen i think");
-
             return;
         }
-        throw new VariableAlreadyDeclaredException("Variable already declared: " + input.Id.Name + " in line " + input.LineNumber);
+        Main.errors.addVariableAlreadyDeclared("Variable already declared: " + input.Id.Name + " in line " + input.LineNumber);
     }
 
     //Help function for Insert. Extracts the parameter types from a FormalParameterNode contained in input's childlist
@@ -118,23 +112,25 @@ public class SymbolTable  {
 
 
     //Returns the SymbolData if the name exists in the symbolTable
-    public SymbolData Search(String name, int lineNumber) throws SymbolNotFoundException{
+    public SymbolData Search(String name, int lineNumber){
         for (int i = 0; i < stack.Size(); i++){
             if(stack.Get(i).containsKey(name)){
                 return stack.Get(i).get(name);
             }
         }
-        throw new SymbolNotFoundException(name,lineNumber);
+        Main.errors.addSymbolNotFoundError(name,lineNumber);
+        return null;
     }
 
     //Returns the SymbolData if the name exists in the symbolTable or null if it doesn't.
-    public SymbolData Search(String name) throws SymbolNotFoundException {
+    public SymbolData Search(String name){
         for (int i = 0; i < stack.Size(); i++){
             if(stack.Get(i).containsKey(name)){
                 return stack.Get(i).get(name);
             }
         }
-        throw new SymbolNotFoundException(name);
+        Main.errors.addSymbolNotFoundError(name);
+        return null;
     }
 
     //Checks if the current key already exists in the

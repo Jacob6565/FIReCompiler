@@ -56,7 +56,7 @@ public class CGTopVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(AdditionNode node, Object... arg) throws Exception {
+    public void visit(AdditionNode node, Object... arg) {
 
     }
 
@@ -66,22 +66,22 @@ public class CGTopVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(AndNode node, Object... arg) throws Exception {
+    public void visit(AndNode node, Object... arg){
 
     }
 
     @Override
-    public void visit(ArrayAccessNode node, Object... arg) throws TypeException {
+    public void visit(ArrayAccessNode node, Object... arg) {
 
     }
 
     @Override
-    public void visit(AssignNode node, Object... arg) throws Exception {
+    public void visit(AssignNode node, Object... arg){
         progCode.runMethod.emit(bodyVisitor.GenerateBodyCode(node),blockIndent);
     }
 
     @Override
-    public void visit(BlockNode node, Object... arg) throws Exception {
+    public void visit(BlockNode node, Object... arg) {
         for (AbstractNode child:node.childList) {
             visitNode(child);
         }
@@ -93,12 +93,12 @@ public class CGTopVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(BooleanDeclarationNode node, Object... arg) throws Exception {
+    public void visit(BooleanDeclarationNode node, Object... arg) {
         progCode.setup.emit(bodyVisitor.GenerateBodyCode(node), blockIndent);
     }
 
     @Override
-    public void visit(BoolArrayDeclarationNode node, Object... arg) throws Exception {
+    public void visit(BoolArrayDeclarationNode node, Object... arg) {
         progCode.setup.emit(bodyVisitor.GenerateBodyCode(node), blockIndent);
     }
 
@@ -122,12 +122,12 @@ public class CGTopVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(DivisionNode node, Object... arg) throws Exception {
+    public void visit(DivisionNode node, Object... arg) {
 
     }
 
     @Override
-    public void visit(EventDeclarationNode node, Object... arg) throws Exception {
+    public void visit(EventDeclarationNode node, Object... arg){
         EventCodeHolder eventDcl = new EventCodeHolder(node.Id.Name);
 
         //Code generation for eventDcl body
@@ -137,7 +137,7 @@ public class CGTopVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(EqualsNode node, Object... arg) throws Exception {
+    public void visit(EqualsNode node, Object... arg){
 
     }
 
@@ -152,17 +152,17 @@ public class CGTopVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(ForNode node, Object... arg) throws TypeException, ReturnException {
+    public void visit(ForNode node, Object... arg){
 
     }
 
     @Override
-    public void visit(FuncCallNode node, Object... arg) throws Exception {
+    public void visit(FuncCallNode node, Object... arg){
 
     }
 
     @Override
-    public void visit(FunctionDeclarationNode node, Object... arg) throws Exception {
+    public void visit(FunctionDeclarationNode node, Object... arg){
 
         MethodCodeHolder method;
         String params = null;
@@ -198,7 +198,7 @@ public class CGTopVisitor extends ASTVisitor {
         progCode.methods.add(method);
     }
 
-    public String translateType(String FIReType){
+    private String translateType(String FIReType){
         switch (FIReType){
             case "bool":
                 return "boolean";
@@ -214,12 +214,12 @@ public class CGTopVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(GEQNode node, Object... arg) throws Exception {
+    public void visit(GEQNode node, Object... arg){
 
     }
 
     @Override
-    public void visit(GreaterThanNode node, Object... arg) throws Exception {
+    public void visit(GreaterThanNode node, Object... arg) {
 
     }
 
@@ -229,37 +229,37 @@ public class CGTopVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(IdNode node, Object... arg) throws Exception {
+    public void visit(IdNode node, Object... arg){
 
     }
 
     @Override
-    public void visit(IfControlStructureNode node, Object... arg) throws Exception {
+    public void visit(IfControlStructureNode node, Object... arg){
 
     }
 
     @Override
-    public void visit(InfixExpressionNode node, Object... arg) throws Exception {
+    public void visit(InfixExpressionNode node, Object... arg){
 
     }
 
     @Override
-    public void visit(LEQNode node, Object... arg) throws Exception {
+    public void visit(LEQNode node, Object... arg){
 
     }
 
     @Override
-    public void visit(LessThanNode node, Object... arg) throws Exception {
+    public void visit(LessThanNode node, Object... arg){
 
     }
 
     @Override
-    public void visit(ModuloNode node, Object... arg) throws Exception {
+    public void visit(ModuloNode node, Object... arg){
 
     }
 
     @Override
-    public void visit(MultiplicationNode node, Object... arg) throws Exception {
+    public void visit(MultiplicationNode node, Object... arg) {
 
     }
 
@@ -269,7 +269,7 @@ public class CGTopVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(NotEqualsNode node, Object... arg) throws Exception {
+    public void visit(NotEqualsNode node, Object... arg){
 
     }
 
@@ -279,12 +279,12 @@ public class CGTopVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(NumberDeclarationNode node, Object... arg) throws Exception {
+    public void visit(NumberDeclarationNode node, Object... arg){
         progCode.setup.emit(bodyVisitor.GenerateBodyCode(node), blockIndent);
     }
 
     @Override
-    public void visit(NumberArrayDeclarationNode node, Object... arg) throws Exception {
+    public void visit(NumberArrayDeclarationNode node, Object... arg) {
         progCode.setup.emit(bodyVisitor.GenerateBodyCode(node), blockIndent);
     }
 
@@ -294,17 +294,17 @@ public class CGTopVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(OrNode node, Object... arg) throws Exception {
+    public void visit(OrNode node, Object... arg) {
 
     }
 
     @Override
-    public void visit(PowerNode node, Object... arg) throws Exception {
+    public void visit(PowerNode node, Object... arg) {
 
     }
 
     @Override
-    public void visit(ProgNode node, Object... arg) throws Exception {
+    public void visit(ProgNode node, Object... arg) {
         for (AbstractNode child : node.childList) {
             visitNode(child);
         }
@@ -354,7 +354,7 @@ public class CGTopVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(RoutineNode node, Object... arg) throws TypeException {
+    public void visit(RoutineNode node, Object... arg) {
 
         //Parent way : WhenNode -> StrategyDcl
         StrategyDeclarationNode parentStrategy = (StrategyDeclarationNode) node.Parent;
@@ -369,7 +369,7 @@ public class CGTopVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(StrategyDeclarationNode node, Object... arg) throws Exception {
+    public void visit(StrategyDeclarationNode node, Object... arg) {
 
         progCode.addEnumStrategyValue(node.Id.Name);
 
@@ -381,17 +381,17 @@ public class CGTopVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(SubtractionNode node, Object... arg) throws Exception {
+    public void visit(SubtractionNode node, Object... arg) {
 
     }
 
     @Override
-    public void visit(TextDeclarationNode node, Object... arg) throws Exception {
+    public void visit(TextDeclarationNode node, Object... arg) {
         progCode.setup.emit(bodyVisitor.GenerateBodyCode(node), blockIndent);
     }
 
     @Override
-    public void visit(TextArrayDeclarationNode node, Object... arg) throws Exception {
+    public void visit(TextArrayDeclarationNode node, Object... arg) {
         progCode.setup.emit(bodyVisitor.GenerateBodyCode(node), blockIndent);
     }
 
@@ -467,7 +467,7 @@ public class CGTopVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(WhileNode node, Object... arg) throws TypeException {
+    public void visit(WhileNode node, Object... arg) {
 
     }
 
@@ -477,5 +477,5 @@ public class CGTopVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(RobotTypeNode node, Object... arg) throws TypeException { progCode.setup.robotType = node.RobotType.Name; }
+    public void visit(RobotTypeNode node, Object... arg) { progCode.setup.robotType = node.RobotType.Name; }
 }

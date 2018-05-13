@@ -76,7 +76,7 @@ public class CGBodyVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(AdditionNode node, Object... arg) throws Exception {
+    public void visit(AdditionNode node, Object... arg){
 
     }
 
@@ -86,18 +86,18 @@ public class CGBodyVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(AndNode node, Object... arg) throws Exception {
+    public void visit(AndNode node, Object... arg){
 
     }
 
     @Override
-    public void visit(ArrayAccessNode node, Object... arg) throws TypeException {
+    public void visit(ArrayAccessNode node, Object... arg){
 
     }
 
     //Method also handles array assignment
     @Override
-    public void visit(AssignNode node, Object... arg) throws Exception {
+    public void visit(AssignNode node, Object... arg){
         code.emit(node.Id.Name);
         if(node.Id.ArrayIndex != null) {
             code.emit("[(int)("); //Conversion necessary for the index of the array
@@ -110,7 +110,7 @@ public class CGBodyVisitor extends ASTVisitor {
     boolean stopBodyGen = false;
 
     @Override
-    public void visit(BlockNode node,Object... arg) throws Exception {
+    public void visit(BlockNode node,Object... arg){
 
         for(AbstractNode child : node.childList) {
             if(!stopBodyGen)
@@ -131,7 +131,7 @@ public class CGBodyVisitor extends ASTVisitor {
 
     //Creates the java code for bool dcls. These are handled the same way for numbers and texts.
     @Override
-    public void visit(BooleanDeclarationNode node, Object... arg) throws Exception {
+    public void visit(BooleanDeclarationNode node, Object... arg) {
         if (!partOfStratBody(node)) {
             int idCounter = 0;
             boolean exprFlag = false;
@@ -153,7 +153,7 @@ public class CGBodyVisitor extends ASTVisitor {
 
     //Creates the java code for bool array dcls. These are handled the same way for numbers and texts.
     @Override
-    public void visit(BoolArrayDeclarationNode node, Object... arg) throws Exception {
+    public void visit(BoolArrayDeclarationNode node, Object... arg) {
         if (!partOfStratBody(node)){
             code.emit("boolean[] ");
 
@@ -190,19 +190,19 @@ public class CGBodyVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(DivisionNode node, Object... arg) throws Exception {
+    public void visit(DivisionNode node, Object... arg) {
 
     }
 
     @Override
-    public void visit(EventDeclarationNode node, Object... arg) throws Exception {
+    public void visit(EventDeclarationNode node, Object... arg){
         for (AbstractNode child: node.childList) {
             visitNode(child);
         }
     }
 
     @Override
-    public void visit(EqualsNode node, Object... arg) throws Exception {
+    public void visit(EqualsNode node, Object... arg){
 
     }
 
@@ -217,7 +217,7 @@ public class CGBodyVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(ForNode node, Object... arg) throws TypeException, ReturnException {
+    public void visit(ForNode node, Object... arg){
         //Flag to see if the for-loop counter was declared inside the for-loop
         boolean dclUsed = false;
 
@@ -297,17 +297,14 @@ public class CGBodyVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(FuncCallNode node, Object... arg) throws Exception {
+    public void visit(FuncCallNode node, Object... arg){
         String name = node.Id.Name;
         boolean ofTypeStrategy = false;
-        try{
+
             //Here we use the substring of name that begins on index 1, to avoid the underscore of the name when searching
             SymbolData symbolData = symbolTable.Search(name.substring(1));
             if (symbolData.nodeRef instanceof StrategyDeclarationNode)
                 ofTypeStrategy = true;
-        }
-        catch (SymbolNotFoundException e){
-        }
 
         //This case indicates that we are dealing with a strategy call
         if (ofTypeStrategy){
@@ -332,7 +329,7 @@ public class CGBodyVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(FunctionDeclarationNode node, Object... arg) throws Exception {
+    public void visit(FunctionDeclarationNode node, Object... arg){
         for(AbstractNode child : node.childList) {
             if (child instanceof BlockNode) {
                 visitNode(child);
@@ -342,12 +339,12 @@ public class CGBodyVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(GEQNode node, Object... arg) throws Exception {
+    public void visit(GEQNode node, Object... arg) {
 
     }
 
     @Override
-    public void visit(GreaterThanNode node, Object... arg) throws Exception {
+    public void visit(GreaterThanNode node, Object... arg){
 
     }
 
@@ -357,12 +354,12 @@ public class CGBodyVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(IdNode node, Object... arg) throws Exception {
+    public void visit(IdNode node, Object... arg){
 
     }
 
     @Override
-    public void visit(IfControlStructureNode node, Object... arg) throws Exception {
+    public void visit(IfControlStructureNode node, Object... arg) {
         code.emit("if(");
 
         //Variables used to count the number of ifs and blocks aggregated to the if node.
@@ -434,27 +431,27 @@ public class CGBodyVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(InfixExpressionNode node, Object... arg) throws Exception {
+    public void visit(InfixExpressionNode node, Object... arg){
 
     }
 
     @Override
-    public void visit(LEQNode node, Object... arg) throws Exception {
+    public void visit(LEQNode node, Object... arg){
 
     }
 
     @Override
-    public void visit(LessThanNode node, Object... arg) throws Exception {
+    public void visit(LessThanNode node, Object... arg) {
 
     }
 
     @Override
-    public void visit(ModuloNode node, Object... arg) throws Exception {
+    public void visit(ModuloNode node, Object... arg) {
 
     }
 
     @Override
-    public void visit(MultiplicationNode node, Object... arg) throws Exception {
+    public void visit(MultiplicationNode node, Object... arg) {
 
     }
 
@@ -464,7 +461,7 @@ public class CGBodyVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(NotEqualsNode node, Object... arg) throws Exception {
+    public void visit(NotEqualsNode node, Object... arg) {
 
     }
 
@@ -475,7 +472,7 @@ public class CGBodyVisitor extends ASTVisitor {
 
     //Handles single and multiple declerations of numbernodes
     @Override
-    public void visit(NumberDeclarationNode node, Object... arg) throws Exception {
+    public void visit(NumberDeclarationNode node, Object... arg) {
         if (!partOfStratBody(node)) {
             int idCounter = 0;
             boolean exprFlag = false;
@@ -494,7 +491,7 @@ public class CGBodyVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(NumberArrayDeclarationNode node, Object... arg) throws Exception {
+    public void visit(NumberArrayDeclarationNode node, Object... arg) {
         if (!partOfStratBody(node)) {
             code.emit("double[] ");
 
@@ -514,17 +511,17 @@ public class CGBodyVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(OrNode node, Object... arg) throws Exception {
+    public void visit(OrNode node, Object... arg) {
 
     }
 
     @Override
-    public void visit(PowerNode node, Object... arg) throws Exception {
+    public void visit(PowerNode node, Object... arg) {
 
     }
 
     @Override
-    public void visit(ProgNode node, Object... arg) throws Exception {
+    public void visit(ProgNode node, Object... arg) {
 
     }
 
@@ -540,7 +537,7 @@ public class CGBodyVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(RoutineNode node, Object... arg) throws TypeException {
+    public void visit(RoutineNode node, Object... arg) {
         if(node.repeatCondition != null) {
             code.emit("for(int i = (int)(");
             code.emitNL(exprGen.GenerateExprCode(code, node.repeatCondition) + "); i > 0; i--){");
@@ -560,18 +557,18 @@ public class CGBodyVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(StrategyDeclarationNode node, Object... arg) throws Exception {
+    public void visit(StrategyDeclarationNode node, Object... arg){
         for(AbstractNode child : node.childList)
             visitNode(child);
     }
 
     @Override
-    public void visit(SubtractionNode node, Object... arg) throws Exception {
+    public void visit(SubtractionNode node, Object... arg){
 
     }
 
     @Override
-    public void visit(TextDeclarationNode node, Object... arg) throws Exception {
+    public void visit(TextDeclarationNode node, Object... arg){
         if (!partOfStratBody(node)) {
             int idCounter = 0;
             boolean exprFlag = false;
@@ -590,7 +587,7 @@ public class CGBodyVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(TextArrayDeclarationNode node, Object... arg) throws Exception {
+    public void visit(TextArrayDeclarationNode node, Object... arg){
         if (!partOfStratBody(node)) {
             code.emit("String[] ");
 
@@ -624,7 +621,7 @@ public class CGBodyVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(WhileNode node, Object... arg) throws TypeException {
+    public void visit(WhileNode node, Object... arg){
         code.emit("while(");
         code.emit(exprGen.GenerateExprCode(code, node.Expression) + ")");
         code.emitNL("{");
@@ -647,7 +644,7 @@ public class CGBodyVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(RobotTypeNode node, Object... arg) throws TypeException {
+    public void visit(RobotTypeNode node, Object... arg){
 
     }
 

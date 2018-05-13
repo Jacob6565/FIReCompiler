@@ -1,11 +1,6 @@
 package FIRe.ContextualAnalysis;
 
 import FIRe.ASTVisitor;
-
-import javax.xml.soap.Text;
-
-import FIRe.ErrorLog;
-import FIRe.Exceptions.MultipleEventHandlerException;
 import FIRe.Main;
 import FIRe.Nodes.*;
 import FIRe.Tuple;
@@ -29,7 +24,7 @@ public class FESVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(AdditionNode node, Object... arg) throws Exception {
+    public void visit(AdditionNode node, Object... arg) {
 
     }
 
@@ -39,7 +34,7 @@ public class FESVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(AndNode node, Object... arg) throws Exception {
+    public void visit(AndNode node, Object... arg) {
 
     }
 
@@ -64,7 +59,7 @@ public class FESVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(BooleanDeclarationNode node, Object... arg) throws Exception {
+    public void visit(BooleanDeclarationNode node, Object... arg) {
         symbolTable.Insert(node);
         if(subTreeContainsId(node.childList.get(1),node.Id.Name)){
             Main.errors.addError("Could not find symbol " + node.Id.Name + " on line " + node.LineNumber + ".");
@@ -72,7 +67,7 @@ public class FESVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(BoolArrayDeclarationNode node, Object... arg) throws Exception {
+    public void visit(BoolArrayDeclarationNode node, Object... arg) {
         symbolTable.Insert(node);
     }
 
@@ -102,7 +97,7 @@ public class FESVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(EventDeclarationNode node, Object... arg) throws Exception {
+    public void visit(EventDeclarationNode node, Object... arg) {
         symbolTable.Insert(node);
     }
 
@@ -132,7 +127,7 @@ public class FESVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(FunctionDeclarationNode node, Object... arg) throws Exception {
+    public void visit(FunctionDeclarationNode node, Object... arg) {
         symbolTable.Insert(node);
     }
 
@@ -152,7 +147,7 @@ public class FESVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(IdNode node, Object... arg) throws Exception {
+    public void visit(IdNode node, Object... arg) {
 
     }
 
@@ -202,7 +197,7 @@ public class FESVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(NumberDeclarationNode node, Object... arg) throws Exception {
+    public void visit(NumberDeclarationNode node, Object... arg) {
         symbolTable.Insert(node);
         if(subTreeContainsId(node.childList.get(1),node.Id.Name)){
             Main.errors.addError("Could not find symbol " + node.Id.Name + " on line " + node.LineNumber + ".");
@@ -210,7 +205,7 @@ public class FESVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(NumberArrayDeclarationNode node, Object... arg) throws Exception {
+    public void visit(NumberArrayDeclarationNode node, Object... arg) {
         symbolTable.Insert(node);
     }
 
@@ -231,12 +226,7 @@ public class FESVisitor extends ASTVisitor {
 
     @Override
     public void visit(ProgNode node, Object... arg) {
-        try {
-            ImportRoboCodeMethods();
-        }
-        catch (Exception Ex){
-            System.out.println(Ex.getMessage() + "Error in importing Robocode functions");
-        }
+        ImportRoboCodeMethods();
         for (AbstractNode Node : node.childList) {
             //Adding all the global declarations by visiting the individual nodes.
             if(Node != null && Node instanceof FunctionDeclarationNode)
@@ -287,12 +277,12 @@ public class FESVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(StrategyDeclarationNode node, Object... arg) throws Exception {
+    public void visit(StrategyDeclarationNode node, Object... arg) {
         ArrayList<String> handledEvents = new ArrayList<>();
         for (AbstractNode Node: node.childList){
             if (Node instanceof WhenNode){
                 if(handledEvents.contains(((IdNode)Node.childList.get(0)).Name)){
-                    throw new MultipleEventHandlerException(((IdNode)node.childList.get(0)).Name,Node.LineNumber);
+                    Main.errors.addMultipleEventHandlerError(((IdNode)node.childList.get(0)).Name,node.LineNumber);
                 }
                 else
                     handledEvents.add(((IdNode)Node.childList.get(0)).Name);
@@ -308,7 +298,7 @@ public class FESVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(TextDeclarationNode node, Object... arg) throws Exception {
+    public void visit(TextDeclarationNode node, Object... arg) {
         symbolTable.Insert(node);
         if(subTreeContainsId(node.childList.get(1),node.Id.Name)){
             Main.errors.addError("Could not find symbol " + node.Id.Name + " on line " + node.LineNumber + ".");
@@ -316,7 +306,7 @@ public class FESVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(TextArrayDeclarationNode node, Object... arg) throws Exception {
+    public void visit(TextArrayDeclarationNode node, Object... arg) {
         symbolTable.Insert(node);
     }
 
@@ -349,7 +339,7 @@ public class FESVisitor extends ASTVisitor {
 
     }
 
-    private void ImportRoboCodeMethods() throws Exception {
+    private void ImportRoboCodeMethods(){
         // basic robot movement and interaction
         symbolTable.Insert(new FunctionDeclarationNode("ahead","void", new Tuple<>("distance", Main.NUMBER)));
         symbolTable.Insert(new FunctionDeclarationNode("back", "void", new Tuple<>("distance", Main.NUMBER)));

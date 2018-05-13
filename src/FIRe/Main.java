@@ -71,6 +71,7 @@ public class Main {
             RobotHeaderTable RHT = new RobotHeaderTable();
             ProgNode ast = (ProgNode) new BuildASTVisitor().visitProg(cst);
             ParentASTVisitor PASTV = new ParentASTVisitor();
+
             try {
                 ast.accept(PASTV, null);
             } catch (Exception e) {
@@ -98,12 +99,8 @@ public class Main {
 
             //We now know all the functions, strategies and events in the program.
             //Therefore checking if the "Default"-strategy exists.
-            try {
-                symbolTable.Search("Default", 0);
-            } catch (SymbolNotFoundException e) {
-                //Could not find the strategy with name "Default";
-                errors.addError("No strategy with name: \"Default\" was found");
-            }
+
+            symbolTable.Search("Default", 0);
 
 
             //Checking correct use of returns.

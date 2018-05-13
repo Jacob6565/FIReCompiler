@@ -237,7 +237,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
                 else if (ctx.Type().toString().equals(Main.TEXT))
                     ADN = new TextArrayDeclarationNode((IdNode) visitId(ctx.id(0)));
                 else {
-                    Main.errors.addError("Error in arraydeclaration"); //should throw an exception
+                    Main.errors.addError("Error in arraydeclaration");
                     ADN = null;
                 }
 
@@ -285,7 +285,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
                 }
                 return booleanDeclarationNode;
             } else
-                return null; //Exception?
+                return null;
         }
         return null;
     }

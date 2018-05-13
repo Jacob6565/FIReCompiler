@@ -1,10 +1,6 @@
 package FIRe.CodeGeneration;
 
 import FIRe.ASTVisitor;
-import FIRe.Exceptions.ReturnException;
-import FIRe.Exceptions.SymbolNotFoundException;
-import FIRe.Exceptions.TypeException;
-import FIRe.ContextualAnalysis.*;
 import FIRe.Nodes.*;
 
 import java.util.Map;
@@ -17,7 +13,7 @@ public class SetUnderScoreVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(AdditionNode node, Object... arg) throws Exception {
+    public void visit(AdditionNode node, Object... arg) {
         visitNode(node.LeftChild);
         visitNode(node.RightChild);
     }
@@ -29,13 +25,13 @@ public class SetUnderScoreVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(AndNode node, Object... arg) throws Exception {
+    public void visit(AndNode node, Object... arg) {
         visitNode(node.LeftChild);
         visitNode(node.RightChild);
     }
 
     @Override
-    public void visit(ArrayAccessNode node, Object... arg) throws TypeException, SymbolNotFoundException {
+    public void visit(ArrayAccessNode node, Object... arg){
         if (node.Id != null)
             visitNode(node.Id);
         if (node.index != null)
@@ -43,7 +39,7 @@ public class SetUnderScoreVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(AssignNode node, Object... arg) throws Exception {
+    public void visit(AssignNode node, Object... arg){
         if (node.Id != null)
             visitNode(node.Id);
 
@@ -52,25 +48,25 @@ public class SetUnderScoreVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(BlockNode node, Object... arg) throws Exception {
+    public void visit(BlockNode node, Object... arg) {
         for (AbstractNode child : node.childList)
             visitNode(child);
     }
 
     @Override
-    public void visit(BodyColorNode node, Object... arg) throws TypeException {
+    public void visit(BodyColorNode node, Object... arg) {
 
     }
 
     @Override
-    public void visit(BooleanDeclarationNode node, Object... arg) throws Exception {
+    public void visit(BooleanDeclarationNode node, Object... arg) {
         //VisitNode(node.Id);
         for (AbstractNode child : node.childList)
             visitNode(child);
     }
 
     @Override
-    public void visit(BoolArrayDeclarationNode node, Object... arg) throws Exception {
+    public void visit(BoolArrayDeclarationNode node, Object... arg) {
         //VisitNode(node.Id);
         for (AbstractNode child : node.childList)
             visitNode(child);
@@ -96,13 +92,13 @@ public class SetUnderScoreVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(DivisionNode node, Object... arg) throws Exception {
+    public void visit(DivisionNode node, Object... arg) {
         visitNode(node.LeftChild);
         visitNode(node.RightChild);
     }
 
     @Override
-    public void visit(EventDeclarationNode node, Object... arg) throws Exception {
+    public void visit(EventDeclarationNode node, Object... arg){
         if (node.Id != null)
             visitNode(node.Id);
         for (AbstractNode child : node.childList)
@@ -110,7 +106,7 @@ public class SetUnderScoreVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(EqualsNode node, Object... arg) throws Exception {
+    public void visit(EqualsNode node, Object... arg){
         visitNode(node.LeftChild);
         visitNode(node.RightChild);
     }
@@ -121,20 +117,20 @@ public class SetUnderScoreVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(FormalParameterNode node, Object... arg) throws Exception {
+    public void visit(FormalParameterNode node, Object... arg) {
         for (Map.Entry<IdNode, String> entry : node.parameterMap.entrySet())
             visitNode(entry.getKey());
 
     }
 
     @Override
-    public void visit(ForNode node, Object... arg) throws TypeException, ReturnException {
+    public void visit(ForNode node, Object... arg){
         for (AbstractNode child : node.childList)
             visitNode(child);
     }
 
     @Override
-    public void visit(FuncCallNode node, Object... arg) throws Exception {
+    public void visit(FuncCallNode node, Object... arg){
 
 
         visitNode(node.Id);
@@ -145,33 +141,33 @@ public class SetUnderScoreVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(FunctionDeclarationNode node, Object... arg) throws Exception {
+    public void visit(FunctionDeclarationNode node, Object... arg){
         visitNode(node.Id);
         for (AbstractNode child : node.childList)
             visitNode(child);
     }
 
     @Override
-    public void visit(GEQNode node, Object... arg) throws Exception {
+    public void visit(GEQNode node, Object... arg){
         visitNode(node.LeftChild);
         visitNode(node.RightChild);
     }
 
     @Override
-    public void visit(GreaterThanNode node, Object... arg) throws Exception {
+    public void visit(GreaterThanNode node, Object... arg){
         visitNode(node.LeftChild);
         visitNode(node.RightChild);
     }
 
     @Override
-    public void visit(GunColorNode node, Object... arg) throws TypeException {
+    public void visit(GunColorNode node, Object... arg){
 
     }
 
     //Prefixes IDs with _ if it doesnt have it and appends the strategy name to differentiate variables of the same
     // name in different strategies (Needed because we make these variables global when we generate code)
     @Override
-    public void visit(IdNode node, Object... arg) throws Exception {
+    public void visit(IdNode node, Object... arg){
         AbstractNode ancestor = node;
         String tempName = new String();
         String[] dotParts;
@@ -235,7 +231,7 @@ public class SetUnderScoreVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(IfControlStructureNode node, Object... arg) throws Exception {
+    public void visit(IfControlStructureNode node, Object... arg){
         if (node.Expression != null)
             visitNode(node.Expression);
         for (AbstractNode child : node.childList)
@@ -243,30 +239,30 @@ public class SetUnderScoreVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(InfixExpressionNode node, Object... arg) throws Exception {
+    public void visit(InfixExpressionNode node, Object... arg){
 
     }
 
     @Override
-    public void visit(LEQNode node, Object... arg) throws Exception {
+    public void visit(LEQNode node, Object... arg){
         visitNode(node.LeftChild);
         visitNode(node.RightChild);
     }
 
     @Override
-    public void visit(LessThanNode node, Object... arg) throws Exception {
+    public void visit(LessThanNode node, Object... arg){
         visitNode(node.LeftChild);
         visitNode(node.RightChild);
     }
 
     @Override
-    public void visit(ModuloNode node, Object... arg) throws Exception {
+    public void visit(ModuloNode node, Object... arg){
         visitNode(node.LeftChild);
         visitNode(node.RightChild);
     }
 
     @Override
-    public void visit(MultiplicationNode node, Object... arg) throws Exception {
+    public void visit(MultiplicationNode node, Object... arg){
         visitNode(node.LeftChild);
         visitNode(node.RightChild);
     }
@@ -277,26 +273,26 @@ public class SetUnderScoreVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(NotEqualsNode node, Object... arg) throws Exception {
+    public void visit(NotEqualsNode node, Object... arg){
         visitNode(node.LeftChild);
         visitNode(node.RightChild);
 
     }
 
     @Override
-    public void visit(NotNode node, Object... arg) throws TypeException {
+    public void visit(NotNode node, Object... arg){
         visitNode(node.Expression);
     }
 
     @Override
-    public void visit(NumberDeclarationNode node, Object... arg) throws Exception {
+    public void visit(NumberDeclarationNode node, Object... arg){
         //VisitNode(node.Id);
         for (AbstractNode child : node.childList)
             visitNode(child);
     }
 
     @Override
-    public void visit(NumberArrayDeclarationNode node, Object... arg) throws Exception {
+    public void visit(NumberArrayDeclarationNode node, Object... arg){
         //VisitNode(node.Id);
         for (AbstractNode child : node.childList)
             visitNode(child);
@@ -309,36 +305,36 @@ public class SetUnderScoreVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(OrNode node, Object... arg) throws Exception {
+    public void visit(OrNode node, Object... arg){
         visitNode(node.LeftChild);
         visitNode(node.RightChild);
     }
 
     @Override
-    public void visit(PowerNode node, Object... arg) throws Exception {
+    public void visit(PowerNode node, Object... arg){
         visitNode(node.LeftChild);
         visitNode(node.RightChild);
     }
 
     @Override
-    public void visit(ProgNode node, Object... arg) throws Exception {
+    public void visit(ProgNode node, Object... arg){
         for (AbstractNode child : node.childList)
             visitNode(child);
     }
 
     @Override
-    public void visit(RadarColorNode node, Object... arg) throws TypeException {
+    public void visit(RadarColorNode node, Object... arg) {
 
     }
 
     @Override
-    public void visit(ReturnNode node, Object... arg) throws TypeException {
+    public void visit(ReturnNode node, Object... arg){
         for (AbstractNode child : node.childList)
             visitNode(child);
     }
 
     @Override
-    public void visit(RoutineNode node, Object... arg) throws TypeException {
+    public void visit(RoutineNode node, Object... arg){
         if (node.repeatCondition != null)
             visitNode(node.repeatCondition);
 
@@ -352,27 +348,27 @@ public class SetUnderScoreVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(StrategyDeclarationNode node, Object... arg) throws Exception {
+    public void visit(StrategyDeclarationNode node, Object... arg){
         node.Id.Name = "_" + node.Id.Name;
         for (AbstractNode child : node.childList)
             visitNode(child);
     }
 
     @Override
-    public void visit(SubtractionNode node, Object... arg) throws Exception {
+    public void visit(SubtractionNode node, Object... arg) {
         visitNode(node.LeftChild);
         visitNode(node.RightChild);
     }
 
     @Override
-    public void visit(TextDeclarationNode node, Object... arg) throws Exception {
+    public void visit(TextDeclarationNode node, Object... arg) {
         //VisitNode(node.Id);
         for (AbstractNode child : node.childList)
             visitNode(child);
     }
 
     @Override
-    public void visit(TextArrayDeclarationNode node, Object... arg) throws Exception {
+    public void visit(TextArrayDeclarationNode node, Object... arg) {
         //VisitNode(node.Id);
         for (AbstractNode child : node.childList)
             visitNode(child);
@@ -395,7 +391,7 @@ public class SetUnderScoreVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(WhileNode node, Object... arg) throws TypeException {
+    public void visit(WhileNode node, Object... arg) {
         visitNode(node.Expression);
         for (AbstractNode child : node.childList)
             visitNode(child);
@@ -407,7 +403,7 @@ public class SetUnderScoreVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(RobotTypeNode node, Object... arg) throws TypeException {
+    public void visit(RobotTypeNode node, Object... arg) {
 
     }
 

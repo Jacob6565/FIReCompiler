@@ -49,7 +49,7 @@ public class ScopeTypeCheckVisitorTest{
             assert false;
     }
 
-
+/*
     @Test
     public void testAddition(){
         AdditionNode node = new AdditionNode();
@@ -2229,6 +2229,7 @@ public class ScopeTypeCheckVisitorTest{
         STCV.visit(node);
         assertEquals(Main.TEXT,node.type);
     }
+    */
 
     public CFGParser.ProgContext ContextPrep(){
 
