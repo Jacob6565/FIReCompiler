@@ -136,14 +136,9 @@ public class Main {
 
         //We now know all the functions, strategies and events in the program.
         //Therefore checking if the "Default"-strategy exists.
-        try {
-            ST.Search("Default", 0);
-        } catch (SymbolNotFoundException e) {
-            //Could not find the strategy with name "Default";
+        if (!ST.Contains("Default"))
             errors.addError("No strategy with name: \"Default\" was found");
-        }
-
-
+        
         //Checking correct use of returns.
         ReturnCheckVisitor returnCheckVisitor = new ReturnCheckVisitor(ST);
         returnCheckVisitor.visit(AST);
