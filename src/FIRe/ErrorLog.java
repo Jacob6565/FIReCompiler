@@ -8,8 +8,12 @@ public class ErrorLog {
 
     private List<String> ErrorsAndWarnings = new ArrayList<String>();
 
-    public boolean isEmpty(){
-        return ErrorsAndWarnings.isEmpty();
+    public boolean hasErrors(){
+        for (String str: ErrorsAndWarnings) {
+            if (str.contains("ERROR"))
+                return true;
+        }
+        return false;
     }
 
     public void addError(String errorMessage){

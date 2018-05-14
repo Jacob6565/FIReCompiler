@@ -7,7 +7,7 @@ RobotProperties
       RadarColor:white;
 }
 
-number a;
+number b,d;
 bool flag = false;
 number values[10];
 number index;

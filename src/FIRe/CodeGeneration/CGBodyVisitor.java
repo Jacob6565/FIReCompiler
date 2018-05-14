@@ -301,10 +301,14 @@ public class CGBodyVisitor extends ASTVisitor {
         String name = node.Id.Name;
         boolean ofTypeStrategy = false;
 
-            //Here we use the substring of name that begins on index 1, to avoid the underscore of the name when searching
-            SymbolData symbolData = symbolTable.Search(name.substring(1));
-            if (symbolData.nodeRef instanceof StrategyDeclarationNode)
-                ofTypeStrategy = true;
+        //Here we use the substring of name that begins on index 1, to avoid the underscore of the name when searching
+        SymbolData symbolData;
+        if(name.charAt(0) == '_')
+            symbolData = symbolTable.Search(name.substring(1));
+        else
+            symbolData = symbolTable.Search(name);
+        if (symbolData.nodeRef instanceof StrategyDeclarationNode)
+            ofTypeStrategy = true;
 
         //This case indicates that we are dealing with a strategy call
         if (ofTypeStrategy){

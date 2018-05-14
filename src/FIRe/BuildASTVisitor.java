@@ -265,7 +265,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
                 NumberDeclarationNode numberDeclarationNode = new NumberDeclarationNode();
                 numberDeclarationNode.LineNumber = ctx.start.getLine();
                 for (CFGParser.IdContext idContext : ctx.id()) {
-                    numberDeclarationNode.childList.add(visitId(idContext)); //we add the dcls as children
+                    numberDeclarationNode.childList.add(visitId(idContext)); //we add the ids as children
                 }
                 return numberDeclarationNode;
             } else if (ctx.Type().toString().equals(Main.TEXT)) {

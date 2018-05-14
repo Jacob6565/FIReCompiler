@@ -40,11 +40,11 @@ public class Main {
         //Scanner in = new Scanner(new FileReader(pathAndFileName.x + pathAndFileName.y));
         String sourceFile = readSouceFile();
 
-        if(errors.isEmpty()) {
+        if(!errors.hasErrors()) {
             AST = lexicalAnalysis(sourceFile);
         }
 
-        if(errors.isEmpty())
+        if(!errors.hasErrors())
         {
             contextualAnalysis(AST, ST, RHT);
         }
@@ -54,7 +54,7 @@ public class Main {
         }
 
 
-        if(errors.isEmpty())
+        if(!errors.hasErrors())
         {
             codeGeneration(AST, ST);
         }
@@ -69,7 +69,7 @@ public class Main {
     private static String readSouceFile() {
         Scanner in = null;
         try {
-            in = new Scanner(new FileReader("src\\FIRe\\Kodeeksempler\\Jacob-Validt.txt"));
+            in = new Scanner(new FileReader("src\\FIRe\\Kodeeksempler\\KodeEx3.txt"));
         } catch (FileNotFoundException e) {
             errors.addError("File could not be read.");
         }
@@ -138,7 +138,7 @@ public class Main {
         //Therefore checking if the "Default"-strategy exists.
         if (!ST.Contains("Default"))
             errors.addError("No strategy with name: \"Default\" was found");
-        
+
         //Checking correct use of returns.
         ReturnCheckVisitor returnCheckVisitor = new ReturnCheckVisitor(ST);
         returnCheckVisitor.visit(AST);
