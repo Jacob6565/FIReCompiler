@@ -11,11 +11,14 @@ number power(number x)
 {
     return x*x;
 }
-number firePower = 1;
+
 text currentRival = "SittingDuck";
 bool shootingAtRival = false;
 text ScannedRobots[10];
+bool Flags[10];
+number FirePowers[3];
 number index = 0;
+
 strategy Default()
 {
     number y = 3;
@@ -67,6 +70,10 @@ strategy Offensive()
         if(shootingAtRival)
         {
             print("I am gonna get you!");
+        }
+        else if(!Flags[0])
+        {
+            y = 5;
         }
 
         setTurnGunRight(360);

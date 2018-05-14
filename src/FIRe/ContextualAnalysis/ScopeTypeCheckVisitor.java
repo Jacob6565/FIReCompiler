@@ -282,7 +282,9 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
                 //Insert all the IdNodes in the childlist
                 AbstractNode child = node.childList.get(i);
                 if (child instanceof IdNode) {
-                    ST.Insert(new BooleanDeclarationNode((IdNode) child));
+                    BooleanDeclarationNode tempNode = new BooleanDeclarationNode((IdNode) child);
+                    tempNode.LineNumber = node.LineNumber;
+                    ST.Insert(tempNode);
                     ((IdNode) child).type = Main.BOOL;
                     //Add to the mother Node's name
                     if (i == 0) {
@@ -901,7 +903,9 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
                 //Insert all the IdNodes in the childlist
                 AbstractNode child = node.childList.get(i);
                 if (child instanceof IdNode) {
-                    ST.Insert(new NumberDeclarationNode((IdNode) child));
+                    NumberDeclarationNode tempNode = new NumberDeclarationNode((IdNode) child);
+                    tempNode.LineNumber = node.LineNumber;
+                    ST.Insert(tempNode);
                     ((IdNode) child).type = Main.NUMBER;
                     //Add to the mother Node's name
                     if (i == 0) {
@@ -1125,7 +1129,10 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
                 //Insert all the IdNodes in the childlist
                 AbstractNode child = node.childList.get(i);
                 if (child instanceof IdNode) {
-                    ST.Insert(new TextDeclarationNode((IdNode) child));
+                    TextDeclarationNode tempTxtNode = new TextDeclarationNode((IdNode) child);
+                    tempTxtNode.LineNumber = node.LineNumber;
+                    ST.Insert(tempTxtNode);
+                    ((IdNode) child).LineNumber = node.LineNumber;
                     ((IdNode) child).type = Main.TEXT;
                     //Add to the mother Node's name
                     if (i == 0) {
