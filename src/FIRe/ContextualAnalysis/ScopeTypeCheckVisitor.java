@@ -254,15 +254,46 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
 
     @Override
     public void visit(BooleanDeclarationNode node, Object... arg){
-        //Insert the new node in the symbol table
-        if (!(node.Parent instanceof ProgNode))
-            ST.Insert(node);
-        for (AbstractNode Node : node.childList) {
-            if (Node != null)
-                visitNode(Node);
+        if (node.Id != null) {
+            visitNode(node.childList.get(1));
+
+            //We insert the node if it is not global
+            //The FESVisitor deals with global declarations
+            if (!(node.Parent instanceof ProgNode))
+                ST.Insert(node);
+
+            //We set the type
+            node.Id.type = Main.BOOL;
+            for (AbstractNode Node : node.childList) {
+                if (Node != null)
+                    visitNode(Node);
+            }
+
+            //If the number is instantiated and the right hand side is not a bool, add an error
+            if (node.childList.size() > 1 && ((ExpressionNode) node.childList.get(1)).type != null && !((ExpressionNode) node.childList.get(1)).type.equals(node.Id.type)) {
+                ExpressionNode rightHandSide = (ExpressionNode) node.childList.get(1);
+                Main.errors.addTypeError(node.Id.type, rightHandSide.type, node.LineNumber);
+            }
         }
-        //We set the type as bool
-        node.Id.type = Main.BOOL;
+        else{ //If it is a multidcl à la "number a,b"
+            node.Id = new IdNode();
+            node.Id.LineNumber = node.LineNumber;
+            for (int i = 0; i < node.childList.size(); ++i) {
+                //Insert all the IdNodes in the childlist
+                AbstractNode child = node.childList.get(i);
+                if (child instanceof IdNode) {
+                    ST.Insert(new BooleanDeclarationNode((IdNode) child));
+                    ((IdNode) child).type = Main.BOOL;
+                    //Add to the mother Node's name
+                    if (i == 0) {
+                        node.Id.Name = ((IdNode) child).Name;
+                        continue;
+                    }
+                    node.Id.Name += ", " + ((IdNode) child).Name;
+                }
+            }
+            Main.errors.addError("WARNING: " + node.Id.Name + " has been implicitly assigned a value of 0.");
+        }
     }
 
     @Override
@@ -841,26 +872,47 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
     }
 
     @Override
-    public void visit(NumberDeclarationNode node, Object... arg){
-        visitNode(node.childList.get(1));
+    public void visit(NumberDeclarationNode node, Object... arg) {
+        if (node.Id != null) {
+            visitNode(node.childList.get(1));
 
-        //We insert the number
-        if (!(node.Parent instanceof ProgNode))
-            ST.Insert(node);
+            //We insert the number if it is not global
+            //The FESVisitor deals with global declarations
+            if (!(node.Parent instanceof ProgNode))
+                ST.Insert(node);
 
-        //We set the type
-        node.Id.type = Main.NUMBER;
-        for (AbstractNode Node: node.childList) {
-            if (Node != null)
-                visitNode(Node);
-        }
+            //We set the type
+            node.Id.type = Main.NUMBER;
+            for (AbstractNode Node : node.childList) {
+                if (Node != null)
+                    visitNode(Node);
+            }
 
             //If the number is instantiated and the right hand side is not a number, add an error
             if (node.childList.size() > 1 && ((ExpressionNode) node.childList.get(1)).type != null && !((ExpressionNode) node.childList.get(1)).type.equals(node.Id.type)) {
                 ExpressionNode rightHandSide = (ExpressionNode) node.childList.get(1);
                 Main.errors.addTypeError(node.Id.type, rightHandSide.type, node.LineNumber);
+            }
         }
-
+        else{ //If it is a multidcl à la "number a,b"
+            node.Id = new IdNode();
+            node.Id.LineNumber = node.LineNumber;
+            for (int i = 0; i < node.childList.size(); ++i) {
+                //Insert all the IdNodes in the childlist
+                AbstractNode child = node.childList.get(i);
+                if (child instanceof IdNode) {
+                    ST.Insert(new NumberDeclarationNode((IdNode) child));
+                    ((IdNode) child).type = Main.NUMBER;
+                    //Add to the mother Node's name
+                    if (i == 0) {
+                        node.Id.Name = ((IdNode) child).Name;
+                        continue;
+                    }
+                    node.Id.Name += ", " + ((IdNode) child).Name;
+                }
+            }
+            Main.errors.addError("WARNING: " + node.Id.Name + " has been implicitly assigned a value of 0.");
+        }
     }
 
     @Override
@@ -1045,16 +1097,46 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
 
     @Override
     public void visit(TextDeclarationNode node, Object... arg){
-        //The declarationnode is put into the symbol table
-        if (!(node.Parent instanceof ProgNode))
-            ST.Insert(node);
+        if (node.Id != null) {
+            visitNode(node.childList.get(1));
 
-        for (AbstractNode Node: node.childList) {
-            if (Node != null)
-                visitNode(Node);
+            //We insert the node if it is not global
+            //The FESVisitor deals with global declarations
+            if (!(node.Parent instanceof ProgNode))
+                ST.Insert(node);
+
+            //We set the type
+            node.Id.type = Main.TEXT;
+            for (AbstractNode Node : node.childList) {
+                if (Node != null)
+                    visitNode(Node);
+            }
+
+            //If the number is instantiated and the right hand side is not a text, add an error
+            if (node.childList.size() > 1 && ((ExpressionNode) node.childList.get(1)).type != null && !((ExpressionNode) node.childList.get(1)).type.equals(node.Id.type)) {
+                ExpressionNode rightHandSide = (ExpressionNode) node.childList.get(1);
+                Main.errors.addTypeError(node.Id.type, rightHandSide.type, node.LineNumber);
+            }
         }
-        //The type is text
-        node.Id.type = Main.TEXT;
+        else{ //If it is a multidcl à la "text a,b"
+            node.Id = new IdNode();
+            node.Id.LineNumber = node.LineNumber;
+            for (int i = 0; i < node.childList.size(); ++i) {
+                //Insert all the IdNodes in the childlist
+                AbstractNode child = node.childList.get(i);
+                if (child instanceof IdNode) {
+                    ST.Insert(new TextDeclarationNode((IdNode) child));
+                    ((IdNode) child).type = Main.TEXT;
+                    //Add to the mother Node's name
+                    if (i == 0) {
+                        node.Id.Name = ((IdNode) child).Name;
+                        continue;
+                    }
+                    node.Id.Name += ", " + ((IdNode) child).Name;
+                }
+            }
+            Main.errors.addError("WARNING: " + node.Id.Name + " has been implicitly assigned a value of 0.");
+        }
     }
 
     @Override

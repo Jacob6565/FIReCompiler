@@ -7,13 +7,15 @@ RobotProperties
       RadarColor:white;
 }
 
-number b,d;
+
 bool flag = false;
 number values[10];
 number index;
 
 strategy Default(){
-    number c;
+    number b,d;
+    bool f,g,h;
+    text j,k,l;
 
     routine(){
         for(number a = 5 upto 3){

@@ -60,11 +60,33 @@ public class FESVisitor extends ASTVisitor {
 
     @Override
     public void visit(BooleanDeclarationNode node, Object... arg) {
-        symbolTable.Insert(node);
-        if(subTreeContainsId(node.childList.get(1),node.Id.Name)){
-            Main.errors.addError("Could not find symbol " + node.Id.Name + " on line " + node.LineNumber + ".");
+        //The Id is null, if it is a multidcl à la "number a, b"
+        if (node.Id == null) {
+            node.Id = new IdNode();
+            node.Id.LineNumber = node.LineNumber;
+            for (int i = 0; i < node.childList.size(); ++i) {
+                //Insert all the IdNodes in the childlist
+                AbstractNode child = node.childList.get(i);
+                if (child instanceof IdNode) {
+                    symbolTable.Insert(new BooleanDeclarationNode((IdNode) child));
+                    ((IdNode) child).type = Main.BOOL;
+                    //Add to the mother Node's name
+                    if (i == 0) {
+                        node.Id.Name = ((IdNode) child).Name;
+                        continue;
+                    }
+                    node.Id.Name += ", " + ((IdNode) child).Name;
+                }
+            }
+            Main.errors.addError("WARNING: " + node.Id.Name + " has been implicitly assigned a value of false.");
         }
+        //Otherwise just insert it normally
+        else if(subTreeContainsId(node.childList.get(1), node.Id.Name)) {
+            Main.errors.addError("ERROR: Could not find symbol " + node.Id.Name + " on line " + node.LineNumber + ".");
+        } else
+            symbolTable.Insert(node);
     }
+
 
     @Override
     public void visit(BoolArrayDeclarationNode node, Object... arg) {
@@ -207,7 +229,7 @@ public class FESVisitor extends ASTVisitor {
                 AbstractNode child = node.childList.get(i);
                 if (child instanceof IdNode) {
                     symbolTable.Insert(new NumberDeclarationNode((IdNode) child));
-                    ((IdNode) child).type = "number";
+                    ((IdNode) child).type = Main.NUMBER;
                     //Add to the mother Node's name
                     if (i == 0) {
                         node.Id.Name = ((IdNode) child).Name;
@@ -220,7 +242,7 @@ public class FESVisitor extends ASTVisitor {
         }
         //Otherwise just insert it normally
         else if(subTreeContainsId(node.childList.get(1), node.Id.Name)) {
-            Main.errors.addError("Could not find symbol " + node.Id.Name + " on line " + node.LineNumber + ".");
+            Main.errors.addError("ERROR: Could not find symbol " + node.Id.Name + " on line " + node.LineNumber + ".");
             } else
                 symbolTable.Insert(node);
     }
@@ -320,11 +342,33 @@ public class FESVisitor extends ASTVisitor {
 
     @Override
     public void visit(TextDeclarationNode node, Object... arg) {
-        symbolTable.Insert(node);
-        if(subTreeContainsId(node.childList.get(1),node.Id.Name)){
-            Main.errors.addError("Could not find symbol " + node.Id.Name + " on line " + node.LineNumber + ".");
+        //The Id is null, if it is a multidcl à la "text a, b"
+        if (node.Id == null) {
+            node.Id = new IdNode();
+            node.Id.LineNumber = node.LineNumber;
+            for (int i = 0; i < node.childList.size(); ++i) {
+                //Insert all the IdNodes in the childlist
+                AbstractNode child = node.childList.get(i);
+                if (child instanceof IdNode) {
+                    symbolTable.Insert(new TextDeclarationNode((IdNode) child));
+                    ((IdNode) child).type = Main.TEXT;
+                    //Add to the mother Node's name
+                    if (i == 0) {
+                        node.Id.Name = ((IdNode) child).Name;
+                        continue;
+                    }
+                    node.Id.Name += ", " + ((IdNode) child).Name;
+                }
+            }
+            Main.errors.addError("WARNING: " + node.Id.Name + " has been implicitly assigned a value of \"\" (the empty string).");
         }
+        //Otherwise just insert it normally
+        else if(subTreeContainsId(node.childList.get(1), node.Id.Name)) {
+            Main.errors.addError("ERROR: Could not find symbol " + node.Id.Name + " on line " + node.LineNumber + ".");
+        } else
+            symbolTable.Insert(node);
     }
+
 
     @Override
     public void visit(TextArrayDeclarationNode node, Object... arg) {
