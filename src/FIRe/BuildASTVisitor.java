@@ -266,6 +266,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
                 numberDeclarationNode.LineNumber = ctx.start.getLine();
                 for (CFGParser.IdContext idContext : ctx.id()) {
                     numberDeclarationNode.childList.add(visitId(idContext)); //we add the ids as children
+                    numberDeclarationNode.childList.get(numberDeclarationNode.childList.size() - 1).LineNumber = numberDeclarationNode.LineNumber;
                 }
                 return numberDeclarationNode;
             } else if (ctx.Type().toString().equals(Main.TEXT)) {
@@ -274,6 +275,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
                 textDeclarationNode.LineNumber = ctx.start.getLine();
                 for (CFGParser.IdContext idContext : ctx.id()) {
                     textDeclarationNode.childList.add(visitId(idContext));//We add the dcls as children
+                    textDeclarationNode.childList.get(textDeclarationNode.childList.size() - 1).LineNumber = textDeclarationNode.LineNumber;
                 }
                 return textDeclarationNode;
             } else if (ctx.Type().toString().equals(Main.BOOL)) {
@@ -282,6 +284,7 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
                 booleanDeclarationNode.LineNumber = ctx.start.getLine();
                 for (CFGParser.IdContext idContext : ctx.id()) {
                     booleanDeclarationNode.childList.add(visitId(idContext));//We add the dcls as children
+                    booleanDeclarationNode.childList.get(booleanDeclarationNode.childList.size() - 1).LineNumber = booleanDeclarationNode.LineNumber;
                 }
                 return booleanDeclarationNode;
             } else
