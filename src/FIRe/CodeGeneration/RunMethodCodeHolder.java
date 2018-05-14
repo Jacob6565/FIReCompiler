@@ -5,7 +5,7 @@ public class RunMethodCodeHolder extends MethodCodeHolder {
     StringBuilder customEvents = new StringBuilder();
     RunMethodCodeHolder(String name, String type) {
         super(name, type);
-        generatedSwitch  = new Switch(currentStrategyVar, "break");
+        generatedSwitch  = new Switch(currentStrategyVar);
     }
 
     public void addToRunMethod(String strategyName, String body) {

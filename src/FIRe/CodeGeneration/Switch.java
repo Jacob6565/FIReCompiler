@@ -4,15 +4,14 @@ import java.util.ArrayList;
 
 
 public class Switch extends Indenter {
-    Switch(String valueName, String caseEnder) {
+    Switch(String valueName) {
         this.valueName = valueName;
-        this.caseEnder = caseEnder;
     }
     Switch(String valueName, Case switchCase){
         this.valueName = valueName;
         switchCases.add(switchCase);
     }
-    //Case ender is break by default
+    //Case ender is always break by default
     String caseEnder = "break";
     String valueName = new String();
     ArrayList<Case> switchCases = new ArrayList<Case>();
@@ -32,7 +31,7 @@ public class Switch extends Indenter {
         }
     }
 
-    //For when we simply want to add a strategy case to the run method or any event handler but the custom event handler
+    //For when we simply want to add a strategy case to a switch
     public void addStrategyCase(String switchCase, String body){
         switchCases.add(new Case(switchCase, body, caseEnder));
     }

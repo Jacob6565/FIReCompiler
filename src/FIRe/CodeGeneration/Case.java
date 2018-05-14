@@ -11,7 +11,7 @@ public class Case extends Indenter{
         this.caseName = caseName;
         this.caseEnder = caseEnder;
     }
-    //caseEnder is by default break
+    //caseEnder is by default always break;
     private String caseEnder;
     public String caseName = new String();
     public String body = new String();
