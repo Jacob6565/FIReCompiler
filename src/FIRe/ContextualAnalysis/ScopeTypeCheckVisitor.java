@@ -292,7 +292,7 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
                     node.Id.Name += ", " + ((IdNode) child).Name;
                 }
             }
-            Main.errors.addError("WARNING: " + node.Id.Name + " has been implicitly assigned a value of 0.");
+            Main.errors.addError("WARNING: " + node.Id.Name + " has been implicitly assigned a value of false.");
         }
     }
 
@@ -1135,7 +1135,7 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
                     node.Id.Name += ", " + ((IdNode) child).Name;
                 }
             }
-            Main.errors.addError("WARNING: " + node.Id.Name + " has been implicitly assigned a value of 0.");
+            Main.errors.addError("WARNING: " + node.Id.Name + " has been implicitly assigned a value of \"\" .");
         }
     }
 

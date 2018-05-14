@@ -34,20 +34,7 @@ public class ScopeTypeCheckVisitorTest{
     RobotHeaderTable RHT = new RobotHeaderTable();
     ScopeTypeCheckVisitor STCV = new ScopeTypeCheckVisitor(ST, RHT);
 
-    @Test
-    public void visitProgTest() {
-        AbstractNode node = BASTV.visitProg(cst);
-        if (node.childList.size() == 4) {
-            if (node.childList.get(0) instanceof RobotPropertiesNode && node.childList.get(1) instanceof StrategyDeclarationNode &&
-                    node.childList.get(2) instanceof FunctionDeclarationNode && node.childList.get(3) instanceof EventDeclarationNode) {
-                assert true;
-            }
-            else
-                assert false;
-        }
-        else
-            assert false;
-    }
+
 
 /*
     @Test
