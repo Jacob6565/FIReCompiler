@@ -148,8 +148,9 @@ public class CGExpressionVisitor{
     }
 
     public void visit(NotNode node, Object... arg) {
-        code.emit("!");
+        code.emit("!(");
         VisitNode(node.Expression);
+        code.emit(")");
     }
 
     public void visit(NumberNode node, Object... arg) {
