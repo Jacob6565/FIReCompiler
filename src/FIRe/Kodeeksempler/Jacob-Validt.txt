@@ -12,6 +12,7 @@ number power(number x)
     return x*x;
 }
 
+
 text currentRival = "SittingDuck";
 bool shootingAtRival = false;
 text ScannedRobots[10];
@@ -28,7 +29,6 @@ strategy Default()
         setTurnGunRight(360);
         setTurnGunLeft(360);
         execute();
-
     }
     when (ScannedRobotEvent e)
     {
@@ -99,6 +99,10 @@ strategy Offensive()
     }
     when (LowHealth e)
     {
+        bool a = true;
+        bool b = true;
+        bool c = !(a and b);
+        number d = ((2+3) + (4+1) - (3))*6;
         print("Wow, I am going to die!");
     }
 }

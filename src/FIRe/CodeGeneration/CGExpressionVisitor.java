@@ -7,6 +7,7 @@ public class CGExpressionVisitor{
     ExpressionNode expr;
     CodeHolder code;
 
+
     private void emitLeftParenthesis()
     {
         code.emit("(");
@@ -16,14 +17,15 @@ public class CGExpressionVisitor{
     private void emitRightParenthesis()
     {
         code.emit(")");
-
     }
+
     private void emitRightChildInInfixNode(InfixExpressionNode node)
     {
         emitLeftParenthesis();
         VisitNode(node.RightChild);
         emitRightParenthesis();
     }
+
     private void emitLeftChildInInfixNode(InfixExpressionNode node)
     {
         emitLeftParenthesis();
@@ -42,9 +44,7 @@ public class CGExpressionVisitor{
     String GenerateExprCode(CodeHolder CH, ExpressionNode expression){
         code = CH;
         expr = expression;
-        emitLeftParenthesis();
         VisitNode(expr);
-        emitRightParenthesis();
         return "";
     }
 
@@ -52,30 +52,21 @@ public class CGExpressionVisitor{
         emitInfixExpression(node, "+");
     }
 
-
-
     public void visit(AndNode node, Object... arg) throws Exception {
-        emitInfixExpression(node, "&&");
+       emitInfixExpression(node, "&&");
     }
 
     public void visit(ArrayAccessNode node, Object... arg) throws TypeException {
-        emitLeftParenthesis();
         code.emit(node.Id.Name + "[(int)(");
         VisitNode(node.index);
         code.emit(")] ");
-       emitRightParenthesis();
     }
 
     public void visit(BoolNode node, Object... arg) {
-        if (node.value == true) {
-           emitLeftParenthesis();
+        if(node.value == true)
             code.emit("true");
-            emitRightParenthesis();
-        } else if (node.value == false) {
-            emitLeftParenthesis();
+        else if(node.value == false)
             code.emit("false");
-            emitRightParenthesis();
-        }
     }
 
     public void visit(DivisionNode node, Object... arg) throws Exception {
@@ -84,13 +75,14 @@ public class CGExpressionVisitor{
 
     public void visit(EqualsNode node, Object... arg) throws Exception {
         if(node.LeftChild.type.equals("text") && node.RightChild.type.equals("text")){
-           emitLeftChildInInfixNode(node);
+            VisitNode(node.LeftChild);
             code.emit(".equals(");
-            emitRightChildInInfixNode(node);
+            VisitNode(node.RightChild);
             code.emit(")");
         }
         else{
             emitInfixExpression(node, "==");
+
         }
     }
 
@@ -114,13 +106,12 @@ public class CGExpressionVisitor{
         code.emit(")");
     }
 
-
     public void visit(GEQNode node, Object... arg) throws Exception {
-        emitInfixExpression(node, ">=");
+       emitInfixExpression(node, ">=");
     }
 
     public void visit(GreaterThanNode node, Object... arg) throws Exception {
-      emitInfixExpression(node, ">");
+        emitInfixExpression(node, ">");
     }
 
     public void visit(IdNode node, Object... arg) throws Exception {
@@ -134,7 +125,7 @@ public class CGExpressionVisitor{
     }
 
     public void visit(LEQNode node, Object... arg) throws Exception {
-        emitInfixExpression(node, "<=");
+       emitInfixExpression(node, "<=");
     }
 
     public void visit(LessThanNode node, Object... arg) throws Exception {
@@ -151,9 +142,7 @@ public class CGExpressionVisitor{
 
     public void visit(NegateNode node, Object... arg) {
         code.emit("-");
-        emitLeftParenthesis();
         VisitNode(node.childList.get(0));
-        emitRightParenthesis();
     }
 
     public void visit(NotEqualsNode node, Object... arg) throws Exception {
