@@ -1,7 +1,7 @@
 RobotProperties
 {
       RobotName:TheDestroyer;
-      RobotType:advancedRobot;
+      RobotType: AdvancedRobot;
       BodyColor:yellow;
       GunColor:red;
       RadarColor:white;
@@ -10,63 +10,54 @@ RobotProperties
 number x = 3;
 strategy Default()
 {
-    if(x > 0)
-    {
-         x = power(x);
-    }
-    else
-    {
-        x = 2;
-    }
-
     routine(6)
     {
         x = x + 1;
     }
     when (MyLowHealthEvent e)
     {
-        e.enemy = "SittingDuck";
+        x = 5;
     }
     when (HitRobotEvent f)
     {
         if(f.getName() == "SittingDuck")
         {
-            System.out.println("Got you :)");
+            print("Got you :)");
         }
 
-        Offensive(f.getName());
+        Offensive();
     }
 }
 
-number power(number x)
+number power(number y)
 {
-    return x*x;
+    return y*y;
 }
 
-strategy Offensive(text enemyName)
+strategy Offensive()
 {
-    text enemy = enemyName;
+    text enemy = "SittingDuck";
     routine()
     {
-        turnLeftAndRotate(360);
-        System.out.println("Shoot: " + enemy);
+        turnLeft(360);
+        print("Shoot: " + enemy);
     }
     when (ScannedRobotEvent e)
     {
-        System.out.println("I see you: " + e.getName());
+        print("I see you: " + e.getName());
         enemy = AdvancedCalculation(e.getName());
     }
 }
 
 text AdvancedCalculation(text enemyName)
 {
-    if(enemy == enemyName)
+    if(true)
     {
         if(enemyName != "SittingDuck")
         {
             if(x < 3)
             {
-                if(enemyName == WallRider)
+                if(enemyName == "WallRider")
                 {
                     if(x == 2)
                     {
@@ -88,7 +79,7 @@ text AdvancedCalculation(text enemyName)
 }
 
 
-event MyLowHealthEvent
+event MyLowHealthEvent()
 {
    text enemy = "WallRider";
 

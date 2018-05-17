@@ -1,0 +1,69 @@
+RobotProperties
+{
+      RobotName:TheDestroyer;
+      RobotType:AdvancedRobot;
+      BodyColor:yellow;
+      GunColor:red;
+      RadarColor:white;
+}
+
+
+strategy Default()
+{
+    //Testing if able to declare variables of same name
+    //in a multi declaratation.
+    number a,b,c,d,e,f;
+    number z;
+
+
+    routine()
+    {
+        if(a == 3)
+        {
+            while (true)
+            {
+                for(b upto d)
+                {
+                    if(2 == 2)
+                    {
+                        while (true)
+                        {
+                            number x = 1;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    when (ScannedRobotEvent fg)
+    {
+        if(2==2)
+        {
+            for(1 downto 0)
+            {
+                for(2 upto 3)
+                {
+                    if(true)
+                    {
+                        while (true)
+                        {
+                            number ad = 2;
+                        }
+                    }
+                }
+                if(true)
+                {
+                    while (2 == 2)
+                    {
+                        while (false)
+                        {
+                            number y = 2;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+}
