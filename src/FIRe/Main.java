@@ -11,6 +11,7 @@ import FIRe.ContextualAnalysis.*;
 import FIRe.Nodes.*;
 import org.antlr.v4.runtime.misc.ParseCancellationException;
 
+import java.awt.*;
 import java.io.*;
 import java.util.Scanner;
 //********************************************************************************
@@ -28,7 +29,7 @@ public class Main {
     public final static String NUMBERARRAY = "number array";
     public final static String TEXTARRAY = "text array";
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args){
 
         //Creating instance of the symboltable
         SymbolTable ST = new SymbolTable();
@@ -97,9 +98,12 @@ public class Main {
 
         //Setup to perform lexical analysis on the input string.
         CFGLexer lexer = new CFGLexer(CharStreams.fromString(outString));
-
+        lexer.removeErrorListeners();
+        lexer.addErrorListener(new AntlrException());
         CommonTokenStream tokenStream = new CommonTokenStream(lexer);
         CFGParser parser = new CFGParser(tokenStream);
+        parser.removeErrorListeners();
+        parser.addErrorListener(new AntlrException());
 
         //Performs lexical analysis and builds a CST.
         CFGParser.ProgContext CST = parser.prog();
@@ -107,6 +111,7 @@ public class Main {
 
         //Builds an AST from the CST
         ProgNode AST = (ProgNode) new BuildASTVisitor().visitProg(CST);
+
         return  AST;
     }
 

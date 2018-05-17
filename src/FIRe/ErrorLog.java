@@ -10,7 +10,7 @@ public class ErrorLog {
 
     public boolean hasErrors(){
         for (String str: ErrorsAndWarnings) {
-            if (str.contains("ERROR"))
+            if (str.contains("ERROR") || str.contains("extraneous")) //"extraneous" means there is a syntactical error
                 return true;
         }
         return false;

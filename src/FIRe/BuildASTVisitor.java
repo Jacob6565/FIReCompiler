@@ -248,15 +248,6 @@ public class BuildASTVisitor extends CFGBaseVisitor<AbstractNode> {
                     ADN.childList.add(visit(ctx.expr()));
                     ADN.Size = (ExpressionNode)ADN.childList.get(1);
                 }
-                //ADN.childList.add(visit(ctx.expr()));
-                /*for (AbstractNode AN : ADN.childList) {
-                    if (AN instanceof IdNode)
-                        ADN.Id = (IdNode) AN;
-                }
-                for (AbstractNode AN : ADN.childList) {
-                    if (AN instanceof ExpressionNode)
-                        ADN.Size = (ExpressionNode) AN;
-                }*/
                 return ADN;
             }
         }

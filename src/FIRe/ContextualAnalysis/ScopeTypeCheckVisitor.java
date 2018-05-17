@@ -34,21 +34,21 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
     @Override
     public void visit(AdditionNode node, Object... arg){
         //When visiting Addition nodes, we will visit each child (if they're not null)
-        if (node.LeftChild != null)
+        if (node.LeftChild != null && node.RightChild != null){
             visitNode(node.LeftChild);
-        if (node.RightChild != null)
             visitNode(node.RightChild);
 
-        //We will set the type as the type of one of the children.
-        node.type = node.LeftChild.type;
-
-        //Addition should only work if the children are of the same type and neither of them are bool
-        if(! node.LeftChild.type.equals(node.RightChild.type)){
-            Main.errors.addError("ERROR: Expected type " + node.LeftChild.type + ", but found type " + node.RightChild.type + " in line "+ node.LineNumber + ".");
-        }else if(node.LeftChild.type.equals(Main.BOOL) || node.RightChild.type.equals(Main.BOOL)){
-            Main.errors.addError("ERROR: Expected type number or text, but found type " + Main.BOOL + " in line "+ node.LineNumber + ".");
-        }else{
-            node.type = node.LeftChild.type;
+            //Addition should only work if the children are of the same type and neither of them are bool
+            if(! node.LeftChild.type.equals(node.RightChild.type)){
+                Main.errors.addError("ERROR: Expected type " + node.LeftChild.type + ", but found type " + node.RightChild.type + " in line "+ node.LineNumber + ".");
+            }else if(node.LeftChild.type.equals(Main.BOOL) || node.RightChild.type.equals(Main.BOOL)){
+                Main.errors.addError("ERROR: Expected type number or text, but found type " + Main.BOOL + " in line "+ node.LineNumber + ".");
+            }else{
+                node.type = node.LeftChild.type;
+            }
+        }
+        else{
+            node.type = null;
         }
     }
 
@@ -465,8 +465,15 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
         if(!node.Id.Name.contains(".")) {
             //We load the knowledge from the symbol table
             SymbolData formalParameters = ST.Search(node.Id.Name, node.LineNumber);
+            if(formalParameters == null)
+            {
+                Main.errors.addSymbolNotFoundError(node.Id.Name,node.LineNumber);
+                return;
+            }
             //These are the parameters that are at the function call.
             List<AbstractNode> actualParams = node.Aparam.childList;
+
+            //If we did not find anything, add an error and exit
 
             //If the lists are not of the same size, add an error
             if (formalParameters.parameters.size() != actualParams.size())
@@ -1212,6 +1219,6 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
         }
         //The robottype should be a valid robottype, as stated by tbe RHT.
         if (!RHT.RobotTypes.contains(node.RobotType.Name))
-            Main.errors.addTypeError("robot, advancedRobot, or juniorRobot",node.RobotType.type,node.LineNumber);
+            Main.errors.addTypeError("Robot, AdvancedRobot, or JuniorRobot",node.RobotType.type,node.LineNumber);
     }
 }
