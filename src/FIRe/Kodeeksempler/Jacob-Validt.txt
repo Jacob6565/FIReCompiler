@@ -20,7 +20,15 @@ bool Flags[10];
 number FirePowers[3];
 number index = 0;
 
-strategy Default()
+
+number f()
+{
+    number p[10];
+    return p;
+}
+
+
+strategy Default(number et)
 {
     number y = 3;
 
@@ -69,6 +77,7 @@ strategy Offensive()
     {
         if(shootingAtRival)
         {
+            f();
             print("I am gonna get you!");
         }
         else if(!Flags[0])
