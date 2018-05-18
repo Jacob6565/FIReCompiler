@@ -494,10 +494,10 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
 
     @Override
     public void visit(FunctionDeclarationNode node, Object... arg) {
-        //The FESVisitor deals with FunctionDeclarationNodes.
+        //If the functions returntype is an array, add an error. Otherwise do as usual.
         if(node.Type.contains("[]"))
         {
-            Main.errors.addError("ERROR: Functions can not return arrays. See line: " + node.LineNumber+".");
+            Main.errors.addError("ERROR: Functions can not return arrays. See line: " + node.LineNumber+ ".");
         }
         else {
             for (AbstractNode Node : node.childList) {
