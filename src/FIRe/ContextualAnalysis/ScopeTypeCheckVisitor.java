@@ -409,7 +409,7 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
         }
 
         if ( node.Parent instanceof StrategyDeclarationNode && ((StrategyDeclarationNode) node.Parent).Id.Name.equals("Default") && node.parameterMap.size() > 0)
-            Main.errors.addInvalidNumberOfArgumentsError(0,node.parameterMap.size(),node.LineNumber);
+            Main.errors.addInvalidNumberOfArgumentsError(node.parameterMap.size(),0 ,node.LineNumber);
     }
 
     @Override
