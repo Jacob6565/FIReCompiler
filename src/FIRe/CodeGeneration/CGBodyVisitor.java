@@ -313,7 +313,8 @@ public class CGBodyVisitor extends ASTVisitor {
         //This case indicates that we are dealing with a strategy call
         if (ofTypeStrategy){
             AbstractNode ancestor = node.Parent.Parent;
-            code.emit("currentStrategy_ = Strategy_." + node.Id.Name);
+            code.emitNL("currentStrategy_ = Strategy_." + node.Id.Name + ";");
+            code.emit("_stratChange = true");
             //If the strat call is in a block inside of a block, we need to make sure that it breaks the case, or return
             //from the event handler, immediately after the strat call. If we did this to every strat call, we would produce
             //java code with an unreachable code
@@ -562,8 +563,50 @@ public class CGBodyVisitor extends ASTVisitor {
 
     @Override
     public void visit(StrategyDeclarationNode node, Object... arg){
+        DeclarationNode tempDcl;
+
+
+        code.emitNL("if(_stratChange){");
+        for(AbstractNode child : node.childList) {
+            if (child instanceof DeclarationNode) {
+                tempDcl = (DeclarationNode) child;
+                if(tempDcl instanceof NumberDeclarationNode){
+                    if(tempDcl.expressionNode != null) {
+                        code.emit(tempDcl.Id.Name + " = ");
+                        code.emitNL(exprGen.GenerateExprCode(code, tempDcl.expressionNode) + ";");
+                    }
+                    else{
+                        code.emit(tempDcl.Id.Name + " = (int)0");
+                    }
+                }
+                else if(tempDcl instanceof TextDeclarationNode){
+                    if(tempDcl.expressionNode != null) {
+                        code.emit(tempDcl.Id.Name + " = ");
+                        code.emitNL(exprGen.GenerateExprCode(code, tempDcl.expressionNode) + ";");
+                    }
+                    else{
+                        code.emitNL(tempDcl.Id.Name + " = \"\";");
+                    }
+
+                }
+                else if(tempDcl instanceof BooleanDeclarationNode){
+                    if(tempDcl.expressionNode != null) {
+                        code.emit(tempDcl.Id.Name + " = ");
+                        code.emitNL(exprGen.GenerateExprCode(code, tempDcl.expressionNode) + ";");
+                    }
+                    else{
+                        code.emitNL(tempDcl.Id.Name + " = false;");
+                    }
+
+                }
+            }
+        }
+        code.emitNL("_stratChange = false; \n}");
+
+
         for(AbstractNode child : node.childList)
-            visitNode(child);
+            if(child instanceof RoutineNode)
+                visitNode(child);
     }
 
     @Override

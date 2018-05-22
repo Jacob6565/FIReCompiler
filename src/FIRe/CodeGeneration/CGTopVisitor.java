@@ -360,7 +360,7 @@ public class CGTopVisitor extends ASTVisitor {
         StrategyDeclarationNode parentStrategy = (StrategyDeclarationNode) node.Parent;
         String strategyName = parentStrategy.Id.Name;
 
-        progCode.runMethod.addToRunMethod(strategyName, bodyVisitor.GenerateBodyCode(node));
+        progCode.runMethod.addToRunMethod(strategyName, bodyVisitor.GenerateBodyCode(parentStrategy));
     }
 
     @Override
@@ -378,6 +378,9 @@ public class CGTopVisitor extends ASTVisitor {
         for (AbstractNode child : node.childList) {
             visitNode(child);
         }
+        //progCode.runMethod.addToRunMethod(node.Id.Name, bodyVisitor.GenerateBodyCode(node));
+
+
     }
 
     @Override
