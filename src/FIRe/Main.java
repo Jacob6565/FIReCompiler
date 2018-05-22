@@ -36,10 +36,10 @@ public class Main {
         RobotHeaderTable RHT = new RobotHeaderTable();
         ProgNode AST = null;
 
-                //Reads from the example program. (Debug code)
-        //Tuple<String, String> pathAndFileName = readUserInput();
-        //Scanner in = new Scanner(new FileReader(pathAndFileName.x + pathAndFileName.y));
-        String sourceFile = readSouceFile();
+        //Reads from the example program. (Debug code)
+        Tuple<String, String> pathAndFileName = readUserInput();
+        //String sourceFile = readSouceFile();
+        String sourceFile = readSourceFile1(pathAndFileName.x, pathAndFileName.y);
 
         if(!errors.hasErrors()) {
             AST = lexicalAnalysis(sourceFile);
@@ -57,7 +57,7 @@ public class Main {
 
         if(!errors.hasErrors())
         {
-            codeGeneration(AST, ST);
+            codeGeneration(AST, ST, pathAndFileName.x);
         }
          else {
             //If the semantics are wrong, print that code generation was not performed
@@ -67,10 +67,38 @@ public class Main {
         errors.writeToConsole();
     }
 
-    private static String readSouceFile() {
+    private static String readSourceFile1(String path, String fileName) {
         Scanner in = null;
         try {
-            in = new Scanner(new FileReader("src\\FIRe\\Kodeeksempler\\KodeEx3.txt"));
+            in = new Scanner(new FileReader(path + fileName));
+        } catch (FileNotFoundException e) {
+            errors.addError("File could not be read.");
+        }
+        //We use this delimiter, to chop the code into bits. We split by the backslash character "\n"
+        in.useDelimiter("\n");
+
+        //Creates a StringBuilder from the given code file.
+        StringBuilder sb = new StringBuilder();
+        while (in.hasNext()) {
+            sb.append(in.next() + "\n");
+        }
+
+        CFGParser.ProgContext cst = null;
+
+        //We append $ because this is the terminal symbol of the program.
+        sb.append("$");
+        in.close();
+
+        //Converts the StringBuilder to a string.
+        String outString = sb.toString();
+        return outString;
+    }
+
+
+    private static String readSourceFile() {
+        Scanner in = null;
+        try {
+            in = new Scanner(new FileReader("src\\FIRe\\Kodeeksempler\\Jacob-Validt.txt"));
         } catch (FileNotFoundException e) {
             errors.addError("File could not be read.");
         }
@@ -149,7 +177,7 @@ public class Main {
         returnCheckVisitor.visit(AST);
     }
 
-    private static void codeGeneration(ProgNode AST, SymbolTable ST)  {
+    private static void codeGeneration(ProgNode AST, SymbolTable ST, String path)  {
         SetUnderScoreVisitor underscoreVis = new SetUnderScoreVisitor();
 
         //Code generation
@@ -162,8 +190,8 @@ public class Main {
             errors.addError(e.getMessage());
         }
 
-        //codeGenerator.generateOutputFile(pathAndFileName.x);
-        codeGenerator.generateOutputFile("src\\FIRe\\Kodeeksempler\\");
+        codeGenerator.generateOutputFile(path);
+        //codeGenerator.generateOutputFile("src\\FIRe\\Kodeeksempler\\");
     }
 
 
