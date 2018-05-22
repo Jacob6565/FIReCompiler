@@ -67,6 +67,7 @@ public class SymbolTable  {
                         Main.errors.addNameAlreadyUsedInTheGlobalScopeError("Variable name in function parameter already used in global scope", param.x);
                 }
                 stack.Peek().put(idNode.Name, new SymbolData(input,sparams));
+
             }
             return;
         }
@@ -118,7 +119,7 @@ public class SymbolTable  {
                 return stack.Get(i).get(name);
             }
         }
-        Main.errors.addSymbolNotFoundError(name,lineNumber);
+        //Main.errors.addSymbolNotFoundError(name,lineNumber);
         return null;
     }
 
