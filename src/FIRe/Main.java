@@ -36,10 +36,20 @@ public class Main {
         RobotHeaderTable RHT = new RobotHeaderTable();
         ProgNode AST = null;
 
+        boolean debug = true;
         //Reads from the example program. (Debug code)
-        Tuple<String, String> pathAndFileName = readUserInput();
-        //String sourceFile = readSouceFile();
-        String sourceFile = readSourceFile1(pathAndFileName.x, pathAndFileName.y);
+        Tuple<String, String> pathAndFileName = null;
+        String sourceFile;
+        if(!debug)
+        {
+            pathAndFileName = readUserInput();
+            sourceFile = readSourceFile(pathAndFileName.x, pathAndFileName.y);
+        }
+        else
+        {
+            sourceFile = readSourceFile();
+        }
+
 
         if(!errors.hasErrors()) {
             AST = lexicalAnalysis(sourceFile);
@@ -57,7 +67,15 @@ public class Main {
 
         if(!errors.hasErrors())
         {
-            codeGeneration(AST, ST, pathAndFileName.x);
+            if(!debug)
+            {
+                codeGeneration(AST, ST, pathAndFileName.x);
+            }
+            else
+            {
+                codeGeneration(AST, ST);
+            }
+
         }
          else {
             //If the semantics are wrong, print that code generation was not performed
@@ -67,7 +85,9 @@ public class Main {
         errors.writeToConsole();
     }
 
-    private static String readSourceFile1(String path, String fileName) {
+
+    private static String readSourceFile(String path, String fileName)
+    {
         Scanner in = null;
         try {
             in = new Scanner(new FileReader(path + fileName));
@@ -94,32 +114,8 @@ public class Main {
         return outString;
     }
 
-
     private static String readSourceFile() {
-        Scanner in = null;
-        try {
-            in = new Scanner(new FileReader("src\\FIRe\\Kodeeksempler\\Jacob-Validt.txt"));
-        } catch (FileNotFoundException e) {
-            errors.addError("File could not be read.");
-        }
-        //We use this delimiter, to chop the code into bits. We split by the backslash character "\n"
-        in.useDelimiter("\n");
-
-        //Creates a StringBuilder from the given code file.
-        StringBuilder sb = new StringBuilder();
-        while (in.hasNext()) {
-            sb.append(in.next() + "\n");
-        }
-
-        CFGParser.ProgContext cst = null;
-
-        //We append $ because this is the terminal symbol of the program.
-        sb.append("$");
-        in.close();
-
-        //Converts the StringBuilder to a string.
-        String outString = sb.toString();
-        return outString;
+       return readSourceFile("src\\FIRe\\Kodeeksempler\\", "Jacob-Validt.txt");
     }
 
     private static ProgNode lexicalAnalysis(String outString) {
@@ -177,6 +173,11 @@ public class Main {
         returnCheckVisitor.visit(AST);
     }
 
+
+    private static void codeGeneration(ProgNode AST, SymbolTable ST)
+    {
+        codeGeneration(AST, ST, "GeneratedCode\\");
+    }
     private static void codeGeneration(ProgNode AST, SymbolTable ST, String path)  {
         SetUnderScoreVisitor underscoreVis = new SetUnderScoreVisitor();
 
@@ -191,7 +192,6 @@ public class Main {
         }
 
         codeGenerator.generateOutputFile(path);
-        //codeGenerator.generateOutputFile("src\\FIRe\\Kodeeksempler\\");
     }
 
 
