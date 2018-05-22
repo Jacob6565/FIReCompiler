@@ -12,6 +12,8 @@ public class SymbolData {
     SymbolData(AbstractNode nodeRef, ArrayList<Tuple<String,String>> parameters){
         this.nodeRef = nodeRef;
         this.parameters = parameters;
+        if (nodeRef instanceof StrategyDeclarationNode)
+            this.type = "strategy";
     }
     SymbolData(AbstractNode nodeRef, String type){
         this.nodeRef = nodeRef;

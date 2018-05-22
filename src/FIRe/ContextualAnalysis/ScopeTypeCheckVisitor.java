@@ -445,50 +445,49 @@ public class ScopeTypeCheckVisitor extends ASTVisitor {
 
     @Override
     public void visit(FuncCallNode node, Object... arg){
-
-        //Strategy calls within function declarations are not allowed
-        AbstractNode predecessor = node;
-        while(!(predecessor.Parent instanceof ProgNode)){
-            if (predecessor instanceof FunctionDeclarationNode && ST.Search(node.Id.Name,node.LineNumber).type.equals("strategy")){
-                Main.errors.addStrategyCallError(node.LineNumber);
-            }
-            predecessor = predecessor.Parent;
-        }
-
-        for (AbstractNode Node : node.childList) {
-            if (Node != null) {
-                visitNode(Node);
-            }
-        }
-        node.type = node.Id.type;
-
-        //If this is not an eventfield, deal with the formal parameters
-        //Event methods do not have parameters
-        if(!node.Id.Name.contains(".")) {
-            //We load the knowledge from the symbol table
-            SymbolData formalParameters = ST.Search(node.Id.Name, node.LineNumber);
-            if(formalParameters == null)
-            {
-                Main.errors.addSymbolNotFoundError(node.Id.Name,node.LineNumber);
-                return;
-            }
-            //These are the parameters that are at the function call.
-            List<AbstractNode> actualParams = node.Aparam.childList;
-
-            //If we did not find anything, add an error and exit
-
-            //If the lists are not of the same size, add an error
-            if (formalParameters.parameters.size() != actualParams.size())
-                Main.errors.addInvalidNumberOfArgumentsError(formalParameters.parameters.size(), actualParams.size(), node.LineNumber);
-
-            //If the actual parameters' types do not match the formal parameters' types add an error
-            for (int i = 0; i < node.Aparam.childList.size(); ++i) {
-                if (!(formalParameters.parameters.get(i).y.equals(((ExpressionNode) actualParams.get(i)).type)))
-                    Main.errors.addTypeError(formalParameters.parameters.get(i).y, ((ExpressionNode) actualParams.get(i)).type, node.LineNumber);
+        if(ST.Search(node.Id.Name,node.LineNumber) != null) {
+            //Strategy calls within function declarations are not allowed
+            AbstractNode predecessor = node;
+            while (!(predecessor instanceof ProgNode)) {
+                if (predecessor instanceof FunctionDeclarationNode && ST.Search(node.Id.Name, node.LineNumber).type.equals("strategy")) {
+                    Main.errors.addStrategyCallError(node.LineNumber);
+                }
+                predecessor = predecessor.Parent;
             }
 
-            if(!(formalParameters.nodeRef instanceof FunctionDeclarationNode || formalParameters.nodeRef instanceof StrategyDeclarationNode))
-                Main.errors.addError("ERROR: Symbol \"" + node.Id.Name + "\" in line " + node.LineNumber + " was not found.");
+            for (AbstractNode Node : node.childList) {
+                if (Node != null) {
+                    visitNode(Node);
+                }
+            }
+            node.type = node.Id.type;
+
+            //If this is not an eventfield, deal with the formal parameters
+            //Event methods do not have parameters
+            if (!node.Id.Name.contains(".")) {
+                //We load the knowledge from the symbol table
+                SymbolData formalParameters = ST.Search(node.Id.Name, node.LineNumber);
+                if (formalParameters == null)
+                    return;
+
+                //These are the parameters that are at the function call.
+                List<AbstractNode> actualParams = node.Aparam.childList;
+
+                //If we did not find anything, add an error and exit
+
+                //If the lists are not of the same size, add an error
+                if (formalParameters.parameters.size() != actualParams.size())
+                    Main.errors.addInvalidNumberOfArgumentsError(formalParameters.parameters.size(), actualParams.size(), node.LineNumber);
+
+                //If the actual parameters' types do not match the formal parameters' types add an error
+                for (int i = 0; i < node.Aparam.childList.size(); ++i) {
+                    if (!(formalParameters.parameters.get(i).y.equals(((ExpressionNode) actualParams.get(i)).type)))
+                        Main.errors.addTypeError(formalParameters.parameters.get(i).y, ((ExpressionNode) actualParams.get(i)).type, node.LineNumber);
+                }
+
+                if (!(formalParameters.nodeRef instanceof FunctionDeclarationNode || formalParameters.nodeRef instanceof StrategyDeclarationNode))
+                    Main.errors.addError("ERROR: Symbol \"" + node.Id.Name + "\" in line " + node.LineNumber + " was not found.");
+            }
         }
     }
 

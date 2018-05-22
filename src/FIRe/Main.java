@@ -115,7 +115,7 @@ public class Main {
     }
 
     private static String readSourceFile() {
-       return readSourceFile("src\\FIRe\\Kodeeksempler\\", "Jacob-Validt.txt");
+       return readSourceFile("src\\FIRe\\Kodeeksempler\\", "kodeEx3.txt");
     }
 
     private static ProgNode lexicalAnalysis(String outString) {

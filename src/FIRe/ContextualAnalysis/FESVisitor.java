@@ -321,6 +321,7 @@ public class FESVisitor extends ASTVisitor {
 
     @Override
     public void visit(StrategyDeclarationNode node, Object... arg) {
+        node.Id.type = "strategy";
         ArrayList<String> handledEvents = new ArrayList<>();
         for (AbstractNode Node: node.childList){
             if (Node instanceof WhenNode){
@@ -332,7 +333,7 @@ public class FESVisitor extends ASTVisitor {
             }
         }
         symbolTable.Insert(node);
-        node.Id.type = "strategy";
+
     }
 
     @Override

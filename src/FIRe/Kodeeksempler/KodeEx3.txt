@@ -1,20 +1,17 @@
 RobotProperties
 {
-      RobotName:TheDestroyer;
-      RobotType:AdvancedRobot;
-      BodyColor:yellow;
-      GunColor:red;
-      RadarColor:white;
 }
-
-
 bool flag = false;
 number values[10];
 number index;
 
+strategy empty(){
+
+}
+
 strategy Default(){
     number b,d;
-    bool f,g,h;
+    bool f,g;
     text j,k,l;
 
     routine(){
@@ -67,8 +64,9 @@ number average(number limit){
     for(number i = 0 upto max(10, limit)){
         sum = sum + values[i + 2];
     }
+    Default();
 
-    return sum / max(10,limit);
+    return sum;
 }
 
 number max(number one, number two){
