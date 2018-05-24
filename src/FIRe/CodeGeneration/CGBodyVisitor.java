@@ -46,6 +46,7 @@ public class CGBodyVisitor extends ASTVisitor {
     }
 
     private void generateDeclaration(String type, DeclarationNode node, boolean exprFlag, int idCounter) {
+        String value ="";
         code.emit(type + " ");
 
         //If the exprflag is true we are dealing with a simple declaration with an assignment
@@ -54,20 +55,29 @@ public class CGBodyVisitor extends ASTVisitor {
             code.emitNL(exprGen.GenerateExprCode(code, node.expressionNode) + ";");
             return;
         }
-        else
-            generateSequentialIds(node.childList, idCounter);
+        else{
+            if (type.equals("double"))
+                value = " = 0";
+            else if (type.equals("String"))
+                value = " = \"\"";
+            else if (type.equals("boolean"))
+                value = " = false";
+            generateSequentialIds(value, node.childList, idCounter);
+        }
+
     }
 
-    private void generateSequentialIds(ArrayList<AbstractNode> childList, int idCounter) {
+    private void generateSequentialIds(String value, ArrayList<AbstractNode> childList, int idCounter) {
         //For-loop for emitting the correct code
         for (AbstractNode id : childList) {
             if (id instanceof IdNode && idCounter > 1) {
-                code.emit(((IdNode) id).Name + ", ");
+                code.emit(((IdNode) id).Name + value + ", ");
                 idCounter--;
             } else if (id instanceof IdNode) {
-                code.emitNL(((IdNode) id).Name + ";");
+                code.emit(((IdNode) id).Name  + value);
             }
         }
+        code.emit(";");
     }
 
     @Override
