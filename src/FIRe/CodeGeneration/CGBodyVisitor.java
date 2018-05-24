@@ -554,6 +554,10 @@ public class CGBodyVisitor extends ASTVisitor {
             }
             indent(child);
         }
+        if(node.repeatCondition != null)
+        {
+            code.emitNL("}");
+        }
     }
 
     @Override
