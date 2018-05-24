@@ -1,5 +1,5 @@
 RobotProperties{
-RobotName: BumbleBee;
+RobotName: BumbleBee1;
 RobotType: AdvancedRobot;
 GunColor: yellow;
 RadarColor: blue;

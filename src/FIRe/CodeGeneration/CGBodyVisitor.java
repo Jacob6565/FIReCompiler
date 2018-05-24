@@ -565,6 +565,59 @@ public class CGBodyVisitor extends ASTVisitor {
 
     }
 
+
+    private void MultipleDeclarations(DeclarationNode tempDcl)
+    {
+        if (tempDcl instanceof NumberDeclarationNode) {
+            for (AbstractNode idnode : ((NumberDeclarationNode) tempDcl).childList) {
+                if (idnode instanceof IdNode) {
+
+
+                    code.emit(((IdNode) idnode).Name + " = ");
+                    if (tempDcl.expressionNode != null) {
+
+
+                        code.emitNL(exprGen.GenerateExprCode(code, tempDcl.expressionNode) + ";");
+                    } else {
+                        code.emitNL("(int)0;");
+                    }
+                }
+            }
+
+        } else if (tempDcl instanceof TextDeclarationNode) {
+            for (AbstractNode idnode : ((TextDeclarationNode) tempDcl).childList) {
+                if (idnode instanceof IdNode) {
+
+
+                    code.emit(((IdNode) idnode).Name + " = ");
+                    if (tempDcl.expressionNode != null) {
+
+
+                        code.emitNL(exprGen.GenerateExprCode(code, tempDcl.expressionNode) + ";");
+                    } else {
+                        code.emitNL("\"\";");
+                    }
+                }
+            }
+
+        } else if (tempDcl instanceof BooleanDeclarationNode) {
+            for (AbstractNode idnode : ((BooleanDeclarationNode) tempDcl).childList) {
+                if (idnode instanceof IdNode) {
+
+
+                    code.emit(((IdNode) idnode).Name + " = ");
+                    if (tempDcl.expressionNode != null) {
+
+
+                        code.emitNL(exprGen.GenerateExprCode(code, tempDcl.expressionNode) + ";");
+                    } else {
+                        code.emitNL("false;");
+                    }
+                }
+            }
+
+        }
+    }
     @Override
     public void visit(StrategyDeclarationNode node, Object... arg){
         DeclarationNode tempDcl;
@@ -574,7 +627,10 @@ public class CGBodyVisitor extends ASTVisitor {
         for(AbstractNode child : node.childList) {
             if (child instanceof DeclarationNode) {
                 tempDcl = (DeclarationNode) child;
-                if(tempDcl instanceof NumberDeclarationNode){
+                if(tempDcl.childList.size() > 1) {
+                    MultipleDeclarations(tempDcl);
+                }
+                else if(tempDcl instanceof NumberDeclarationNode){
                     if(tempDcl.expressionNode != null) {
                         code.emit(tempDcl.Id.Name + " = ");
                         code.emitNL(exprGen.GenerateExprCode(code, tempDcl.expressionNode) + ";");

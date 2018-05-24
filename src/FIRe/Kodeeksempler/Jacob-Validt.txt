@@ -13,7 +13,7 @@ number power(number x)
 }
 
 
-text currentRival = "SittingDuck";
+text currentRival = "Sitting1Duck";
 bool shootingAtRival = false;
 text ScannedRobots[10];
 bool Flags[10];
@@ -24,11 +24,11 @@ number index = 0;
 number f()
 {
     number p[10];
-    return p;
+    return p[1];
 }
 
 
-strategy Default(number et)
+strategy Default()
 {
     number y = 3;
 
