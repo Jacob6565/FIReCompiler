@@ -36,7 +36,7 @@ public class Main {
         RobotHeaderTable RHT = new RobotHeaderTable();
         ProgNode AST = null;
 
-        boolean debug = true;
+        boolean debug = false;
         //Reads from the example program. (Debug code)
         Tuple<String, String> pathAndFileName = null;
         String sourceFile;
@@ -115,7 +115,7 @@ public class Main {
     }
 
     private static String readSourceFile() {
-       return readSourceFile("src\\FIRe\\Kodeeksempler\\", "kodeEx3.txt");
+       return readSourceFile("src\\FIRe\\Kodeeksempler\\", "Test6");
     }
 
     private static ProgNode lexicalAnalysis(String outString) {
