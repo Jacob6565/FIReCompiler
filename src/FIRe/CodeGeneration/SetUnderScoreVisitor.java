@@ -543,6 +543,8 @@ public class SetUnderScoreVisitor extends ASTVisitor {
                 return true;
             case "execute":
                 return true;
+            case "HitRobotEvent":
+                return true;
             default:
                 return false;
         }

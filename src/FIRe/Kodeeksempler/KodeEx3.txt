@@ -64,7 +64,6 @@ number average(number limit){
     for(number i = 0 upto max(10, limit)){
         sum = sum + values[i + 2];
     }
-    Default();
 
     return sum;
 }

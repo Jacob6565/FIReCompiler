@@ -14,10 +14,6 @@ strategy Default()
     {
         x = x + 1;
     }
-    when (MyLowHealthEvent e)
-    {
-        x = 5;
-    }
     when (HitRobotEvent f)
     {
         if(f.getName() == "SittingDuck")
@@ -61,8 +57,7 @@ text AdvancedCalculation(text enemyName)
                 {
                     if(x == 2)
                     {
-                        Default();
-                        return "Crazy";
+                       return "Crazy";
                     }
                     return "SittingDuck";
                 }

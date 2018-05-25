@@ -115,7 +115,7 @@ public class Main {
     }
 
     private static String readSourceFile() {
-       return readSourceFile("src\\FIRe\\Kodeeksempler\\", "kodeEx3.txt");
+       return readSourceFile("src\\FIRe\\Kodeeksempler\\", "KodeEx3.txt");
     }
 
     private static ProgNode lexicalAnalysis(String outString) {
@@ -201,12 +201,14 @@ public class Main {
         Scanner userInput = new Scanner(System.in);
         String path;
         String fileName;
-        System.out.println("> Write the name of the file including file extension fx Robot.txt:");
-        System.out.print("> ");
-        fileName =  userInput.nextLine();
-        System.out.println("\n> Write the full path for your FIRe program excluding the file name fx C:\\Desktop\\: ");
+        System.out.println("> Write the full path for your FIRe program excluding the file name fx C:\\Desktop: ");
         System.out.print("> ");
         path = userInput.nextLine();
+        path +="\\";
+        System.out.println("\n> Write the name of the file including file extension fx Robot.txt:");
+        System.out.print("> ");
+        fileName =  userInput.nextLine();
+
         System.out.println("\nThe compiled file will be made in the same path.");
         Tuple<String, String> pathAndFileName = new Tuple<String, String>(path, fileName);
 
