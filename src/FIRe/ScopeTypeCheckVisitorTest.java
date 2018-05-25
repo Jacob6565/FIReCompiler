@@ -163,5 +163,4 @@ public class ScopeTypeCheckVisitorTest{
         results.add(testIndividualTextConcat(new AdditionNode()));
         assert trueList(results);
     }
-
 }

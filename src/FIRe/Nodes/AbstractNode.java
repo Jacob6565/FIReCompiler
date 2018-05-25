@@ -36,7 +36,7 @@ public abstract class AbstractNode
     /*Each class needs this in order to accept a
     * visit from a visitor. Then each nodes has to call
     * its childrens accept-methods.*/
-    public abstract void accept(ASTVisitor v, AbstractNode parent) throws Exception;
+    public abstract void accept(ASTVisitor v, AbstractNode parent);
 
     public ArrayList<AbstractNode> childList = new ArrayList<>();
 

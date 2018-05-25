@@ -4,14 +4,13 @@ import FIRe.ASTVisitor;
 
 import java.util.ArrayList;
 
-public class ProgNode extends AbstractNode{
-    public ArrayList<AbstractNode> _abstractNodesList = new ArrayList<>();
-
-    @Override
-    public void accept(ASTVisitor v, AbstractNode parent) throws Exception {
+public class ProgNode extends AbstractNode {
+    public void accept(ASTVisitor v, AbstractNode parent) {
+        //Calling the visit method for itself.
         v.visit(this, parent);
         for(AbstractNode child : childList)
             if(child != null)
+                //Calling its children's accept methods and thereby traversing the AST.
                 child.accept(v, this);
     }
 }
